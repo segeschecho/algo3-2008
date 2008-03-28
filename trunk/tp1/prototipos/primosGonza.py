@@ -66,15 +66,13 @@ def primoDeMayorPotencia(n):
     while n != 1:
         # si me paso de la raiz, pruebo con el numero
         if primoActual > s:
-            if mejorPotencia <= 1:
-                mejorPrimo = n
-                mejorPotencia = 1
+            primoActual = n
+            potenciaActual = 1
             break
             
         if n % primoActual == 0:
             potenciaActual += 1
             n = n / primoActual
-            s = int(ceil(sqrt(n)))
         else:
             if potenciaActual >= mejorPotencia:
                 mejorPrimo = primoActual
@@ -82,12 +80,16 @@ def primoDeMayorPotencia(n):
 
             potenciaActual = 0
             primoActual = f.next()
+            s = int(ceil(sqrt(n)))
 
     
-    if primoActual <= s and potenciaActual >= mejorPotencia:
+    if potenciaActual >= mejorPotencia:
         mejorPrimo = primoActual
         mejorPotencia = potenciaActual
 
     return mejorPrimo, mejorPotencia
 
-print primoDeMayorPotencia(12312346223569)
+
+if __name__ == '__main__':
+    import sys
+    print primoDeMayorPotencia(int(sys.argv[1]))
