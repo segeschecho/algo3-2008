@@ -2,25 +2,27 @@
 #include <list.h>
 #include <math.h>
 
-void primoMaxPotencia(int n, int &primo, int &potencia);
-int calcularPotencia(int n, int primo);
+void primoMaxPotencia(unsigned long long int n, unsigned long long int &primo, int &potencia);
+int calcularPotencia(int n, unsigned long long int primo);
 bool esPrimo(int n, list<int> l);
 
 int main(){
-    int primo = 0;
+    unsigned long long int a = 12312349223569LL;
+    unsigned long long int primo = 0;
     int pot = 0;
-    primoMaxPotencia(991, primo, pot);
+    primoMaxPotencia(a, primo, pot);
 
     cout << "resultado, primo: " << primo << "  potencia " << pot << endl;
     return 0;
 }
 
-void primoMaxPotencia(int n, int &primo, int &potencia){
+void primoMaxPotencia(unsigned long long int n, unsigned long long int &primo, int &potencia){
+    //unsigned long long int a = 12312349223569LL;
     list<int> l;
-    int maxPrimo = 0;
+    unsigned long long int  maxPrimo = 0;
     int maxPotencia = 0;
 
-    int primoActual = 2;
+    unsigned long long int  primoActual = 2;
     int potenciaActual = 0;
 
     int temp = 0;
@@ -36,7 +38,7 @@ void primoMaxPotencia(int n, int &primo, int &potencia){
 
     if(n%3 == 0){
         temp = calcularPotencia(n, 3);
-        if(temp > potenciaActual){
+        if(temp >= potenciaActual){
             primoActual = 3;
             potenciaActual = temp;
         }
@@ -45,14 +47,14 @@ void primoMaxPotencia(int n, int &primo, int &potencia){
 
     if(n%5 == 0){
         temp = calcularPotencia(n, 5);
-        if(temp > potenciaActual){
+        if(temp >= potenciaActual){
              primoActual = 5;
              potenciaActual = temp;
         }
       }
 
 
-    while(primoActual <= (int)sqrt(n)){
+    while(primoActual <= (unsigned long long int)sqrt(n)){
          if( (n % primoActual == 0) && esPrimo(primoActual, l)){
               l.push_back(primoActual);
               potenciaActual = calcularPotencia(n, primoActual);
@@ -61,10 +63,12 @@ void primoMaxPotencia(int n, int &primo, int &potencia){
                    maxPotencia = potenciaActual;
                    maxPrimo = primoActual;
               }
+
+              //n = n / (primoActual^potenciaActual);
          }
-         
+
          primoActual = 6*i + k;
-         
+
          if(k == 1)
              k = 5;
          else
@@ -77,12 +81,20 @@ void primoMaxPotencia(int n, int &primo, int &potencia){
         primo = n;
         potencia = 1;
     }else{
-        primo = maxPrimo;
-        potencia = maxPotencia;
+        if(esPrimo(n, l) && (n > maxPrimo)){
+            cout << "holaa" << maxPrimo << endl;
+            primo = n;
+            potencia = 1;
+        }
+        else
+        {
+            primo = maxPrimo;
+            potencia = maxPotencia;
+        }
     }
 }
 
-int calcularPotencia(int n, int primo){
+int calcularPotencia(int n, unsigned long long int primo){
     int res = 0;
 
     while(n%primo == 0){
@@ -101,6 +113,6 @@ bool esPrimo(int n, list<int> l){
         if(n % (*it) == 0)
             return false;
     }
-    
+
     return true;
 }
