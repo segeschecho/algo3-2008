@@ -6,15 +6,12 @@ using namespace std;
 
 void primoMaxPotencia(unsigned long long int n, unsigned long long int &primo, int &potencia);
 int calcularPotencia(int n, unsigned long long int primo);
-bool esPrimo(int n, list<unsigned long long int> l);
+bool esPrimo(int n, list<unsigned long long int> &l);
 
 int main(){
     unsigned long long int a = 12312346223569LL;
     unsigned long long int primo = 0;
     int pot = 0;
-    for(int i=0; i<500000; i++){}
-
-    cout << "paso" << endl;
 
     primoMaxPotencia(a, primo, pot);
 
@@ -78,18 +75,14 @@ void primoMaxPotencia(unsigned long long int n, unsigned long long int &primo, i
     }
     l.push_back(5);    //agrego el primo a la lista de primos
 
-    cout << "limite   " << limite << endl;
-    primoActual = 6*i + 1;
-    bool es = esPrimo(primoActual, l);
-
     while(primoActual <= limite){
-
         primoActual = 6*i + 1;
+
         bool es = esPrimo(primoActual, l);
         if(es)
             l.push_back(primoActual);
 
-/*        if( (n % primoActual == 0) && es){
+        if( (n % primoActual == 0) && es){
             potenciaActual = calcularPotencia(n, primoActual);
 
             if(potenciaActual > maxPotencia || ((potenciaActual == maxPotencia) &&  (primoActual > maxPrimo))){
@@ -102,13 +95,14 @@ void primoMaxPotencia(unsigned long long int n, unsigned long long int &primo, i
             n = (unsigned long long int)(n / pow(primoActual, potenciaActual));
             limite = (unsigned long long int)sqrt(n);
         }
-*/
+
         primoActual = 6*i + 5;
+
         es = esPrimo(primoActual, l);
         if(es)
             l.push_back(primoActual);
 
-/*        if( (n % primoActual == 0) && es){
+        if( (n % primoActual == 0) && es){
             potenciaActual = calcularPotencia(n, primoActual);
 
             if(potenciaActual > maxPotencia || ((potenciaActual == maxPotencia) &&  (primoActual > maxPrimo))){
@@ -121,13 +115,11 @@ void primoMaxPotencia(unsigned long long int n, unsigned long long int &primo, i
 
             n = n / (unsigned long long int)(pow(primoActual, potenciaActual));
             limite = (unsigned long long int)sqrt(n);
-        }*/
+        }
 
-        if(primoActual > 50000)
-            cout << "nada " << endl;
         i++;
     }
-
+cout << "n :" << n << endl;
     if(l.size() == 0){
         primo = n;
         potencia = 1;
@@ -163,7 +155,7 @@ int calcularPotencia(int n, unsigned long long int primo){
     return res;
 }
 
-bool esPrimo(int n, list<unsigned long long int> l){
+bool esPrimo(int n, list<unsigned long long int> &l){
     list<unsigned long long int>::iterator it;
     int limite = (int)sqrt(n);
 
