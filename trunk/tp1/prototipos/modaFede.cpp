@@ -16,17 +16,14 @@ BEGIN
    RETURN pmin;
 END PosMinimo;
 */
-int posMinimo(int* a, int i, int j){
-	int pmin, k;
-	pmin = i;
-	for(int k = i + 1; k < j; k++){
-		if(a[k] < a[pmin]){
-		pmin = k;
-		}
-	}
-	return pmin;
+int posMinimo(int*b,int i,int n){
+    int pos = i;
+    for(int j= i+1; j < n; j++){
+        if(b[j] < b[pos])
+            pos = j;
+    }
+    return pos;
 }
-
 /*
 (* permuta los elementos de a[prim..ult] y devuelve dos
    posiciones k,l tales que prim-1<=k<l<=ult+1, a[i]<p si
@@ -63,50 +60,40 @@ BEGIN
    END;
 END Pivote2;
 */
-void pivote(int* a, int p, int prim, int ult, int& k, int& l){
-	int m;
-	k=prim;
-	l=ult-1;
-	while(k < ult && a[k] <= p){
-		k++;
-	}
-	while(a[l] > p){
-		l--;
-	}
-	while(k < l){
-		int aux = a[k];
-		a[k] = a[l];
-		a[l] = aux;
-		while(a[k] <= p){
-			k++;
-		}
-		while(a[l]  > p){
-			l--;
-		}	
-	}
-	int aux=a[prim];
-	a[prim] = a[l];
-	a[l] = aux;
-	l++;
-	k = prim;
-	m = l; 	
-	while(a[k]!=p && k < l){
-		k++;
-	}
-	while(a[m] == p and m >= prim){
-		m--;
-	}
-	while( k < m){
-		int aux = a[k];
-		a[k] = a[m];
-		a[m] = aux;
-		while(a[k] != p){
-			k++;
-		}
-		while(a[m] == p){
-			m--;
-		}
-	}
+void pivote(int*a,int p,int prim,int ult,int& k,int& l){
+    k = prim+1;
+    l=ult;
+    while(!(a[k]>p || k >=ult )){
+        k=k+1;
+    }
+    while(!(a[l] <= p)){
+        l=l-1;
+    }
+    int aux=a[prim];
+    a[prim] = a[l];
+    a[l] = aux;
+    l=l+1;
+    k = prim;
+    int m = l-1;
+    while (!(a[k] == p or k >= 1)){
+        k=k+1;
+    }
+    while (!(a[m] != p or m<prim)){
+        m=m-1;
+    }
+    while (k< m){
+        aux = a[k];
+        a[k] = a[m];
+        a[m] = aux;
+        k=k+1;
+        m=m-1;
+        while (!(a[k] == p)){
+            k=k+1;
+        }
+        while (!(a[m] != p)){
+            m=m-1;
+        }
+    }
 }
 
 /*
@@ -126,32 +113,22 @@ BEGIN
 END Medianade5;
 
 */
-int medianaDe5(int* a, int prim, int ult){
-	int i,n;
-	//cout<<"sdasdsadasd"<<endl;
-	//cout<<prim<<endl;
-	//cout<<ult<<endl;
-    n = ult-prim;
-	//cout<<"sdasdsadasd"<<endl;
-	//cout<<n<<endl;
-    int * b = new  int[n];
-	//cout<<"sdasdsadasd"<<endl;
-	for(int i = 0; i < n; i++){
-		b[i] = a[prim+i];
-	//	cout<<"b "<<i<<" "<<b[i]<<endl;
-	}
-	for(int i = 0; i <= (n+1)/2; i ++){
-		int aux= b[i];
-		int pos=posMinimo(b,i,n);
-		b[i]=b[pos];
-		b[pos] = aux;
-	}
-	int x = b[(n+1)/2];
-	delete b;
-	return x;
-}  
-	
-
+int medianaDe5(int* a,int prim,int ult){
+    int n = ult - prim+1;
+    int *b= new int[n];
+    for(int i=0; i< n; i++){
+        b[i] = a[prim + i];
+    }
+    for(int i= 0; i < (n+1)/2; i++){
+        int aux = b[i];
+        int pos = posMinimo(b,i,n-1);
+        b[i]=b[pos];
+        b[pos]=aux;
+    }
+    int x = b[(n+1)/2];
+    delete b;
+    return x;
+}
 /*
 PROCEDURE CasiMediana(VAR a:vector; prim,ult:CARDINAL):INTEGER;
 (* calcula una mediana aproximada del vector a[prim..ult] *)
@@ -168,29 +145,19 @@ BEGIN
    RETURN Kesimo3(b,1,n,(n+1)DIV 2)
 END CasiMediana;
 */
-int casiMediana(int* a, int prim, int ult){
-	int n,i;
-	n = ult - prim;
-	if (n <= 5){
-        
-		return medianaDe5(a,prim,ult);
-	}
-	n = n / 5;
-	int* b = new int[n];
-	for(int i = 0; i < n; i ++){
-		b[i] = medianaDe5(a,5*i+prim,5*i+prim+4); //TODO:alta tendencia al bug 
-	}
-	/*cout<<"------------------"<<endl;
-	cout<<b[0]<<endl;
-	cout<<b[1]<<endl;
-	cout<<"------------------"<<endl;
-	cout<<n<<endl;
-	cout<<(n+1)/2<<endl;*/
-	int x = kesimo(b,0,n,(n+1)/2);
-	delete b;
-	return x;
+int casiMediana(int* a,int prim,int ult){
+    int n = ult - prim;
+    if(n <= 5)
+        return medianaDe5(a,prim,ult);
+    n = n / 5;
+    int * b=new int[n];
+    for(int i=0; i < n; i++){
+        b[i] = medianaDe5(a,5*i+prim,5*i+prim+4);
+    }
+    int x = kesimo(b,0,n-1,(n+1)/2);
+    delete b;
+    return x;
 }
-
 
 
 
@@ -211,47 +178,24 @@ BEGIN
 END Kesimo3;
 */
 
-int kesimo(int* a, int prim, int ult, int k) {
-    if(prim == ult){
-            return a[prim];
-    }
-	if(prim < ult){
-		int pm = casiMediana(a,prim,ult);
-
-        int i=0,d=0;
-                /*for(int fede=0; fede<ult;fede++){
-			cout<<a[fede]<<endl;
-		}
-        for(int fede=prim; fede < ult; fede++){
-                cout<<a[fede]<<endl;
-                }*/
-        //cout<<"emilioooooooooooooooooooooooooooo"<<endl;
-		pivote(a,pm,prim,ult,i,d);
-		/*for(int fede=prim; fede < ult; fede++){
-                cout<<a[fede]<<endl;
-                }*/
-        //cout<<"izq y der"<<endl;        
-        //cout<<i<<endl;
-		//cout<<d<<endl;
-		//cout<<k<<endl;
-        /*for(int fede=0; fede<ult;fede++){
-			cout<<a[fede]<<endl;
-		}
-		return 0;*/
-		if(prim +k-1 < i) {
-			return kesimo(a,prim,i-1,k); // tal vez i
-		}
-	  	if(d<=(prim+k-1)) {
-			return kesimo(a,d,ult,k-d+prim);
-		}
-		return a[i];
-		
-	}
-	else{
-		return a[ult-1];
-	}	
+int kesimo(int*a,int prim,int ult,int k){
+        if(prim < ult){
+            int pm = casiMediana(a,prim,ult);
+            int i=0;
+            int d=0;
+            pivote(a,pm,prim,ult,i,d);
+            if(prim+k < i){
+                return kesimo(a,prim,i-1,k);
+            }
+            if(d <=prim+k){
+                return kesimo(a,d,ult,k-d+prim);
+            }
+            return a[i];
+        }
+        else
+            return a[ult];
 }
-			
+
 int main(){
 	int* a =new int[10];
         a[0]=0;
@@ -261,8 +205,9 @@ int main(){
 	for(int i = 4; i < 10; i++){
 		a[i] = 4;
 	}
-	cout<<kesimo(a,0,10,5);
+	cout<<kesimo(a,0,9,5);
 	//cout<<casiMediana(a,0,10);
 	//cout<<medianaDe5(a,5,10);
+	delete a;
 	return 0;
 }
