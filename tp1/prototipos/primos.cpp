@@ -5,7 +5,7 @@
 #include <math.h>
 using namespace std;
 
-void maxFactorPrimParser(unsigned long long desde, unsigned long long hasta, char* archivo){
+void maxFactorPrimTester(unsigned long long desde, unsigned long long hasta, char* archivo){
     ofstream output;
     output.open(archivo, ios_base::out);
 
@@ -198,10 +198,23 @@ void maxFactorPrim(unsigned long long n, unsigned& primo, unsigned& potencia){
 }
 
  int main(int argc, char* argv[]){
-     unsigned primo, pot;
-     maxFactorPrim(28, primo, pot);
-     maxFactorPrimParser(1, 100, "log.txt");
+     ifstream entrada;
+     ofstream salida;
 
+     entrada.open("Tp1Ej1.in", ios_base::in);
+     salida.open("Tp1Ej1.out", ios_base::out);
+     assert(entrada.is_open());
+     int numero = 0;
+     entrada >> numero;
+     while(numero != 0){
+         unsigned primo, pot;
+         maxFactorPrim(numero, primo, pot);
+         salida << numero << " " << primo << " " << pot << endl;
+         entrada >> numero;
+     }
+
+     entrada.close();
+     salida.close();
      system("PAUSE");
      return 0;
  }

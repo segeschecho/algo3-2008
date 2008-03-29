@@ -40,7 +40,7 @@ int moda(int* a, int n) {
         while (i < n && b[i] == 1) {
             i++;
         }
-        while (j < n &&(b[j] == 1 || j <=i)){
+        while (j < n && (b[j] == 1 || j <= i)){
             j++;
         }
     }
@@ -52,15 +52,17 @@ int moda(int* a, int n) {
   while( k < n && b[k] != 0){
       k++;
   }
+  delete [] b;
   assert(k < n);
   return a[k];
 }
 
 int main(int argc, char* argv[]){
     if(argc < 2){
-        cout<<"Falta archivo"<<endl;
+        cout << "Falta archivo" << endl;
         return 0;
     }
+
     string ruta = argv[1];
     fstream f (ruta.c_str());
     string salida;
@@ -79,18 +81,19 @@ int main(int argc, char* argv[]){
         int* a = new int[elementos];
         int i = 0;
         while(elementos > 0){
-            f >>a[i];
+            f >> a[i];
             i++;
             elementos--;
         }
-        int res =moda(a,buffer);
-        cout <<res;
+        int res = moda(a,buffer);
+        cout << res;
         delete a;
         o << res << endl;
         f >> buffer;
     }
     o.close();
     f.close();
+
     return 0;
 }
 
