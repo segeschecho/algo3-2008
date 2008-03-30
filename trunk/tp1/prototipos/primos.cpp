@@ -9,7 +9,7 @@ void maxFactorPrimTester(unsigned long long desde, unsigned long long hasta, cha
     ofstream output;
     output.open(archivo, ios_base::out);
 
-    for (unsigned long long num = desde; num <= hasta; num++){ 
+    for (unsigned long long num = desde; num <= hasta; num++){
         unsigned long long reconstruido = 1, n = num;
         int pot = 0;
         int maxPot = 1;
@@ -18,8 +18,8 @@ void maxFactorPrimTester(unsigned long long desde, unsigned long long hasta, cha
 
         cout << "Numero: \t" << n << endl;
         output << "Numero: \t" << n << endl;
-        output << "Factorizacion: \t"; 
-        output << "1"; 
+        output << "Factorizacion: \t";
+        output << "1";
         //Casos especiales
         // primo = 2
         while(n % 2 == 0){
@@ -65,8 +65,9 @@ void maxFactorPrimTester(unsigned long long desde, unsigned long long hasta, cha
         int cand = 7;
         int k = 1;
         pot = 0;
+        bool sumocinco = true;
         while(cand <= raiz){
-            bool sumocinco = true;
+
             //dividimos para obtener la potencia
             while(n % cand == 0){
                 pot++;
@@ -108,11 +109,11 @@ void maxFactorPrimTester(unsigned long long desde, unsigned long long hasta, cha
             }
         }
 
-        output << "\nReconstruido: \t" << reconstruido << endl; 
-        output << "Primo: \t\t" << maxPrim << endl; 
+        output << "\nReconstruido: \t" << reconstruido << endl;
+        output << "Primo: \t\t" << maxPrim << endl;
         output << "Potencia: \t" << maxPot << endl;
         output << "\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n";
-        cout << "Primo: \t\t" << maxPrim << endl; 
+        cout << "Primo: \t\t" << maxPrim << endl;
         cout << "Potencia: \t" << maxPot << endl;
         cout << "\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n";
     }
@@ -160,8 +161,9 @@ void maxFactorPrim(unsigned long long n, unsigned& primo, unsigned& potencia){
     int cand = 7;
     int k = 1;
     pot = 0;
+    bool sumocinco = true;
     while(cand <= raiz){
-        bool sumocinco = true;
+
         //dividimos para obtener la potencia
         while(n % cand == 0){
             pot++;
