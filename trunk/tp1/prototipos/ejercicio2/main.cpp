@@ -1,4 +1,7 @@
 #include <iostream>
+#include <assert.h>
+#include <string>
+#include <fstream>
 #include "SolucionPosible.h"
 using namespace std;
 void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsigned indice, unsigned cant,SolucionPosible& mejorSol);
@@ -46,23 +49,57 @@ void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsi
 }
 
 
-int main()
+int main(int argc, char* argv[])
 {
-    Cosa* c= new Cosa[3];
-    c[0] = Cosa(199,2);
-    c[1] = Cosa(2999,3);
-    c[2] = Cosa(39,4);
-    Camion cam = Camion(c,0,3);
-    SolucionPosible* s = new SolucionPosible(cam.cantCosas);
-    camion(cam,*s);
+    string ruta;
+    if(argc >= 2){
+        ruta = argv[1];
+    }
+    else{
+        ruta="Tp1Ej2.in";
+    }
+    fstream f (ruta.c_str());
+    string salida;
+    if(argc > 2)
+        salida = argv[2];
+    else
+        salida = "Tp1Ej2.out";
+
+    ofstream o (salida.c_str());
+    assert(f.is_open());
+    string caso;
+    f >> caso;
+    while(caso != "Fin"){
+        unsigned cantElem, capacidad;
+        f >> cantElem;
+        f >> capacidad;
+        Cosa* cs = new Cosa[cantElem];
+        for(unsigned i = 0; i < cantElem; i++){
+            unsigned costo,valor;
+            f>>valor;
+            f>>costo;
+            cs[i] = Cosa(valor,costo);
+        }
+        Camion cam = Camion(cs,capacidad,cantElem);
+        SolucionPosible* s = new SolucionPosible(cam.cantCosas);
+        camion(cam,*s);
+    o<<s->valor<<" ";
+    unsigned contador=0;
     for(unsigned int i = 0; i < cam.cantCosas; i++){
         if(s->guardo[i]){
-            cout<<cam.cosas[i]<<endl;
+            contador++;
         }
     }
-    cout<<s->costo<<endl;
-    cout<<s->valor<<endl;
-    delete c;
+    o<<contador<<" ";
+    for(unsigned int i = 0; i < cam.cantCosas; i++){
+        if(s->guardo[i]){
+            o<<i+1<<" ";
+        }
+    }
+    o<<endl;
+    delete cs;
     delete s;
-    return 0;
+    f>>caso;
+    }
+
 }

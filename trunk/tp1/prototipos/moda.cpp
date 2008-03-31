@@ -58,12 +58,13 @@ int moda(int* a, int n) {
 }
 
 int main(int argc, char* argv[]){
+    string ruta;
     if(argc < 2){
-        cout << "Falta archivo" << endl;
-        return 0;
+        ruta = argv[1];
     }
-
-    string ruta = argv[1];
+    else{
+        ruta="Tp1Ej3.in";
+    }
     fstream f (ruta.c_str());
     string salida;
     if(argc > 2)
