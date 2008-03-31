@@ -27,39 +27,47 @@ using namespace std;
     return a[k]
 */
 int moda(int* a, int n) {
-  int i = 0;
-  int j = 0;
-  int* b = new int[n];
+  int indiceDeAtras = 0;
+  int indiceDeAdelante = 0;
+  //en tachados guardaremos que elementos descartamos porq encontramos uno distinto
+  bool* tachados = new bool[n];
   for(int i = 0; i < n; i++) {
-      b[i] = 0;
+      tachados[i] = false;
   }
-  while(j < n) {
-    if (a[i] != a[j]) {
-        b[i] = 1;
-        b[j] = 1;
-        while (i < n && b[i] == 1) {
-            i++;
+
+  while(indiceDeAdelante < n) {
+    //si son distintos pasan a estar tachados
+    if (a[indiceDeAtras] != a[indiceDeAdelante]) {
+        tachados[indiceDeAtras] = true;
+        tachados[indiceDeAdelante] = true;
+        // movemos los indices para que lleguen al proximo elemento sin tachar, y ademas que valga
+        // que el de adelante quede adelante
+        while (indiceDeAtras < n && tachados[indiceDeAtras] ) {
+            indiceDeAtras++;
         }
-        while (j < n && (b[j] == 1 || j <= i)){
-            j++;
+        while (indiceDeAdelante < n && (tachados[indiceDeAdelante] || indiceDeAdelante <= indiceDeAtras)){
+            indiceDeAdelante++;
         }
     }
     else{
-        j++;
+        // si eran iguales, avanzamos buscando otro diferente
+        indiceDeAdelante++;
     }
   }
   int k = 0;
-  while( k < n && b[k] != 0){
+  // buscamos el primer elemento sin tachar y sabemos que es la moda
+  // o quedo solo 1 y es la moda, o quedaron varios iguales y que son la moda
+  while( k < n && tachados[k]){
       k++;
   }
-  delete [] b;
+  delete [] tachados;
   assert(k < n);
   return a[k];
 }
 
 int main(int argc, char* argv[]){
     string ruta;
-    if(argc < 2){
+    if(argc >= 2){
         ruta = argv[1];
     }
     else{
