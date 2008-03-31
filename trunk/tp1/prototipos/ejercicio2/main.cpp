@@ -5,7 +5,7 @@ void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsi
 
 void camion(Camion& c,SolucionPosible& mejorSol){
     // s es variable auxiliar para ir guardando las soluciones q se van armando
-    SolucionPosible * s = new SolucionPosible(c.cosas, c.cantCosas);
+    SolucionPosible * s = new SolucionPosible(c.cantCosas);
     //mejor sol va a guardar la solucion optima
     camionAux(*s,c.cosas,c.capacidad,0,c.cantCosas,mejorSol);
     delete s;
@@ -30,10 +30,10 @@ void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsi
 
     while(indice < cant){
         if(candActual.costo + cosas[indice].costo <= capacidad){
-            candActual.agregar(indice);
+            candActual.agregar(indice,cosas[indice].costo,cosas[indice].valor);
             camionAux(candActual,cosas, capacidad, indice+1, cant, mejorSol);
             //sacamos el elemento agregado, para hacer backtracking
-            candActual.sacar(indice);
+            candActual.sacar(indice,cosas[indice].costo, cosas[indice].valor);
         }
 
         indice  = indice + 1;
@@ -52,10 +52,16 @@ int main()
     c[0] = Cosa(199,2);
     c[1] = Cosa(2999,3);
     c[2] = Cosa(39,4);
-    Camion cam = Camion(c,400,3);
-    SolucionPosible* s = new SolucionPosible(cam.cosas, cam.cantCosas);
+    Camion cam = Camion(c,0,3);
+    SolucionPosible* s = new SolucionPosible(cam.cantCosas);
     camion(cam,*s);
-    cout<<*s<<endl;
+    for(unsigned int i = 0; i < cam.cantCosas; i++){
+        if(s->guardo[i]){
+            cout<<cam.cosas[i]<<endl;
+        }
+    }
+    cout<<s->costo<<endl;
+    cout<<s->valor<<endl;
     delete c;
     delete s;
     return 0;
