@@ -1,30 +1,29 @@
 #include "SolucionPosible.h"
 
-SolucionPosible ::SolucionPosible(Cosa* cs,unsigned cantcosas ){
+SolucionPosible ::SolucionPosible(unsigned cantcosas ){
     cantCosas = cantcosas;
-    cosas = new Cosa[cantCosas];
+
     guardo = new bool[cantCosas];
     for(unsigned i = 0; i < cantCosas; i++){
         guardo[i] = false;
-        cosas[i] = cs[i];
     }
     valor = 0;
     costo = 0;
 }
 
-void SolucionPosible :: agregar(unsigned i){
+void SolucionPosible :: agregar(unsigned i,unsigned cost, unsigned val){
     guardo[i] = true;
-    valor = valor + cosas[i].valor;
-    costo = costo + cosas[i].costo;
+    valor = valor + val;
+    costo = costo + cost;
 }
 
-void SolucionPosible :: sacar(unsigned i){
+void SolucionPosible :: sacar(unsigned i,unsigned cost, unsigned val){
     guardo[i] = false;
-    valor = valor - cosas[i].valor;
-    costo = costo - cosas[i].costo;
+    valor = valor - val;
+    costo = costo - cost;
 }
 
-std::ostream& operator<< (std::ostream& o, const SolucionPosible& s) {
+/*std::ostream& operator<< (std::ostream& o, const SolucionPosible& s) {
     for(unsigned i = 0; i < s.cantCosas; i++){
         if (s.guardo[i] == true){
          o<<s.cosas[i]<<endl;
@@ -34,7 +33,7 @@ std::ostream& operator<< (std::ostream& o, const SolucionPosible& s) {
      o<<"valor total:"<<s.valor<<endl;
      return o;
 
-}
+}*/
 
 SolucionPosible&  SolucionPosible ::  operator=(const SolucionPosible &otro){
     for(unsigned i = 0; i < otro.cantCosas; i++){
@@ -46,6 +45,6 @@ SolucionPosible&  SolucionPosible ::  operator=(const SolucionPosible &otro){
 }
 
 SolucionPosible :: ~SolucionPosible(){
-    delete cosas;
+
     delete guardo;
 }
