@@ -21,7 +21,7 @@ void camion(Camion& c,SolucionPosible& mejorSol) {
 // capacidad: capacidad del camion
 // cosas: arreglo con las cosas que hay para llevar
 // indice: posicion del arreglo que estoy tratando de meter
-// cant: tamaño del arreglo cosas
+// cant: tamaï¿½o del arreglo cosas
 // candActual: la solucion que voy construyendo
 // mejorSol: la mejor solucion encontrada hasta ahora
 
@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
         }
 
         o << endl;
-        delete cs;
+        delete [] cs;
         delete s;
 
         f >> caso;

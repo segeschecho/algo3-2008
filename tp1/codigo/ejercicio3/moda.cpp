@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
         }
         int res = moda(a,buffer);
         cout << res;
-        delete a;
+        delete [] a;
         o << res << endl;
         f >> buffer;
     }
