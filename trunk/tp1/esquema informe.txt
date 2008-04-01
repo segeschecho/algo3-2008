@@ -1,0 +1,13 @@
+informe:
+
+	for each in problemas:
+		descripcion de each
+		soluciones pensadas para each
+		solucion escogida paa each
+		pseudocodigo de el algoritmo solucion de each
+		analisis de complejidad del algortimo de each
+		analisis de peor caso para each
+		grafico promedio each
+		grafico borde each
+		conclusiones each
+	conclusion final
