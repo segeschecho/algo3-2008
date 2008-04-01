@@ -46,5 +46,5 @@ SolucionPosible&  SolucionPosible ::  operator=(const SolucionPosible &otro){
 
 SolucionPosible :: ~SolucionPosible(){
 
-    delete guardo;
+    delete[] guardo;
 }
