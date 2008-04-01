@@ -82,4 +82,5 @@ int main(int argc, char* argv[]) {
         o << n << " " << primo << " " << potencia << endl;
         f >> n;
     }
+    return 0;
 }
