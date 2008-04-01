@@ -1,4 +1,4 @@
-#include "camion.h"
+#include "Camion.h"
 
 Camion :: Camion(Cosa* cs, unsigned cap, unsigned cant){
     cosas = cs;
