@@ -5,12 +5,14 @@
 
 using namespace std;
 
-class Cosa{
+class Cosa {
     public:
         Cosa(){};
         Cosa(unsigned c, unsigned v);
+
         unsigned costo;
         unsigned valor;
+
         friend std::ostream& operator<< (ostream&, const Cosa&);
 };
 
