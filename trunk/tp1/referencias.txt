@@ -1,0 +1,3 @@
+//clase para hacer el benchmark
+
+http://cplus.about.com/od/howtodothingsi2/a/timing.htm
