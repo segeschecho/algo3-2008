@@ -3,7 +3,7 @@
 \begin{algorithmic}[1]
 \STATE indiceDeAtras $\Leftarrow$ 0
 \STATE indiceDeAdelante $\Leftarrow$ 0
-\STATE tachados $\leftarrow$ [bool] //los elementos de tachados inicializan en false
+\STATE tachados: [bool] //los elementos de tachados inicializan en false
 \WHILE{indiceDeAdelante < tamanio(a)}
     \IF{a_{indiceDeAtras} $\neq$ a_{indiceDeAdelante}}
         \STATE tachados $\Leftarrow$ tachar ambos elementos //donde: tachar i es asignar con true en el elemento iesimo de tachados
