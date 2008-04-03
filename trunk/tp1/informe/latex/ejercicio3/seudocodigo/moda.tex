@@ -1,0 +1,25 @@
+\begin{algorithm}
+\caption{Halla $moda$}
+\begin{algorithmic}[1]
+\STATE $indiceDeAtras \Leftarrow 0$
+\STATE $indiceDeAdelante \Leftarrow 0$
+\STATE $tachados \Leftarrow [bool]$
+\WHILE{$indiceDeAdelante < tamanio(a)$}
+    \IF{$a_{indiceDeAtras} \neq a_{indiceDeAdelante}$}
+        \STATE $tachados \Leftarrow tachar ambos elementos$ //donde: tachar i es asignar con false en el elemento iesimo de tachados
+
+        \WHILE{$(indiceDeAtras no exceda tamanio(arreglo) \and (a_{indiceDeAtras} no fue tachado)$}
+            \STATE $indiceDeAtras \Leftarrow indiceDeAtras + 1$
+        \ENDWHILE
+    
+        \WHILE{$(indiceDeAdelante no exceda tamanio(arreglo) \and (a_{indiceDeAdelante} no fue tachado \or indiceDeAdelante \leq indiceDeAtras)$}
+            \STATE $indiceDeAdelante \Leftarrow indiceDeAdelante + 1$
+        \ENDWHILE
+    \ELSE
+        \STATE $indiceDeAdelante \Leftarrow indiceDeAdelante + 1$
+    \ENDIF
+
+\ENDWHILE
+\STATE $moda \Leftarrow a_{indiceDeAtras}$
+\end{algorithmic}
+\end{algorithm}
