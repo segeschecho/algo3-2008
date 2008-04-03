@@ -1,11 +1,11 @@
 #include "Cosa.h"
 
-Cosa :: Cosa(unsigned v, unsigned c) {
+Cosa :: Cosa(unsigned v, unsigned p) {
     valor = v;
-    costo = c;
+    peso = p;
 }
 
 std::ostream& operator<< (std::ostream& o, const Cosa& c) {
-    return o << "Cosa de valor: " << c.valor << " y costo " << c.costo << endl;
+    return o << "Cosa de valor: " << c.valor << " y costo " << c.peso << endl;
 
 }

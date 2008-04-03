@@ -29,29 +29,27 @@ void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsi
     // cuando ya llegue hasta el ultimo elemento paro, pero me fijo si consegui una mejor solucion
     if(indice == cant && candActual.valor > mejorSol.valor) {
         mejorSol = candActual;
-        return;
     }
-
-    // caso base
-    if(indice == cant)
-        return;
-
-    // caso recursivo
-    while(indice < cant) {
-        if(candActual.costo + cosas[indice].costo <= capacidad) {
-            candActual.agregar(indice,cosas[indice].costo,cosas[indice].valor);
-            camionAux(candActual,cosas, capacidad, indice+1, cant, mejorSol);
-            
-            //sacamos el elemento agregado para hacer backtracking
-            candActual.sacar(indice,cosas[indice].costo, cosas[indice].valor);
+    else {
+        // caso base: indice == cant
+        if(indice != cant) {
+            // caso recursivo
+            while(indice < cant) {
+                if(candActual.peso + cosas[indice].peso <= capacidad) {
+                    candActual.agregar(indice,cosas[indice].peso,cosas[indice].valor);
+                    camionAux(candActual,cosas, capacidad, indice+1, cant, mejorSol);
+                    
+                    //sacamos el elemento agregado para hacer backtracking
+                    candActual.sacar(indice,cosas[indice].peso, cosas[indice].valor);
+                }
+                indice  = indice + 1;
+            }
+        
+            if(candActual.valor > mejorSol.valor) {
+                mejorSol = candActual;
+            }
         }
-        indice  = indice + 1;
     }
-
-    if(candActual.valor > mejorSol.valor) {
-        mejorSol = candActual;
-    }
-
 }
 
 
@@ -85,10 +83,10 @@ int main(int argc, char* argv[]) {
         f >> capacidad;
         Cosa* cs = new Cosa[cantElem];
         for(unsigned i = 0; i < cantElem; i++) {
-            unsigned costo, valor;
+            unsigned peso, valor;
             f >> valor;
-            f >> costo;
-            cs[i] = Cosa(valor,costo);
+            f >> peso;
+            cs[i] = Cosa(valor,peso);
         }
         
         // resuelvo este caso

@@ -10,7 +10,7 @@ class Cosa {
         Cosa(){};
         Cosa(unsigned c, unsigned v);
 
-        unsigned costo;
+        unsigned peso;
         unsigned valor;
 
         friend std::ostream& operator<< (ostream&, const Cosa&);
