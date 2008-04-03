@@ -5,14 +5,14 @@
 \STATE indiceDeAdelante $\Leftarrow$ 0
 \STATE tachados: [bool] //los elementos de tachados inicializan en false
 \WHILE{indiceDeAdelante $<$ tamanio(a)}
-    \IF{a_{indiceDeAtras} $\neq$ a_{indiceDeAdelante}}
+    \IF{$a_{indiceDeAtras}$ $\neq$ $a_{indiceDeAdelante}$}
         \STATE tachados $\Leftarrow$ tachar ambos elementos //donde: tachar i es asignar con true en el elemento iesimo de tachados
 
         \WHILE{(indiceDeAtras no exceda tamanio(arreglo) \& (indiceDeAtras no fue tachado)}
             \STATE indiceDeAtras $\leftarrow$ indiceDeAtras + 1
         \ENDWHILE
     
-        \WHILE{(indiceDeAdelante no exceda tamanio(arreglo) \& (indiceDeAdelante no fue tachado \or indiceDeAdelante $\leq$ indiceDeAtras)}
+        \WHILE{(indiceDeAdelante no exceda tamanio(arreglo) \& (indiceDeAdelante no fue tachado $|$ indiceDeAdelante $\leq$ indiceDeAtras)}
             \STATE indiceDeAdelante $\leftarrow$ indiceDeAdelante + 1
         \ENDWHILE
     \ELSE
@@ -20,6 +20,6 @@
     \ENDIF
 
 \ENDWHILE
-\STATE $moda \Leftarrow$ a_{indiceDeAtras}
+\STATE $moda \Leftarrow$ $a_{indiceDeAtras}$
 \end{algorithmic}
 \end{algorithm}
