@@ -1,0 +1,34 @@
+function limite(n):
+    return (int) ceil(sqrt(n))
+
+function primoDeMayorPotencia(n):
+    mejorPrimo = 1;
+    mejorPotencia = 0;
+
+    primoActual = generar_candidato()
+    potenciaActual = 0;
+
+    l = limite(n)
+
+    while n != 1:
+        if n > l:
+            primoActual = n;
+            potenciaActual = 1;
+            break;
+
+        if primoActual | n:
+            potenciaActual++;
+        else:
+            if potenciaActual >= mejorPotencia:
+                mejorPrimo = primoActual
+                mejorPotencia = potenciaActual
+
+            potenciaActual = 0
+            primoActual = generar_candidato()
+            l = limite(n)
+
+    if potenciaActual >= mejorPotencia:
+        mejorPrimo = primoActual
+        mejorPotencia = potenciaActual
+
+    return primo, potencia

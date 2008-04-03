@@ -1,0 +1,34 @@
+\begin{algorithm}
+\caption{Halla $mejorPrimo$ y $mejorPotencia$}
+\begin{algorithmic}[1]
+\STATE $mejorPrimo \Leftarrow 1$
+\STATE $primoPotencia \Leftarrow 0$
+\STATE $primoActual \Leftarrow generar_candidato()$
+\STATE $potenciaActual \Leftarrow 0$
+\STATE $l \Leftarrow limite(n)$
+\WHILE{$n \neq 0$}
+    \IF{$n > l$}
+        \STATE $primoActual \Leftarrow n$
+        \STATE $potenciaActual \Leftarrow 1$
+        \STATE $break$
+    \ENDIF
+
+    \IF{$primoActual | n$}
+        \STATE $primoActual++$
+    \ELSE
+        \IF{$potenciaActual \geq mejorPotencia$}
+            \STATE $mejorPrimo \Leftarrow primoActual$
+            \STATE $mejorPotencia \Leftarrow potenciaActual$
+        \ENDIF
+
+        \STATE $potenciaActual \Leftarrow 0$
+        \STATE $primoActual \Leftarrow generar_candidato()$
+        \STATE $l \Leftarrow limite(n)$
+    \ENDIF
+\ENDWHILE
+\IF{$potenciaActual \geq mejorPotencia$}
+    \STATE $mejorPrimo \Leftarrow primoActual$
+    \STATE $mejorPotencia \Leftarrow potenciaActual$
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
