@@ -8,19 +8,19 @@ SolucionPosible ::SolucionPosible(unsigned cantcosas ){
         guardo[i] = false;
     }
     valor = 0;
-    costo = 0;
+    peso = 0;
 }
 
 void SolucionPosible :: agregar(unsigned i,unsigned cost, unsigned val){
     guardo[i] = true;
     valor = valor + val;
-    costo = costo + cost;
+    peso = peso + cost;
 }
 
 void SolucionPosible :: sacar(unsigned i,unsigned cost, unsigned val){
     guardo[i] = false;
     valor = valor - val;
-    costo = costo - cost;
+    peso = peso - cost;
 }
 
 /*std::ostream& operator<< (std::ostream& o, const SolucionPosible& s) {
@@ -29,7 +29,7 @@ void SolucionPosible :: sacar(unsigned i,unsigned cost, unsigned val){
          o<<s.cosas[i]<<endl;
         }
      }
-     o<<"costo total:"<<s.costo<<endl;
+     o<<"peso total:"<<s.peso<<endl;
      o<<"valor total:"<<s.valor<<endl;
      return o;
 
@@ -40,7 +40,7 @@ SolucionPosible&  SolucionPosible ::  operator=(const SolucionPosible &otro){
         guardo[i] = otro.guardo[i];
     }
     valor = otro.valor;
-    costo = otro.costo;
+    peso = otro.peso;
     return *this;
 }
 

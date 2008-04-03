@@ -13,8 +13,8 @@ class SolucionPosible {
         bool* guardo;
         //guardo el valor acumulado de la sol, para no repetir calculos
         unsigned valor;
-        //idem pero para el costo
-        unsigned costo;
+        //idem pero para el peso
+        unsigned peso;
 
         SolucionPosible(unsigned cantCosas );
         ~SolucionPosible();
