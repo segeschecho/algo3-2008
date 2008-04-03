@@ -5,29 +5,21 @@ Cosa: tupla$<$costo, valor$>$ \\
 cosas = \{a1,....,$a_{cant}$\} \\
 
 \begin{algorithm}
-\caption{Halla la solución óptima al problema de la mochila}
+\caption{Halla la solución óptima $mejorSol$ al problema de la mochila}
 \begin{algorithmic}[1]
-    \STATE $SolucionPosible s \leftarrow crear Instancia de c.cantCosas$
-    \STATE $camionAux(s, c.cosas, c.capacidad, 0, c.cantCosas, mejorSol)$
-\end{algorithmic}
-\end{algorithm}
-
-\medskip
-\begin{algorithm}
-\begin{algorithmic}[1]
-    \IF{ ((probe con las cant cosas) \& (el valor de candActual es mayor al de mejorSol)) }
+    \IF{ probé con las cant cosas \& valor(candActual) $>$ valor(mejorSol) }
         \STATE mejorSol $\leftarrow$ candActual
     \ELSE
-        \IF {(no probe las cant cosas)}
-            \FOR {cada $a_i$ en cosas con i $\geq$ indice}
-                \IF {(no me paso del peso maximo agregando $a_i$ a candActual)}
+        \IF {no probé las cant cosas}
+            \FOR {cada $a_i$ en cosas con i $\geq$ índice}
+                \IF {no me paso del peso máximo agregando $a_i$ a candActual}
                     \STATE agregar($a_i$, candActual)
                     \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
                     \STATE sacar($a_i$, candActual)
                 \ENDIF
             \ENDFOR
 
-            \IF{(encontre mejor solucion)}
+            \IF{valor(candActual) $>$ valor(mejorSol)}
                 \STATE mejorSol $\leftarrow$ candActual
             \ENDIF
         \ENDIF
