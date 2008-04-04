@@ -1,3 +1,4 @@
+\chapter{Ejercicio 2 }
 \part{Ejercicio 2}
 \section{Enunciado}
 La empresa Musimundo cuenta con una serie de sucursales repartidas por el pa'is. Recientemente ha decidido cerrar su sucursal
@@ -48,13 +49,30 @@ Observando el pseudocodigo podemos notar que la ecuacion de recurrencia es la si
 %TODO: hacer la demo
 	$T(n) = 2*T(n-1) + k$\\
 	Ya que hacemos dos llamadas con el indice incrementado en una posicion.\\
+%TODO: hablar de cual es el peor caso
 
 %TODO: todo lo q de aca abajo
 \section{Analisis Experimental}
 \subsection{Experiencias realizadas}
+Para probar el comportamiento del algoritmo procedimos a medir tiempo y cantidad de operaciones. En ambos casos generamos muestras con un numero creciente de elementos (las caracteristicas de la muestra eran generadas al azar) y`por otro lado hicimos un analisis de peor caso. Como dijimos anteriormente, el peor caso es cuando no se puede podar ningun elemento por lo que hay que ver todas las soluciones.
+Cuando nos fue posible, utilizamos cuadrados minimos para buscar una funcion que se aproxime a las observaciones obtenidas, graficando dicha funcion para contrastarla con las observaciones.
 
 \subsection{Gr'aficos}
+%TODO: sergio hace los graficos con n creciente y aleatorio
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark/graficos/operacionesPeorCaso/cantOperacionesPeorCaso.png}
+\caption{Cantidad de operaciones en funcion de la cantidad de cosas en peor caso}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark-tiempos/graficos/tiempoPeorCaso/tiempobacktracking.png}
+\caption{Tiempo en funcion de la cantidad de cosas en peor caso}
+\end{figure}
 
 \section{Discusi'on}
+
 
 	
