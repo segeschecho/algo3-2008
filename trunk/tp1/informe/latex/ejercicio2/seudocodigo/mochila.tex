@@ -11,13 +11,12 @@ cosas = \{a1,....,$a_{cant}$\} \\
         \STATE mejorSol $\leftarrow$ candActual
     \ELSE
         \IF {no probé las cant cosas}
-            \FOR {cada $a_i$ en cosas con i $\geq$ índice}
                 \IF {no me paso del peso máximo agregando $a_i$ a candActual}
                     \STATE agregar($a_i$, candActual)
                     \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
                     \STATE sacar($a_i$, candActual)
                 \ENDIF
-            \ENDFOR
+            \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
 
             \IF{valor(candActual) $>$ valor(mejorSol)}
                 \STATE mejorSol $\leftarrow$ candActual

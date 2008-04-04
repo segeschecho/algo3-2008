@@ -34,17 +34,15 @@ void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsi
         // caso base: indice == cant
         if(indice != cant) {
             // caso recursivo
-            while(indice < cant) {
+
                 if(candActual.peso + cosas[indice].peso <= capacidad) {
                     candActual.agregar(indice,cosas[indice].peso,cosas[indice].valor);
                     camionAux(candActual,cosas, capacidad, indice+1, cant, mejorSol);
-                    
+
                     //sacamos el elemento agregado para hacer backtracking
                     candActual.sacar(indice,cosas[indice].peso, cosas[indice].valor);
                 }
-                indice  = indice + 1;
-            }
-        
+            camionAux(candActual,cosas, capacidad, indice+1, cant, mejorSol);
             if(candActual.valor > mejorSol.valor) {
                 mejorSol = candActual;
             }
@@ -54,7 +52,7 @@ void camionAux(SolucionPosible& candActual, Cosa* cosas, unsigned capacidad,unsi
 
 
 int main(int argc, char* argv[]) {
-    
+
     // leo los datos de entrada
     string ruta;
     if(argc >= 2) {
@@ -62,7 +60,7 @@ int main(int argc, char* argv[]) {
     } else {
         ruta="Tp1Ej2.in";
     }
-    fstream f (ruta.c_str()); 
+    fstream f (ruta.c_str());
     assert(f.is_open());
     string caso;
     f >> caso;
@@ -75,7 +73,7 @@ int main(int argc, char* argv[]) {
         salida = "Tp1Ej2.out";
     }
     ofstream o (salida.c_str());
- 
+
     // leo la secuencia de cosas
     while(caso != "Fin"){
         unsigned cantElem, capacidad;
@@ -88,7 +86,7 @@ int main(int argc, char* argv[]) {
             f >> peso;
             cs[i] = Cosa(valor,peso);
         }
-        
+
         // resuelvo este caso
         Camion cam = Camion(cs,capacidad,cantElem);
         SolucionPosible* s = new SolucionPosible(cam.cantCosas);

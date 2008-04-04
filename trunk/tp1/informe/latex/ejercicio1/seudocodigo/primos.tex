@@ -5,8 +5,8 @@
 \STATE $primoPotencia \Leftarrow 0$
 \STATE $primoActual \Leftarrow generar\_candidato()$
 \STATE $potenciaActual \Leftarrow 0$
-\STATE $l \Leftarrow limite(n)$
-\WHILE{$n \neq 0$}
+\STATE $l \Leftarrow limite(n)$ \COMMENT{limite es la raiz cuadrada de n}
+\WHILE{$n \neq 1$}
     \IF{$n > l$}
         \STATE $primoActual \Leftarrow n$
         \STATE $potenciaActual \Leftarrow 1$
