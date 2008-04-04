@@ -1,1 +1,69 @@
+\part{Enunciado}
+Dado un n'umero natural n mayor que 1, encontrar el n'umero primo p que aparece con mayor potencia en la factorizaci'on de n. En caso de haber m'as de un n'umero primo con  la mayor potencia, encontrar el mayor de ellos.
+
+\part{Desarrollo}
+\section{Introducci'on}
+La primer idea para resolver el ejercicio fue obtener los primos menores que el n'umero a factorizar
+(en adelante n) y luego obtener la potencia con la que cada uno lo divide, qued'andonos con el de mayor
+potencia o con el mayor de todos los de m'axima potencia. Sin embargo esta soluci'on era costosa, en la medida
+que necesitaba primeo obtener todos los n'umeros primos menores que n.
+\paragraph{}
+Un segundo acercamiento nos permiti'o salvar esta dificultad, de manera que no fue necesario obtener los primos menores a n expl'icitamente. El proceso consite en partir de 2, probar si 2,3,5 dividen a n y a partir  de aqu'i ciclar generando numeros de la forma 6*k + 1 o 6*k + 5 con k $\geq$ 1 (se puede probar que si un numero es primo mayor que 5 tiene esa forma. Ver Demostraci'on 1).
+\paragraph{}
+Cuando obtenemos que alguno lo divide seguimos dividiendo hasta obtener la potencia y si es mayor que la m'axima hasta el momento se actualiza. Cada vez que dividimos a n, nos quedamos con el cociente como nuevo n. Un problema de este m'etodo es que se hacen  divisiones por n'umeros que no son primos, pero el costo es menor que el de buscarlos o de decidir antes de  dividir si el candidato es primo. 
+\paragraph{}
+Es importante notar que si un numero no es primo, no lo puede dividir(ver demostraci'on 2). Si no pudieramos asegurar esto, el algoritmo fallar'ia, por ejemplo al factorizar 2*3*5 guardar'ia a 15 como m'aximo factor primo, lo cual claramente es erroneo. Finalmente, utilizamos un teorema que nos dice que si un numero es compuesto existe por lo menos un primo menor que su raiz que lo divide(ver demostracion3), de esta manera iteramos solo hasta la ra'iz del numero (la cual se actualiza luego de terminada la divisi'on por un primo) en vez de hasta n.
+
+\section{Demostraciones}
+\subsection{Teorema 1}
+\paragraph{Enunciado:}
+Sea p $\in$ $\enteros$, primo , p $>$ 5, entonces $\exists$ k $\in$ $\enteros$ $\geq$ 1  tal que p = $6*k+1$ o p = $6*k +5$.
+\paragraph{Demostraci'on:}
+Lo demostraremos por absurdo.\\ Supongamos que $\exists$ p $\in$ $\enteros$, primo, tal que p $>$ 5 y p $\not\equiv$ 1  $\mod{6}$ y p
+$\not\equiv$ 5  $\mod{6}$, luego p = $6*k + j$ con j $\in$ ${0,2,3,4}$
+si $j = 0$
+$6*k$ $\equiv$ 0  $\mod{6}$, absurdo pues p es primo
+si $j = 2$
+$6*k + 2$ $\equiv$ 0  $\mod{2}$, absurdo pues p es primo 
+si $j = 3$
+$6*k + 3$ $\equiv$ 0  $\mod{3}$, nuevamente absurdo
+si $j = 4$
+$6*k + 4$ $\equiv$ 0  $\mod{2}$, tambi'en llegamos a un absurdo.
+Ergo, si p es primo y p $>$ 5, entonces p = $6*k+1$ o p = $6*k +5$
+
+\subsection{Teorema 2}
+\paragraph{Enunciado:}
+Sea k $\in$ $\enteros$ compuesto, y sea n $\entero$ para todo p $\entero$, primo, p $<$ k, $(n:p) = 1$, entonces n $\not\equiv$ 0 $\mod{k}$
+\paragraph{Demostraci'on}
+Dado que k es compuesto existen $q_1,\ldots,q_j$ con $q_i$ primo tal que $q_1*\ldots*q_j = k$ \\
+Supongamos que n $\equiv$ 0 $\mod{k}$,\\
+Entonces como los $q_i$ son primos, vale que n $\equiv$ 0 $\mod{q_1}$ 'o ... 'o n $\equiv$ 0 $\mod{q_j}$ \\
+Pero sabemos que $q_i < k$ y que por lo tanto $(n:q_{i}) = 1$ \\
+Llegamos entonces a un absurdo que provino de suponer que  n $\equiv$ 0 $\mod{k}$ \\ 
+Luego n $\not\equiv$ 0 $\mod{k}$, que era lo que queriamos probar
+
+\subsection{Teorema 3}
+\paragraph{Enunciado:}
+k $\entero$, k $\neq$ 1, es compuesto $\longleftrightarrow$ $\exists$ p ,primo, tal que p $leq$ $\sqrt{k}$ y k $\equiv$ 0 $\mod{p}$ \\
+\paragraph{Demostracion:}
+$\leftarrow)$ trivial \\
+$\rightarrow$) Como k es compuesto se puede factorizar como $p_1*...*p_n$ con $p_i > \sqrt{k} \forall i \in {1...n}$\\
+Entonces \\
+$k = p_1*...*p_n > (\sqrt{k})^2* T $ , con T $>$ 1\\  
+$k = p_1*...*p_n > \sqrt{k}^2* T = k*T > k$ \\
+Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$\\
+
+\section{Pseudocodigo}
 \input{ejercicio1/seudocodigo/primos.tex}
+
+%TODO: todo lo q esta aca abajo
+\section{C'alculo de complejidad}
+
+\section{Analisis Experimental}
+\subsection{Experiencias realizadas}
+
+\subsection{Gr'aficos}
+
+\section{Discusi'on}
+
+

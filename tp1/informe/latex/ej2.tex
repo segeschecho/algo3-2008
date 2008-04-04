@@ -1,1 +1,60 @@
+\part{Ejercicio 2}
+\section{Enunciado}
+La empresa Musimundo cuenta con una serie de sucursales repartidas por el pa'is. Recientemente ha decidido cerrar su sucursal
+de Iruya y llevarse toda la mercader'ia al dep'osito central. Debido al dif'icil acceso ha dispuesto s'olo un cami'on para
+llevar toda la mercader'ia. Sin embargo, es posible que no todo el material pueda ser llevado en un s'olo viaje del cami'on
+d'ebido a las restricciones de carga, por lo que la parte que no entre en el cami'on ser'a vendida a valores despreciables el
+ d'ia del cierre.
+Dada la capacidad de carga m'axima P del cami'on y una lista de los productos del local conteniendo el valor $v_i$ y peso $p_i$ 
+de cada uno, encontrar la lista de productos de mayor valor que sea posible llevar en el cami'on sin que el peso total de la
+lista supere la carga m'axima. El valor de una lista de productos se calcula como la suma de los valores de los productos
+involucrados. En caso de haber varias listas con el mismo valor m'aximo, encuentre cualquiera de ellas.
+Realice un algoritmo para resolver el problema usando la t'ecnica de backtraking.
+
+\section{Desarrollo}
+Dado que el problema deb'ia ser resuelto con backtracking, buscamos la forma de aplicar dicha t'ecnica algor'itmica para la su resoluci'on. B'asicamente la idea es formar todos los subconjuntos de cosas para encontrar aquel que maximice la valor total.\\ 
+La restricci'on explicita es el conjunto de cosas a llevar y la restricci'on implicita es la capacidad de carga del cami'on. A 
+medida que vamos armando una solucion descartamos a aquellas cuya suma es mayor al peso que puede transportar el cami'on, de 
+esta manera vamos podando el arbol de posibles soluciones.
+De esta manera, construimos el siguiente arbol de recursion:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./ejercicio2/arbol.png}
+\end{figure}
+En la raiz del 'arbol tenemos la solucion conjunto vacio. Luego en cada nodo tenemos una n-upla donde un 0 en la posicion i 
+indica que el elemento i no se lleva, y un 1 indica que el elemento se lleva. Las hojas de este arbol son las soluciones 
+posibles. Como cada elemento puede estar o no estar tenemos para cada uno 2 posiblidades (llevarlo o no), luego la cantidad 
+posible de soluciones si tengo n elementos es $2^n$.\\
+Nuestro algoritmo toma como parametros las cosas que se pueden llevar, dos soluciones posibles, una que guarda la mejor 
+encontrada hasta el momento y otra que guarda la que voy construyendo, el peso maximo que se puede llevar y un indice que 
+indica sobre que cosa estoy decidiendo llevar o no.\\
+Basicamente una llamada a la funcion consiste en verificar si puedo agregar al elemento apuntado por indice, si es asi , es 
+decir que al agregarlo no me paso del peso maximo, lo agrego a la solucion candidata y llamo recursivamente. Luego se hace la 
+llamada sin agregar el elemento. Cuando encuntro una solucion mejor a la que hasta ese momento era optima la guardo. Repitiendo 
+el proceso podemos observar todas las hojas del arbol para quedarnos con la mejor.\\  
+
+Para implementar el algoritmo definimos los tipos Cosa, Camion y SolucionPosible ya que consideramos que de esta manera se 
+agrega claridad al mismo.
+
+\section{Pseudocodigo}
 \input{ejercicio2/seudocodigo/mochila.tex}
+
+\section{C'alculo de complejidad}
+Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
+cantidad de cosas a llevar. Por esa razon no nos parece desacertado considerar que el peso y el valor de las cosas estan 
+acotados. Por esta razon consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas que se pueden llevar.\\
+Para nuestro algoritmo, el peor caso se da cuando no puedo podar ninguna rama, es decir cuando se deben llaver todos los elementos, ya que entonces lo que hacemos es revisar las $2^n$ posibles soluciones.
+Observando el pseudocodigo podemos notar que la ecuacion de recurrencia es la siguiente:\\
+%TODO: hacer la demo
+	$T(n) = 2*T(n-1) + k$\\
+	Ya que hacemos dos llamadas con el indice incrementado en una posicion.\\
+
+%TODO: todo lo q de aca abajo
+\section{Analisis Experimental}
+\subsection{Experiencias realizadas}
+
+\subsection{Gr'aficos}
+
+\section{Discusi'on}
+
+	
