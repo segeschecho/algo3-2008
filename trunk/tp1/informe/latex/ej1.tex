@@ -1,8 +1,9 @@
-\part{Enunciado}
+\chapter{Ejercicio 1}
+\part{Ejercicio 1}
+\section{Enunciado}
 Dado un n'umero natural n mayor que 1, encontrar el n'umero primo p que aparece con mayor potencia en la factorizaci'on de n. En caso de haber m'as de un n'umero primo con  la mayor potencia, encontrar el mayor de ellos.
 
-\part{Desarrollo}
-\section{Introducci'on}
+\section{Desarrollo}
 La primer idea para resolver el ejercicio fue obtener los primos menores que el n'umero a factorizar
 (en adelante n) y luego obtener la potencia con la que cada uno lo divide, qued'andonos con el de mayor
 potencia o con el mayor de todos los de m'axima potencia. Sin embargo esta soluci'on era costosa, en la medida
@@ -44,7 +45,7 @@ Luego n $\not\equiv$ 0 $\mod{k}$, que era lo que queriamos probar
 
 \subsection{Teorema 3}
 \paragraph{Enunciado:}
-k $\entero$, k $\neq$ 1, es compuesto $\longleftrightarrow$ $\exists$ p ,primo, tal que p $leq$ $\sqrt{k}$ y k $\equiv$ 0 $\mod{p}$ \\
+k $\entero$, k $\neq$ 1; k es compuesto $\longleftrightarrow$ $\exists$ p ,primo, tal que p $\leq$ $\sqrt{k}$ y k $\equiv$ 0 $\mod{p}$ \\
 \paragraph{Demostracion:}
 $\leftarrow)$ trivial \\
 $\rightarrow$) Como k es compuesto se puede factorizar como $p_1*...*p_n$ con $p_i > \sqrt{k} \forall i \in {1...n}$\\
@@ -61,8 +62,45 @@ Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$\\
 
 \section{Analisis Experimental}
 \subsection{Experiencias realizadas}
+Para el analisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables para los numeros entre 2 y 100000 para observar un patron de comportamiento. A partir de esta experiencia, decidimos realizar otras dos, donde separamos numeros primos en una de ellas, y en otra tomamos las potencias de un primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es precisamente cuando el numero es primo, mientras que el mejor es cuando el numero es potencia de un primo. Por otro lado realizamos experiencias similares pero teniendo en cuenta no el numero, sino la cantidad de bits que lo representan, es decir teniendo en cuenta el tama\~{n}o de la entrada.
+%TODO: hacer los graficos de tamanio que no estan
 
 \subsection{Gr'aficos}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark/graficos/todos-los-numeros/graficosTodos.png}
+\caption{Cantidad de operaciones en funcion del n'umero}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark/graficos/primos/graficoPrimos.png}
+\caption{Cantidad de operaciones en funcion del n'umero para n'umeros primos}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark/graficos/potencias-de-7/graficoPotenciasDe7.png}
+\caption{Cantidad de operaciones en funcion del n'umero para n'umeros de la forma $7^k$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark-de-tiempo/graficos/todos-los-numeros/todosLosNumerosPuntosTiempo.png}
+\caption{Tiempo en funcion del n'umero}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark-de-tiempo/graficos/primos/primos-tiempo.png}
+\caption{Tiempo en funcion del n'umero para n'umeros primos}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark-de-tiempo/graficos/potencias-de-7/Potencias-de-7-tiempo.png}
+\caption{Tiempo en funcion del n'umero para n'umeros de la forma $7^k$}
+\end{figure}
 
 \section{Discusi'on}
 
