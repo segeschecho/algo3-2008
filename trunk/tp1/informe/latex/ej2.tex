@@ -42,10 +42,11 @@ Para implementar el algoritmo se definieron los tipos: Cosa, Camion y SolucionPo
 \section{C'alculo de complejidad}
 Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
 cantidad de cosas a llevar. Por esa razon no nos parece desacertado considerar que el peso y el valor de las cosas estan 
-acotados. Por esta razon consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas que se pueden llevar.\\
+acotados. Asi mismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas que se pueden llevar.\\
 Para nuestro algoritmo, el peor caso se da cuando no puedo podar ninguna rama, es decir cuando se deben llevar todos los elementos, ya que entonces lo que hacemos es revisar las $2^n$ posibles soluciones.
 Observando el pseudocodigo podemos notar que la ecuacion de recurrencia es la siguiente:\\
 %TODO: hacer la demo
+$T(0) = 1$\\
 $$T(n) = 2*T(n-1) + k$$\\
 Ya que hacemos dos llamadas con el indice incrementado en una posicion.\\
 El algoritmo resulta tener una complejidad asintotica en peor caso de $O(2^n)$. La demostraci'on de dicha afirmacion, es la siguiente:\\
@@ -62,6 +63,8 @@ Cuyas raices son $x = 1$ y $x = 2$. Con estos datos, $T(n)$ tiene la siguiente f
 
 \medskip
 Luego queda claro que $T(n) \in O(2^n)$.
+
+Para nuestro algoritmo el peor caso es cuando hay que llevar todos los elementos, ya que no se puede hacer poda en ningun momento. En este caso probara con todas las combinaciones hasta que quede que la mejor solucion era llevar todo. Ocurre lo contrario si no hay que llevar ningun elemento, ya que en cada paso hace solo una llamada recursiva(es decir la que no incluye al elemento actual)
 %TODO: hablar de cual es el peor caso
 
 \section{Analisis Experimental}
@@ -87,7 +90,7 @@ Cuando fue posible, se utiliz'o la tecnica de cuadrados minimos para buscar una 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_aumentando_cant_articulos/aumentandoCantArticulosPromedio.png}
-\caption{Tiempo en funcion de la cantidad de cosas en caso promedio}
+\caption{Tiempo en funcion de la cantidad de cosas (peso y valor aleatorios con distribucion uniforme)}
 \end{figure}
 
 \section{Discusi'on}
