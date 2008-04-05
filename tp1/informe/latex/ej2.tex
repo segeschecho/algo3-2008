@@ -40,6 +40,8 @@ agrega claridad al mismo.
 \section{Pseudocodigo}
 \input{ejercicio2/seudocodigo/mochila.tex}
 
+%TODO: completar esta demostracion, hablar de tamaño de entrada. Tarea de fede
+%hablar de peor caso
 \section{C'alculo de complejidad}
 Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
 cantidad de cosas a llevar. Por esa razon no nos parece desacertado considerar que el peso y el valor de las cosas estan 
@@ -51,7 +53,6 @@ Observando el pseudocodigo podemos notar que la ecuacion de recurrencia es la si
 	Ya que hacemos dos llamadas con el indice incrementado en una posicion.\\
 %TODO: hablar de cual es el peor caso
 
-%TODO: todo lo q de aca abajo
 \section{Analisis Experimental}
 \subsection{Experiencias realizadas}
 Para probar el comportamiento del algoritmo procedimos a medir tiempo y cantidad de operaciones. En ambos casos generamos muestras con un numero creciente de elementos (las caracteristicas de la muestra eran generadas al azar) y`por otro lado hicimos un analisis de peor caso. Como dijimos anteriormente, el peor caso es cuando no se puede podar ningun elemento por lo que hay que ver todas las soluciones.
