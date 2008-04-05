@@ -6,15 +6,15 @@ Dado un n'umero natural n mayor que 1, encontrar el n'umero primo p que aparece 
 %TODO: revisar la claridad de esto, ver si se puede mejorar
 \section{Desarrollo}
 La primer idea para resolver el ejercicio fue obtener los primos menores que el n'umero a factorizar
-(en adelante n) y luego obtener la potencia con la que cada uno lo divide, qued'andonos con el de mayor
-potencia o con el mayor de todos los de m'axima potencia. Sin embargo esta soluci'on era costosa, en la medida
-que necesitaba primeo obtener todos los n'umeros primos menores que n.
+(en adelante $n$) y luego obtener la potencia con la que cada uno lo divide, qued'andonos con el de mayor
+potencia o con el mayor de todos los de m'axima potencia. Sin embargo esta soluci'on era costosa, ya que requeria obtener primeramente todos aquellos primos que sean menores a $n$.
 \paragraph{}
-Un segundo acercamiento nos permiti'o salvar esta dificultad, de manera que no fue necesario obtener los primos menores a n expl'icitamente. El proceso consite en partir de 2, probar si 2,3,5 dividen a n y a partir  de aqu'i ciclar generando numeros de la forma 6*k + 1 o 6*k + 5 con k $\geq$ 1 (se puede probar que si un numero es primo mayor que 5 tiene esa forma. Ver Demostraci'on 1).
+Un segundo acercamiento nos permiti'o salvar esta dificultad, de manera que no fue necesario obtener los primos menores a $n$ expl'icitamente. El proceso consiste en partir de 2, probar manualmente si 2, 3 y 5 dividen a $n$ y a partir  de aqu'i ciclar generando numeros de la forma $6*k + 1$ o $6*k + 5$ con $k \geq 1$ (se puede demostrar que los numeros primos mayores que 5 tienen esta forma. Ver Demostraci'on 1).
 \paragraph{}
-Cuando obtenemos que alguno lo divide seguimos dividiendo hasta obtener la potencia y si es mayor que la m'axima hasta el momento se actualiza. Cada vez que dividimos a n, nos quedamos con el cociente como nuevo n. Un problema de este m'etodo es que se hacen  divisiones por n'umeros que no son primos, pero el costo es menor que el de buscarlos o de decidir antes de  dividir si el candidato es primo. 
+Cuando hallamos algun numero primo que divide a $n$, buscamos su multiplicidad dividiendo nuestro numero por dicho primo, las veces que sean posibles. Una vez calculada, se verifica si esta nueva multiplicidad es mayor a la guardada hasta el momento. Si lo es, esta es reemplazada por la nueva y se guarda. Una vez hecho esto se pasa al siguiente posible primo, repitiendo el proceso anterior pero ahora con un nuevo $n$ que llamaremos $n'$, que resulta de dividir $n$ por el numero primo, elevado a la potencia hallada. Este proceso se repite mientras nuestro proximo primo, no supere la raiz de $n'$. Un problema de este m'etodo es que se hacen divisiones por n'umeros que no son primos, pero su costo es menor comparandolo con otras metodologias que buscan todos los menores a $n$, o que verifican si dicho numero lo es antes de hacer la division.
 \paragraph{}
-Es importante notar que si un numero no es primo, no lo puede dividir(ver demostraci'on 2). Si no pudieramos asegurar esto, el algoritmo fallar'ia, por ejemplo al factorizar 2*3*5 guardar'ia a 15 como m'aximo factor primo, lo cual claramente es erroneo. Finalmente, utilizamos un teorema que nos dice que si un numero es compuesto existe por lo menos un primo menor que su raiz que lo divide(ver demostracion3), de esta manera iteramos solo hasta la ra'iz del numero (la cual se actualiza luego de terminada la divisi'on por un primo) en vez de hasta n.
+Es importante notar que si un numero no es primo, este no puede dividir a $n$ (ver demostraci'on 2). Si no se pudiera asegurar esto, el algoritmo fallar'ia.
+Un ejemplo simple seria al factorizar $30 = 2*3*5$. En este caso se guardar'ia a 15 como m'aximo factor primo, lo cual resulta claramente erroneo. Finalmente, utilizamos un teorema que nos dice que si un numero es compuesto existe por lo menos un primo menor que su raiz que lo divide (ver demostraci'on 3), de esta manera iteramos solo hasta la ra'iz del numero (la cual se actualiza luego de terminada la divisi'on) en vez de hasta $n$.
 
 \section{Demostraciones}
 \subsection{Teorema 1}
@@ -52,7 +52,7 @@ $\leftarrow)$ trivial \\
 $\rightarrow$) Como k es compuesto se puede factorizar como $p_1*...*p_n$ con $p_i > \sqrt{k} \forall i \in {1...n}$\\
 Entonces \\
 $k = p_1*...*p_n > (\sqrt{k})^2* T $ , con T $>$ 1\\  
-$k = p_1*...*p_n > \sqrt{k}^2* T = k*T > k$ \\
+$k = p_1*...*p_n > \sqrt{k}^2* T$ pero $k*T > k$ \\
 Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$\\
 
 %todo hacer el cambio al pseudocodigo para q sea mas facil la demo

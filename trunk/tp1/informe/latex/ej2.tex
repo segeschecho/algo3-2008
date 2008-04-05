@@ -13,29 +13,26 @@ involucrados. En caso de haber varias listas con el mismo valor m'aximo, encuent
 Realice un algoritmo para resolver el problema usando la t'ecnica de backtraking.
 
 \section{Desarrollo}
-Dado que el problema deb'ia ser resuelto con backtracking, buscamos la forma de aplicar dicha t'ecnica algor'itmica para la su resoluci'on. B'asicamente la idea es formar todos los subconjuntos de cosas para encontrar aquel que maximice la valor total.\\ 
+Dado que el problema deb'ia ser resuelto con backtracking, buscamos la forma de aplicar dicha t'ecnica algor'itmica para su resoluci'on. B'asicamente la idea es formar todos los subconjuntos de cosas para encontrar aquel que maximice el valor total.\\ 
 La restricci'on explicita es el conjunto de cosas a llevar y la restricci'on implicita es la capacidad de carga del cami'on. A 
-medida que vamos armando una solucion descartamos a aquellas cuya suma es mayor al peso que puede transportar el cami'on, de 
-esta manera vamos podando el arbol de posibles soluciones.
-De esta manera, construimos el siguiente arbol de recursion:
+medida que se va armando una soluci'on, son descartadas aquellas cuya suma es mayor al peso que puede transportar el cami'on, de 
+esta manera se va podando el 'arbol de posibles soluciones.
+De esta manera, se construye el siguiente 'arbol de recursion:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./ejercicio2/arbol.png}
 \end{figure}
-En la raiz del 'arbol tenemos la solucion conjunto vacio. Luego en cada nodo tenemos una n-upla donde un 0 en la posicion i 
-indica que el elemento i no se lleva, y un 1 indica que el elemento se lleva. Las hojas de este arbol son las soluciones 
-posibles. Como cada elemento puede estar o no estar tenemos para cada uno 2 posiblidades (llevarlo o no), luego la cantidad 
-posible de soluciones si tengo n elementos es $2^n$.\\
-Nuestro algoritmo toma como parametros las cosas que se pueden llevar, dos soluciones posibles, una que guarda la mejor 
-encontrada hasta el momento y otra que guarda la que voy construyendo, el peso maximo que se puede llevar y un indice que 
-indica sobre que cosa estoy decidiendo llevar o no.\\
-Basicamente una llamada a la funcion consiste en verificar si puedo agregar al elemento apuntado por indice, si es asi , es 
-decir que al agregarlo no me paso del peso maximo, lo agrego a la solucion candidata y llamo recursivamente. Luego se hace la 
-llamada sin agregar el elemento. Cuando encuntro una solucion mejor a la que hasta ese momento era optima la guardo. Repitiendo 
-el proceso podemos observar todas las hojas del arbol para quedarnos con la mejor.\\  
+En la raiz del 'arbol se tiene la solucion conjunto vacio. Luego en cada nodo se tiene una $n-upla$ donde un $0$ en la posicion $i$ 
+indica que el elemento $i$ no se lleva, y un $1$ indica que el elemento se lleva. Las hojas de este 'arbol son las soluciones 
+posibles. Como cada elemento puede estar o no estar, se tienen dos posibilidades para cada uno (llevarlo o no), esto implica que la cantidad 
+posible de soluciones si se tienen $n$ elementos es $2^n$.\\
+El algoritmo implementado toma como parametros las cosas que se pueden llevar, dos soluciones posibles, una en donde esta guardada la mejor 
+encontrada hasta el momento y otra que guarda la que se va construyendo, asi tambien el peso maximo que se puede llevar y un indice que 
+indica sobre que cosa se esta decidiendo llevar o no.\\
+Basicamente una llamada a la funci'on consiste en verificar si se agrega o no a la solucion el elemento apuntado por indice, si es asi, es 
+decir que al agregarlo, el peso total no exede el peso maximo, se agrega a la soluci'on candidata, luego de esto se continua con la siguiente llamada recursiva. Esta consiste en una llamada sin agregar el elemento apuntado por indice. Cuando se encuentra una soluci'on mejor a la optima actualmente, esta es reemplazada. Repitiendo este proceso se pueden observar todas las hojas del arbol, para quedarse con la mejor.\\  
 
-Para implementar el algoritmo definimos los tipos Cosa, Camion y SolucionPosible ya que consideramos que de esta manera se 
-agrega claridad al mismo.
+Para implementar el algoritmo se definieron los tipos: Cosa, Camion y SolucionPosible. Con la finalidad de aportar mas claridad al mismo.
 
 \section{Pseudocodigo}
 \input{ejercicio2/seudocodigo/mochila.tex}
@@ -46,17 +43,31 @@ agrega claridad al mismo.
 Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
 cantidad de cosas a llevar. Por esa razon no nos parece desacertado considerar que el peso y el valor de las cosas estan 
 acotados. Por esta razon consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas que se pueden llevar.\\
-Para nuestro algoritmo, el peor caso se da cuando no puedo podar ninguna rama, es decir cuando se deben llaver todos los elementos, ya que entonces lo que hacemos es revisar las $2^n$ posibles soluciones.
+Para nuestro algoritmo, el peor caso se da cuando no puedo podar ninguna rama, es decir cuando se deben llevar todos los elementos, ya que entonces lo que hacemos es revisar las $2^n$ posibles soluciones.
 Observando el pseudocodigo podemos notar que la ecuacion de recurrencia es la siguiente:\\
 %TODO: hacer la demo
-	$T(n) = 2*T(n-1) + k$\\
-	Ya que hacemos dos llamadas con el indice incrementado en una posicion.\\
+$$T(n) = 2*T(n-1) + k$$\\
+Ya que hacemos dos llamadas con el indice incrementado en una posicion.\\
+El algoritmo resulta tener una complejidad asintotica en peor caso de $O(2^n)$. La demostraci'on de dicha afirmacion, es la siguiente:\\
+Queremos probar que $T(n) \in O(2^n)$. Para esto planteamos las siguientes igualdades:\\
+$$a: T(n) = 2*T(n-1) + k$$\\
+$$b: T(n+1) = 2*T(n) + k$$\\
+Luego restamos $a$ con $b$ y dejamos todo de un lado de la igualdad y nos queda:\\
+$$T(n+1) - 3*T(n) + 2*T(n-1) = 0$$\\
+Con esto usamos las ecuaciones caracter'isticas, dando resultado al siguiente polinomio:\\
+$$x^2 - 3*x + 2 = 0$$\\
+Cuyas raices son $x = 1$ y $x = 2$. Con estos datos, $T(n)$ tiene la siguiente forma:\\
+
+\centerline{$T(n) = A*1^n + B*2^n = A + B*2^n$  para A y B constantes}
+
+\medskip
+Luego queda claro que $T(n) \in O(2^n)$.
 %TODO: hablar de cual es el peor caso
 
 \section{Analisis Experimental}
 \subsection{Experiencias realizadas}
-Para probar el comportamiento del algoritmo procedimos a medir tiempo y cantidad de operaciones. En ambos casos generamos muestras con un numero creciente de elementos (las caracteristicas de la muestra eran generadas al azar) y`por otro lado hicimos un analisis de peor caso. Como dijimos anteriormente, el peor caso es cuando no se puede podar ningun elemento por lo que hay que ver todas las soluciones.
-Cuando nos fue posible, utilizamos cuadrados minimos para buscar una funcion que se aproxime a las observaciones obtenidas, graficando dicha funcion para contrastarla con las observaciones.
+Para probar el comportamiento del algoritmo, se procedi'o a medir los tiempos y la cantidad de operaciones. En ambos casos se generaron muestras con un numero creciente de elementos (las caracteristicas de la muestra fueron generadas al azar) y por otro lado se hizo un analisis del peor caso. Como se dijo anteriormente, el peor caso se da cuando no se puede podar ningun elemento, por lo tanto, es necesario ver todas las soluciones(es decir, recorrer todo el arbol).
+Cuando fue posible, se utiliz'o la tecnica de cuadrados minimos para buscar una funci'on que aproxime a las observaciones obtenidas, para graficar dicha funci'on y contrastarla con las observaciones.
 
 \subsection{Gr'aficos}
 %TODO: sergio hace los graficos con n creciente y aleatorio
@@ -71,6 +82,12 @@ Cuando nos fue posible, utilizamos cuadrados minimos para buscar una funcion que
 \centering
 \includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_peor_caso/tiempobacktracking.png}
 \caption{Tiempo en funcion de la cantidad de cosas en peor caso}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_aumentando_cant_articulos/aumentandoCantArticulosPromedio.png}
+\caption{Tiempo en funcion de la cantidad de cosas en caso promedio}
 \end{figure}
 
 \section{Discusi'on}
