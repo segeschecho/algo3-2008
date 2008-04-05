@@ -23,7 +23,7 @@ Se Busc'o entonces otra forma de  obtener un orden lineal aprovechando que la fr
 \subsection{Experiencias realizadas}
 Nuevamente para este algoritmo se decidi'o medir tanto la cantidad de operaciones como el tiempo, en funcion de la cantidad de 
 elementos del arreglo, con la intencion de confirmar nuestro analisis te'orico. Para ello se generaron arreglos de largo creciente 
-con elementos al azar (distribuci'on uniforme) respetando que la frecuencia de la moda sea de por lo menos $n/2+1$\\
+con elementos al azar (distribuci'on uniforme) respetando que la frecuencia de la moda sea de por lo menos $n/2+1$.\\
 Por otro lado para observer la influencia de la frecuencia de la moda en el comportamiento del algoritmo se hicieron corridas de prueba
 para un $n$ fijo aumentando la frecuencia y midiendo la cantidad de operaciones asi como el tiempo.\\
 En algunos casos adem'as fue posible utilizando la tecnica de cuadrados m'inimos, dar una funci'on que aproxime el comportamiento obtenido experimentalmente. En dichos casos, la ecuacion de $f(x)$ se encuentra en el gr'afico.
@@ -32,27 +32,27 @@ En algunos casos adem'as fue posible utilizando la tecnica de cuadrados m'inimos
 %TODO: rehacer estos graficos es al pedo tener 10^-5 segundos, pasar a milisegundos por lo menos (opcional por ahora)
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio3/benchmark/graficos/corridas_aleatorias_n_creciente/grafico.png}
+\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark/graficos/corridas_aleatorias_n_creciente/grafico.png}
 \caption{Cantidad de operaciones en funcion del tama\~{n}o del arreglo}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio3/benchmark/graficos/frecuencia/frecuencia.png}
-\caption{Cantidad de operaciones en funcion de la frecuencia (n = 501)}
+\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark/graficos/frecuencia/frecuencia.png}
+\caption{Cantidad de operaciones en funci'on de la frecuencia ($n$ = 500)}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/moda-1000-casos.jpg}
+\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/moda-1000-casos.png}
 %TODO: rehacer este grafico es al pedo tener 10^-5 segundos, pasar a milisegundos por lo menos 
-\caption{Tiempo (segundos) en funcion del tama\~{n}o del arreglo}
+\caption{Tiempo (milisegundos) en funci'on del tama\~{n}o del arreglo}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/aumento-frecuencia.jpg}
-\caption{Tiempo (segundos) en funcion de la frecuencia (n = 501)}
+\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/aumento-frecuencia.png}
+\caption{Tiempo (milisegundos) en funci'on de la frecuencia ($n$ = 500)}
 \end{figure}
 
 \section{Discusi'on}
