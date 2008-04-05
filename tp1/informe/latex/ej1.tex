@@ -46,7 +46,7 @@ Luego n $\not\equiv$ 0 $\mod{k}$, que era lo que queriamos probar
 
 \subsection{Teorema 3}
 \paragraph{Enunciado:}
-k $\entero$, k $\neq$ 1; k es compuesto $\longleftrightarrow$ $\exists$ p ,primo, tal que p $\leq$ $\sqrt{k}$ y k $\equiv$ 0 $\mod{p}$ \\
+k $\entero$, k $>$ 1; k es compuesto $\longleftrightarrow$ $\exists$ p ,primo, tal que p $\leq$ $\sqrt{k}$ y k $\equiv$ 0 $\mod{p}$ \\
 \paragraph{Demostracion:}
 $\leftarrow)$ trivial \\
 $\rightarrow$) Como k es compuesto se puede factorizar como $p_1*...*p_n$ con $p_i > \sqrt{k} \forall i \in {1...n}$\\
@@ -66,7 +66,7 @@ Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$\\
 %TODO: hablar de que sabemos q n no es tam de entrada, que dejamos los graficos porq se ve bien el o(sqrtn), ojo con esto q me parece q es O(raiz*log^3)
 \section{Analisis Experimental}
 \subsection{Experiencias realizadas}
-Para el analisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables para los numeros entre 2 y 100000 para observar un patron de comportamiento. A partir de esta experiencia, decidimos realizar otras dos, donde separamos numeros primos en una de ellas, y en otra tomamos las potencias de un primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es precisamente cuando el numero es primo, mientras que el mejor es cuando el numero es potencia de un primo. Por otro lado realizamos experiencias similares pero teniendo en cuenta no el numero, sino la cantidad de bits que lo representan, es decir teniendo en cuenta el tama\~{n}o de la entrada.
+Para el analisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables para los numeros entre 2 y 100000 para observar un patron de comportamiento. A partir de esta experiencia, decidimos realizar otras dos, donde separamos numeros primos en una de ellas, y en otra tomamos las potencias de un primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es precisamente cuando el numero es primo, mientras que el mejor es cuando el numero es potencia de un primo. Por otro lado realizamos experiencias similares pero teniendo en cuenta no el numero, sino la cantidad de bits que lo representan, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experriencias tomamos distintos numeros pero medimos la cantidad de operaciones y el tiempo, pero no para un n. sino para $floor(log_2(n))$ + 1$ 
 %TODO: hacer los graficos de tamanio que no estan
 %TODO: revisar los graficos, tratar de q las leyendas se vean bien.
 \subsection{Gr'aficos}
