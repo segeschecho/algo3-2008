@@ -39,20 +39,20 @@ Sea k $\in$ $\enteros$ compuesto, y sea n $\entero$ para todo p $\entero$, primo
 \paragraph{Demostraci'on}
 Dado que k es compuesto existen $q_1,\ldots,q_j$ con $q_i$ primo tal que $q_1*\ldots*q_j = k$ \\
 Supongamos que n $\equiv$ 0 $\mod{k}$,\\
-Entonces como los $q_i$ son primos, vale que n $\equiv$ 0 $\mod{q_1}$ 'o ... 'o n $\equiv$ 0 $\mod{q_j}$ \\
+Entonces como los $q_i$ son primos, vale que n $\equiv$ 0 $\mod{q_1}$ 'o ... 'o $n \equiv 0 \mod{q_j}$ \\
 Pero sabemos que $q_i < k$ y que por lo tanto $(n:q_{i}) = 1$ \\
-Llegamos entonces a un absurdo que provino de suponer que  n $\equiv$ 0 $\mod{k}$ \\ 
-Luego n $\not\equiv$ 0 $\mod{k}$, que era lo que queriamos probar
+Llegamos entonces a un absurdo que provino de suponer que  $n \equiv 0 \mod{k}$ \\ 
+Luego $n \not\equiv 0 \mod{k}$, que era lo que queriamos probar
 
 \subsection{Teorema 3}
 \paragraph{Enunciado:}
-k $\entero$, k $>$ 1; k es compuesto $\longleftrightarrow$ $\exists$ p ,primo, tal que p $\leq$ $\sqrt{k}$ y k $\equiv$ 0 $\mod{p}$ \\
+$k$ $\entero$, $k>1$; $k$ es compuesto $\longleftrightarrow$ $\exists p$ ,primo, tal que $p \leq \sqrt{k}$ y $k \equiv 0 \mod{p}$ \\
 \paragraph{Demostracion:}
 $\leftarrow)$ trivial \\
-$\rightarrow$) Como k es compuesto se puede factorizar como $p_1*...*p_n$ con $p_i > \sqrt{k} \forall i \in {1...n}$\\
+$\rightarrow$) Como $k$ es compuesto se puede factorizar como $p_1*...*p_n$ con $p_i > \sqrt{k} \forall i \in {1...n}$\\
 Entonces \\
-$k = p_1*...*p_n > (\sqrt{k})^2* T $ , con T $>$ 1\\  
-$k = p_1*...*p_n > \sqrt{k}^2* T$ pero $k*T > k$ \\
+$k = p_1*...*p_n > (\sqrt{k})^2*T$ , con $T>1$\\  
+$k = p_1*...*p_n > \sqrt{k}^2*T$ pero $k*T > k$ \\
 Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$\\
 
 %todo hacer el cambio al pseudocodigo para q sea mas facil la demo
@@ -66,25 +66,25 @@ Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$\\
 %TODO: hablar de que sabemos q n no es tam de entrada, que dejamos los graficos porq se ve bien el o(sqrtn), ojo con esto q me parece q es O(raiz*log^3)
 \section{Analisis Experimental}
 \subsection{Experiencias realizadas}
-Para el analisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables para los numeros entre 2 y 100000 para observar un patron de comportamiento. A partir de esta experiencia, decidimos realizar otras dos, donde separamos numeros primos en una de ellas, y en otra tomamos las potencias de un primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es precisamente cuando el numero es primo, mientras que el mejor es cuando el numero es potencia de un primo. Por otro lado realizamos experiencias similares pero teniendo en cuenta no el numero, sino la cantidad de bits que lo representan, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experriencias tomamos distintos numeros pero medimos la cantidad de operaciones y el tiempo, pero no para un n. sino para $floor(log_2(n))$ + 1$ 
+Para el analisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables para los numeros entre 2 y 100000 para observar un patron de comportamiento. A partir de esta experiencia, decidimos realizar otras dos, donde separamos numeros primos en una de ellas, y en otra tomamos las potencias de un primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es precisamente cuando el numero es primo, mientras que el mejor es cuando el numero es potencia de un primo. Por otro lado realizamos experiencias similares pero teniendo en cuenta no el numero, sino la cantidad de bits que lo representan, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experriencias tomamos distintos numeros pero medimos la cantidad de operaciones y el tiempo, pero no para un n. sino para $floor(log_2(n)) + 1$ 
 %TODO: hacer los graficos de tamanio que no estan
 %TODO: revisar los graficos, tratar de q las leyendas se vean bien.
 \subsection{Gr'aficos}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark/graficos/todos_los_numeros/graficosTodos.png}
+\includegraphics[scale=0.8]{../../codigo/ejercicio1/benchmark/graficos/todos_los_numeros/graficosTodos.png}
 \caption{Cantidad de operaciones en funcion del n'umero}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark/graficos/primos/graficoPrimos.png}
+\includegraphics[scale=0.8]{../../codigo/ejercicio1/benchmark/graficos/primos/graficoPrimos.png}
 \caption{Cantidad de operaciones en funcion del n'umero para n'umeros primos}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark/graficos/potencias_de_7/graficoPotenciasDe7.png}
+\includegraphics[scale=0.8]{../../codigo/ejercicio1/benchmark/graficos/potencias_de_7/graficoPotenciasDe7.png}
 \caption{Cantidad de operaciones en funcion del n'umero para n'umeros de la forma $7^k$}
 \end{figure}
 
