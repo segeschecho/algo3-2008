@@ -89,7 +89,45 @@ def primoDeMayorPotencia(n):
 
     return mejorPrimo, mejorPotencia
 
+def primoDeMayorPotencia2(n):
+    assert(n > 1)
+
+    mejorPrimo = 1
+    mejorPotencia = 0
+
+    f = FabricaPrimos()
+    primoActual = f.next()
+    potenciaActual = 0
+    
+    s = int(ceil(sqrt(n)))
+
+    while n != 1 and primoActual <= s:
+        if n % primoActual == 0:
+            potenciaActual += 1
+            n = n / primoActual
+        else:
+            if potenciaActual >= mejorPotencia:
+                mejorPrimo = primoActual
+                mejorPotencia = potenciaActual
+
+            potenciaActual = 0
+            primoActual = f.next()
+            s = int(ceil(sqrt(n)))
+
+    if primoActual > s:
+        primoActual = n
+        potenciaActual = 1
+
+    if potenciaActual >= mejorPotencia:
+        mejorPrimo = primoActual
+        mejorPotencia = potenciaActual
+
+    return mejorPrimo, mejorPotencia
 
 if __name__ == '__main__':
-    import sys
-    print primoDeMayorPotencia(int(sys.argv[1]))
+
+    for each in range(2, 10000):
+        if primoDeMayorPotencia(each) != primoDeMayorPotencia2(each):
+            print "no anda con n=%s" % each
+    #import sys
+    #print primoDeMayorPotencia(int(sys.argv[1]))
