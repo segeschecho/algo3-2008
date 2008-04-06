@@ -22,7 +22,7 @@ encontrar la mediana de un arreglo en orden lineal sin necesidad de ordenarlo. E
 se basa en el uso de un pivote para partir el arreglo y quedarse solo con la parte donde se 
 puede encontrar la mediana. Es necesario para tener orden lineal poder encontrar un buen pivote 
 en un orden a lo sumo lineal. El algoritmo resuelve esto partiendo el arreglo principal en arreglos
-de 5 elementos, tomando la mediana de 'estos y luego tomando una seudomediana a partir de dicha ``mediana''. 
+de 5 elementos, tomando la mediana de 'estos y luego tomando una pseudomediana a partir de dicha ``mediana''. 
 Se puede demostrar que este procedimiento permite encontrar la mediana en un orden lineal. Esta 
 soluci'on se descarto ya que su implementaci'on era bastante complicada, lo cual no resultaba conveniente 
 teniendo en cuenta que luego deber'iamos realizar un an'alisis del algoritmo para determinar su
@@ -44,7 +44,7 @@ $n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1) 
 fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal buscado y su implementaci'on 
 era simple.
 
-\section{Seudoc'odigo}
+\section{Pseudoc'odigo}
 \newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
@@ -97,5 +97,5 @@ aumenta de forma lineal. Lo mismo ocurre con la cantidad de operaciones. Esta si
 corresponde con el an'alisis te'orico que se realiz'o. Por otro lado en los gr'aficos en funci'on 
 de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer linealmente. Esto 
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se
-explica de la siguiente manera: si todos los elementos son iguales a la moda, el if de la linea 5 del seudoc'odigo
+explica de la siguiente manera: si todos los elementos son iguales a la moda, el if de la linea 5 del pseudoc'odigo
 siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin hacer otro tipo de operación.
