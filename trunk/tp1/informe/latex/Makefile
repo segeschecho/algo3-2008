@@ -6,4 +6,5 @@ tp1.pdf:
 clean:
 	rm -f *.aux
 	rm -f *.log
+	rm -f tp1.toc
 	rm -f tp1.pdf
