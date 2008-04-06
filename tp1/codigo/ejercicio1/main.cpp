@@ -21,14 +21,7 @@ void primoDeMayorPotencia(int n, int& primo, int& potencia) {
     
     int s = (int) ceil(sqrt(n));
 
-    while (n != 1) {
-        // si me paso de la raiz, pruebo con el numero
-        if (primoActual > s) {
-            primoActual = n;
-            potenciaActual = 1;
-            break;
-        }
-
+    while (n != 1 && primoActual <= s) {
         if (n % primoActual == 0) {
             potenciaActual++;
             n = n / primoActual;
@@ -42,6 +35,10 @@ void primoDeMayorPotencia(int n, int& primo, int& potencia) {
             primoActual = fab.siguiente();
             s = (int) ceil(sqrt(n));
         }
+    }
+    if (primoActual > s) {
+        primoActual = n;
+        potenciaActual = 1;
     }
 
     // vemos que ocurre con el ultimo primo
