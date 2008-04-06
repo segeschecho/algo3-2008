@@ -85,7 +85,7 @@ y genera candidatos a n'umeros primos como se describi'o en el Teorema 1
 %TODO: hablar del calculo de complejidad, de porq logaritmico, hacer el calculo
 %TODO: analisis de peor caso!
 \section{C'alculo de complejidad}
-En este ejercicio usaremos el modelo logaritmico para deducir el orden de complejidad de nuestro algoritmo. Este modelo fue elegido para poder representar lo mas fielmente posible, el verdadero orden de dicho algoritmo. Primeramente nos centraremos en la complejidad tomando como tama\~{n}o de entrada al valor de $n$, realizar una medici'on en base a esto, y concluir con el verdadero orden de complejidad en base a el tama\~{n}o de dicho $n$.\\
+En este ejercicio usaremos el modelo logaritmico para calcular el orden de complejidad de nuestro algoritmo. Este modelo fue elegido ya que como nuestra entrada es un numero no nos parece correcto suponer que las operaciones tienen un coste constatne, pues el numero no esta acotdao. P
 A continuaci'on, deduciremos la funci'on $T(n)$, tomando en cuenta el peor caso que puede tener el algoritmo. Este caso se da cuando el numero ingresado es primo, y no es un numero compuesto. Por lo tanto, si se observa el pseudocodigo, el ciclo principal se ejecutar'a tantas veces como lo diga $l$ (que representa a $\sqrt{n}$), lo mismo que sus $dos$ guardas. Ademas como $n$ es primo, implica que el algoritmo nunca entrar'a al primer y segundo $Si$, apesar de que las $dos$ guardas de dichos $Si$ se har'an. Luego de esto solo queda mirar las $tres$ ultimas asiganciones del ciclo. Con esta explicaci'on podemos deducir una parte de nuestra funci'on $T(n)$.
 $$\sum_{i=1}^{\sqrt{n}}7$$\\
 Ahora solo resta ver que pasa afuera del ciclo. Antes de el hay $cinco$ asignaciones, y despu'es de el, si consideramos el peor caso, el algoritmo entrar'a en el primer $Si$, har'a $dos$ asignaciones, y luego ejecutar'a la guarda del ultimo $Si$ sin entrar. Con esto podemos escribir la funci'on $T(n)$ buscada y obtener su complejidad.\\
@@ -108,9 +108,11 @@ tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo e
 %TODO: revisar los graficos, tratar de q las leyendas se vean bien.
 
 \subsection{Gr'aficos}
+\subsubsection{Gr'aficos en funcion de n}
+
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio1/benchmark/graficos/todos_los_numeros/graficosTodos.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio1/benchmark/graficos/todos_los_numeros/graficosTodos.png}
 \caption{Cantidad de operaciones en funci'on de $n$}
 \end{figure}
 
@@ -131,17 +133,23 @@ tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo e
 \includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/todos_los_numeros/todosLosNumerosPuntosTiempo.png}
 \caption{Tiempo en funci'on de $n$}
 \end{figure}
-
+%
+%\begin{figure}[H]
+%\centering
+%\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/primos/primosTiempo.png}
+%\caption{Tiempo en funci'on de $n$ para $n$ primo}
+%\end{figure}
+%
+%\begin{figure}[H]
+%\centering
+%\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/potencias_de_7/Potencias_de_7_tiempo.png}
+%\caption{Tiempo en funci'on de $n$ para $n$ de la forma $7^k$}
+%\end{figure}
+\subsubsection{Gr'aficos en funcion del tama\~{n}o de la entrada}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/primos/primosTiempo.png}
-\caption{Tiempo en funci'on de $n$ para $n$ primo}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/potencias_de_7/Potencias_de_7_tiempo.png}
-\caption{Tiempo en funci'on de $n$ para $n$ de la forma $7^k$}
+\includegraphics[scale=0.7]{../../codigo/ejercicio1/benchmark/graficos/tamanio_Entrada_T/operacionesEntrada.png}
+\caption{Cantidad de operaciones en funci'on del tama\~{n}o de la entrada}
 \end{figure}
 
 \section{Discusi'on}
