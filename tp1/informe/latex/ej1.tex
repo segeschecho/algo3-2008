@@ -86,13 +86,90 @@ y genera candidatos a n'umeros primos como se describi'o en el Teorema 1
 %TODO: hablar del calculo de complejidad, de porq logaritmico, hacer el calculo
 %TODO: analisis de peor caso!
 \section{C'alculo de complejidad}
-En este ejercicio usaremos el modelo logaritmico para calcular el orden de complejidad de nuestro algoritmo. Este modelo fue elegido ya que como nuestra entrada es un numero no nos parece correcto suponer que las operaciones tienen un coste constatne, pues el numero no esta acotdao. P
-A continuaci'on, deduciremos la funci'on $T(n)$, tomando en cuenta el peor caso que puede tener el algoritmo. Este caso se da cuando el numero ingresado es primo, y no es un numero compuesto. Por lo tanto, si se observa el pseudocodigo, el ciclo principal se ejecutar'a tantas veces como lo diga $l$ (que representa a $\sqrt{n}$), lo mismo que sus $dos$ guardas. Ademas como $n$ es primo, implica que el algoritmo nunca entrar'a al primer y segundo $Si$, apesar de que las $dos$ guardas de dichos $Si$ se har'an. Luego de esto solo queda mirar las $tres$ ultimas asiganciones del ciclo. Con esta explicaci'on podemos deducir una parte de nuestra funci'on $T(n)$.
-$$\sum_{i=1}^{\sqrt{n}}7$$\\
-Ahora solo resta ver que pasa afuera del ciclo. Antes de el hay $cinco$ asignaciones, y despu'es de el, si consideramos el peor caso, el algoritmo entrar'a en el primer $Si$, har'a $dos$ asignaciones, y luego ejecutar'a la guarda del ultimo $Si$ sin entrar. Con esto podemos escribir la funci'on $T(n)$ buscada y obtener su complejidad.\\
-$$T(n) = \sum_{i=1}^{\sqrt{n}}7 + 9 = 7*\sqrt{n} + 9 \in O(\sqrt{n})$$\\
-Si tomamos esto en cuenta, podemos deducir la complejidad si se toma ahora el tama\~{n}o de $n$ en ves de su valor. si decimos que $t$ es el tama\~{n}o de $n$, entonces $t = log_2(n)$, Luego $n = 2^t$, lo que implica que $\sqrt{n} = 2^{(t/2)}$, con lo cual la complejidad del algortimo en base el tama\~{n}o de entrada es $O(2^t)$.
+\paragraph{}
+En este ejercicio usamos el modelo logar'itmico de complejidad ya que la entrada del problema es 'unicamente un
+n'umero entero y el grueso de las operaciones involucradas son 'unicamente sentencias de control de flujo
+y operaciones aritm'eticas sobre enteros. En funci'on de esto no ser'ia l'ogico despreciar el aumento del costo
+de operar sobre dichos n'umeros a medida que la entrada crece.
 
+\paragraph{}
+A partir del pseudoc'odigo se puede identificar r'apidamente el bucle principal donde se realizan la mayor'ia
+de las operaciones. Veamos primero el c'odigo fuera del bucle.
+\begin{itemize}
+\item $limite(n)$ tiene un costo $O(log^3 n)$, puesto que la operaci'on m'as costosa que realiza es una ra'iz
+cuadrada, y la complejidad de dicha operaci'on es la m'as importante. En este caso $n$ es una variable que contiene
+inicialmente el valor del par'ametro de entrada y a lo largo de la ejecuci'on se divide en sucesivas ocasiones, por
+lo tanto su valor decrece y est'a acotado por el valor inicial.
+\item $generar\_candidato()$ tiene un costo $O(log^2 n)$ ya que para casos grandes solo efect'ua un chequeo de
+una variable booleana y una multiplicaci'on de un entero acotado por $n$.
+\end{itemize}
+El resto de las operaciones realizadas antes y después del bucle tienen una complejidad de a lo sumo $O(log$ $n)$,
+y por lo tanto son despreciables respecto del orden predominante que es hasta el momento $O(log^3 n)$ si no tenemos
+en cuenta al ciclo principal.
+
+\paragraph{}
+Observemos ahora el comportamiento de dicho bucle. Se demostrará a continuaci'on que este bucle se ejecuta a lo sumo
+$O(\sqrt{n})$ veces, pero por el momento veamos la complejidad del c'odigo contenido en el mismo. Si observamos
+l'inea por l'inea el pseudoc'odigo puede verse que el cuerpo del ciclo es una sucesi'on de operaciones aritm'eticas,
+donde aparece una llamada a la funci'on $limite(n)$. La m'as costosa de las operaciones aritm'eticas es la ra'iz
+cuadrada que tiene el mismo costo que la funci'on $limite$, por lo tanto siendo que la complejidad de dicha llamada
+acota a todas las otras operaciones (sumas, restas, divisiones, comparaciones y asignaciones) puede verse f'acilmente
+que el costo de ejecutar cada iteraci'on del ciclo es $O(log^3 n)$ producto de la llamada a $limite(n)$.
+
+\paragraph{}
+Resta entonces demostrar que el ciclo itera a lo sumo $O(\sqrt{n})$ veces. Si analizamos la guarda del ciclo vemos
+que se trata de una conjunci'on booleana. Como es suficiente que solo una de las condiciones no se cumpla para que
+el ciclo termine, vamos a analizar 'unicamente la condici'on $primoActual \leq l$, y veremos que se deja de cumplir
+necesariamente tras $O(\sqrt{n})$ iteraciones. Represento por $nombre_i$ el valor de la variable $nombre$ en la 
+iteraci'on $i$. Probemos que:\\
+\\
+\centerline{$\forall n > N$, $l_{i+1} \leq l_i - 1 \vee primoActual_{i+1} \geq primoActual_i + 1$}
+
+\paragraph{}
+Esto es suficiente puesto que es f'acil ver que $primoActual$ solo crece, y $l$ solo decrece, por lo tanto si
+probamos que la distancia entre ellos disminuye en al menos 1 en cada iteraci'on (y puesto que $|primoActual - l| < l$,
+ya que $primoActual$ es positivo), esto redunda en que el ciclo se ejecuta $O(l)=O(\sqrt{n})$ veces. Cabe aclarar
+que esto es v'alido si se prueba para $n > N$ con $N$ acotado, ya que la complejidad es una formulaci'on asint'otica
+y el costo para instancias acotadas ($n \leq N$) es fijo.
+
+
+\paragraph{}
+Al entrar al ciclo hay dos casos posibles: o bien $primoActual$ $|$ $n$, o no lo hace. Llamemos a estas dos
+posibilidades caso 1 y caso 2 respectivamente, y analicemos por separado.
+%FIXME: queda demasiado espacio aca!
+\begin{itemize}
+\item Caso 1: $primoActual$ $|$ $n$ \\
+Veamos que en este caso se cumple $\forall n > N$, $l_{i+1} \leq l_i - 1$:
+\begin{center}
+$$l_i = \lceil \sqrt{n_i}\rceil$$
+$$n_{i+1} =  \dfrac{n_i}{primoActual_i} \leq \dfrac {n_i}{2}$$
+$l_{i+1} = \lceil \sqrt{n_{i+1}} \rceil \leq \sqrt{n_{i+1}} + 1 \leq \dfrac {\sqrt{n_i}}{\sqrt{2}} + 1
+  \leq \dfrac {l_i} {\sqrt{2}} + 1 \leq l_i - 1$ para $l_i > 5$
+\end{center}
+%FIXME: tiene sentido probar el caso 2 por induccion? es una forrada
+\item Caso 2: $primoActual \nmid n$\\
+En este otro caso se cumple que $\forall n > N$, $primoActual_{i+1} \geq primoActual_i + 1$. Esto se deduce
+por construcci'on del procedimiento $generar\_candidatos()$ que produce una sucesi'on de la forma: \\
+
+\centerline{2, 3, 5, 6 * 1 + 1, 6 * 1 + 5, 6 * 2 + 1, 6 * 2 + 5, 6 * 3 + 1, 6 * 3 + 5 ...} 
+
+Si adem'as vemos que en este caso $primoActual_{i+1}$ es el t'ermino de la sucesi'on que est'a 
+inmediatamente a continuaci'on de $primoActual_i$, resulta sencillamente que el postulado es verdadero.
+\end{itemize}
+
+\paragraph{}
+Finalmente como en los dos casos se cumple una de las partes de la conjunci'on booleana propuesta,
+resulta que 'esta es verdadera. Demostrado esto, resulta que la complejidad total del ciclo es 
+$O(\sqrt{n}$ $log^3 n)$, siendo $n$ el valor del entero que el algoritmo toma como par'ametro. 
+Por otra parte sabemos que el tamaño en memoria de un entero arbitrario $n$ es $t = log_2 n$, por lo tanto:\\
+\\
+\centerline{$2^t = n \Rightarrow \sqrt{n}$ $log^3 n = 2^n$ $t^3$}
+
+\paragraph{}
+Finalmente pudimos demostrar que $T(t) \in O(2^n $ $t^3)$.
+
+
+%TODO: hablar de que sabemos q n no es tam de entrada, que dejamos los graficos porq se ve bien el o(sqrtn), ojo con esto q me parece q es O(raiz*log^3)
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
 Para el an'alisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables 
@@ -151,13 +228,16 @@ En la figura 1, se ve claramente como existen diversos patrones de comportamient
 cuadrada, mientras que debajo se encuentran otras funciones de orden logar'itmico. Esta situaci'on se ve mas claro en los 
 gr'aficos donde solo est'an los n'umeros primos y las potencias de 7. En ambos casos pudimos, mediante cuadrados m'inimos, 
 encontrar una funci'on que se asemeje al comportamiento de las muestras, lo cual refuerza nuestra idea de mejor y peor caso.\\
-El grafico en funci'on del tiempo muestra un comportamiento muy similar al grafico de cantidad de operaciones, pero presenta 
-oultliers que se pueden explicar en el hecho de que tomar tiempos esta sujeto a un error de medici'on producto de los tiempos 
-de asignaci'on del procesador, memoria libre, hits en cach'e, etc.
+El gr'afico en funci'on del tiempo muestra un comportamiento muy similar al gr'afico de cantidad de operaciones, pero presenta 
+$outliers$ que se pueden explicar por el hecho de que tomar tiempos esta sujeto a un error de medici'on producto del uso del sistema
+de pruebas por parte de otros procesos.
 
-A la hora de analizar los gr'aficos en funci'on del tamatama\~{n}o de la entrada esperamos ver g'raficos con forma exponencial y fue exactamente eso lo que obtuvimos. En el caso de cantidad de operaciones, se mantuvo lo visto es los otros gr'aficos, es decir que en general los primos requieren mas operaciones que el resto de los n'umeros, mientras que las potencias de siete requieren mucas menos.
+A la hora de analizar los gr'aficos en funci'on del tama\~{n}o de la entrada esperamos ver g'raficos con forma exponencial 
+y fue exactamente eso lo que obtuvimos. En el caso de cantidad de operaciones, se mantuvo lo observado en los otros gr'aficos, 
+es decir que en general los primos requieren m'as operaciones que el resto de los n'umeros, mientras que las potencias de 7 
+requieren muchas menos.
 
-Finalmente la figura 6 mantiene la tendencia, y nuevamente presenta outliers propios de los factores externos que intervienen 
+Finalmente la figura 6 mantiene la tendencia, y nuevamente presenta $outliers$ propios de los factores externos que intervienen 
 en la medici'on de tiempos.
 
-A modo de conclusi'on podemos afirmar, que la experimentaci'on emp'irica valid'o nuestros resultados te'oricos.
+A modo de conclusi'on podemos afirmar que la experimentaci'on emp'irica valid'o nuestros resultados te'oricos.
