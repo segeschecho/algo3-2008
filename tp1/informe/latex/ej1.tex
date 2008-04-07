@@ -13,7 +13,7 @@ requer'ia obtener primeramente todos aquellos primos que sean menores a $n$.
 Un segundo acercamiento nos permiti'o salvar esta dificultad, de manera que no fue necesario obtener 
 los primos menores a $n$ expl'icitamente. El proceso consiste en partir de 2, probar manualmente si 2, 3 y 5 
 dividen a $n$ y a partir  de aqu'i ciclar generando n'umeros de la forma $6*k + 1$ o $6*k + 5$ con $k \geq 1$ 
-(se puede demostrar que los n'umeros primos mayores que 5 tienen esta forma (ver Demostraci'on 1).
+(se puede demostrar que los n'umeros primos mayores que 5 tienen esta forma (ver Demostraci'on 1)).
 \paragraph{}
 Cuando hallamos alg'un n'umero primo que divide a $n$, buscamos su multiplicidad dividiendo nuestro n'umero 
 por dicho primo, tantas veces como sea posible. Una vez calculada, se verifica si esta nueva multiplicidad 
@@ -93,7 +93,6 @@ Ahora solo resta ver que pasa afuera del ciclo. Antes de el hay $cinco$ asignaci
 $$T(n) = \sum_{i=1}^{\sqrt{n}}7 + 9 = 7*\sqrt{n} + 9 \in O(\sqrt{n})$$\\
 Si tomamos esto en cuenta, podemos deducir la complejidad si se toma ahora el tama\~{n}o de $n$ en ves de su valor. si decimos que $t$ es el tama\~{n}o de $n$, entonces $t = log_2(n)$, Luego $n = 2^t$, lo que implica que $\sqrt{n} = 2^{(t/2)}$, con lo cual la complejidad del algortimo en base el tama\~{n}o de entrada es $O(2^t)$.
 
-%TODO: hablar de que sabemos q n no es tam de entrada, que dejamos los graficos porq se ve bien el o(sqrtn), ojo con esto q me parece q es O(raiz*log^3)
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
 Para el an'alisis del algoritmo decidimos medir tanto operaciones como tiempo. Primero medimos dichas variables 
@@ -102,11 +101,8 @@ decidimos realizar otras dos, donde separamos n'umeros primos en una de ellas, y
 de un n'umero primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es 
 precisamente cuando el n'umero es primo, mientras que el mejor caso es cuando el n'umero es potencia de un primo. 
 Por otro lado realizamos experiencias similares pero teniendo en cuenta ya no el numero, sino la cantidad de bits 
-de su representaci'on binaria, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experriencias 
+de su representaci'on binaria, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experiencias 
 tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo en funci'on de $\lfloor log_2(n) \rfloor + 1$.
-
-%TODO: hacer los graficos de tamanio que no estan
-%TODO: revisar los graficos, tratar de q las leyendas se vean bien.
 
 \subsection{Gr'aficos}
 \subsubsection{Gr'aficos en funcion de n}
@@ -134,18 +130,7 @@ tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo e
 \includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/todos_los_numeros/todosLosNumerosPuntosTiempo.png}
 \caption{Tiempo en funci'on de $n$}
 \end{figure}
-%
-%\begin{figure}[H]
-%\centering
-%\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/primos/primosTiempo.png}
-%\caption{Tiempo en funci'on de $n$ para $n$ primo}
-%\end{figure}
-%
-%\begin{figure}[H]
-%\centering
-%\includegraphics[scale=0.5]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/potencias_de_7/Potencias_de_7_tiempo.png}
-%\caption{Tiempo en funci'on de $n$ para $n$ de la forma $7^k$}
-%\end{figure}
+
 \subsubsection{Gr'aficos en funcion del tama\~{n}o de la entrada}
 \begin{figure}[H]
 \centering
@@ -159,7 +144,20 @@ tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo e
 \caption{Cantidad de operaciones en funci'on del tama\~{n}o de la entrada}
 \end{figure}
 
-
 \section{Discusi'on}
+En los gr'aficos pudimos observar lo que el an'alisis te'orico nos anunci'o.
 
-%TODO: escribir
+En la figura 1, se ve claramente como existen diversos patrones de comportamiento. As'i el techo es un funci'on del tipo ra'iz 
+cuadrada, mientras que debajo se encuentran otras funciones de orden logar'itmico. Esta situaci'on se ve mas claro en los 
+gr'aficos donde solo est'an los n'umeros primos y las potencias de 7. En ambos casos pudimos, mediante cuadrados m'inimos, 
+encontrar una funci'on que se asemeje al comportamiento de las muestras, lo cual refuerza nuestra idea de mejor y peor caso.\\
+El grafico en funci'on del tiempo muestra un comportamiento muy similar al grafico de cantidad de operaciones, pero presenta 
+oultliers que se pueden explicar en el hecho de que tomar tiempos esta sujeto a un error de medici'on producto de los tiempos 
+de asignaci'on del procesador, memoria libre, hits en cach'e, etc.
+
+A la hora de analizar los gr'aficos en funci'on del tamatama\~{n}o de la entrada esperamos ver g'raficos con forma exponencial y fue exactamente eso lo que obtuvimos. En el caso de cantidad de operaciones, se mantuvo lo visto es los otros gr'aficos, es decir que en general los primos requieren mas operaciones que el resto de los n'umeros, mientras que las potencias de siete requieren mucas menos.
+
+Finalmente la figura 6 mantiene la tendencia, y nuevamente presenta outliers propios de los factores externos que intervienen 
+en la medici'on de tiempos.
+
+A modo de conclusi'on podemos afirmar, que la experimentaci'on emp'irica valid'o nuestros resultados te'oricos.
