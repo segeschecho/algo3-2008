@@ -22,7 +22,7 @@ encontrar la mediana de un arreglo en orden lineal sin necesidad de ordenarlo. E
 se basa en el uso de un pivote para partir el arreglo y quedarse solo con la parte donde se 
 puede encontrar la mediana. Es necesario para tener orden lineal poder encontrar un buen pivote 
 en un orden a lo sumo lineal. El algoritmo resuelve esto partiendo el arreglo principal en arreglos
-de 5 elementos, tomando la mediana de 'estos y luego tomando una pseudomediana a partir de dicha ``mediana''. 
+de 5 elementos, tomando la mediana de 'estos y luego tomando una seudomediana a partir de dicha ``mediana''. 
 Se puede demostrar que este procedimiento permite encontrar la mediana en un orden lineal. Esta 
 soluci'on se descarto ya que su implementaci'on era bastante complicada, lo cual no resultaba conveniente 
 teniendo en cuenta que luego deber'iamos realizar un an'alisis del algoritmo para determinar su
@@ -44,12 +44,32 @@ $n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1) 
 fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal buscado y su implementaci'on 
 era simple.
 
-\section{Pseudoc'odigo}
+\section{Seudoc'odigo}
 \newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
 %TODO calculo, demostracion, tamaño de entrada, porq uniforme, peor caso, mejor caso
 \section{C'alculo de complejidad}
+Para hacer el c'alculo de complejidad utilizamos el modelo uniforme,pues consideramo, al igual que con el ejercicio anterior, que lo fundamental en el problema, a la hora de estudiar el tiempo, pasa por la cantidad de elementos que tengo, por lo que se puede suponer que los n'umeros est'an acotados. \\
+Considerando esto, afirmamos que si el arreglo tiene n  elementos, el tama\~{n}o de la entrada es n.\\
+Pensando en el comportamiento que tiene el algoritmo,vemos que siempre lo recorremos, al arreglo, hacia adelante y nunca volvemos hacia atr'as. Es por esta raz'on que si bien hay ciclos anidados (dentro del de la l'inea 4 tenemos al de la l'inea 7 y el de la l'inea 10) el algoritmo tiene O(n)
+El ciclo de la l'inea 7 usa indiceDeAtras para recorrer el arreglo, ahora la guarda del ciclo es:\\
+$$indiceDeAtras < tamanio(a) \& (indiceDeAtras no fue tachado)$$\\ 
+Entonces podemos ver que este ciclo, dado que i no se reinicia, solo recorre el arreglo a lo sumo una vez en todos los ciclos del de la l'inea 4. Es decir, si el ciclo principal hace k iteraciones y llamamos $iterAtras_t$ al numero iteraciones del ciclo de la l'inea 7 en la iteraci'on t del ciclo principal, vale que:\\
+$$\sum_{t=1}^{k}iterAtras_t \leq n$$\\
+ya que en el momento en que i se hace n, el ciclo interno no itera mas.\\
+La situaci'on del ciclo de la l'inea 10 es similar, en este caso la guarda es:\\
+$$indiceDeAdelante < tamanio(a) \& (indiceDeAdelante no fue tachado | indiceDeAdelante \leq indiceDeAtras)$$\\
+Es decir que el numero de iteraciones esta acotado en principio por n. Pero por otro lado la variable indiceDeAdelante, que no se reinicia, es la que establece la condici'on de salida del ciclo principal, es decir que si, an'alogamente a como hicimos antes, el ciclo principal hace k iteraci'on y llamamos $iterAdel_t$ al numero de iteraciones del ciclo de la l'inea 10, se puede ver que:\\
+$$\sum_{t=1}^{k}iterAdel_t \leq n$$\\
+en particular si definimos
+$beta(b) =$ if b then 1 else 0 \\
+Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos indices en la iteraci'on t, tenemos que:\\
+$$n=\sum_{t=0}^{n}beta(a[indiceDeAtras_t] == a[indiceDeAdelante_t])+ iterAdel_t$$\\
+ya que o indiceDeAdelante se incrementa en una unidad porque los elementos eran iguales, o itera el ciclo interno.\\
+
+Viendo esto, es de notar, que tanto indiceDeAtras como indiceDeAdelante solo recorren el arreglo una vez. De modo que el algoritmo tiene un orden de complejidad lineal, es decir O(n).
+Observando el pseudoc'odigo, tambien notamos como en la medida de que aumente el n'umero de apariciones de la moda, y por lo tanto la guarda del if de la linea 5 se haga falsa en mas oportunidades, mas rapido deber'ia andar el algoritmo, ya que solo se incrementa indiceDeAdelante. En vista de esto, si los elementos del arreglo son todos iguales, el algoritmo hace solo una pasada.
 
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
@@ -97,5 +117,5 @@ aumenta de forma lineal. Lo mismo ocurre con la cantidad de operaciones. Esta si
 corresponde con el an'alisis te'orico que se realiz'o. Por otro lado en los gr'aficos en funci'on 
 de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer linealmente. Esto 
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se
-explica de la siguiente manera: si todos los elementos son iguales a la moda, el if de la linea 5 del pseudoc'odigo
+explica de la siguiente manera: si todos los elementos son iguales a la moda, el if de la linea 5 del seudoc'odigo
 siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin hacer otro tipo de operación.
