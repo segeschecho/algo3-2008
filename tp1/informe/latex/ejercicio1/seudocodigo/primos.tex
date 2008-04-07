@@ -2,13 +2,14 @@
 \caption{Halla $mejorPrimo$ y $mejorPotencia$}
 \begin{algorithmic}[1]
 \STATE $mejorPrimo \leftarrow 1$
-\STATE $primoPotencia \leftarrow 0$
+\STATE $mejorPotencia \leftarrow 0$
 \STATE $primoActual \leftarrow generar\_candidato()$
 \STATE $potenciaActual \leftarrow 0$
 \STATE $l \leftarrow limite(n)$
-\WHILE{$n \neq 1$ $\&$ $n \leq l$}
-    \IF{$primoActual | n$}
-        \STATE $primoActual++$
+\WHILE{$n \neq 1$ $\&$ $primoActual \leq l$}
+    \IF{$primoActual$  $|$ $n$}
+        \STATE $potenciaActual++$
+        \STATE $n \leftarrow n/primoActual$
     \ELSE
         \IF{$potenciaActual \geq mejorPotencia$}
             \STATE $mejorPrimo \leftarrow primoActual$
@@ -20,7 +21,7 @@
         \STATE $l \leftarrow limite(n)$
     \ENDIF
 \ENDWHILE
-\IF{$n > l$}
+\IF{$primoActual > l$}
     \STATE $primoActual \leftarrow n$
     \STATE $potenciaActual \leftarrow 1$
 \ENDIF
