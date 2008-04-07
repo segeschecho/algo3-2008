@@ -18,7 +18,7 @@ algor'itmica para su resoluci'on. B'asicamente la idea es formar todos los subco
 sin exceder la capacidad de carga del cami'on.
 
 La restricci'on expl'icita es el conjunto de cosas a llevar y la restricci'on impl'icita es la capacidad de carga del cami'on. A 
-medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad deldel cami'on, y de 
+medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de 
 esta manera se va podando el 'arbol de posibles soluciones.
 
 De esta manera, se construye el siguiente 'arbol de recursion:
@@ -110,3 +110,4 @@ a las observaciones obtenidas, con el fin de contrastarla con los resultados exp
 \end{figure}
 
 \section{Discusi'on}
+En los gr'aficos podemos observar lo anteriormente demostrado. Tanto los gr'aficos de tiempo en funci'on de cosas como los de cantidad de operaciones en funci'on de cosas muestran un comportamiento exponencial para los peores casos. Para contrastar los resultados y mostrar realmente el comportamiento, encontramos funciones de tipo $f(x) = k*2^x + c$ que respetan el patron de crecimiento de la muestra experimental y confirma la teor'ia.
