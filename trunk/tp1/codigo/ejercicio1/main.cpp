@@ -18,10 +18,10 @@ void primoDeMayorPotencia(int n, int& primo, int& potencia) {
     FabricaCandidatos fab = FabricaCandidatos();
     int primoActual = fab.siguiente();
     int potenciaActual = 0;
-    
-    int s = (int) ceil(sqrt(n));
+    int h = n;
+    //int s = (int) ceil(sqrt(n));
 
-    while (n != 1 && primoActual <= s) {
+    while (n != 1 && primoActual*primoActual <= h) {
         if (n % primoActual == 0) {
             potenciaActual++;
             n = n / primoActual;
@@ -33,10 +33,11 @@ void primoDeMayorPotencia(int n, int& primo, int& potencia) {
 
             potenciaActual = 0;
             primoActual = fab.siguiente();
-            s = (int) ceil(sqrt(n));
+            //s = (int) ceil(sqrt(n));
+			h=n;
         }
     }
-    if (primoActual > s) {
+    if (primoActual*primoActual > h) {
         primoActual = n;
         potenciaActual = 1;
     }

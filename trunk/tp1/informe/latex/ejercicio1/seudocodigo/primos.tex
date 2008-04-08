@@ -5,8 +5,8 @@
 \STATE $mejorPotencia \leftarrow 0$
 \STATE $primoActual \leftarrow generar\_candidato()$
 \STATE $potenciaActual \leftarrow 0$
-\STATE $l \leftarrow limite(n)$
-\WHILE{$n \neq 1$ $\&$ $primoActual \leq l$}
+\STATE $limite \leftarrow n$
+\WHILE{$n \neq 1$ $\&$ $primoActual*primoActual \leq limite$}
     \IF{$primoActual$  $|$ $n$}
         \STATE $potenciaActual++$
         \STATE $n \leftarrow n/primoActual$
@@ -18,7 +18,7 @@
 
         \STATE $potenciaActual \leftarrow 0$
         \STATE $primoActual \leftarrow generar\_candidato()$
-        \STATE $l \leftarrow limite(n)$
+        \STATE $limite \leftarrow n$
     \ENDIF
 \ENDWHILE
 \IF{$primoActual > l$}
