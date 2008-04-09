@@ -31,15 +31,24 @@ indica que el elemento $i$ no es parte de esta soluci'on, mientras que  un $1$ i
 Las hojas de este 'arbol son las soluciones posibles. Como cada elemento puede estar o no estar, se tienen dos posibilidades para cada
 uno (llevarlo o no). Esto implica que la cantidad posible de soluciones si se tienen $n$ elementos es $2^n$.
 
-El algoritmo implementado toma como par'ametros las cosas que se pueden llevar y dos soluciones posibles (una en donde est'a guardada la mejor 
-encontrada hasta el momento y otra que guarda la que se va construyendo). Adem'as se obtienen el peso m'aximo que se puede llevar y un 'indice que 
-indica sobre que objeto se est'a decidiendo si o no conveniente llevarlo.
+El algoritmo implementado toma como par'ametros el camion (cosas, cuantas cosas y capacidad)  y dos soluciones posibles (una en donde est'a guardada la mejor 
+encontrada hasta el momento y otra que guarda la que se va construyendo). Adem'as se lleva un 'indice que 
+indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo.
 
 B'asicamente una llamada a la funci'on consiste en verificar si se agrega o no a la soluci'on el elemento apuntado por $indice$. Si es as'i (es 
 decir que al agregarlo, el peso total no excede el peso m'aximo), se agrega a la soluci'on candidata y se contin'ua con la 
 siguiente llamada recursiva. 'Esta consiste en una llamada sin agregar el elemento apuntado por 'indice. Cuando se encuentra 
 una soluci'on mejor a la actualmente 'optima, 'esta es reemplazada. Repitiendo este proceso se pueden observar todas 
 las hojas del arbol, para quedarse con la mejor.
+
+Ademas de la restricci'on propia del problema, buscamos definir otras que nos permitieran efectuar mejores podas. Asi una primera idea fue ordenar el arreglo en orden creciente de pesos. De esta forma, si durante la construccion de una solucion, llegamos a que el elemento k no se puede agregar, sabemos que ningun elemento entre $k+1$ y n se va a poder agregar, porque su peso es mayor que el de k, y por ende mayor que la capacidad disponible.
+
+Otra idea que tuvimos consisti'o en preguntar cuando estoy construyendo una soluci'on si tiene sentido que siga bajando. Esto lo hacemos de la siguiente manera: si considero la suma de los valores de los elementos que me quedan por visitar y este valor sumado al del candidato actual no me da mejor que el de la mejor soluc'on hasta el momento, no tiene sentido que baje porque no voy a lograr una soluci'on con valor mayor. En un principio, para hacer esto se nos ocurri'o hacer la suma en cada llamada para ver si bajo. Sin embargo este calculo era costoso, por lo cual buscamos alguna alternativa mejor. La idea entonces fue antes de empezar a trabajar con el arreglo de cosas, sumar el valor de todos los elementos. Este n'umero es el m'aximo valor que puedo lograr con un conjunto de cosas. Cada vez que hago una llamada calculo si el valor de mi candidato actual mas el m'aximo me sirve para mejorar mi solucion. Por otro lado, cuando hago una llamada sin incluir a un elemento, resto al m'aximo posible el valor de dicho elemento.
+
+Por ejemplo:
+
+Si tengo un conjunto de cosas tal que sus valores son: {1,2,3,4}. El m'aximo valor que podr'ia llevar es 10. Cuando estoy armando una soluci'on que excluye al valor 1, el maximo es 9. Si ademas quito al 2, el maximo es 7, etc.
+Consideramos que si bien estas podas no nos mejorar'an el orden de complejidad, si nos permitirian en general observar un mejor desempeño.
 
 Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $SolucionPosible$ con la finalidad de aportar m'as claridad al mismo.
 
@@ -51,43 +60,39 @@ Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $Soluci
 \section{C'alculo de complejidad}
 Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
 cantidad de cosas a llevar. Por esa raz'on no nos parece desacertado considerar que el peso y el valor de las cosas estan 
-acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas que se pueden llevar.
+acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas entre las cuales elegir.
 
-Para nuestro algoritmo, el peor caso se da cuando no es posible podar ninguna rama del 'arbol de decisi'on. Dada nuestra heur'istica
-de poda, esto redunda en que todos los elementos deban ser llevados en el cami'on. En este caso, el algoritmo revisa todas las $2^n$
-posibles soluciones. El mejor caso es el inverso - cuando todos los elementos a llevar exceden la capacidad del cami'on por s'i solos.
-En esa situaci'on, nuestro algoritmo resuelve en $O(n)$.
+Antes de llamar a la funcion que hace backtracking, lo que hace el algoritmo es ordenar el arreglo con merge sort (lo cual es O(n*log(n)) y luego suma todos los valores del arreglo, lo cual es O(n). Veremos a continuacion que como el orden de la funcion principal  mayor que estos, no hacen a la complejidad del algoritmo. 
 
-Observando el pseudoc'odigo podemos notar que la ecuaci'on de recurrencia es la siguiente:\\
-%TODO: hacer la demo
-$T(0) = 1$\\
-$$T(n) = 2*T(n-1) + k$$\\
-Ya que hacemos dos llamadas con el indice incrementado en una posici'on.\\
-El algoritmo resulta tener una complejidad asint'otica en peor caso de $O(2^n)$. La demostraci'on es la siguiente:\\
-Queremos probar que $T(n) \in O(2^n)$. Para esto planteamos las siguientes igualdades:\\
-$$a: T(n) = 2*T(n-1) + k$$\\
-$$b: T(n+1) = 2*T(n) + k$$\\
-Luego restamos $a$ con $b$ y dejamos todo de un lado de la igualdad y nos queda:\\
-$$T(n+1) - 3*T(n) + 2*T(n-1) = 0$$\\
-Con esto usamos las ecuaciones caracter'isticas, dando resultado al siguiente polinomio:\\
-$$x^2 - 3*x + 2 = 0$$\\
-Cuyas ra'ices son $x = 1$ y $x = 2$. Con estos datos, $T(n)$ tiene la siguiente forma:\\
+Sea N la cantidad de cosas que hay para elegir. Observemos que dado un N, si llamamos n a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) la
+T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan mas elementos que mirar y tengo que copiar la nueva solucion, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
+Entonces podemos decir que las ecuaciones de recurrencia son:
+$$T(0) = N +1$$
+$$T(n) = 2*T(n-1) + k$$
+k viene de las operaciones que se realizan dentro de cada llamda, las cuales son todas O(1).
 
-\centerline{$T(n) = A*1^n + B*2^n = A + B*2^n$  para A y B constantes}
+Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$
 
-\medskip
-Luego queda claro que $T(n) \in O(2^n)$.
+veamoslo por inducci'on:
+n = 0:\\
+$$T(0) = N + 1 =  N*2^0 + k*(2^0-1) + 2^0$$
+supongamos que vale para n, veamos que vale para n+1:
+$$T(n+1) = 2T(n) + k$$
+usando la hipotesis inductiva:
+$$T(n+1) = 2(N*2^n + k*(2^n-1) + 2^n) + k$$ 
+$$T(n+1) = N*2^{n+1} + k*(2^{n+1}-2) + 2^{n+1} + k$$
+$$T(n+1) = N*2^{n+1} + k*(2^{n+1}-1) + 2^{n+1}$$
+Que era lo que queriamos ver.
+Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$, y ademas sabemos que n es del orden de N, tenemos que T(n) $\in$ $O(N*2^N)$
+
+Luego el algoritmo tiene un orden exponencial en funcion del tamaño de la entrada, aun pese a las podas; y esto es de esperarse ya que las podas funcionan en algunos casos, mientras que en otros no ayudan en nada. 
+
+Observando las podas que implementamos, uno esperaria que en general el algoritmo se comporte bien. Ahora supongamos que tenemos un conjunto ${a_1,a_2,...a_n}$ donde el peso y el valor de $a_i = 1$ $\forall i \in {1...n-1}$ y el peso y valor de  
+$a_n = n$ y que el peso del camion es n.
+En este caso ninguna de nuestras podas van a funcionar, puesto que la poda por pesos baja siempre hasta el ante ultimo nivel, salvo en el caso donde no agregue a ningun $a_i$ con i $<$ n. Tampoco funciona ver cual es el m'aximo que puedo armar porque hasta que no llegue al caso donde solo pongo a $a_n$ el valor m'aximo que puedo armar siempre es mayor que n, pero las soluciones que arme siempre valen menos que n. De esta manera en este caso, se recorren practicamente todas las ramas. 
 
 \subsection{Experiencias realizadas}
-Para probar el comportamiento del algoritmo, se procedi'o a medir los tiempos y la cantidad de operaciones. 
-En ambos casos se generaron muestras con un n'umero creciente de elementos (las caracter'isticas de la 
-muestra fueron generadas al azar) y por otro lado se hizo un an'alisis del peor caso. Como se dijo 
-anteriormente, el peor caso se da cuando no se puede podar ning'un elemento, y por lo tanto es necesario 
-ver todas las soluciones posibles (es decir, recorrer todo el arbol).
-
-Cuando fue posible, se utiliz'o la tecnica de cuadrados m'inimos para buscar una funci'on que aproxime 
-a las observaciones obtenidas, con el fin de contrastarla con los resultados experimentales.
-
+Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funcion del tama\~{n}o de la entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban una mejora en la practica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer las pruebas generamos casos donde la cantidad de elementos era creciente y la composicion de las cosas era aleatoria. El peso que el camion podia llevar se fijo en 200 y los valores y pesos de las cosas seguian una distribucion uniforme (0,100). Ademas se analizo el comportamiento del algoritmo en aquellas situaciones que consideramos como peores casos. Para contar tiempo y operaciones, no se tuvo en cuenta el tiempo necesario para reordenar el arreglo, ya que sin hacer esto el problema estaba resuelto, y solo lo reordenamos por una cuestion de enunciado que nos impone devolver la soluci'on con un formato dado.
 \subsection{Gr'aficos}
 %TODO: sergio hace los graficos con n creciente y aleatorio
 
