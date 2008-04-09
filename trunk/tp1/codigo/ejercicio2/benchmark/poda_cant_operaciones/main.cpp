@@ -7,6 +7,7 @@
 
 unsigned long long int operaciones = 0LL;
 
+
 using namespace std;
 
 void camionAux(SolucionPosible& candActual,Camion&c,unsigned indice,SolucionPosible& mejorSol,unsigned valorOptimo);
@@ -48,7 +49,7 @@ void camion(Camion& c,SolucionPosible& mejorSol,int* indices) {
 
 void camionAux(SolucionPosible& candActual, Camion& c,unsigned indice,SolucionPosible& mejorSol,unsigned valorOptimo){
     // cuando ya llegue hasta el ultimo elemento paro, pero me fijo si consegui una mejor solucion
-    operaciones = operaciones + 3;
+	operaciones = operaciones + 3;
 
     if(indice == c.cantCosas && candActual.valor > mejorSol.valor) {
         operaciones = operaciones + candActual.cantCosas;
