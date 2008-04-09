@@ -97,15 +97,11 @@ de operar sobre dichos n'umeros a medida que la entrada crece.
 A partir del pseudoc'odigo se puede identificar r'apidamente el bucle principal donde se realizan la mayor'ia
 de las operaciones. Veamos primero el c'odigo fuera del bucle.
 \begin{itemize}
-\item $limite(n)$ tiene un costo $O(log^3 n)$, puesto que la operaci'on m'as costosa que realiza es una ra'iz
-cuadrada, y la complejidad de dicha operaci'on es la m'as importante. En este caso $n$ es una variable que contiene
-inicialmente el valor del par'ametro de entrada y a lo largo de la ejecuci'on se divide en sucesivas ocasiones, por
-lo tanto su valor decrece y est'a acotado por el valor inicial.
 \item $generar\_candidato()$ tiene un costo $O(log^2 n)$ ya que para casos grandes solo efect'ua un chequeo de
 una variable booleana y una multiplicaci'on de un entero acotado por $n$.
 \end{itemize}
 El resto de las operaciones realizadas antes y después del bucle tienen una complejidad de a lo sumo $O(log$ $n)$,
-y por lo tanto son despreciables respecto del orden predominante que es hasta el momento $O(log^3 n)$ si no tenemos
+y por lo tanto son despreciables respecto del orden predominante que es hasta el momento $O(log^2 n)$ si no tenemos
 en cuenta al ciclo principal.
 
 \paragraph{}
