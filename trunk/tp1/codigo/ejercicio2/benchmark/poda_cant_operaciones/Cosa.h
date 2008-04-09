@@ -7,7 +7,7 @@ using namespace std;
 
 class Cosa {
     public:
-        Cosa(){};
+        Cosa();
         Cosa(unsigned c, unsigned v);
 
         unsigned peso;
