@@ -1,6 +1,6 @@
 import random
 
-for n in range(1,36):
+for n in range(1,50):
 	print "Caso"
 	print n," ",
 	print 200
