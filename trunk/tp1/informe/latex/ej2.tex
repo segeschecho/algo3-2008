@@ -48,7 +48,7 @@ Otra idea que tuvimos consisti'o en preguntar cuando estoy construyendo una solu
 Por ejemplo:
 
 Si tengo un conjunto de cosas tal que sus valores son: {1,2,3,4}. El m'aximo valor que podr'ia llevar es 10. Cuando estoy armando una soluci'on que excluye al valor 1, el maximo es 9. Si ademas quito al 2, el maximo es 7, etc.
-Consideramos que si bien estas podas no nos mejorar'an el orden de complejidad, si nos permitirian en general observar un mejor desempeño.
+Consideramos que si bien estas podas no nos mejorar'an el orden de complejidad, si nos permitirian en general observar un mejor desempe\~{n}o.
 
 Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $SolucionPosible$ con la finalidad de aportar m'as claridad al mismo.
 
@@ -85,7 +85,7 @@ $$T(n+1) = N*2^{n+1} + k*(2^{n+1}-1) + 2^{n+1}$$
 Que era lo que queriamos ver.
 Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$, y ademas sabemos que n es del orden de N, tenemos que T(n) $\in$ $O(N*2^N)$
 
-Luego el algoritmo tiene un orden exponencial en funcion del tamaño de la entrada, aun pese a las podas; y esto es de esperarse ya que las podas funcionan en algunos casos, mientras que en otros no ayudan en nada. 
+Luego el algoritmo tiene un orden exponencial en funci'on del tama\~{n}o de la entrada, a'un pese a las podas; y esto es de esperarse ya que las podas funcionan en algunos casos, mientras que en otros no ayudan en nada. 
 
 Observando las podas que implementamos, uno esperaria que en general el algoritmo se comporte bien. Ahora supongamos que tenemos un conjunto ${a_1,a_2,...a_n}$ donde el peso y el valor de $a_i = 1$ $\forall i \in {1...n-1}$ y el peso y valor de  
 $a_n = n$ y que el peso del camion es n.
