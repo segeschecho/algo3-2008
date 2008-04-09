@@ -42,17 +42,17 @@ sin tachar desde $i$ hasta el final del arreglo son iguales. Entonces podr'ian o
 distintos a la moda. Sin embargo, esto 'ultimo no puede ocurrir ya que la frecuencia de la moda es como m'inimo 
 $n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1) > n$.
 El siguiente es un ejemplo de la aplicaci'on del algoritmo
-%\begin{figure}[H]
-%\centering
-%\includegraphics[scale=0.7]{./ejemplo.png}
-%\caption{Al princio como estamos parados en dos elementos iguales, solo se avanza el indice de adelante. Como ahora son %diferentes, se tachan y se avanzan los indices. Nuevamente son iguales por lo que solo se avanza el de adelante. Se tacha %nuevamente un par de elemtenos, y al avanzar el indice de adelante se termino el arreglo. La moda entonces es el elemento %donde esta parado el indice de atras.}
-%\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{./ejemplo.png}
+\caption{Al princio como estamos parados en dos elementos iguales, solo se avanza el indice de adelante. Como ahora son diferentes, se tachan y se avanzan los indices. Nuevamente son iguales por lo que solo se avanza el de adelante. Se tacha nuevamente un par de elemtenos, y al avanzar el indice de adelante se termino el arreglo. La moda entonces es el elemento donde esta parado el indice de atras.}
+\end{figure}
 
 Este algoritmo fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal buscado y su implementaci'on 
 era simple.
 
 \section{Seudoc'odigo}
-\newpage
+%\newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
 %TODO calculo, demostracion, tamaño de entrada, porq uniforme, peor caso, mejor caso
@@ -76,7 +76,7 @@ $$n=\sum_{t=0}^{n}beta(a[indiceDeAtras_t] == a[indiceDeAdelante_t])+ iterAdel_t$
 ya que o indiceDeAdelante se incrementa en una unidad porque los elementos eran iguales, o itera el ciclo interno.\\
 
 Viendo esto, es de notar, que tanto indiceDeAtras como indiceDeAdelante solo recorren el arreglo una vez. De modo que el algoritmo tiene un orden de complejidad lineal, es decir O(n).
-Observando el pseudoc'odigo, tambien notamos como en la medida de que aumente el n'umero de apariciones de la moda, y por lo tanto la guarda del if de la linea 5 se haga falsa en mas oportunidades, mas rapido deber'ia andar el algoritmo, ya que solo se incrementa indiceDeAdelante. En vista de esto, si los elementos del arreglo son todos iguales, el algoritmo hace solo una pasada.
+Observando el pseudoc'odigo, tambien notamos como en la medida de que aumente el n'umero de apariciones de la moda, y por lo tanto la guarda del if de la linea 5 se haga falsa en mas oportunidades, mas rapido deber'ia andar el algoritmo, ya que solo se incrementa indiceDeAdelante. En vista de esto, si los elementos del arreglo son todos iguales, el algoritmo hace solo una pasada, en cambio en el peor de los casos, hace dos pasadas completas.
 
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
@@ -126,3 +126,4 @@ de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer lin
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se
 explica de la siguiente manera: si todos los elementos son iguales a la moda, el if de la linea 5 del seudoc'odigo
 siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin hacer otro tipo de operación.
+Para finalizar, podemos decir que el comportamiento que obtuvimos, coincidi'o con el esperado.

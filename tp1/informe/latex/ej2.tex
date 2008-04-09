@@ -85,41 +85,52 @@ $$T(n+1) = N*2^{n+1} + k*(2^{n+1}-1) + 2^{n+1}$$
 Que era lo que queriamos ver.
 Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$, y ademas sabemos que n es del orden de N, tenemos que T(n) $\in$ $O(N*2^N)$
 
-Luego el algoritmo tiene un orden exponencial en funci'on del tama\~{n}o de la entrada, a'un pese a las podas; y esto es de esperarse ya que las podas funcionan en algunos casos, mientras que en otros no ayudan en nada. 
+Luego el algoritmo tiene un orden exponencial en funci'on del tama\~{n}o de la entrada, a'un pese a las podas; y esto es de esperarse ya que las podas funcionan en algunos casos, mientras que en otros no ayudan en nada. Otra forma de ver el orden, es considerar el funcionamiento de algoritmo. La idea es revisar cada soluci'on posible, y sabemos que estas son $2^n$. En el peor de los casos, tenemos que recorrerlas todas y ademas actualizar la mejor solucion cada vez. Como esto ultimo tiene O(n) lo que nos queda es $O(2^n*n)$.
 
-Observando las podas que implementamos, uno esperaria que en general el algoritmo se comporte bien. Ahora supongamos que tenemos un conjunto ${a_1,a_2,...a_n}$ donde el peso y el valor de $a_i = 1$ $\forall i \in {1...n-1}$ y el peso y valor de  
+Si el algoritmo solo desecha un camino cuando no puede agregar a un elemento porque se excede del peso, el peor caso se da cuando puede poner a todos los elementos, ya que llegara a cada hoja. 
+
+Observando las podas que implementamos, uno esperaria que en general el algoritmo se comporte bien. Incluso en el caso antes mensionado. Ahora supongamos que tenemos un conjunto ${a_1,a_2,...a_n}$ donde el peso y el valor de $a_i = 1$ $\forall i \in {1...n-1}$ y el peso y valor de  
 $a_n = n$ y que el peso del camion es n.
+
 En este caso ninguna de nuestras podas van a funcionar, puesto que la poda por pesos baja siempre hasta el ante ultimo nivel, salvo en el caso donde no agregue a ningun $a_i$ con i $<$ n. Tampoco funciona ver cual es el m'aximo que puedo armar porque hasta que no llegue al caso donde solo pongo a $a_n$ el valor m'aximo que puedo armar siempre es mayor que n, pero las soluciones que arme siempre valen menos que n. De esta manera en este caso, se recorren practicamente todas las ramas. 
 
 \subsection{Experiencias realizadas}
-Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funcion del tama\~{n}o de la entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban una mejora en la practica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer las pruebas generamos casos donde la cantidad de elementos era creciente y la composicion de las cosas era aleatoria. El peso que el camion podia llevar se fijo en 200 y los valores y pesos de las cosas seguian una distribucion uniforme (0,100). Ademas se analizo el comportamiento del algoritmo en aquellas situaciones que consideramos como peores casos. Para contar tiempo y operaciones, no se tuvo en cuenta el tiempo necesario para reordenar el arreglo, ya que sin hacer esto el problema estaba resuelto, y solo lo reordenamos por una cuestion de enunciado que nos impone devolver la soluci'on con un formato dado.
+Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funcion del tama\~{n}o de la entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban una mejora en la practica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer las pruebas generamos casos donde la cantidad de elementos era creciente y la composicion de las cosas era aleatoria. El peso que el camion podia llevar se fijo en 200 y los valores y pesos de las cosas seguian una distribucion uniforme (0,100). Ademas se analizo el comportamiento del algoritmo en aquellas situaciones que consideramos como peores casos. En los gr'aficos, algoritmos sin poda es el que no ordena el arreglo, ni observa la suma potencial del camino.
+
 \subsection{Gr'aficos}
 %TODO: sergio hace los graficos con n creciente y aleatorio
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso/cantOperacionesPeorCaso.png}
-\caption{Cantidad de operaciones en funci'on de la cantidad de cosas en peor caso}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_peor_caso/tiempobackTracking.png}
-\caption{Tiempo en funci'on de la cantidad de cosas en peor caso}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_aumentando_cant_articulos/aumentandoCantArticulosPromedio.png}
+\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark/graficos/comparacion_con_poda_sin_poda/caso_promedio/comparacionCantOpConPodaSinPoda.png}
 \caption{Cantidad de operacione en funci'on de la cantidad de cosas (peso y valor aleatorios con distribuci'on uniforme)}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark/graficos/operaciones_prom/operacionesProm.png}
-\caption{Tiempo en funci'on de la cantidad de cosas (peso y valor aleatorios con distribuci'on uniforme)}
+\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoConPoda.png}
+\caption{Cantidad de operaciones en funci'on de la cantidad de elementos, peor caso para la poda}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoSinPoda.png}
+\caption{Operaciones en funci'on de la cantidad de cosas, peor caso sin podas }
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_caso_promedio/ComparacionPodavsSinPoda.png}
+\caption{Tiempo en funci'on de la cantidad de cosas, casos aleatorios}
 \end{figure}
 
 \section{Discusi'on}
-En los gr'aficos podemos observar lo anteriormente demostrado. Tanto los gr'aficos de tiempo en funci'on de cosas como los de cantidad de operaciones en funci'on de cosas muestran un comportamiento exponencial para los peores casos. Para contrastar los resultados y mostrar realmente el comportamiento, encontramos funciones de tipo $f(x) = k*2^x + c$ que respetan el patr'on de crecimiento de la muestra experimental y confirma la teor'ia.
-Finalmente, es intuitivo el comportamiento exponencial del algoritmo en el caso promedio (Figura 9 y Figura 10). Probablemente las irregularidades que vemos en la Figura 9 y la Figura 10 desde n = 25 a n = 32 aprox sean por causa del caso que haya sido resultante de la construccion aleatoria del mismo. A pesar de esto, independientemente del valor y del peso de las cosas, a medida que se agregan elementos al inventario, tambien se agregar'a igual cantidad de niveles al 'arbol de decisi'on. De esta forma, para 1 elemento, el arbol tendra 2 niveles (tomar o no el elemento), 2 elementos tendran 3 niveles (tomar o no el primer elemento, tomar o no el segundo). De esta forma conseguiremos con $n$ elementos, un 'arbol de $n+1$ niveles, que al agregar un elemento al inventario, se duplica la cantidad de soluciones posibles por las que probablemente el algoritmo iterar'a.
+En los graficos pudimos observar el comportamiento exponencial del algoritmo. En las corridas de casos generales, se observo un mejor comportamiento del algoritmo que implementaba las diversas podas, lo cual es esperable, uno tenderia a creer que algunas ramas se van a podar si la configuracion de las cosas es al azar.
+
+ Tambien el algoritmo con podas se comporto mucho mejor que el algoritmo sin podas en el peor caso de este, es decir cuando hay que llevar a todos los elementos; esto se explica en que en este caso la primer mejor soluci'on que se arma es la que 'optima, por eso no baja por ninguna otra rama, ya que ninguna tiene el potencial de superarla.
+ 
+ En el peor caso de nuestro algoritmo con podas, si se observa que el comportamiento es peor que el del algoritmo com'un y esto se explica si tenemos en cuenta que en este caso no se hacen podas efectivas y sin embargo tenemos el overhead de ordenar el arreglo y hacer la traducci'on de los indices para poder guardarlo en el archivo de salida.
+ 
+ El grafico de tiempos, muestra la misma tendencia que el de cantidad de operaciones.
+ 
+ A modo de conclusi'on, podemos decir que se validaron las hip'otesis planteadas durante el an'alisis te'orico
