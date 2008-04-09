@@ -5,23 +5,39 @@ Cosa: tupla$<costo, valor>$ \\
 cosas = $\{a_1,....,a_{cant}\}$ \\
 
 \begin{algorithm}
-\caption{Halla la solución óptima $mejorSol$ al problema de la mochila}
+\caption{Halla la soluci'on 'optima al problema del camion}
 \begin{algorithmic}[1]
-    \IF{ probé con las cant cosas \& valor(candActual) $>$ valor(mejorSol) }
+    \STATE s $\leftarrow$ SolucionPosible(cant cosas)
+    \STATE ordenar arreglo de cosas \COMMENT{mediante merge sort}
+    \STATE valorMaximo $\leftarrow$ $\sum_{t=0}^{cant cosas} (cosa_i)_{valor}$ 
+    \STATE camionAux(s,c,0,mejorSol,valorMaximo)
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{camionAux: Halla la solución óptima $mejorSol$ al problema del camion}
+\begin{algorithmic}[1]
+    \IF{ prob'e con las cant cosas \& valor(candActual) $>$ valor(mejorSol) }
         \STATE mejorSol $\leftarrow$ candActual
+        \STATE terminar
+    \ENDIF    
+    \IF{el valor del actual $+$ valorMaximo $\leq$ el valor de la mejor soluci'on hasta el momento}
+        \STATE terminar
     \ELSE
-        \IF {no probé las cant cosas}
+        \IF {no prob'e las cant cosas}
                 \IF {no me paso del peso máximo agregando $a_i$ a candActual}
                     \STATE agregar($a_i$, candActual)
                     \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
                     \STATE sacar($a_i$, candActual)
-                \ENDIF
-            \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
-
-            \IF{valor(candActual) $>$ valor(mejorSol)}
-                \STATE mejorSol $\leftarrow$ candActual
-            \ENDIF
-        \ENDIF
+            		\ELSE
+            								\STATE \COMMENT{ como los demas pesan mas, no puedo agregar a mas nadie}
+		   	        						\IF{ valor(candActual) $>$ valor(mejorSol) }
+       											  	\STATE mejorSol $\leftarrow$ candActual
+        										\ENDIF	       
+        										\STATE terminar
+        				\ENDIF
+         \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
     \ENDIF
+   \ENDIF
 \end{algorithmic}
 \end{algorithm}
