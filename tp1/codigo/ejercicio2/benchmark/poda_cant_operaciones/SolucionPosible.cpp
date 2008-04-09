@@ -1,8 +1,7 @@
 #include "SolucionPosible.h"
 
-SolucionPosible ::SolucionPosible(unsigned cantcosas ){
+SolucionPosible :: SolucionPosible(unsigned cantcosas ){
     cantCosas = cantcosas;
-
     guardo = new bool[cantCosas];
     for(unsigned i = 0; i < cantCosas; i++){
         guardo[i] = false;
@@ -29,7 +28,7 @@ void SolucionPosible :: sacar(unsigned i,unsigned cost, unsigned val){
          o<<s.cosas[i]<<endl;
         }
      }
-     o<<"peso total:"<<s.peso<<endl;
+     o<<"costo total:"<<s.peso<<endl;
      o<<"valor total:"<<s.valor<<endl;
      return o;
 
@@ -45,6 +44,5 @@ SolucionPosible&  SolucionPosible ::  operator=(const SolucionPosible &otro){
 }
 
 SolucionPosible :: ~SolucionPosible(){
-
-    delete[] guardo;
+    delete []guardo;
 }

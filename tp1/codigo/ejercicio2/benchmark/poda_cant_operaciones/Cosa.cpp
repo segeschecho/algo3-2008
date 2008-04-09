@@ -1,8 +1,10 @@
 #include "Cosa.h"
 
-Cosa :: Cosa(unsigned v, unsigned p) {
+Cosa :: Cosa(){};
+
+Cosa :: Cosa(unsigned v, unsigned c) {
     valor = v;
-    peso = p;
+    peso = c;
 }
 
 std::ostream& operator<< (std::ostream& o, const Cosa& c) {
