@@ -18,39 +18,32 @@ int moda(int* a, int n) {
 
     while (indiceDeAdelante < n) {
         // si son distintos pasan a estar tachados
-        if (a[indiceDeAtras] != a[indiceDeAdelante]) {
+        if (!tachados[indiceDeAtras] && !tachados[indiceDeAdelante] && (a[indiceDeAtras] != a[indiceDeAdelante])) {
             tachados[indiceDeAtras] = true;
             tachados[indiceDeAdelante] = true;
-
-            // movemos los indices para que lleguen al proximo elemento sin tachar, y ademas que valga
-            // que el de adelante quede adelante
-            while (indiceDeAtras < n && tachados[indiceDeAtras]) {
-                indiceDeAtras++;
-            }
-            while (indiceDeAdelante < n && (tachados[indiceDeAdelante] || indiceDeAdelante <= indiceDeAtras)) {
-                indiceDeAdelante++;
-            }
         }
 
-        // si eran iguales, avanzamos buscando otro diferente
-        else {
+        // movemos los indices para que lleguen al proximo elemento sin tachar y sean distintos
+        if (indiceDeAtras < n && tachados[indiceDeAtras]) {
+            indiceDeAtras++;
+        }
+        if (indiceDeAdelante < n && (tachados[indiceDeAdelante] || 
+           (!tachados[indiceDeAtras] && a[indiceDeAtras] == a[indiceDeAdelante]) )) {
             indiceDeAdelante++;
         }
     }
 
-
     // buscamos el primer elemento sin tachar y sabemos que es la moda
     // o quedo solo 1 y es la moda, o quedaron varios iguales y que son la moda
-
-
-    /*int k = 0;
+    int k = 0;
     while ( k < n && tachados[k]) {
         k++;
-    }*/
+    }
+    
     delete [] tachados;
-    assert(indiceDeAtras < n);
-    return a[indiceDeAtras];
+    return a[k];
 }
+
 
 int main(int argc, char* argv[]) {
 
@@ -59,7 +52,7 @@ int main(int argc, char* argv[]) {
     if(argc >= 2) {
         ruta = argv[1];
     } else {
-        ruta="Tp1Ej1.in";
+        ruta="Tp1Ej3.in";
     }
     fstream f (ruta.c_str());
     assert(f.is_open());
@@ -69,7 +62,7 @@ int main(int argc, char* argv[]) {
     if(argc > 2) {
         salida = argv[2];
     } else {
-        salida = "Tp1Ej1.out";
+        salida = "Tp1Ej3.out";
     }
     ofstream o (salida.c_str());
 
