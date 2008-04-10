@@ -41,42 +41,62 @@ De esta forma solo terminan sobreviviendo algunos elementos de la moda. Al termi
 sin tachar desde $i$ hasta el final del arreglo son iguales. Entonces podr'ian o bien ser moda o ser elementos 
 distintos a la moda. Sin embargo, esto 'ultimo no puede ocurrir ya que la frecuencia de la moda es como m'inimo 
 $n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1) > n$.
-El siguiente es un ejemplo de la aplicaci'on del algoritmo
+El siguiente es un ejemplo de la aplicaci'on del algoritmo:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{./ejemplo.png}
-\caption{Al princio como estamos parados en dos elementos iguales, solo se avanza el indice de adelante. Como ahora son diferentes, se tachan y se avanzan los indices. Nuevamente son iguales por lo que solo se avanza el de adelante. Se tacha nuevamente un par de elemtenos, y al avanzar el indice de adelante se termino el arreglo. La moda entonces es el elemento donde esta parado el indice de atras.}
+%FIXME: esto no es el caption!!
+\caption{Al princio como estamos parados en dos elementos iguales, solo se avanza el 'indice de adelante. 
+Como ahora son diferentes, se tachan y se avanzan los 'indices. Nuevamente son iguales por lo que s'olo 
+se avanza el de adelante. Se tacha nuevamente un par de elementos, y al avanzar el 'indice de adelante se 
+termina el arreglo. La moda es entonces el elemento donde est'a parado el indice de atr'as.}
 \end{figure}
 
-Este algoritmo fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal buscado y su implementaci'on 
-era simple.
+Este algoritmo fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal 
+buscado y su implementaci'on era simple.
 
-\section{Seudoc'odigo}
+\section{Fseudoc'odigo}
 %\newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
 %TODO calculo, demostracion, tamaño de entrada, porq uniforme, peor caso, mejor caso
 \section{C'alculo de complejidad}
-Para hacer el c'alculo de complejidad utilizamos el modelo uniforme,pues consideramo, al igual que con el ejercicio anterior, que lo fundamental en el problema, a la hora de estudiar el tiempo, pasa por la cantidad de elementos que tengo, por lo que se puede suponer que los n'umeros est'an acotados. \\
-Considerando esto, afirmamos que si el arreglo tiene n  elementos, el tama\~{n}o de la entrada es n.\\
-Pensando en el comportamiento que tiene el algoritmo,vemos que siempre lo recorremos, al arreglo, hacia adelante y nunca volvemos hacia atr'as. Es por esta raz'on que si bien hay ciclos anidados (dentro del de la l'inea 4 tenemos al de la l'inea 7 y el de la l'inea 10) el algoritmo tiene O(n)
+Para hacer el c'alculo de complejidad utilizamos el modelo uniforme pues consideramos, al igual que con 
+el ejercicio anterior, que lo fundamental a la hora de estudiar el tiempo pasa por la cantidad de elementos 
+a estudiar, y no por los valores de los mismos. Por ende es razonable asumir que el costo de operar
+con los n'umeros propiamente dichos es constante.\\
+
+Considerando esto, afirmamos que si el arreglo tiene $n$ elementos, el tama\~{n}o de la entrada es $n$.\\
+Pensando en el comportamiento que tiene el algoritmo, vemos que siempre recorremos el arreglo hacia adelante 
+y nunca volvemos hacia atr'as. Es por esta raz'on que si bien hay ciclos anidados (dentro del de la l'inea 
+4 tenemos al de la l'inea 7 y el de la l'inea 10) el algoritmo es $O(n)$.
 El ciclo de la l'inea 7 usa indiceDeAtras para recorrer el arreglo, ahora la guarda del ciclo es:\\
 $$indiceDeAtras < tamanio(a) \& (indiceDeAtras no fue tachado)$$\\ 
-Entonces podemos ver que este ciclo, dado que i no se reinicia, solo recorre el arreglo a lo sumo una vez en todos los ciclos del de la l'inea 4. Es decir, si el ciclo principal hace k iteraciones y llamamos $iterAtras_t$ al numero iteraciones del ciclo de la l'inea 7 en la iteraci'on t del ciclo principal, vale que:\\
+Entonces podemos ver que este ciclo, dado que $i$ no se reinicia, solo recorre el arreglo a lo sumo una 
+vez en todos los ciclos del de la l'inea 4. Es decir, si el ciclo principal hace $k$ iteraciones y llamamos 
+$iterAtras_t$ al numero de iteraciones del ciclo de la l'inea 7 en la iteraci'on t del ciclo principal, vale que:\\
 $$\sum_{t=1}^{k}iterAtras_t \leq n$$\\
-ya que en el momento en que i se hace n, el ciclo interno no itera mas.\\
+ya que en el momento en que $i$ se hace $n$ el ciclo interno no itera m'as.\\
 La situaci'on del ciclo de la l'inea 10 es similar, en este caso la guarda es:\\
 $$indiceDeAdelante < tamanio(a) \& (indiceDeAdelante no fue tachado | indiceDeAdelante \leq indiceDeAtras)$$\\
-Es decir que el numero de iteraciones esta acotado en principio por n. Pero por otro lado la variable indiceDeAdelante, que no se reinicia, es la que establece la condici'on de salida del ciclo principal, es decir que si, an'alogamente a como hicimos antes, el ciclo principal hace k iteraci'on y llamamos $iterAdel_t$ al numero de iteraciones del ciclo de la l'inea 10, se puede ver que:\\
+Es decir que el n'umero de iteraciones est'a en principio acotado $n$. Por otro lado la variable $indiceDeAdelante$, 
+que no se reinicia, es la que establece la condici'on de salida del ciclo principal. Si, an'alogamente a como hicimos 
+antes, el ciclo principal hace $k$ iteraciones y llamamos $iterAdel_t$ al n'umero de iteraciones del ciclo de 
+la l'inea 10, se puede ver que:\\
 $$\sum_{t=1}^{k}iterAdel_t \leq n$$\\
-en particular si definimos
+y en particular si definimos
 $beta(b) =$ if b then 1 else 0 \\
-Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos indices en la iteraci'on t, tenemos que:\\
+Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos 'indices en la iteraci'on t, tenemos que:\\
 $$n=\sum_{t=0}^{n}beta(a[indiceDeAtras_t] == a[indiceDeAdelante_t])+ iterAdel_t$$\\
 ya que o indiceDeAdelante se incrementa en una unidad porque los elementos eran iguales, o itera el ciclo interno.\\
 
-Viendo esto, es de notar, que tanto indiceDeAtras como indiceDeAdelante solo recorren el arreglo una vez. De modo que el algoritmo tiene un orden de complejidad lineal, es decir O(n).
-Observando el pseudoc'odigo, tambien notamos como en la medida de que aumente el n'umero de apariciones de la moda, y por lo tanto la guarda del if de la linea 5 se haga falsa en mas oportunidades, mas rapido deber'ia andar el algoritmo, ya que solo se incrementa indiceDeAdelante. En vista de esto, si los elementos del arreglo son todos iguales, el algoritmo hace solo una pasada, en cambio en el peor de los casos, hace dos pasadas completas.
+Viendo esto es de notar que tanto indiceDeAtras como indiceDeAdelante solo recorren el arreglo una vez. 
+Por lo tanto el algoritmo tiene un orden de complejidad lineal, es decir $O(n)$.
+Observando el pseudoc'odigo, tambien notamos como en la medida que aumenta el n'umero de apariciones de la 
+moda (y por lo tanto la guarda del $if$ de la l'inea 5 se haga falsa en m'as oportunidades) m'as r'apido 
+deber'ia andar el algoritmo, ya que solo se incrementa $indiceDeAdelante$. En vista de 'esto, si los elementos 
+del arreglo son todos iguales, el algoritmo hace solo una pasada, mientras que en el peor de los casos, 
+hace dos pasadas completas.
 
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
@@ -124,6 +144,6 @@ aumenta de forma lineal. Lo mismo ocurre con la cantidad de operaciones. Esta si
 corresponde con el an'alisis te'orico que se realiz'o. Por otro lado en los gr'aficos en funci'on 
 de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer linealmente. Esto 
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se
-explica de la siguiente manera: si todos los elementos son iguales a la moda, el if de la linea 5 del seudoc'odigo
-siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin hacer otro tipo de operación.
-Para finalizar, podemos decir que el comportamiento que obtuvimos, coincidi'o con el esperado.
+explica porque si todos los elementos son iguales a la moda, el $if$ de la l'inea 5 del pseudoc'odigo
+siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin 
+hacer otro tipo de operación. Para finalizar, podemos decir que el comportamiento que obtuvimos coincidi'o con el esperado.
