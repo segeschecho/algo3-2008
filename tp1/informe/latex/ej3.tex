@@ -29,7 +29,7 @@ teniendo en cuenta que luego deber'iamos realizar un an'alisis del algoritmo par
 complejidad.
 \paragraph{}
 Se busc'o entonces otra forma de  obtener un orden lineal aprovechando que la frecuencia de la moda 
-era mayor a la mitad. La idea definitiva consiste b'asicamente en recorrer el  arreglo sirvi'endose de 
+era mayor a la mitad. La idea definitiva consiste b'asicamente en recorrer el arreglo sirvi'endose de 
 dos 'indices. Si se encuentran dos elementos iguales, se incrementa uno de los 'indices (en adelante $j$) 
 y se deja inm'ovil al otro (en adelante $i$) en la posici'on donde se encuentra. Si se encuentran 2 
 elementos diferentes, estos son tachados (para esto se utiliza una marca sobre un arreglo de posiciones booleanas). 
@@ -47,14 +47,14 @@ El siguiente es un ejemplo de la aplicaci'on del algoritmo:
 \includegraphics[scale=0.7]{./ejemplo.png}
 \caption{Ejemplo de la aplicaci'on del algoritmo}
 \end{figure}
-En el ejemplo, Al princio como estamos parados en dos elementos iguales, solo se avanza el 'indice de adelante. 
+En el ejemplo, al principio como estamos parados en dos elementos iguales, solo se avanza el 'indice de adelante. 
 Como ahora son diferentes, se tachan y se avanzan los 'indices. Nuevamente son iguales por lo que s'olo 
 se avanza el de adelante. Se tacha nuevamente un par de elementos, y al avanzar el 'indice de adelante se 
-termina el arreglo. La moda es entonces el elemento donde est'a parado el indice de atr'as.
+termina el arreglo. La moda es entonces el elemento donde est'a parado el 'indice de atr'as.
 Este algoritmo fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal 
 buscado y su implementaci'on era simple.
 
-\section{Fseudoc'odigo}
+\section{Pseudoc'odigo}
 %\newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
@@ -145,4 +145,4 @@ de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer lin
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se
 explica porque si todos los elementos son iguales a la moda, el $if$ de la l'inea 5 del pseudoc'odigo
 siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin 
-hacer otro tipo de operación. Para finalizar, podemos decir que el comportamiento que obtuvimos coincidi'o con el esperado.
+hacer otro tipo de operaci'on. Para finalizar, podemos decir que el comportamiento que obtuvimos coincidi'o con el esperado.

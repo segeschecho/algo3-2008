@@ -19,8 +19,7 @@ sin exceder la capacidad de carga del cami'on.
 
 %FIXME: mmmmm ?? no es verdura esto? verificar
 %FIXME: cuando menos hay que cambiarlo para hablar del nuevo metodo de poda
-A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de 
-esta manera se va podando el 'arbol de posibles soluciones.
+A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de esta manera se va podando el 'arbol de posibles soluciones.
 
 De esta manera, se construye el siguiente 'arbol de recursi'on:
 \begin{figure}[H]
@@ -32,7 +31,7 @@ indica que el elemento $i$ no es parte de esta soluci'on, mientras que  un $1$ i
 Las hojas de este 'arbol son las soluciones posibles. Como cada elemento puede estar o no estar, se tienen dos posibilidades para cada
 uno (llevarlo o no). Esto implica que la cantidad posible de soluciones si se tienen $n$ elementos es $2^n$.
 
-El algoritmo implementado toma como par'ametros el camion (cosas, cuantas cosas y capacidad)  y dos soluciones posibles (una en donde est'a guardada la mejor 
+El algoritmo implementado toma como par'ametros el cami'on (cosas, cuantas cosas y capacidad)  y dos soluciones posibles (una en donde est'a guardada la mejor 
 encontrada hasta el momento y otra que guarda la que se va construyendo). Adem'as se lleva un 'indice que 
 indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo y el valor 'optimo que puede lograr una soluci'on(se explica a continuaci'on).
 
@@ -57,7 +56,7 @@ hacer esto se nos ocurri'o hacer la suma en cada llamada. Sin embargo este c'alc
 tanto buscamos alguna alternativa mejor. La idea entonces fue antes de empezar a trabajar con el arreglo 
 de cosas, sumar el valor de todos los elementos. Este n'umero es el m'aximo valor que puedo lograr con 
 un conjunto de cosas. Cada vez que hago una llamada calculo si el valor de mi candidato actual m'as el 
-m'aximo me sirve para mejorar mi soluci'n. Por otro lado, cuando hago una llamada sin incluir a un 
+m'aximo me sirve para mejorar mi soluci'on. Por otro lado, cuando hago una llamada sin incluir a un 
 elemento, resto al m'aximo posible el valor de dicho elemento.
 
 Por ejemplo:
@@ -84,13 +83,13 @@ $O(n$ $log(n))$ y luego suma todos los valores del mismo en $O(n)$. Veremos a co
 orden de la funci'on principal es mayor que 'estos, la complejidad total del algoritmo no se ve afectada.
 
 Sea N la cantidad de cosas que hay para elegir. Observemos que dado un N, si llamamos n a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
-T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan mas elementos que mirar y tengo que copiar la nueva solucion, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
+T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan m'as elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 %FIXME: wtf paso aca??
 T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan mas elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 Entonces podemos decir que las ecuaciones de recurrencia son:
-$$T(0) = N +1$$
+$$T(0) = N + 1$$
 $$T(n) = 2*T(n-1) + k$$
-$k$ viene de las operaciones que se realizan dentro de cada llamda, las cuales son todas O(1).
+$k$ viene de las operaciones que se realizan dentro de cada llamada, las cuales son todas O(1).
 
 Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$
 
@@ -124,9 +123,9 @@ porque hasta que no llegue al caso donde solo pongo a $a_n$ el valor m'aximo que
 pero las soluciones que arme siempre valen menos que $n$. Por ende en este caso se recorren practicamente todas las ramas. 
 
 \subsection{Experiencias realizadas}
-Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funcion del tama\~{n}o de la 
+Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funci'on del tama\~{n}o de la 
 entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban u
-na mejora en la practica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer 
+na mejora en la pr'actica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer 
 las pruebas generamos casos donde la cantidad de elementos era creciente y la composic'ion del conjunto de cosas era 
 aleatoria. El peso que el cami'on puede cargar se fij'o en 200 y los valores y pesos de las cosas siguen una distribuci'on 
 uniforme (0,100). Ademas se analiz'o el comportamiento del algoritmo en aquellas situaciones que consideramos como peores 
@@ -165,7 +164,7 @@ En los gr'aficos pudimos observar el comportamiento exponencial del algoritmo. E
 se observ'o un mejor comportamiento del algoritmo que implementaba las diversas podas, lo cual es esperable, puesto
 que uno tender'ia a creer que algunas ramas se van a podar necesariamente si la configuraci'on de las cosas es aleatoria.
 
-El algoritmo con podas se comport'o mucho mejor que el algoritmo sin podas en el peor caso de  este 'ultimo: esto se 
+El algoritmo con podas se comport'o mucho mejor que el algoritmo sin podas en el peor caso de este 'ultimo: esto se 
 explica porque en este caso la primer mejor soluci'on que se arma es la que es 'optima, y por eso no baja por ninguna 
 rama, ya que ninguna tiene el potencial de superarla.
  
