@@ -19,8 +19,7 @@ sin exceder la capacidad de carga del cami'on.
 
 %FIXME: mmmmm ?? no es verdura esto? verificar
 %FIXME: cuando menos hay que cambiarlo para hablar del nuevo metodo de poda
-La restricci'on expl'icita es el conjunto de cosas a llevar y la restricci'on impl'icita es la capacidad de carga del cami'on. A 
-medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de 
+A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de 
 esta manera se va podando el 'arbol de posibles soluciones.
 
 De esta manera, se construye el siguiente 'arbol de recursi'on:
@@ -35,7 +34,7 @@ uno (llevarlo o no). Esto implica que la cantidad posible de soluciones si se ti
 
 El algoritmo implementado toma como par'ametros el camion (cosas, cuantas cosas y capacidad)  y dos soluciones posibles (una en donde est'a guardada la mejor 
 encontrada hasta el momento y otra que guarda la que se va construyendo). Adem'as se lleva un 'indice que 
-indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo.
+indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo y el valor 'optimo que puede lograr una soluci'on(se explica a continuaci'on).
 
 B'asicamente una llamada a la funci'on consiste en verificar si se agrega o no a la soluci'on el elemento apuntado por $indice$. Si es as'i (es 
 decir que al agregarlo, el peso total no excede el peso m'aximo), se agrega a la soluci'on candidata y se contin'ua con la 
@@ -84,8 +83,8 @@ Antes de llamar a la funci'on que hace backtracking, el algoritmo ordena el arre
 $O(n$ $log(n))$ y luego suma todos los valores del mismo en $O(n)$. Veremos a continuacio'n que como el 
 orden de la funci'on principal es mayor que 'estos, la complejidad total del algoritmo no se ve afectada.
 
-Sea $N$ la cantidad de cosas que hay para elegir. Observemos que dado un $N$, si llamamos $n$ a la cantidad 
-de elementos que me quedan por procesar (es decir por decidir si llevo o no), la 
+Sea N la cantidad de cosas que hay para elegir. Observemos que dado un N, si llamamos n a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
+T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan mas elementos que mirar y tengo que copiar la nueva solucion, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 %FIXME: wtf paso aca??
 T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan mas elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 Entonces podemos decir que las ecuaciones de recurrencia son:
