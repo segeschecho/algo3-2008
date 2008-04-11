@@ -100,15 +100,15 @@ de las operaciones. Veamos primero el c'odigo fuera del bucle.
 \item $generar\_candidato()$ tiene un costo $O(log^2 n)$ ya que para casos grandes solo efect'ua un chequeo de
 una variable booleana y una multiplicaci'on de un entero acotado por $n$.
 \end{itemize}
-El resto de las operaciones realizadas antes y después del bucle tienen una complejidad de a lo sumo $O(log$ $n)$,
+El resto de las operaciones realizadas antes y despu'es del bucle tienen una complejidad de a lo sumo $O(log$ $n)$,
 y por lo tanto son despreciables respecto del orden predominante que es hasta el momento $O(log^2 n)$ si no tenemos
 en cuenta al ciclo principal.
 
 \paragraph{}
-Observemos ahora el comportamiento de dicho bucle. Se demostrará a continuaci'on que este bucle se ejecuta a lo sumo
+Observemos ahora el comportamiento de dicho bucle. Se demostrar'a a continuaci'on que este bucle se ejecuta a lo sumo
 $O(\sqrt{n})$ veces, pero por el momento veamos la complejidad del c'odigo contenido en el mismo. Si observamos
 l'inea por l'inea el pseudoc'odigo puede verse que el cuerpo del ciclo es una sucesi'on de operaciones aritm'eticas,
-donde la más costosa es la multiplicaci'on, cuya complejidad es $O(log^2 n)$.
+donde la m'as costosa es la multiplicaci'on, cuya complejidad es $O(log^2 n)$.
 
 \paragraph{}
 Resta entonces demostrar que el ciclo itera a lo sumo $O(\sqrt{n})$ veces. Si analizamos la guarda del ciclo vemos
@@ -136,7 +136,7 @@ Si adem'as vemos que en este caso $primoActual_{i+1}$ es el t'ermino de la suces
 inmediatamente a continuaci'on de $primoActual_i$. Por consiguiente $primoActual$ crece
 de forma tal que supera el valor de $\sqrt{limite}$ en $O(\sqrt{limite})$ iteraciones (puesto
 que $primoActual > 0$ en todo momento, $|$ $primoActual - \sqrt{limite}$ $|$ $< \sqrt{limite}$).
-Además resulta claro que $limite \leq n$ ya que su valor inicial es $n$ y luego decrece
+Adem'as resulta claro que $limite \leq n$ ya que su valor inicial es $n$ y luego decrece
 progresivamente.
 \end{itemize}
 
@@ -151,7 +151,7 @@ Y el orden de complejidad del ciclo teniendo en cuenta el costo de cada iteraci'
 \centerline{$O(log^2 n \sqrt{n})$}
 \paragraph{}
 Siendo $n$ el valor del entero que el algoritmo toma como par'ametro. Por otra parte sabemos que 
-el tamaño en memoria de un entero arbitrario $n$ es $t = log_2 n$, por lo tanto, el tama\~{n}o de la entrada no es n, sino t:\\
+el tama\~{n}o en memoria de un entero arbitrario $n$ es $t = log_2 n$, por lo tanto, el tama\~{n}o de la entrada no es n, sino t:\\
 \\
 \centerline{$2^t = n \Rightarrow \sqrt{n}$ $log^2 n = 2^{t/2}$ $t^2$}
 \\
@@ -208,7 +208,7 @@ tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo e
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{../../codigo/ejercicio1/benchmark_de_tiempo/graficos/tamanio_Entrada_T/Tiempo_en_funcion_bits.png}
-\caption{Cantidad de operaciones en funci'on del tama\~{n}o de la entrada}
+\caption{Tiempo en funci'on del tama\~{n}o de la entrada}
 \end{figure}
 
 \section{Discusi'on}
