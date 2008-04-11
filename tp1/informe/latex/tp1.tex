@@ -9,18 +9,42 @@
 \usepackage[a4paper,margin=1cm,top=2cm,bottom=2cm]{geometry}
 \usepackage[spanish,activeacute]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{caratula}
+\usepackage{hyperref}
 \newcommand{\enteros}{{\mathbb Z}}
 \newcommand{\entero}{{\in \enteros}}
+\pagestyle{fancy}
+\fancyhead[LO]{Gonzalez, Gonzalez, Mart'inez, Sainz-Tr'apaga}
+\fancyhead[C]{}
+\fancyhead[RO]{P\'agina \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot{}
 
 \begin{document}
+\includegraphics{logo.jpg}
+\materia{Algoritmos y estructuras de datos III}
+\titulo{Trabajo Pr'actico no. 1}
+\subtitulo{}
+
+\integrante{Martinez Federico}{17/06}{federicoemartinez@gmail.com}
+
+\resumen{
+En el siguiente trabajo se presentan las soluciones a los ejercicios propuestos como primer trabajo practico de la materia algoritmos y estructuras de datos III. En el mismo se presenta el planteo de cada problema, el desarrollo de un algoritmo para resolverlo, asi como tambi'en el c'alculo de la complejidad de cada algoritmo. Por otro lado, se realiza una experimentaci'on para observar el comportamiento de los mismos, para contrastar los resultados de dichas experiencias con el analisis teorico.
+}
+
+\maketitle
 \tableofcontents
 \input{trans_algorithmic.tex}
-
-\setcounter{section}{0}
-\include{ej1}
-\setcounter{section}{0}
-\include{ej2}
-\setcounter{section}{0}
-\include{ej3}
-
+%\setcounter{section}{0}
+\input{ej1}
+%\setcounter{section}{0}
+\input{ej2}
+%\setcounter{section}{0}
+\input{ej3}
+\part{Conclusi'on}
+Consideramos que la realizaci'on del trabajo nos result'o provechosa en la medida que nos permiti'o contrastar el analisis teorico de la complejidad de los algoritmos con su comportamiento a nivel empirico.
+Por otro lado, nos gustar'ia comentar posibles extensiones al trabajo, a saber, mejorar la selecci'on de candidatos en el algoritmo de factorizacion, desarrollar nuevas podas para el ejercicio 2 y en el tres lograr no utilizar un arreglo auxiliar. 
+finalmente y a modo de conclusi'on, nos gustaria decir que pudimos observar como el comportamiento de los algoritmos se correspondi'o con lo que deducimos durante el analisis.
+\label{LastPage}
 \end{document}
