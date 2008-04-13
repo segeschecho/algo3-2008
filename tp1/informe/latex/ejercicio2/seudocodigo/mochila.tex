@@ -7,36 +7,36 @@ cosas = $\{a_1,....,a_{cant}\}$ \\
 \begin{algorithm}
 \caption{Halla la soluci'on 'optima al problema del camion}
 \begin{algorithmic}[1]
-    \STATE s $\leftarrow$ SolucionPosible(cant cosas)
+    \STATE s $\textcolor{orange}{\leftarrow}$ SolucionPosible\textcolor{magenta}{(}cant cosas\textcolor{magenta}{)}
     \STATE ordenar arreglo de cosas \COMMENT{mediante merge sort}
-    \STATE valorMaximo $\leftarrow$ $\sum_{t=0}^{cant cosas} (cosa_i)_{valor}$ 
-    \STATE camionAux(s,c,0,mejorSol,valorMaximo)
+    \STATE valorMaximo $\textcolor{orange}{\leftarrow}$ $\sum_{t=0}^{cant cosas} \textcolor{magenta}{(}cosa_i\textcolor{magenta}{)}_{valor}$ 
+    \STATE camionAux\textcolor{magenta}{(}s,c,0,mejorSol,valorMaximo\textcolor{magenta}{)}
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}
 \caption{camionAux: Halla la solución óptima $mejorSol$ al problema del camion}
 \begin{algorithmic}[1]
-    \IF{ prob'e con las cant cosas \& valor(candActual) $>$ valor(mejorSol) }
-        \STATE mejorSol $\leftarrow$ candActual
+    \IF{ prob'e con las cant cosas \textcolor{orange}{\&} valor\textcolor{magenta}{(}candActual\textcolor{magenta}{)} $\textcolor{orange}{>}$ valor\textcolor{magenta}{(}mejorSol\textcolor{magenta}{)} }
+        \STATE mejorSol $\textcolor{orange}{\leftarrow}$ candActual
         \STATE terminar
     \ENDIF    
-    \IF{el valor del actual $+$ valorMaximo $\leq$ el valor de la mejor soluci'on hasta el momento}
+    \IF{el valor del actual $\textcolor{orange}{+}$ valorMaximo $\textcolor{orange}{\leq}$ el valor de la mejor soluci'on hasta el momento}
         \STATE terminar
     \ELSE
         \IF {no prob'e las cant cosas}
                 \IF {no me paso del peso máximo agregando $a_i$ a candActual}
-                    \STATE agregar($a_i$, candActual)
-                    \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
-                    \STATE sacar($a_i$, candActual)
+                    \STATE agregar\textcolor{magenta}{(}$a_i$, candActual\textcolor{magenta}{)}
+                    \STATE camionAux\textcolor{magenta}{(}candActual, cosas, capacidad, i\textcolor{orange}{+}1, cant, mejorSol\textcolor{magenta}{)}
+                    \STATE sacar\textcolor{magenta}{(}$a_i$, candActual\textcolor{magenta}{)}
             		\ELSE
             								\STATE \COMMENT{ como los demas pesan mas, no puedo agregar a mas nadie}
-		   	        						\IF{ valor(candActual) $>$ valor(mejorSol) }
-       											  	\STATE mejorSol $\leftarrow$ candActual
+		   	        						\IF{ valor\textcolor{magenta}{(}candActual\textcolor{magenta}{)} $\textcolor{orange}{>}$ valor\textcolor{magenta}{(}mejorSol\textcolor{magenta}{)} }
+       											  	\STATE mejorSol $\textcolor{orange}{\leftarrow}$ candActual
         										\ENDIF	       
         										\STATE terminar
         				\ENDIF
-         \STATE camionAux(candActual, cosas, capacidad, i+1, cant, mejorSol)
+         \STATE camionAux\textcolor{magenta}{(}candActual, cosas, capacidad, i\textcolor{orange}{+}1, cant, mejorSol\textcolor{magenta}{)}
     \ENDIF
    \ENDIF
 \end{algorithmic}

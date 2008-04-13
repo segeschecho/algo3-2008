@@ -26,7 +26,7 @@ De esta manera, se construye el siguiente 'arbol de recursi'on:
 \centering
 \includegraphics[scale=0.5]{./ejercicio2/arbol.png}
 \end{figure}
-En la ra'iz del 'arbol se tiene la soluci'on $\emptyset$. Luego, en cada nodo se tiene una $n-upla$ donde un $0$ en la posici'on $i$ 
+En la ra'iz del 'arbol se tiene la soluci'on $\emptyset$. Luego, en cada nodo se va construyendo una $n-upla$ donde un $0$ en la posici'on $i$ 
 indica que el elemento $i$ no es parte de esta soluci'on, mientras que  un $1$ indica que el elemento est'a inclu'ido en la soluci'on.
 Las hojas de este 'arbol son las soluciones posibles. Como cada elemento puede estar o no estar, se tienen dos posibilidades para cada
 uno (llevarlo o no). Esto implica que la cantidad posible de soluciones si se tienen $n$ elementos es $2^n$.
@@ -37,7 +37,7 @@ indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo y el va
 
 B'asicamente una llamada a la funci'on consiste en verificar si se agrega o no a la soluci'on el elemento apuntado por $indice$. Si es as'i (es 
 decir que al agregarlo, el peso total no excede el peso m'aximo), se agrega a la soluci'on candidata y se contin'ua con la 
-siguiente llamada recursiva. 'Esta consiste en una llamada sin agregar el elemento apuntado por 'indice. Cuando se encuentra 
+siguiente llamada recursiva. Luego se realiza otra llamada recursiva que consiste en no agregar el elemento apuntado por 'indice. Cuando se encuentra 
 una soluci'on mejor a la actualmente 'optima, 'esta es reemplazada. Repitiendo este proceso se pueden observar todas 
 las hojas del 'arbol, para quedarse con la mejor.
 
@@ -64,7 +64,7 @@ Por ejemplo:
 Si tengo un conjunto de cosas tal que sus valores son: {1,2,3,4}. El m'aximo valor que podr'ia llevar 
 es 10. Cuando estoy armando una soluci'on que excluye al valor 1, el m'aximo es 9. Si ademas quito al 2, 
 el m'aximo es 7, etc. Consideramos que si bien estas podas no nos mejorar'ian el orden de complejidad, 
-si nos permitir'ian en general observar un mejor desempe\~{n}o.
+si nos permitir'ian en general observar un mejor desempe\~{n}o. Es importante notar que por como tenemos que devolver la soluci'on es necesario mapear de alguna manera los indices de los elementos luego de ordenarse con los del arreglo original, esto nos agrega un overhead a la poda, que debe tenerse en cuenta.
 
 Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $SolucionPosible$ con la finalidad de aportar m'as claridad al mismo.
 
@@ -85,7 +85,6 @@ orden de la funci'on principal es mayor que 'estos, la complejidad total del alg
 Sea N la cantidad de cosas que hay para elegir. Observemos que dado un N, si llamamos n a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
 T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan m'as elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 %FIXME: wtf paso aca??
-T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan mas elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 Entonces podemos decir que las ecuaciones de recurrencia son:
 $$T(0) = N + 1$$
 $$T(n) = 2*T(n-1) + k$$
@@ -94,7 +93,8 @@ $k$ viene de las operaciones que se realizan dentro de cada llamada, las cuales 
 Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$
 
 Lo podemos demostrar por inducci'on:
-$n = 0$:\\
+
+Para $n = 0$:\\
 $$T(0) = N + 1 =  N*2^0 + k*(2^0-1) + 2^0$$
 supongamos que vale para $n$, veamos que vale para $n+1$:
 $$T(n+1) = 2T(n) + k$$
@@ -122,14 +122,14 @@ salvo en el caso donde no agregu'e a ning'un $a_i$ con $i < n$. Tampoco funciona
 porque hasta que no llegue al caso donde solo pongo a $a_n$ el valor m'aximo que puedo armar siempre es mayor que $n$, 
 pero las soluciones que arme siempre valen menos que $n$. Por ende en este caso se recorren practicamente todas las ramas. 
 
+\section{An'alisis experimental}
 \subsection{Experiencias realizadas}
 Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funci'on del tama\~{n}o de la 
-entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban u
-na mejora en la pr'actica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer 
+entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban una mejora en la pr'actica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. Para hacer 
 las pruebas generamos casos donde la cantidad de elementos era creciente y la composic'ion del conjunto de cosas era 
 aleatoria. El peso que el cami'on puede cargar se fij'o en 200 y los valores y pesos de las cosas siguen una distribuci'on 
 uniforme (0,100). Ademas se analiz'o el comportamiento del algoritmo en aquellas situaciones que consideramos como peores 
-casos. En los gr'aficos, se denomina "algoritmo sin poda" a la versi'on que no ordena el arreglo, ni observa la suma potencial 
+casos. En los gr'aficos, se denomina algoritmo sin poda a la versi'on que no ordena el arreglo, ni observa la suma potencial 
 del camino.
 
 \subsection{Gr'aficos}

@@ -1,4 +1,3 @@
-for i in range(1000):
-    print 6*(10*i+1)+1
-    print 6*(10*i+1)+5
+for i in range(10000000):
+    print i+2
 print 0

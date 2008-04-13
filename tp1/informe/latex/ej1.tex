@@ -15,21 +15,10 @@ los primos menores a $n$ expl'icitamente. El proceso consiste en partir de 2, pr
 dividen a $n$ y a partir  de aqu'i ciclar generando n'umeros de la forma $6*k + 1$ o $6*k + 5$ con $k \geq 1$ 
 (se puede demostrar que los n'umeros primos mayores que 5 tienen esta forma (ver Demostraci'on 1)).
 \paragraph{}
-Cuando hallamos alg'un n'umero primo que divide a $n$, buscamos su multiplicidad dividiendo nuestro n'umero 
-por dicho primo, tantas veces como sea posible. Una vez calculada, se verifica si esta nueva multiplicidad 
-es mayor a la guardada hasta el momento. Si lo es, 'esta es reemplazada por la nueva. Una vez hecho esto 
-se pasa al siguiente posible primo, repitiendo el proceso anterior pero ahora con un nuevo $n$ que llamaremos 
-$n'$, y que resulta de dividir $n$ por el n'umero primo, elevado a la potencia hallada. Este proceso se repite 
-mientras nuestro pr'oximo primo no supere la ra'iz de $n'$. Un problema de este m'etodo es que se hacen 
-divisiones por n'umeros que no son primos, pero su costo es menor compar'andolo con otras metodolog'ias que
-buscan todos los primos menores a $n$, o que verifican si dicho n'umero lo es antes de hacer la divisi'on.
+Cuando hallamos alg'un n'umero primo que divide a $n$,se lo divide y se guarda en n el cociente de dicha division. mientras el primo siga dividendo a n vamos guardando la potencia con que lo divide. Cuando deja de dividir a n, verificamos si es necesario actualizar dicha potencia, y luego construimos un nuevo candidato. Utilizando que si un n'umero es compuesto entonces algun primo menor que su ra'iz cuadrada lo divide (ver demostraci'on 2) no necesitamos cicalr hasta n sino hasta ru raiz, o lo que es lo mismo ciclar hasta que el primo actual al cuadrado sea menor que n (recordemos que n se actualiza con cada divisi'on). Usamos primo al cuadrado ya que en el m'odelo logaritmico el coste de la raiz cuadrada es mayor que el de la multiplicaci'on (ver C'alculo de Complejidad). Una desventaja de este m'etodo es que hace divisiones por n'umeros que no son primos, pero igualmente el costo de estas divisiones es menor que el de ver si el n'umero e sprimo cada vez.
 \paragraph{}
 Es importante notar que si un n'umero no es primo, este no puede dividir a $n$ (ver demostraci'on 2). Si 
-no se pudiera asegurar esto, el algoritmo fallar'ia. Un ejemplo simple seria al factorizar $30 = 2*3*5$. 
-En este caso se guardar'ia a 15 como m'aximo factor primo, lo cual resulta claramente err'oneo. Finalmente, 
-utilizamos un teorema que nos dice que si un n'umero es compuesto existe por lo menos un primo menor que su 
-ra'iz cuadrada que lo divide (ver demostraci'on 3), lo que nos permite iterar solo hasta la ra'iz del n'umero 
-(la cual se actualiza luego de terminada la divisi'on) en vez de hasta $n$.
+no se pudiera asegurar esto, el algoritmo podria fallar.
 
 \section{Demostraciones}
 \subsection{Teorema 1}
@@ -157,6 +146,8 @@ el tama\~{n}o en memoria de un entero arbitrario $n$ es $t = log_2 n$, por lo ta
 \\
 \paragraph{}
 Finalmente pudimos demostrar que $T(t) \in O(2^{t/2} $ $t^2)$.
+\paragraph{}
+Cuando un numero es primo, ocurre que el ciclo itera exactamente $\sqrt(n)$ veces, mientras que si el numero es compuesto el numero de iteraciones es menor, ya que si $n = p1^k1*m$ donde p1 es primo y es el menor primo que divide a n, tenemos que el ciclo va a iterar aproximadamente p1 veces hasta allar a p1, luego k1 veces y luego como maximo $\sqrt(m)-p1$ veces. En particular si el numero n es de la forma $p^k$ con p primo, el ciclo itera hasta p y luego itera k veces, y $k=log_p n$ por lo que la cantidad de iteraciones va a ser logaritmica. Si lo pensamos en funcion del tama\~{n}o de la entrada, si el n es primo se producen $2^{t/2}$ iteraciones, mientras que si el numero es una potencia de un primo, el n'umero de iteraciones es O(t)
 
 
 %TODO: hablar de que sabemos q n no es tam de entrada, que dejamos los graficos porq se ve bien el o(sqrtn), ojo con esto q me parece q es O(raiz*log^3)
@@ -170,6 +161,7 @@ precisamente cuando el n'umero es primo, mientras que el mejor caso es cuando el
 Por otro lado realizamos experiencias similares pero teniendo en cuenta ya no el numero, sino la cantidad de bits 
 de su representaci'on binaria, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experiencias 
 tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo en funci'on de $\lfloor log_2(n) \rfloor + 1$.
+Para medir los tiempo se utiliz'o una clase basada en QueryPerformanceCounter de windwos. Para contar operaciones, el procedimiento se baso en declarar unavariable global e ir incrementandola en base a las operaciones que se realizaban linea a linea. Este procedimiento se aplico en los tres ejercicios.
 
 \subsection{Gr'aficos}
 \subsubsection{Gr'aficos en funcion de n}
