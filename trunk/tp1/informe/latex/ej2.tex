@@ -79,16 +79,18 @@ cantidad de cosas a llevar. Por esa raz'on no nos parece desacertado considerar 
 acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas entre las cuales elegir.
 
 Antes de llamar a la funci'on que hace backtracking, el algoritmo ordena el arreglo con $merge sort$ en 
-$O(n$ $log(n))$ y luego suma todos los valores del mismo en $O(n)$. Veremos a continuacio'n que como el 
+$O(n$ $log(n))$ y luego suma todos los valores del mismo en $O(n)$. Veremos a continuaci'on que como el 
 orden de la funci'on principal es mayor que 'estos, la complejidad total del algoritmo no se ve afectada.
 
-Sea N la cantidad de cosas que hay para elegir. Observemos que dado un N, si llamamos n a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
-T(0) = N + 1, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan m'as elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
+Sea $N$ la cantidad de cosas que hay para elegir. Observemos que dado un $N$, si llamamos $n$ a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
+$T(0) = N + 1$, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan m'as elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
+
+Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo sumo se hacen d'os llamadas recursivas con $n - 1$ elementos a procesar. A este costo se le agrega una constante que llamaremos $k$, por lo tanto podemos deducir las siguientes ecuaciones de recurrencia:
 %FIXME: wtf paso aca??
-Entonces podemos decir que las ecuaciones de recurrencia son:
+%%FIXME: hay q explicar q en algun caso t(n ) = N pero q eso no es lo peor q puede pasar
 $$T(0) = N + 1$$
 $$T(n) = 2*T(n-1) + k$$
-$k$ viene de las operaciones que se realizan dentro de cada llamada, las cuales son todas O(1).
+donde $k$ viene de las operaciones que se realizan dentro de cada llamada, las cuales son todas O(1).
 
 Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$
 
@@ -103,7 +105,7 @@ $$T(n+1) = 2(N*2^n + k*(2^n-1) + 2^n) + k$$
 $$T(n+1) = N*2^{n+1} + k*(2^{n+1}-2) + 2^{n+1} + k$$
 $$T(n+1) = N*2^{n+1} + k*(2^{n+1}-1) + 2^{n+1}$$
 Que era lo que quer'iamos ver.
-Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$, y adem'as sabemos que $n$ es del orden de $N$, tenemos que $T(n) \in$ $O(N*2^N)$.
+Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$\\y adem'as sabemos que $n$ es del orden de $N$, tenemos que $T(n) \in$ $O(N*2^N)$.
 
 Luego el algoritmo tiene un orden exponencial en funci'on del tama\~{n}o de la entrada, a'un pese a las podas; 
 y esto es de esperarse ya que las podas funcionan 'unicamente en algunos casos, mientras que en otros no ayudan 
