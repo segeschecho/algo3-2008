@@ -1,13 +1,14 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <fstream>
-
+#include "hr_time.h"
 #include <assert.h>
 #include <math.h>
 #include <time.h>
 
 #include "FabricaCandidatos.h"
-
+static CStopWatch* timer= new CStopWatch();
 using namespace std;
 
 #define CANT_VECES 10000
@@ -21,7 +22,7 @@ void primoDeMayorPotencia(unsigned long long int n, unsigned long long int& prim
     FabricaCandidatos fab = FabricaCandidatos();
     unsigned long long int primoActual = fab.siguiente();
     unsigned int potenciaActual = 0;
-    
+
     unsigned long long int s = (unsigned long long int) ceil(sqrt((long double)n));
 
     while (n != 1) {
@@ -52,7 +53,7 @@ void primoDeMayorPotencia(unsigned long long int n, unsigned long long int& prim
         mejorPrimo = primoActual;
         mejorPotencia = potenciaActual;
     }
-    
+
     primo = mejorPrimo;
     potencia = mejorPotencia;
 }
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]) {
     } else {
         ruta = "Tp1Ej1.in";
     }
-    fstream f (ruta.c_str()); 
+    fstream f (ruta.c_str());
     assert(f.is_open());
 
     // preparo el archivo de salida
@@ -77,7 +78,7 @@ int main(int argc, char* argv[]) {
         salida = "Tp1Ej1.out";
     }
     ofstream o (salida.c_str());
-    
+
     unsigned long long int primo, n;
     unsigned int potencia;
     f >> n;
@@ -86,7 +87,12 @@ int main(int argc, char* argv[]) {
 //    unsigned long long int inicio = clock();
 //    while(i > 0) {
         while (n != 0) {
+            timer->startTimer();
             primoDeMayorPotencia(n, primo, potencia);
+            timer->stopTimer( );
+            cout<<setprecision (20)<<timer->getElapsedTime()<<endl;
+            delete timer;
+            timer = new CStopWatch();
             o << n << " " << primo << " " << potencia << endl;
             f >> n;
         }

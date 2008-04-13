@@ -7,31 +7,28 @@ veces, encontrar la moda, es decir, el valor que aparece m'as veces.
 \paragraph{}
 La primera idea para abordar este problema fue la de ordenar el arreglo y contar la cantidad 
 de apariciones guardando el elemento con m'as apariciones. Esta primera idea no tuvo mucha 
-aceptaci'on ya que se observ'o que el orden requerido para ordenar dicho arreglo no cumpl'ia
-con el requisito de ser mejor que $O(n log n)$.
+aceptaci'on ya que se observ'o que el orden requerido para ordenar dicho arreglo era $O(n*log n)$ y pensamos que debiamos buscar un orden mejor.
 \paragraph{}
 Una mejora a este procedimiento fue notar que la moda en un arreglo con las caracter'isticas
-dadas por el problema coincide con el elemento $n/2$ del arreglo ordenado (la mediana). Por lo tanto, 
+dadas por el problema coincide con el elemento $n/2$ del arreglo ordenado. Por lo tanto, 
 si se ordena el arreglo, en vez de contar apariciones basta con tomar el elemento $n/2$ para 
 obtener la moda. Sin embargo, esta mejora tambi'en requiere que el arreglo sea ordenado, y por
 lo tanto, al igual que la idea anterior, qued'o descartado por tener un orden de complejidad
 demasiado alto.
 \paragraph{}
 Investigando sobre el tema se encontr'o el algoritmo de Loyd-Pratt-Rivest-Tarjan, que permite 
-encontrar la mediana de un arreglo en orden lineal sin necesidad de ordenarlo. El algoritmo 
+encontrar la mediana (mediana en el sentido de elemento del medio, si el arreglo tiene una cantidad impar de elementos coincide con la mediana estadistica, si no, no es exactamente el mismo concepto; pero lo usamos para abreviar), de un arreglo en orden lineal sin necesidad de ordenarlo. El algoritmo 
 se basa en el uso de un pivote para partir el arreglo y quedarse solo con la parte donde se 
 puede encontrar la mediana. Es necesario para tener orden lineal poder encontrar un buen pivote 
 en un orden a lo sumo lineal. El algoritmo resuelve esto partiendo el arreglo principal en arreglos
 de 5 elementos, tomando la mediana de 'estos y luego tomando una seudomediana a partir de dicha ``mediana''. 
 Se puede demostrar que este procedimiento permite encontrar la mediana en un orden lineal. Esta 
-soluci'on se descarto ya que su implementaci'on era bastante complicada, lo cual no resultaba conveniente 
-teniendo en cuenta que luego deber'iamos realizar un an'alisis del algoritmo para determinar su
-complejidad.
+soluci'on se descarto ya que su implementaci'on era bastante complicada, y la demostraci'on del orden de complejidad tambi'en lo era.
 \paragraph{}
 Se busc'o entonces otra forma de  obtener un orden lineal aprovechando que la frecuencia de la moda 
-era mayor a la mitad. La idea definitiva consiste b'asicamente en recorrer el arreglo sirvi'endose de 
+era mayor a la mitad. La idea que tuvimos consiste b'asicamente en recorrer el arreglo sirvi'endose de 
 dos 'indices. Si se encuentran dos elementos iguales, se incrementa uno de los 'indices (en adelante $j$) 
-y se deja inm'ovil al otro (en adelante $i$) en la posici'on donde se encuentra. Si se encuentran 2 
+y se deja inm'ovil al otro (en adelante $i$) en la posici'on donde se encuentra. Si se encuentran dos 
 elementos diferentes, estos son tachados (para esto se utiliza una marca sobre un arreglo de posiciones booleanas). 
 Luego se avanza $i$ hasta que llegue a una posici'on sin tachar y se hace lo propio con $j$ hasta llegar 
 a una posici'on sin tachar pero que tambi'en sea mayor que $i$. El ciclo termina cuando $j$ excede el l'imite 
@@ -40,7 +37,7 @@ En cada paso el algoritmo ``tacha'' dos elementos que no son la moda, o uno que 
 De esta forma solo terminan sobreviviendo algunos elementos de la moda. Al terminar el ciclo, los elementos
 sin tachar desde $i$ hasta el final del arreglo son iguales. Entonces podr'ian o bien ser moda o ser elementos 
 distintos a la moda. Sin embargo, esto 'ultimo no puede ocurrir ya que la frecuencia de la moda es como m'inimo 
-$n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1) > n$.
+$n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1)$ elementos pero $2*(n/2+1) > n$.
 El siguiente es un ejemplo de la aplicaci'on del algoritmo:
 \begin{figure}[H]
 \centering
@@ -82,7 +79,7 @@ Es decir que el n'umero de iteraciones est'a en principio acotado $n$. Por otro 
 que no se reinicia, es la que establece la condici'on de salida del ciclo principal. Si, an'alogamente a como hicimos 
 antes, el ciclo principal hace $k$ iteraciones y llamamos $iterAdel_t$ al n'umero de iteraciones del ciclo de 
 la l'inea 10, se puede ver que:\\
-$$\sum_{t=1}^{k}iterAdel_t \leq n$$\\
+$$\sum_{t=1}^{k}iterAdel_t \leq n$$\\ porque en el momento en que el indice de adelante llega a n, ninguno de los ciclos itera mas.
 y en particular si definimos
 $beta(b) =$ if b then 1 else 0 \\
 Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos 'indices en la iteraci'on t, tenemos que:\\

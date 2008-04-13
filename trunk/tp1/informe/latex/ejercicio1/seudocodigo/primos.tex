@@ -1,33 +1,33 @@
 \begin{algorithm}
 \caption{Halla $mejorPrimo$ y $mejorPotencia$}
 \begin{algorithmic}[1]
-\STATE $mejorPrimo \leftarrow 1$
-\STATE $mejorPotencia \leftarrow 0$
-\STATE $primoActual \leftarrow generar\_candidato()$
-\STATE $potenciaActual \leftarrow 0$
-\STATE $limite \leftarrow n$
-\WHILE{$n \neq 1$ $\&$ $primoActual*primoActual \leq limite$}
-    \IF{$primoActual$  $|$ $n$}
-        \STATE $potenciaActual++$
-        \STATE $n \leftarrow n/primoActual$
+\STATE $mejorPrimo \textcolor{orange}{\leftarrow} 1$
+\STATE $mejorPotencia \textcolor{orange}{\leftarrow} 0$
+\STATE $primoActual \textcolor{orange}{\leftarrow} generar\_candidato\textcolor{magenta}{(}\textcolor{magenta}{)}$
+\STATE $potenciaActual \textcolor{orange}{\leftarrow} 0$
+\STATE $limite \textcolor{orange}{\leftarrow} n$
+\WHILE{$n \textcolor{orange}{\neq} 1$ $\textcolor{orange}{|}$ $primoActual\textcolor{orange}{*}primoActual \textcolor{orange}{\leq} limite$}
+    \IF{$primoActual$  $\textcolor{orange}{|}$ $n$}
+        \STATE $potenciaActual\textcolor{orange}{+}\textcolor{orange}{+}$
+        \STATE $n \textcolor{orange}{\leftarrow} n/primoActual$
     \ELSE
-        \IF{$potenciaActual \geq mejorPotencia$}
-            \STATE $mejorPrimo \leftarrow primoActual$
-            \STATE $mejorPotencia \leftarrow potenciaActual$
+        \IF{$potenciaActual \textcolor{orange}{\geq} mejorPotencia$}
+            \STATE $mejorPrimo \textcolor{orange}{\leftarrow} primoActual$
+            \STATE $mejorPotencia \textcolor{orange}{\leftarrow} potenciaActual$
         \ENDIF
 
-        \STATE $potenciaActual \leftarrow 0$
-        \STATE $primoActual \leftarrow generar\_candidato()$
-        \STATE $limite \leftarrow n$
+        \STATE $potenciaActual \textcolor{orange}{\leftarrow} 0$
+        \STATE $primoActual \textcolor{orange}{\leftarrow} generar\_candidato\textcolor{magenta}{(}\textcolor{magenta}{)}$
+        \STATE $limite \textcolor{orange}{\leftarrow} n$
     \ENDIF
 \ENDWHILE
-\IF{$primoActual > l$}
-    \STATE $primoActual \leftarrow n$
-    \STATE $potenciaActual \leftarrow 1$
+\IF{$primoActual \textcolor{orange}{>} l$}
+    \STATE $primoActual \textcolor{orange}{\leftarrow} n$
+    \STATE $potenciaActual \textcolor{orange}{\leftarrow} 1$
 \ENDIF
-\IF{$potenciaActual \geq mejorPotencia$}
-    \STATE $mejorPrimo \leftarrow primoActual$
-    \STATE $mejorPotencia \leftarrow potenciaActual$
+\IF{$potenciaActual \textcolor{orange}{\geq} mejorPotencia$}
+    \STATE $mejorPrimo \textcolor{orange}{\leftarrow} primoActual$
+    \STATE $mejorPotencia \textcolor{orange}{\leftarrow} potenciaActual$
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
