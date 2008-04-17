@@ -110,14 +110,16 @@ que aproxime el comportamiento observado experimentalmente. En dichos casos, la 
 %TODO: rehacer estos graficos es al pedo tener 10^-5 segundos, pasar a milisegundos por lo menos (opcional por ahora)
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark/graficos/corridas_aleatorias_n_creciente/grafico.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio3/benchmark/graficos/corridas_aleatorias_n_creciente/grafico.png}
 \caption{Cantidad de operaciones en funci'on del tama\~{n}o del arreglo}
+\label{Ej3fig1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark/graficos/frecuencia/frecuencia.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio3/benchmark/graficos/frecuencia/frecuencia.png}
 \caption{Cantidad de operaciones en funci'on de la frecuencia ($n$ = 500)}
+\label{Ej3fig2}
 \end{figure}
 
 %TODO: rehacer este grafico es al pedo tener 10^-5 segundos, pasar a milisegundos por lo menos 
@@ -125,18 +127,20 @@ que aproxime el comportamiento observado experimentalmente. En dichos casos, la 
 \centering
 \includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/moda-1000-casos.png}
 \caption{Tiempo (milisegundos) en funci'on del tama\~{n}o del arreglo}
+\label{Ej3fig3}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/aumento-frecuencia.png}
 \caption{Tiempo (milisegundos) en funci'on de la frecuencia ($n$ = 500)}
+\label{Ej3fig4}
 \end{figure}
 
 \section{Discusi'on}
 \paragraph{}
-En los gr'aficos de tiempo se observ'o que al aumentar el tama\~{n}o del arreglo, el tiempo 
-aumenta de forma lineal. Lo mismo ocurre con la cantidad de operaciones. Esta situaci'on se 
+En el gr'afico de tiempo se observ'o que al aumentar el tama\~{n}o del arreglo, el tiempo 
+aumenta de forma lineal. Lo mismo ocurre con la cantidad de operaciones . Esta situaci'on se 
 corresponde con el an'alisis te'orico que se realiz'o. Por otro lado en los gr'aficos en funci'on 
 de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer linealmente. Esto 
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se

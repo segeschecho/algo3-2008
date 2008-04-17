@@ -19,7 +19,7 @@ sin exceder la capacidad de carga del cami'on.
 
 %FIXME: mmmmm ?? no es verdura esto? verificar
 %FIXME: cuando menos hay que cambiarlo para hablar del nuevo metodo de poda
-A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de esta manera se va podando el 'arbol de posibles soluciones.
+A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de esta manera se va podando el 'arbol dejando solo posibles soluciones (Por eso es backtracking y no fuerza bruta).
 
 De esta manera, se construye el siguiente 'arbol de recursi'on:
 \begin{figure}[H]
@@ -71,18 +71,19 @@ Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $Soluci
 \section{Pseudoc'odigo}
 \input{ejercicio2/seudocodigo/mochila.tex}
 
+Por una cuestion de claridad, y de no desviar la atenci'on del algoritmo que realmente resuelve el problema, se excluyo del pseudocodigo la traducci'on entre los indices originales, y los indices en que quedan los elementos luego de ordenarse (lo cual necesitamos para devolver la solucion en el formato pedido). Este proceso consiste en recorrer un diccionario(sobre arreglo) donde estan mapeados para cada elemento la posici'on donde qued'o luego de ordenarse. 
 %TODO: completar esta demostracion, hablar de tamaño de entrada. Tarea de fede
 %hablar de peor caso
 \section{C'alculo de complejidad}
 Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
 cantidad de cosas a llevar. Por esa raz'on no nos parece desacertado considerar que el peso y el valor de las cosas estan 
-acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas entre las cuales elegir.
+acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas entre las cuales elegir (es decir la cantidad de items de la sucursal), en adelante N.
 
 Antes de llamar a la funci'on que hace backtracking, el algoritmo ordena el arreglo con $merge sort$ en 
-$O(n$ $log(n))$ y luego suma todos los valores del mismo en $O(n)$. Veremos a continuaci'on que como el 
+$O(N$ $log(N))$ y luego suma todos los valores del mismo en $O(N)$. Al finalizar el algoritmo, realizamos una traducci'on entre los indices originales de las cosas y su posici'on luego de ordenar que tiene un costo lineal, es decir $O(N)$. Veremos a continuaci'on que como el 
 orden de la funci'on principal es mayor que 'estos, la complejidad total del algoritmo no se ve afectada.
 
-Sea $N$ la cantidad de cosas que hay para elegir. Observemos que dado un $N$, si llamamos $n$ a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
+Observemos que dado un $N$, si llamamos $n$ a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
 $T(0) = N + 1$, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan m'as elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
 
 Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo sumo se hacen d'os llamadas recursivas con $n - 1$ elementos a procesar. A este costo se le agrega una constante que llamaremos $k$, por lo tanto podemos deducir las siguientes ecuaciones de recurrencia:
@@ -91,6 +92,7 @@ Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo 
 $$T(0) = N + 1$$
 $$T(n) = 2*T(n-1) + k$$
 donde $k$ viene de las operaciones que se realizan dentro de cada llamada, las cuales son todas O(1).
+En algun caso, podria ocurrir que por accion de la poda, T(n) = N, ya que si la soluci'on que se esta armando no puede incorporar ningun objeto mas (encontro que el elemento del indice actual es mayor al peso, y como estan ordenados todos los siguientes pesan mas) pero tiene un valor mayor que el de la mejor hasta el momento, hay que actualizar. Sin embargo, veremos a continuaci'on que el caso donde esto no ocurre (el descripto por las ecuaciones) el orden es mayor que N.
 
 Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$
 
@@ -110,19 +112,19 @@ Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$\\y adem'as sabemos que $n$ es
 Luego el algoritmo tiene un orden exponencial en funci'on del tama\~{n}o de la entrada, a'un pese a las podas; 
 y esto es de esperarse ya que las podas funcionan 'unicamente en algunos casos, mientras que en otros no ayudan 
 en nada. Otra forma de ver el orden es considerar el funcionamiento de algoritmo: la idea es revisar cada soluci'on 
-posible, y sabemos que estas son $2^n$. En el peor de los casos, tenemos que recorrerlas todas y adem'as actualizar 
-la mejor soluci'on cada vez. Como esto 'ultimo se realiza en a $O(n)$, el orden final del algoritmo resulta ser $O(2^n*n)$.
+posible, y sabemos que estas son $2^N$. En el peor de los casos, tenemos que recorrerlas todas y adem'as actualizar 
+la mejor soluci'on cada vez. Como esto 'ultimo se realiza en a $O(N)$, el orden final del algoritmo resulta ser $O(2^N*N)$.
 
 Si el algoritmo solo desecha un camino cuando no puede agregar a un elemento porque se excede del peso, el peor 
 caso se da cuando puede poner a todos los elementos, ya que llegar'a a cada hoja. Observando las podas que implementamos, 
 uno esperar'ia que en general el algoritmo se comporte bien, incluso en el caso antes mencionado. Ahora supongamos que 
-tenemos un conjunto ${a_1,a_2,...a_n}$ donde el peso y el valor de $a_i = 1$ $\forall i \in {1...n-1}$ y el peso y valor de  
-$a_n = n$ y que la capacidad del cami'on es $n$.
+tenemos un conjunto ${a_1,a_2,...a_N}$ donde el peso y el valor de $a_i = 1$ $\forall i \in {1...N-1}$ y el peso y valor de  
+$a_N = N$ y que la capacidad del cami'on es $N$.
 
 En este caso ninguna de nuestras podas va a funcionar, puesto que la poda por pesos baja siempre hasta el ante'ultimo nivel,
-salvo en el caso donde no agregu'e a ning'un $a_i$ con $i < n$. Tampoco funciona ver cual es el m'aximo que puedo armar 
-porque hasta que no llegue al caso donde solo pongo a $a_n$ el valor m'aximo que puedo armar siempre es mayor que $n$, 
-pero las soluciones que arme siempre valen menos que $n$. Por ende en este caso se recorren practicamente todas las ramas. 
+salvo en el caso donde no agregu'e a ning'un $a_i$ con $i < N$. Tampoco funciona ver cual es el m'aximo que puedo armar 
+porque hasta que no llegue al caso donde solo pongo a $a_N$ el valor m'aximo que puedo armar siempre es mayor que $N$, 
+pero las soluciones que arme siempre valen menos que $N$. Por ende en este caso se recorren practicamente todas las ramas. 
 
 \section{An'alisis experimental}
 \subsection{Experiencias realizadas}
@@ -141,24 +143,28 @@ del camino.
 \centering
 \includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark/graficos/comparacion_con_poda_sin_poda/caso_promedio/comparacionCantOpConPodaSinPoda.png}
 \caption{Cantidad de operaciones en funci'on de la cantidad de cosas (peso y valor aleatorios con distribuci'on uniforme)}
+\label{Ej2fig1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoConPoda.png}
 \caption{Cantidad de operaciones en funci'on de la cantidad de elementos, peor caso para la poda}
+\label{Ej2fig2}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoSinPoda.png}
 \caption{Operaciones en funci'on de la cantidad de cosas, peor caso sin podas }
+\label{Ej2fig3}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_caso_promedio/ComparacionPodavsSinPoda.png}
 \caption{Tiempo en funci'on de la cantidad de cosas, casos aleatorios}
+\label{Ej2fig4}
 \end{figure}
 
 \section{Discusi'on}
@@ -172,7 +178,7 @@ rama, ya que ninguna tiene el potencial de superarla.
  
 En el peor caso de nuestro algoritmo con podas s'i se observa que el comportamiento es peor que el del algoritmo 
 com'un y esto se explica si tenemos en cuenta que en este caso no se hacen podas efectivas y sin embargo tenemos 
-el $overhead$ de ordenar el arreglo y hacer la traducci'on de los 'indices para poder reconstruir los valores que
+el \textsl{$overhead$} de ordenar el arreglo y hacer la traducci'on de los 'indices para poder reconstruir los valores que
 se almacenan en el archivo de salida.
  
 El gr'afico de tiempos muestra la misma tendencia que el de cantidad de operaciones, y por tanto no merece
