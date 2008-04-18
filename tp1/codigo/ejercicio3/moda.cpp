@@ -39,14 +39,8 @@ int moda(int* a, int n) {
     }
 
 
-    // buscamos el primer elemento sin tachar y sabemos que es la moda
-    // o quedo solo 1 y es la moda, o quedaron varios iguales y que son la moda
+	//indice de atras esta en un elemento que es la moda
 
-
-    /*int k = 0;
-    while ( k < n && tachados[k]) {
-        k++;
-    }*/
     delete [] tachados;
     assert(indiceDeAtras < n);
     return a[indiceDeAtras];
