@@ -46,6 +46,14 @@ int moda(int* a, int n) {
     return a[indiceDeAtras];
 }
 
+void help() {
+    cout << "Uso ./moda <infile> <outfile>" << endl;
+    cout << "  o ./moda (sin parametros)" << endl;
+    cout << "En el caso de la llamada sin parametros se toman los archivos" << endl;
+    cout << "Tp1Ej3.in y Tp1Ej3.out como valores por defecto." << endl;
+}
+
+
 int main(int argc, char* argv[]) {
 
     // leo los datos de entrada
@@ -53,17 +61,21 @@ int main(int argc, char* argv[]) {
     if(argc >= 2) {
         ruta = argv[1];
     } else {
-        ruta="Tp1Ej1.in";
+        ruta="Tp1Ej3.in";
     }
     fstream f (ruta.c_str());
-    assert(f.is_open());
+    if(!f.is_open()) {
+        cout << endl << "ERROR: No se pudo abrir el archivo de entrada!" << endl << endl;
+        help();
+        return 1;
+    }
 
     // preparo el archivo de salida
     string salida;
     if(argc > 2) {
         salida = argv[2];
     } else {
-        salida = "Tp1Ej1.out";
+        salida = "Tp1Ej3.out";
     }
     ofstream o (salida.c_str());
 

@@ -140,7 +140,7 @@ void help() {
     cout << "Uso ./camion <infile> <outfile>" << endl;
     cout << "  o ./camion (sin parametros)" << endl;
     cout << "En el caso de la llamada sin parametros se toman los archivos" << endl;
-    cout << "Tp1Ej1.in y Tp1Ej1.out como valores por defecto." << endl;
+    cout << "Tp1Ej2.in y Tp1Ej2.out como valores por defecto." << endl;
 }
 
 
