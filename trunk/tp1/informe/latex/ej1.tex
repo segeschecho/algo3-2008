@@ -199,16 +199,17 @@ En particular si el numero n es de la forma $p^k$ con p primo, el ciclo itera ha
 \newpage
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
+\paragraph{}
 Para el an'alisis del algoritmo decidimos medir tanto operaciones como tiempo. 
-
+\paragraph{}
 Primero medimos dichas variables para los n'umeros entre 2 y 100000 para observar un patr'on de comportamiento. A partir de esta experiencia, decidimos realizar otras dos, donde separamos n'umeros primos en una de ellas, y en la otra tomamos las 
 potencias de un n'umero primo (en particular de 7). Esto lo hicimos por considerar que el peor caso del algoritmo es 
 precisamente cuando el n'umero es primo, mientras que el mejor caso es cuando el n'umero es potencia de un primo. 
-
+\paragraph{}
 Por otro lado realizamos experiencias similares pero teniendo en cuenta ya no el numero, sino la cantidad de bits 
 de su representaci'on binaria, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experiencias 
 tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo en funci'on de $\lfloor log_2(n) \rfloor + 1$.
-
+\paragraph{}
 Para medir los tiempo se utiliz'o una clase basada en QueryPerformanceCounter de windwos. Para contar operaciones, el procedimiento se bas'o en declarar una variable global e ir increment'andola en base a las operaciones que se realizaban l'inea a l'inea. Este procedimiento se aplico en los tres ejercicios.
 
 \subsection{Gr'aficos}
