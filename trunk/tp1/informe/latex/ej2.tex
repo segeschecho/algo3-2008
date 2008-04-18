@@ -15,13 +15,13 @@ Realice un algoritmo para resolver el problema usando la t'ecnica de backtrackin
 \section{Desarrollo}
 \paragraph{}
 Dado que el problema deb'ia ser resuelto con backtracking, buscamos la forma de aplicar dicha t'ecnica 
-algor'itmica para su resoluci'on. B'asicamente la idea es formar todos los subconjuntos de cosas para encontrar aquel que maximice el valor total, 
-sin exceder la capacidad de carga del cami'on.
+algor'itmica para su resoluci'on. B'asicamente la idea es formar todos los subconjuntos de cosas para 
+encontrar aquel que maximice el valor total, sin exceder la capacidad de carga del cami'on.
 
-%FIXME: mmmmm ?? no es verdura esto? verificar
-%FIXME: cuando menos hay que cambiarlo para hablar del nuevo metodo de poda
 \paragraph{}
-A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del cami'on, y de esta manera se va podando el 'arbol dejando solo posibles soluciones (Por eso es backtracking y no fuerza bruta).
+A medida que se va armando una soluci'on, son descartadas aquellas cuyo peso excede la capacidad del 
+cami'on, y de esta manera se va podando el 'arbol dejando solo posibles soluciones (por eso es 
+backtracking y no fuerza bruta).
 
 De esta manera, se construye el siguiente 'arbol de recursi'on:\\
 \begin{figure}[H]
@@ -62,13 +62,13 @@ de cosas, sumar el valor de todos los elementos. Este n'umero es el m'aximo valo
 un conjunto de cosas. Cada vez que hago una llamada calculo si el valor de mi candidato actual m'as el 
 m'aximo me sirve para mejorar mi soluci'on. Por otro lado, cuando hago una llamada sin incluir a un 
 elemento, resto al m'aximo posible el valor de dicho elemento.\\
-
-Por ejemplo:
 \paragraph{}
-Si tengo un conjunto de cosas tal que sus valores son: {1,2,3,4}. El m'aximo valor que podr'ia llevar 
+Veamos un ejemplo: Tengo un conjunto de cosas tal que sus valores son: {1,2,3,4}. El m'aximo valor que podr'ia llevar 
 es 10. Cuando estoy armando una soluci'on que excluye al valor 1, el m'aximo es 9. Si ademas quito al 2, 
 el m'aximo es 7, etc. Consideramos que si bien estas podas no nos mejorar'ian el orden de complejidad, 
-si nos permitir'ian en general observar un mejor desempe\~{n}o. Es importante notar que por como tenemos que devolver la soluci'on es necesario mapear de alguna manera los indices de los elementos luego de ordenarse con los del arreglo original, esto nos agrega un overhead a la poda, que debe tenerse en cuenta.
+si nos permitir'ian en general observar un mejor desempe\~{n}o. Es importante notar que por como tenemos 
+que devolver la soluci'on es necesario mapear de alguna manera los 'indices de los elementos luego de 
+ordenarse con los del arreglo original. Esto agrega un overhead a la poda que debe tenerse en cuenta.
 \paragraph{}
 Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $SolucionPosible$ con la finalidad de aportar m'as claridad al mismo.
 
@@ -77,57 +77,70 @@ Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $Soluci
 \input{ejercicio2/seudocodigo/mochila.tex}
 
 \paragraph{}
-Por una cuestion de claridad, y de no desviar la atenci'on del algoritmo que realmente resuelve el problema, se excluy'o del pseudocodigo la traducci'on entre los indices originales, y los indices en que quedan los elementos luego de ordenarse (lo cual necesitamos para devolver la solucion en el formato pedido). Este proceso consiste en recorrer un diccionario(sobre arreglo) donde estan mapeados para cada elemento la posici'on donde qued'o luego de ordenarse.
+Por una cuestion de claridad (y para no desviar la atenci'on del algoritmo que realmente resuelve el problema), 
+se excluy'o del pseudoc'odigo la traducci'on entre los 'indices originales, y los 'indices en que quedan los 
+elementos luego de ordenarse (lo cual necesitamos para devolver la soluci'on en el formato pedido). Este proceso 
+consiste en recorrer un diccionario (sobre arreglo) donde estan mapeado para cada elemento la posici'on donde 
+qued'o luego de ordenarse.
  
-%TODO: completar esta demostracion, hablar de tamaño de entrada. Tarea de fede
-%hablar de peor caso
 \newpage
 \section{C'alculo de complejidad}
 \paragraph{}
 Para este ejercicio decidimos usar el modelo uniforme, ya que consideramos que lo que hace al n'ucleo del problema es la
 cantidad de cosas a llevar. Por esa raz'on no nos parece desacertado considerar que el peso y el valor de las cosas estan 
-acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas entre las cuales elegir (es decir la cantidad de items de la sucursal), en adelante N.
+acotados. Asimismo consideraremos que el tama\~{n}o de la entrada es la cantidad de cosas entre las cuales elegir 
+(es decir la cantidad de items de la sucursal), en adelante $N$.
 \paragraph{}
 Antes de llamar a la funci'on que hace backtracking, el algoritmo ordena el arreglo con $merge sort$ en 
-$O(N$ $log(N))$ y luego suma todos los valores del mismo en $O(N)$. Al finalizar el algoritmo, realizamos una traducci'on entre los indices originales de las cosas y su posici'on luego de ordenar que tiene un costo lineal, es decir $O(N)$. Veremos a continuaci'on que como el 
-orden de la funci'on principal es mayor que 'estos, la complejidad total del algoritmo no se ve afectada.
+$O(N$ $log(N))$ y luego suma todos los valores del mismo en $O(N)$. Al finalizar el algoritmo, realizamos 
+una traducci'on entre los indices originales de las cosas y su posici'on luego de ordenar que tiene un costo 
+lineal, es decir $O(N)$. Veremos a continuaci'on que como el orden de la funci'on principal es mayor que 'estos, 
+la complejidad total del algoritmo no se ve afectada.
 \paragraph{}
-Observemos que dado un $N$, si llamamos $n$ a la cantidad de elementos que me quedan por procesar (es decir por decidir que hacer con ellos) se observa que
-$T(0) = N + 1$, pues hay que preguntar si encontre una mejor soluci'on y hay que copiar la soluci'on actual. Si no me quedan m'as elementos que mirar y tengo que copiar la nueva soluci'on, esta copia tiene como costo la cantidad de elementos entre los cuales elegir.
+Observemos que dado un $N$, si llamamos $n$ a la cantidad de elementos que quedan por procesar (es decir por 
+decidir que hacer con ellos) se observa que $T(0) = N + 1$, pues hay que preguntar si encontr'e una 
+mejor soluci'on y hay que copiar la soluci'on actual. Si no quedan m'as elementos que mirar y tengo que copiar 
+la nueva soluci'on. Esta copia tiene como costo la cantidad de elementos entre los cuales hay que elegir.
 \paragraph{}
-Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo sumo se hacen d'os llamadas recursivas con $n - 1$ elementos a procesar. A este costo se le agrega una constante que llamaremos $k$, por lo tanto podemos deducir las siguientes ecuaciones de recurrencia:\\
-%FIXME: wtf paso aca??
-%%FIXME: hay q explicar q en algun caso t(n ) = N pero q eso no es lo peor q puede pasar
-$$T(0) = N + 1$$\\
-$$T(n) = 2*T(n-1) + k$$\\
-\paragraph{}
-donde $k$ viene de las operaciones que se realizan dentro de cada llamada, las cuales son todas O(1).
-\paragraph{}
-En algun caso, podria ocurrir que por accion de la poda, T(n) = N, ya que si la soluci'on que se esta armando no puede incorporar ningun objeto mas (encontro que el elemento del indice actual es mayor al peso, y como estan ordenados todos los siguientes pesan mas) pero tiene un valor mayor que el de la mejor hasta el momento, hay que actualizar. Sin embargo, veremos a continuaci'on que el caso donde esto no ocurre (el descripto por las ecuaciones) el orden es mayor que N.\\
+Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo sumo se hacen d'os llamadas 
+recursivas con $n - 1$ elementos a procesar. A este costo se le agrega una constante que llamaremos $k$, 
+por lo tanto podemos deducir las siguientes ecuaciones de recurrencia:\\
 
-Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$\\
+$$T(0) = N + 1$$
+$$T(n) = 2*T(n-1) + k$$
+
+\paragraph{}
+donde $k$ viene de las operaciones que se realizan dentro de cada llamada, que son todas $O(1)$.
+\paragraph{}
+En algun caso, podr'ia ocurrir que por accion de la poda, T(n) = N, ya que si la soluci'on que 
+se est'a armando no puede incorporar ning'un objeto m'as (encontr'o que el elemento del 'indice actual 
+es mayor al peso, y como est'an ordenados todos los siguientes pesan m'as) pero tiene un valor mayor 
+que el de la mejor hasta el momento, hay que actualizar. Sin embargo, veremos a continuaci'on que en el 
+caso donde esto no ocurre (el descripto por las ecuaciones) el orden es mayor que $N$.\\
+
+Proponemos que: $$T(n) = N*2^n + k*(2^n-1) + 2^n$$
 
 Lo podemos demostrar por inducci'on:\\
 
 Para $n = 0$:\\
 
-$$T(0) = N + 1 =  N*2^0 + k*(2^0-1) + 2^0$$\\
+$$T(0) = N + 1 =  N*2^0 + k*(2^0-1) + 2^0$$
 
-supongamos que vale para $n$, veamos que vale para $n+1$:\\
+supongamos que vale para $n$, veamos que vale para $n+1$:
 
-$$T(n+1) = 2T(n) + k$$\\
+$$T(n+1) = 2T(n) + k$$
 
-usando la hip'otesis inductiva:\\
+usando la hip'otesis inductiva:
 
-$$T(n+1) = 2(N*2^n + k*(2^n-1) + 2^n) + k$$\\ 
+$$T(n+1) = 2(N*2^n + k*(2^n-1) + 2^n) + k$$
 
-$$T(n+1) = N*2^{n+1} + k*(2^{n+1}-2) + 2^{n+1} + k$$\\
+$$T(n+1) = N*2^{n+1} + k*(2^{n+1}-2) + 2^{n+1} + k$$
 
-$$T(n+1) = N*2^{n+1} + k*(2^{n+1}-1) + 2^{n+1}$$\\
+$$T(n+1) = N*2^{n+1} + k*(2^{n+1}-1) + 2^{n+1}$$
 
 Que era lo que quer'iamos ver.\\
 
-Ahora bien como $$T(n) = N*2^n + k*(2^n-1) + 2^n$$\\y adem'as sabemos que $n$ es del orden de $N$, tenemos que $T(n) \in$ $O(N*2^N)$.
+Ahora bien como $T(n) = N*2^n + k*(2^n-1) + 2^n$ y adem'as sabemos que $n$ es del orden de $N$, tenemos que $T(n) \in$ $O(N*2^N)$.
 \paragraph{}
 Luego el algoritmo tiene un orden exponencial en funci'on del tama\~{n}o de la entrada, a'un pese a las podas; 
 y esto es de esperarse ya que las podas funcionan 'unicamente en algunos casos, mientras que en otros no ayudan 
@@ -146,12 +159,12 @@ salvo en el caso donde no agregu'e a ning'un $a_i$ con $i < N$. Tampoco funciona
 porque hasta que no llegue al caso donde solo pongo a $a_N$ el valor m'aximo que puedo armar siempre es mayor que $N$, 
 pero las soluciones que arme siempre valen menos que $N$. Por ende en este caso se recorren practicamente todas las ramas. 
 
-\newpage
 \section{An'alisis experimental}
 \subsection{Experiencias realizadas}
 \paragraph{}
 Para probar el comportamiento del algoritmo medimos tiempos y cantidad de operaciones en funci'on del tama\~{n}o de la 
-entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas significaban una mejora en la pr'actica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. 
+entrada, es decir de la cantidad de posibles elementos a llevar. A modo de ver si nuestras podas representaban una mejora
+en la pr'actica contrastamos los resultados entre el algoritmo sin podas, y el algoritmo con podas. 
 \paragraph{}
 Para hacer las pruebas generamos casos donde la cantidad de elementos era creciente y la composic'ion del conjunto de cosas era 
 aleatoria. El peso que el cami'on puede cargar se fij'o en 200 y los valores y pesos de las cosas siguen una distribuci'on 
@@ -159,33 +172,33 @@ uniforme (0,100). Ademas se analiz'o el comportamiento del algoritmo en aquellas
 casos. En los gr'aficos, se denomina algoritmo sin poda a la versi'on que no ordena el arreglo, ni observa la suma potencial 
 del camino.
 
+\newpage
 \subsection{Gr'aficos}
-%TODO: sergio hace los graficos con n creciente y aleatorio
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark/graficos/comparacion_con_poda_sin_poda/caso_promedio/comparacionCantOpConPodaSinPoda.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio2/benchmark/graficos/comparacion_con_poda_sin_poda/caso_promedio/comparacionCantOpConPodaSinPoda.png}
 \caption{Cantidad de operaciones en funci'on de la cantidad de cosas (peso y valor aleatorios con distribuci'on uniforme)}
 \label{Ej2fig1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoConPoda.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoConPoda.png}
 \caption{Cantidad de operaciones en funci'on de la cantidad de elementos, peor caso para la poda}
 \label{Ej2fig2}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoSinPoda.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio2/benchmark/graficos/operaciones_peor_caso_poda/peorCasoSinPoda.png}
 \caption{Operaciones en funci'on de la cantidad de cosas, peor caso sin podas }
 \label{Ej2fig3}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_caso_promedio/ComparacionPodavsSinPoda.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio2/benchmark_tiempos/graficos/tiempo_caso_promedio/ComparacionPodavsSinPoda.png}
 \caption{Tiempo en funci'on de la cantidad de cosas, casos aleatorios}
 \label{Ej2fig4}
 \end{figure}
