@@ -4,7 +4,7 @@ Dado un n'umero natural $n$ mayor que 1, encontrar el n'umero primo $p$ que apar
 de $n$. En caso de haber m'as de un n'umero primo con  la mayor potencia, encontrar el mayor de ellos.
 
 \section{Desarrollo}
-La primer idea para resolver el ejercicio fue obtener los primos menores que el n'umero a factorizar
+La primera idea para resolver el ejercicio fue obtener los primos menores que el n'umero a factorizar
 (en adelante $n$) y luego obtener la potencia con la que cada uno lo divide, qued'andonos con el de mayor
 potencia o con el mayor de todos los de m'axima potencia. Sin embargo esta soluci'on era costosa, ya que
 requer'ia obtener primeramente todos aquellos primos que sean menores a $n$.
@@ -12,9 +12,9 @@ requer'ia obtener primeramente todos aquellos primos que sean menores a $n$.
 Un segundo acercamiento nos permiti'o salvar esta dificultad, de manera que no fue necesario obtener 
 los primos menores a $n$ expl'icitamente. El proceso consiste en partir de 2, probar manualmente si 2, 3 y 5 
 dividen a $n$ y a partir  de aqu'i ciclar generando n'umeros de la forma $6*k + 1$ o $6*k + 5$ con $k \geq 1$ 
-(se puede demostrar que los n'umeros primos mayores que 5 tienen esta forma (ver Demostraci'on 1)).
+(se demostr'o que todos los n'umeros primos mayores que 5 tienen esta forma en la demostraci'on 1).
 \paragraph{}
-Cuando hallamos alg'un n'umero primo que divide a $n$,se lo divide y se guarda en $n$ el cociente de dicha 
+Cuando hallamos alg'un n'umero primo que divide a $n$, se lo divide y se guarda en $n$ el cociente de dicha 
 divisi'on. Mientras el primo siga dividiendo a $n$, vamos guardando la potencia con que lo divide. 
 Cuando deja de dividir a $n$, verificamos si es necesario actualizar dicha potencia, y luego construimos 
 un nuevo candidato. 
@@ -173,7 +173,7 @@ por construcci'on del procedimiento $generar\_candidatos()$ que produce una suce
 Si adem'as vemos que en este caso $primoActual_{i+1}$ es el t'ermino de la sucesi'on que est'a 
 inmediatamente a continuaci'on de $primoActual_i$. Por consiguiente $primoActual$ crece
 de forma tal que supera el valor de $\sqrt{limite}$ en $O(\sqrt{limite})$ iteraciones (puesto
-que $primoActual > 0$ en todo momento, $|$ $primoActual - \sqrt{limite}$ $|$ $< \sqrt{limite}$).
+que $primoActual > 0$ en todo momento, $|primoActual - \sqrt{limite}|$ $< \sqrt{limite}$).
 Adem'as resulta claro que $limite \leq n$ ya que su valor inicial es $n$ y luego decrece
 progresivamente.
 \end{itemize}
@@ -195,7 +195,7 @@ el tama\~{n}o en memoria de un entero arbitrario $n$ es $t = log_2 n$, por lo ta
 \paragraph{}
 Finalmente pudimos demostrar que $T(t) \in O(2^{t/2} $ $t^2)$.
 \paragraph{}
-Cuando un n'umero es primo, ocurre que el ciclo itera exactamente $\sqrt(n)$ veces, mientras que si el n'umero es 
+Cuando un n'umero es primo, ocurre que el ciclo itera exactamente $\sqrt{n}$ veces, mientras que si el n'umero es 
 compuesto la cantidad de iteraciones es menor, ya que si $n = p_{1}^{k_{1}}*m$ donde $p_1$ es primo y es el menor 
 primo que divide a $n$, tenemos que el ciclo va a iterar aproximadamente $p_1$ veces hasta hallar a $p_1$, luego 
 $k_1$ veces y por ende como m'aximo $\sqrt{m}-p_1$ veces.
@@ -220,7 +220,7 @@ Por otro lado realizamos experiencias similares pero teniendo en cuenta ya no el
 de su representaci'on binaria, es decir teniendo en cuenta el tama\~{n}o de la entrada. Para estas experiencias 
 tomamos distintos n'umeros pero medimos la cantidad de operaciones y el tiempo en funci'on de $\lfloor log_2(n) \rfloor + 1$.
 \paragraph{}
-Para medir los tiempo se utiliz'o una clase basada en $QueryPerformanceCounter$ de Win32. Para contar operaciones, 
+Para medir los tiempos se utiliz'o una clase basada en $QueryPerformanceCounter$ de Win32. Para contar operaciones, 
 el procedimiento se bas'o en declarar una variable global e ir increment'andola en base a las operaciones que se 
 realizaban l'inea a l'inea. Este procedimiento se aplic'o en los tres ejercicios.
 
@@ -276,7 +276,7 @@ En los gr'aficos pudimos observar lo que el an'alisis te'orico nos anunci'o.
 \paragraph{}
 En la figura 1, se ve claramente como existen diversos patrones de comportamiento. As'i el techo es un funci'on del tipo ra'iz 
 cuadrada, mientras que debajo se encuentran otras funciones de orden logar'itmico. Esta situaci'on se ve mas claro en los 
-gr'aficos donde solo est'an los n'umeros primos. En ambos casos pudimos, mediante cuadrados m'inimos, 
+gr'aficos donde s'olo est'an los n'umeros primos. En ambos casos pudimos, mediante cuadrados m'inimos, 
 encontrar una funci'on que se asemeje al comportamiento de las muestras, lo cual refuerza nuestra idea de mejor y peor caso.
 \paragraph{}
 El gr'afico en funci'on del tiempo muestra un comportamiento muy similar al gr'afico de cantidad de operaciones, pero presenta 
