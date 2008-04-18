@@ -17,14 +17,16 @@ lo tanto, al igual que la idea anterior, qued'o descartado por tener un orden de
 demasiado alto.
 \paragraph{}
 Investigando sobre el tema se encontr'o el algoritmo de Loyd-Pratt-Rivest-Tarjan, que permite 
-encontrar la mediana (mediana en el sentido de elemento del medio, si el arreglo tiene una cantidad impar de elementos coincide con la mediana estadistica, si no, no es exactamente el mismo concepto; pero lo usamos para abreviar), de un arreglo en orden lineal sin necesidad de ordenarlo.
+encontrar la mediana (mediana en el sentido de elemento del medio, que si el arreglo tiene una 
+cantidad impar de elementos coincide con la mediana estad'istica, si no, no es exactamente el 
+mismo concepto; pero lo usamos para abreviar) de un arreglo en orden lineal sin necesidad de ordenarlo.
 \paragraph{}
 El algoritmo se basa en el uso de un pivote para partir el arreglo y quedarse solo con la parte donde se 
 puede encontrar la mediana. Es necesario para tener orden lineal poder encontrar un buen pivote 
 en un orden a lo sumo lineal. El algoritmo resuelve esto partiendo el arreglo principal en arreglos
 de 5 elementos, tomando la mediana de 'estos y luego tomando una seudomediana a partir de dicha ``mediana''. 
 Se puede demostrar que este procedimiento permite encontrar la mediana en un orden lineal. Esta 
-soluci'on se descarto ya que su implementaci'on era bastante complicada, y la demostraci'on del orden de complejidad tambi'en lo era.
+soluci'on se descart'o ya que su implementaci'on era bastante complicada, y la demostraci'on del orden de complejidad tambi'en lo era.
 \paragraph{}
 Se busc'o entonces otra forma de  obtener un orden lineal aprovechando que la frecuencia de la moda 
 era mayor a la mitad. La idea que tuvimos consiste b'asicamente en recorrer el arreglo sirvi'endose de 
@@ -55,12 +57,9 @@ termina el arreglo. La moda es entonces el elemento donde est'a parado el 'indic
 Este algoritmo fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal 
 buscado y su implementaci'on era simple.
 
-\newpage
 \section{Pseudoc'odigo}
-%\newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
-%TODO calculo, demostracion, tamaño de entrada, porq uniforme, peor caso, mejor caso
 \newpage
 \section{C'alculo de complejidad}
 Para hacer el c'alculo de complejidad utilizamos el modelo uniforme pues consideramos, al igual que con 
@@ -94,9 +93,9 @@ indiceDeAdelante $<$ tamanio(a) $\&$ (indiceDeAdelante no fue tachado $\|$ indic
 Es decir que el n'umero de iteraciones est'a en principio acotado $n$. Por otro lado la variable $indiceDeAdelante$, 
 que no se reinicia, es la que establece la condici'on de salida del ciclo principal. Si, an'alogamente a como hicimos 
 antes, el ciclo principal hace $k$ iteraciones y llamamos $iterAdel_t$ al n'umero de iteraciones del ciclo de 
-la l'inea 10, se puede ver que:\\
+la l'inea 10, se puede ver que:
 
-$$\sum_{t=1}^{k}iterAdel_t \leq n$$\\ 
+$$\sum_{t=1}^{k}iterAdel_t \leq n$$
 
 porque en el momento en que el indice de adelante llega a n, ninguno de los ciclos itera mas.
 
@@ -104,9 +103,9 @@ Y en particular si definimos:\\
 
 $beta(b) =$ if b then 1 else 0 \\
 
-Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos 'indices en la iteraci'on t, tenemos que:\\
+Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos 'indices en la iteraci'on t, tenemos que:
 
-$$n=\sum_{t=0}^{k}beta(a[indiceDeAtras_t] == a[indiceDeAdelante_t])+ iterAdel_t$$\\
+$$n=\sum_{t=0}^{k}beta(a[indiceDeAtras_t] == a[indiceDeAdelante_t])+ iterAdel_t$$
 
 ya que o indiceDeAdelante se incrementa en una unidad porque los elementos eran iguales, o itera el ciclo interno.\\
 
@@ -121,7 +120,6 @@ deber'ia andar el algoritmo, ya que solo se incrementa $indiceDeAdelante$. En vi
 del arreglo son todos iguales, el algoritmo hace solo una pasada, mientras que en el peor de los casos, 
 hace dos pasadas completas.
 
-\newpage
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
 \paragraph{}
@@ -137,36 +135,33 @@ que aproxime el comportamiento observado experimentalmente. En dichos casos, la 
 
 \subsection{Gr'aficos}
 
-%TODO: rehacer estos graficos es al pedo tener 10^-5 segundos, pasar a milisegundos por lo menos (opcional por ahora)
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark/graficos/corridas_aleatorias_n_creciente/grafico.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio3/benchmark/graficos/corridas_aleatorias_n_creciente/grafico.png}
 \caption{Cantidad de operaciones en funci'on del tama\~{n}o del arreglo}
 \label{Ej3fig1}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark/graficos/frecuencia/frecuencia.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio3/benchmark/graficos/frecuencia/frecuencia.png}
 \caption{Cantidad de operaciones en funci'on de la frecuencia ($n$ = 500)}
 \label{Ej3fig2}
 \end{figure}
 
-%TODO: rehacer este grafico es al pedo tener 10^-5 segundos, pasar a milisegundos por lo menos 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/moda-1000-casos.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/moda-1000-casos.png}
 \caption{Tiempo (milisegundos) en funci'on del tama\~{n}o del arreglo}
 \label{Ej3fig3}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.8]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/aumento-frecuencia.png}
+\includegraphics[scale=0.7]{../../codigo/ejercicio3/benchmark_de_tiempo/graficos/aumento-frecuencia.png}
 \caption{Tiempo (milisegundos) en funci'on de la frecuencia ($n$ = 500)}
 \label{Ej3fig4}
 \end{figure}
-
 \newpage
 \section{Discusi'on}
 \paragraph{}
