@@ -64,7 +64,7 @@ buscado y su implementaci'on era simple.
 \newpage
 \section{C'alculo de complejidad}
 Para hacer el c'alculo de complejidad utilizamos el modelo uniforme pues consideramos, al igual que con 
-el ejercicio anterior, que lo fundamental a la hora de estudiar el tiempo pasa por la cantidad de elementos 
+el ejercicio anterior, que lo fundamental a la hora de estudiar el orden pasa por la cantidad de elementos 
 a estudiar, y no por los valores de los mismos. Por ende es razonable asumir que el costo de operar
 con los n'umeros propiamente dichos es constante.\\
 \paragraph{}
@@ -80,12 +80,11 @@ indiceDeAtras $<$ tamanio(a) $\&$ (indiceDeAtras no fue tachado)\
 \paragraph{}
 Entonces podemos ver que este ciclo, dado que $i$ no se reinicia, solo recorre el arreglo a lo sumo una 
 vez en todos los ciclos del de la l'inea 4. Es decir, si el ciclo principal hace $k$ iteraciones y llamamos 
-$iterAtras_t$ al numero de iteraciones del ciclo de la l'inea 7 en la iteraci'on t del ciclo principal, vale que:\\
+$iterAtras_t$ al numero de iteraciones del ciclo de la l'inea 7 en la iteraci'on t del ciclo principal, vale que:
 
 $$\sum_{t=1}^{k}iterAtras_t \leq n$$
 
-ya que en el momento en que $i$ se hace $n$ el ciclo interno no itera m'as.\\
-
+ya que en el momento en que $i$ se hace $n$ el ciclo interno no itera m'as.
 \paragraph{}
 La situaci'on del ciclo de la l'inea 10 es similar, en este caso la guarda es:\\
 
@@ -168,6 +167,7 @@ que aproxime el comportamiento observado experimentalmente. En dichos casos, la 
 \label{Ej3fig4}
 \end{figure}
 
+\newpage
 \section{Discusi'on}
 \paragraph{}
 En el gr'afico de tiempo se observ'o que al aumentar el tama\~{n}o del arreglo, el tiempo 
