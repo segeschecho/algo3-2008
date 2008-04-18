@@ -85,7 +85,6 @@ int main(int argc, char* argv[]) {
             elementos--;
         }
         int res = moda(a,buffer);
-        cout << res;
         delete [] a;
         o << res << endl;
         f >> buffer;
