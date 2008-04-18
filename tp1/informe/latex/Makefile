@@ -1,7 +1,7 @@
 all: tp1.pdf
 
 tp1.pdf:
-	pdflatex tp1.tex
+	pdflatex tp1.tex && pdflatex tp1.tex
 
 clean:
 	rm -f *.aux

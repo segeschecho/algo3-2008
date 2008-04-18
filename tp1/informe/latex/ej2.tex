@@ -37,7 +37,8 @@ uno (llevarlo o no). Esto implica que la cantidad posible de soluciones si se ti
 \paragraph{}
 El algoritmo implementado toma como par'ametros el cami'on (cosas, cuantas cosas y capacidad)  y dos soluciones posibles (una en donde est'a guardada la mejor 
 encontrada hasta el momento y otra que guarda la que se va construyendo). Adem'as se lleva un 'indice que 
-indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo y el valor 'optimo que puede lograr una soluci'on(se explica a continuaci'on).
+indica sobre que objeto se est'a decidiendo si conveniente o no llevarlo y el valor 'optimo que puede lograr una soluci'on
+(se explica a continuaci'on).
 \paragraph{}
 B'asicamente una llamada a la funci'on consiste en verificar si se agrega o no a la soluci'on el elemento apuntado por $indice$. Si es as'i (es 
 decir que al agregarlo, el peso total no excede el peso m'aximo), se agrega a la soluci'on candidata y se contin'ua con la 
@@ -68,7 +69,7 @@ es 10. Cuando estoy armando una soluci'on que excluye al valor 1, el m'aximo es 
 el m'aximo es 7, etc. Consideramos que si bien estas podas no nos mejorar'ian el orden de complejidad, 
 si nos permitir'ian en general observar un mejor desempe\~{n}o. Es importante notar que por como tenemos 
 que devolver la soluci'on es necesario mapear de alguna manera los 'indices de los elementos luego de 
-ordenarse con los del arreglo original. Esto agrega un overhead a la poda que debe tenerse en cuenta.
+ordenarse con los del arreglo original. Esto agrega un \textsl{overhead} a la poda que debe tenerse en cuenta.
 \paragraph{}
 Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $SolucionPosible$ con la finalidad de aportar m'as claridad al mismo.
 
@@ -77,10 +78,10 @@ Para implementar el algoritmo se definieron los tipos $Cosa$, $Camion$ y $Soluci
 \input{ejercicio2/seudocodigo/mochila.tex}
 
 \paragraph{}
-Por una cuestion de claridad (y para no desviar la atenci'on del algoritmo que realmente resuelve el problema), 
+Por una cuesti'on de claridad (y para no desviar la atenci'on del algoritmo que realmente resuelve el problema), 
 se excluy'o del pseudoc'odigo la traducci'on entre los 'indices originales, y los 'indices en que quedan los 
 elementos luego de ordenarse (lo cual necesitamos para devolver la soluci'on en el formato pedido). Este proceso 
-consiste en recorrer un diccionario (sobre arreglo) donde estan mapeado para cada elemento la posici'on donde 
+consiste en recorrer un diccionario (sobre arreglo) donde est'a mapeado para cada elemento la posici'on donde 
 qued'o luego de ordenarse.
  
 \newpage
@@ -102,7 +103,7 @@ decidir que hacer con ellos) se observa que $T(0) = N + 1$, pues hay que pregunt
 mejor soluci'on y hay que copiar la soluci'on actual. Si no quedan m'as elementos que mirar y tengo que copiar 
 la nueva soluci'on. Esta copia tiene como costo la cantidad de elementos entre los cuales hay que elegir.
 \paragraph{}
-Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo sumo se hacen d'os llamadas 
+Adem'as, si se observa el pseudoc'odigo, se puede ver que para un $n$ dado a lo sumo se hacen dos llamadas 
 recursivas con $n - 1$ elementos a procesar. A este costo se le agrega una constante que llamaremos $k$, 
 por lo tanto podemos deducir las siguientes ecuaciones de recurrencia:\\
 
@@ -157,7 +158,7 @@ $a_N = N$ y que la capacidad del cami'on es $N$.
 En este caso ninguna de nuestras podas va a funcionar, puesto que la poda por pesos baja siempre hasta el ante'ultimo nivel,
 salvo en el caso donde no agregu'e a ning'un $a_i$ con $i < N$. Tampoco funciona ver cual es el m'aximo que puedo armar 
 porque hasta que no llegue al caso donde solo pongo a $a_N$ el valor m'aximo que puedo armar siempre es mayor que $N$, 
-pero las soluciones que arme siempre valen menos que $N$. Por ende en este caso se recorren practicamente todas las ramas. 
+pero las soluciones que arme siempre valen menos que $N$. Por ende en este caso se recorren pr'acticamente todas las ramas. 
 
 \section{An'alisis experimental}
 \subsection{Experiencias realizadas}

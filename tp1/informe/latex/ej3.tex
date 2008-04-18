@@ -7,7 +7,8 @@ veces, encontrar la moda, es decir, el valor que aparece m'as veces.
 \paragraph{}
 La primera idea para abordar este problema fue la de ordenar el arreglo y contar la cantidad 
 de apariciones guardando el elemento con m'as apariciones. Esta primera idea no tuvo mucha 
-aceptaci'on ya que se observ'o que el orden requerido para ordenar dicho arreglo era $O(n*log n)$ y pensamos que debiamos buscar un orden mejor.
+aceptaci'on ya que se observ'o que el orden requerido para ordenar dicho arreglo era $O(n*log$ $n)$ 
+y pensamos que deb'iamos buscar un orden mejor.
 \paragraph{}
 Una mejora a este procedimiento fue notar que la moda en un arreglo con las caracter'isticas
 dadas por el problema coincide con el elemento $n/2$ del arreglo ordenado. Por lo tanto, 
@@ -65,7 +66,7 @@ buscado y su implementaci'on era simple.
 Para hacer el c'alculo de complejidad utilizamos el modelo uniforme pues consideramos, al igual que con 
 el ejercicio anterior, que lo fundamental a la hora de estudiar el orden pasa por la cantidad de elementos 
 a estudiar, y no por los valores de los mismos. Por ende es razonable asumir que el costo de operar
-con los n'umeros propiamente dichos es constante.\\
+con los n'umeros propiamente dichos es constante.
 \paragraph{}
 Considerando esto, afirmamos que si el arreglo tiene $n$ elementos, el tama\~{n}o de la entrada es $n$.\\
 Pensando en el comportamiento que tiene el algoritmo, vemos que siempre recorremos el arreglo hacia adelante 
@@ -90,14 +91,14 @@ La situaci'on del ciclo de la l'inea 10 es similar, en este caso la guarda es:\\
 indiceDeAdelante $<$ tamanio(a) $\&$ (indiceDeAdelante no fue tachado $\|$ indiceDeAdelante $\leq$ indiceDeAtras)
 
 \paragraph{}
-Es decir que el n'umero de iteraciones est'a en principio acotado $n$. Por otro lado la variable $indiceDeAdelante$, 
+Es decir que el n'umero de iteraciones est'a en principio acotado por $n$. Por otro lado la variable $indiceDeAdelante$, 
 que no se reinicia, es la que establece la condici'on de salida del ciclo principal. Si, an'alogamente a como hicimos 
 antes, el ciclo principal hace $k$ iteraciones y llamamos $iterAdel_t$ al n'umero de iteraciones del ciclo de 
 la l'inea 10, se puede ver que:
 
 $$\sum_{t=1}^{k}iterAdel_t \leq n$$
 
-porque en el momento en que el indice de adelante llega a n, ninguno de los ciclos itera mas.
+porque en el momento en que el 'indice de adelante llega a n, ninguno de los ciclos itera mas.
 
 Y en particular si definimos:\\
 
@@ -116,7 +117,7 @@ Por lo tanto el algoritmo tiene un orden de complejidad lineal, es decir $O(n)$.
 \paragraph{}
 Observando el pseudoc'odigo, tambien notamos como en la medida que aumenta el n'umero de apariciones de la 
 moda (y por lo tanto la guarda del $if$ de la l'inea 5 se haga falsa en m'as oportunidades) m'as r'apido 
-deber'ia andar el algoritmo, ya que solo se incrementa $indiceDeAdelante$. En vista de 'esto, si los elementos 
+deber'ia andar el algoritmo, ya que s'olo se incrementa $indiceDeAdelante$. En vista de 'esto, si los elementos 
 del arreglo son todos iguales, el algoritmo hace solo una pasada, mientras que en el peor de los casos, 
 hace dos pasadas completas.
 
