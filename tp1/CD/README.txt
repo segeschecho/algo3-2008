@@ -18,4 +18,5 @@ por los enunciados.
 Informe
 
 El informe se presenta en papel. El PDF del mismo está en la
-carpeta En la carpeta 
+carpeta informe/. Se adjunta además el enunciado original en
+la carpeta homónima.
