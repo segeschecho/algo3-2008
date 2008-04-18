@@ -64,7 +64,7 @@ Ergo, si p es primo y p $>$ 5, entonces p = $6*k+1$ o p = $6*k +5$.
 %\paragraph{Enunciado:}
 \textbf{\underline{Enunciado:}\\}
 
-Sea k $\in$ $\enteros$ compuesto, y sea n $\entero$ para todo p $\entero$ primo, p $<$ k, $(n:p) = 1$, entonces n $\not\equiv$ 0 $\mod{k}$\\
+Sea k $\in$ $\enteros$ compuesto, k $>$ 1, y sea n $\entero$ para todo p $\entero$ primo, p $<$ k, $(n:p) = 1$, entonces n $\not\equiv$ 0 $\mod{k}$\\
 
 \textbf{\underline{Demostraci'on:}\\}
 
@@ -107,7 +107,6 @@ Absurdo, que provino de suponer que $p_i > \sqrt{k}$ $\forall i \in {1...n}$.\\
 \newpage
 \section{Pseudoc'odigo}
 \input{ejercicio1/seudocodigo/primos.tex}
-
 %En el pseudoc'odigo presentado se utilizan dos funciones auxiliares:
 En el pseudoc'odigo presentado se utiliza una funcion auxiliar:
 \begin{itemize}
@@ -118,6 +117,7 @@ y genera candidatos a n'umeros primos como se describi'o en el Teorema 1
 
 %TODO: hablar del calculo de complejidad, de porq logaritmico, hacer el calculo
 %TODO: analisis de peor caso!
+\newpage
 \section{C'alculo de complejidad}
 \paragraph{}
 En este ejercicio usamos el modelo logar'itmico de complejidad ya que la entrada del problema es 'unicamente un
@@ -258,23 +258,24 @@ Para medir los tiempo se utiliz'o una clase basada en QueryPerformanceCounter de
 \end{figure}
 \newpage
 \section{Discusi'on}
+\paragraph{}
 En los gr'aficos pudimos observar lo que el an'alisis te'orico nos anunci'o.
-
+\paragraph{}
 En la figura 1, se ve claramente como existen diversos patrones de comportamiento. As'i el techo es un funci'on del tipo ra'iz 
 cuadrada, mientras que debajo se encuentran otras funciones de orden logar'itmico. Esta situaci'on se ve mas claro en los 
 gr'aficos donde solo est'an los n'umeros primos. En ambos casos pudimos, mediante cuadrados m'inimos, 
-encontrar una funci'on que se asemeje al comportamiento de las muestras, lo cual refuerza nuestra idea de mejor y peor caso.\\
-
+encontrar una funci'on que se asemeje al comportamiento de las muestras, lo cual refuerza nuestra idea de mejor y peor caso.
+\paragraph{}
 El gr'afico en funci'on del tiempo muestra un comportamiento muy similar al gr'afico de cantidad de operaciones, pero presenta 
 $outliers$ que se pueden explicar por el hecho de que tomar tiempos esta sujeto a un error de medici'on producto del uso del sistema
 de pruebas por parte de otros procesos.
-
+\paragraph{}
 A la hora de analizar los gr'aficos en funci'on del tama\~{n}o de la entrada esperamos ver g'raficos con forma exponencial 
 y fue exactamente eso lo que obtuvimos. En el caso de cantidad de operaciones, se mantuvo lo observado en los otros gr'aficos, 
 es decir que en general los primos requieren m'as operaciones que el resto de los n'umeros, mientras que las potencias de 7 
 requieren muchas menos.
-
+\paragraph{}
 Finalmente la figura 6 mantiene la tendencia, y nuevamente presenta $outliers$ propios de los factores externos que intervienen 
 en la medici'on de tiempos.
-
+\paragraph{}
 A modo de conclusi'on podemos afirmar que la experimentaci'on emp'irica valid'o nuestros resultados te'oricos.

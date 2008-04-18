@@ -17,8 +17,9 @@ lo tanto, al igual que la idea anterior, qued'o descartado por tener un orden de
 demasiado alto.
 \paragraph{}
 Investigando sobre el tema se encontr'o el algoritmo de Loyd-Pratt-Rivest-Tarjan, que permite 
-encontrar la mediana (mediana en el sentido de elemento del medio, si el arreglo tiene una cantidad impar de elementos coincide con la mediana estadistica, si no, no es exactamente el mismo concepto; pero lo usamos para abreviar), de un arreglo en orden lineal sin necesidad de ordenarlo. El algoritmo 
-se basa en el uso de un pivote para partir el arreglo y quedarse solo con la parte donde se 
+encontrar la mediana (mediana en el sentido de elemento del medio, si el arreglo tiene una cantidad impar de elementos coincide con la mediana estadistica, si no, no es exactamente el mismo concepto; pero lo usamos para abreviar), de un arreglo en orden lineal sin necesidad de ordenarlo.
+\paragraph{}
+El algoritmo se basa en el uso de un pivote para partir el arreglo y quedarse solo con la parte donde se 
 puede encontrar la mediana. Es necesario para tener orden lineal poder encontrar un buen pivote 
 en un orden a lo sumo lineal. El algoritmo resuelve esto partiendo el arreglo principal en arreglos
 de 5 elementos, tomando la mediana de 'estos y luego tomando una seudomediana a partir de dicha ``mediana''. 
@@ -30,6 +31,7 @@ era mayor a la mitad. La idea que tuvimos consiste b'asicamente en recorrer el a
 dos 'indices. Si se encuentran dos elementos iguales, se incrementa uno de los 'indices (en adelante $j$) 
 y se deja inm'ovil al otro (en adelante $i$) en la posici'on donde se encuentra. Si se encuentran dos 
 elementos diferentes, estos son tachados (para esto se utiliza una marca sobre un arreglo de posiciones booleanas). 
+\paragraph{}
 Luego se avanza $i$ hasta que llegue a una posici'on sin tachar y se hace lo propio con $j$ hasta llegar 
 a una posici'on sin tachar pero que tambi'en sea mayor que $i$. El ciclo termina cuando $j$ excede el l'imite 
 del arreglo. Se devuelve entonces el valor donde qued'o parado el 'indice $i$. 
@@ -38,12 +40,14 @@ De esta forma solo terminan sobreviviendo algunos elementos de la moda. Al termi
 sin tachar desde $i$ hasta el final del arreglo son iguales. Entonces podr'ian o bien ser moda o ser elementos 
 distintos a la moda. Sin embargo, esto 'ultimo no puede ocurrir ya que la frecuencia de la moda es como m'inimo 
 $n/2+1$, entonces que eso ocurra implicar'ia que tach'e por lo menos $2*(n/2+1)$ elementos pero $2*(n/2+1) > n$.
-El siguiente es un ejemplo de la aplicaci'on del algoritmo:
+\paragraph{}
+El siguiente es un ejemplo de la aplicaci'on del algoritmo:\\
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{./ejemplo.png}
 \caption{Ejemplo de la aplicaci'on del algoritmo}
 \end{figure}
+\paragraph{}
 En el ejemplo, al principio como estamos parados en dos elementos iguales, solo se avanza el 'indice de adelante. 
 Como ahora son diferentes, se tachan y se avanzan los 'indices. Nuevamente son iguales por lo que s'olo 
 se avanza el de adelante. Se tacha nuevamente un par de elementos, y al avanzar el 'indice de adelante se 
@@ -51,57 +55,84 @@ termina el arreglo. La moda es entonces el elemento donde est'a parado el 'indic
 Este algoritmo fue finalmente el que se adopt'o como soluci'on ya que nos garantizaba el orden lineal 
 buscado y su implementaci'on era simple.
 
+\newpage
 \section{Pseudoc'odigo}
 %\newpage
 \input{ejercicio3/seudocodigo/moda.tex}
 
 %TODO calculo, demostracion, tamaño de entrada, porq uniforme, peor caso, mejor caso
+\newpage
 \section{C'alculo de complejidad}
 Para hacer el c'alculo de complejidad utilizamos el modelo uniforme pues consideramos, al igual que con 
 el ejercicio anterior, que lo fundamental a la hora de estudiar el tiempo pasa por la cantidad de elementos 
 a estudiar, y no por los valores de los mismos. Por ende es razonable asumir que el costo de operar
 con los n'umeros propiamente dichos es constante.\\
-
+\paragraph{}
 Considerando esto, afirmamos que si el arreglo tiene $n$ elementos, el tama\~{n}o de la entrada es $n$.\\
 Pensando en el comportamiento que tiene el algoritmo, vemos que siempre recorremos el arreglo hacia adelante 
 y nunca volvemos hacia atr'as. Es por esta raz'on que si bien hay ciclos anidados (dentro del de la l'inea 
 4 tenemos al de la l'inea 7 y el de la l'inea 10) el algoritmo es $O(n)$.
+\paragraph{}
 El ciclo de la l'inea 7 usa indiceDeAtras para recorrer el arreglo, ahora la guarda del ciclo es:\\
-$$indiceDeAtras < tamanio(a) \& (indiceDeAtras no fue tachado)$$\\ 
+
+indiceDeAtras $<$ tamanio(a) $\&$ (indiceDeAtras no fue tachado)\
+
+\paragraph{}
 Entonces podemos ver que este ciclo, dado que $i$ no se reinicia, solo recorre el arreglo a lo sumo una 
 vez en todos los ciclos del de la l'inea 4. Es decir, si el ciclo principal hace $k$ iteraciones y llamamos 
 $iterAtras_t$ al numero de iteraciones del ciclo de la l'inea 7 en la iteraci'on t del ciclo principal, vale que:\\
-$$\sum_{t=1}^{k}iterAtras_t \leq n$$\\
+
+$$\sum_{t=1}^{k}iterAtras_t \leq n$$
+
 ya que en el momento en que $i$ se hace $n$ el ciclo interno no itera m'as.\\
+
+\paragraph{}
 La situaci'on del ciclo de la l'inea 10 es similar, en este caso la guarda es:\\
-$$indiceDeAdelante < tamanio(a) \& (indiceDeAdelante no fue tachado | indiceDeAdelante \leq indiceDeAtras)$$\\
+
+indiceDeAdelante $<$ tamanio(a) $\&$ (indiceDeAdelante no fue tachado $\|$ indiceDeAdelante $\leq$ indiceDeAtras)
+
+\paragraph{}
 Es decir que el n'umero de iteraciones est'a en principio acotado $n$. Por otro lado la variable $indiceDeAdelante$, 
 que no se reinicia, es la que establece la condici'on de salida del ciclo principal. Si, an'alogamente a como hicimos 
 antes, el ciclo principal hace $k$ iteraciones y llamamos $iterAdel_t$ al n'umero de iteraciones del ciclo de 
 la l'inea 10, se puede ver que:\\
-$$\sum_{t=1}^{k}iterAdel_t \leq n$$\\ porque en el momento en que el indice de adelante llega a n, ninguno de los ciclos itera mas.
-y en particular si definimos
+
+$$\sum_{t=1}^{k}iterAdel_t \leq n$$\\ 
+
+porque en el momento en que el indice de adelante llega a n, ninguno de los ciclos itera mas.
+
+Y en particular si definimos:\\
+
 $beta(b) =$ if b then 1 else 0 \\
+
 Y definimos $indiceAtras_t$, $indiceAdelante_t$ a los valores de dichos 'indices en la iteraci'on t, tenemos que:\\
+
 $$n=\sum_{t=0}^{n}beta(a[indiceDeAtras_t] == a[indiceDeAdelante_t])+ iterAdel_t$$\\
+
 ya que o indiceDeAdelante se incrementa en una unidad porque los elementos eran iguales, o itera el ciclo interno.\\
 
+\paragraph{}
 Viendo esto es de notar que tanto indiceDeAtras como indiceDeAdelante solo recorren el arreglo una vez. 
+\paragraph{}
 Por lo tanto el algoritmo tiene un orden de complejidad lineal, es decir $O(n)$.
+\paragraph{}
 Observando el pseudoc'odigo, tambien notamos como en la medida que aumenta el n'umero de apariciones de la 
 moda (y por lo tanto la guarda del $if$ de la l'inea 5 se haga falsa en m'as oportunidades) m'as r'apido 
 deber'ia andar el algoritmo, ya que solo se incrementa $indiceDeAdelante$. En vista de 'esto, si los elementos 
 del arreglo son todos iguales, el algoritmo hace solo una pasada, mientras que en el peor de los casos, 
 hace dos pasadas completas.
 
+\newpage
 \section{An'alisis Experimental}
 \subsection{Experiencias realizadas}
+\paragraph{}
 Nuevamente para este algoritmo se decidi'o medir tanto la cantidad de operaciones como el tiempo en funci'on de la cantidad de 
 elementos del arreglo, con la intenci'on de confirmar nuestro analisis te'orico. Para ello se generaron arreglos de largo creciente 
 con elementos al azar (distribuci'on uniforme) respetando que la frecuencia de la moda sea de por lo menos $n/2+1$.
-
+\paragraph{}
 Por otro lado para observar la influencia de la frecuencia de la moda en el comportamiento del algoritmo se hicieron corridas de prueba
 para un $n$ fijo aumentando la frecuencia y midiendo la cantidad de operaciones y el tiempo insumido.
+\paragraph{}
 Adem'as, en algunos casos fue posible utilizar la t'ecnica de cuadrados m'inimos para dar una funci'on 
 que aproxime el comportamiento observado experimentalmente. En dichos casos, la ecuaci'on de $f(x)$ se encuentra en el gr'afico.
 
@@ -141,9 +172,13 @@ que aproxime el comportamiento observado experimentalmente. En dichos casos, la 
 \paragraph{}
 En el gr'afico de tiempo se observ'o que al aumentar el tama\~{n}o del arreglo, el tiempo 
 aumenta de forma lineal. Lo mismo ocurre con la cantidad de operaciones . Esta situaci'on se 
-corresponde con el an'alisis te'orico que se realiz'o. Por otro lado en los gr'aficos en funci'on 
+corresponde con el an'alisis te'orico que se realiz'o. 
+\paragraph{}
+Por otro lado en los gr'aficos en funci'on 
 de la frecuencia de la moda, el tiempo y las operaciones parecieran decrecer linealmente. Esto 
 evidencia que el mejor caso se produce cuando todos los elementos del arreglo resultan ser la moda. Esto se
 explica porque si todos los elementos son iguales a la moda, el $if$ de la l'inea 5 del pseudoc'odigo
 siempre tiene una condici'on de entrada falsa, por lo que el ciclo recorre el arreglo sin 
-hacer otro tipo de operaci'on. Para finalizar, podemos decir que el comportamiento que obtuvimos coincidi'o con el esperado.
+hacer otro tipo de operaci'on. 
+\paragraph{}
+Para finalizar, podemos decir que el comportamiento que obtuvimos coincidi'o con el esperado.
