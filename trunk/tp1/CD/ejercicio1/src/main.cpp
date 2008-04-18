@@ -53,6 +53,13 @@ void primoDeMayorPotencia(int n, int& primo, int& potencia) {
     potencia = mejorPotencia;
 }
 
+void help() {
+    cout << "Uso ./primos <infile> <outfile>" << endl;
+    cout << "  o ./primos (sin parametros)" << endl;
+    cout << "En el caso de la llamada sin parametros se toman los archivos" << endl;
+    cout << "Tp1Ej1.in y Tp1Ej1.out como valores por defecto." << endl;
+}
+
 int main(int argc, char* argv[]) {
     // leo los datos de entrada
     string ruta;
@@ -61,8 +68,12 @@ int main(int argc, char* argv[]) {
     } else {
         ruta="Tp1Ej1.in";
     }
-    fstream f (ruta.c_str()); 
-    assert(f.is_open());
+    fstream f (ruta.c_str());
+    if(!f.is_open()) {
+        cout << endl << "ERROR: No se pudo abrir el archivo de entrada!" << endl << endl;
+        help();
+        return 1;
+    }
 
     // preparo el archivo de salida
     string salida;
