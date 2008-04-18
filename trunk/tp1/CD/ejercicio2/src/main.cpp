@@ -136,6 +136,14 @@ void camionAux(SolucionPosible& candActual, Camion& c,unsigned indice,SolucionPo
 }
 
 
+void help() {
+    cout << "Uso ./camion <infile> <outfile>" << endl;
+    cout << "  o ./camion (sin parametros)" << endl;
+    cout << "En el caso de la llamada sin parametros se toman los archivos" << endl;
+    cout << "Tp1Ej1.in y Tp1Ej1.out como valores por defecto." << endl;
+}
+
+
 int main(int argc, char* argv[]) {
 
     // leo los datos de entrada
@@ -146,7 +154,12 @@ int main(int argc, char* argv[]) {
         ruta="Tp1Ej2.in";
     }
     fstream f (ruta.c_str());
-    assert(f.is_open());
+    if(!f.is_open()) {
+        cout << endl << "ERROR: No se pudo abrir el archivo de entrada!" << endl << endl;
+        help();
+        return 1;
+    }
+
     string caso;
     f >> caso;
 
