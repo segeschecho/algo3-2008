@@ -1,0 +1,38 @@
+﻿Desarrollo:
+Sobre el modelo:
+Para resolver el problema, planteamos un digrafo donde cada nodo es un jugador y a->b si  a le gana a b. 
+Lo primero que observamos es que la relacion de ganar, por como esta planteada, es transitiva. Es decir si a->b y b->c, se puede hacer que a le “gane” a c, haciendo que b le gane a c y luego a le gane a b.
+Entonces según este modelo, un jugador puede ganar el torneo si puede llegar a todos los jugadores.
+Luego si usamos esto, podemos obtener una primera forma de resolver el problema: Para cada nodo, tratamos de recorrer todo el grafo. Si lo logramos, se puede armar un torneo para que gane. Como esto se hace para cada nodo, el orden queda O(n*m).
+Buscamos entonces alguna forma de mejorar el orden. Una primera alternativa era guardar alguna informacion en cada recorrida, para no repetir calculos, pero los ciclos nos impedian lograr alguna solucion. Tuvimos entonces que buscar alguna otra forma.
+
+Resolucion en grafos aciclicos:
+Si el grafo que se obtiene no presenta ciclos, se puede ver que existe un ganador si y solo si existe un unico nodo tal que su grado de entrada es 0.
+Si existen varios, no se podran eliminar nunca, ya que no hay quien seguro les gane. Por otro lado, no puede ocurrir que no halla ninguno nodo con grado de entrada 0, porque si eso ocurre existe un ciclo. (Ver demostracion, hecha en la practica).
+Entonces si no hay ciclos, podemos resolver facilmente el problema: Si representamos el grafo con listas de adyacencia (tanto de entrada, como de salida), podemos recorrer cada nodo, viendo si hay solo uno con grado de entrada 0. Si es asi, ese gana. Si encontramos varios, no existe ganador.
+Esto tiene como costo O(n), ya que recorremos todos los nodos, y preguntamos cuanto mide su lista de adyacencia de salida (costo constante).
+Ahora bien, no se puede afirmar que el grafo que recibimos no presente ciclos. Es decir hay instancias validas que poseen ciclos. Debemos entonces buscar alguna manera de salvar esta dificultad.
+
+El papel de las componentes fuertemente conexas:
+Si tenemos ciclos, no vale la propiedad antes enunciada sobre los grados de entrada. 
+Analizamos entonces que ocurre si el grafo presenta un ciclo. Como la relacion a -> b es transitiva, todos los elementos que pertenecen a un ciclo, se ganan entre si. Por otro lado, si tomamos un elemento que no este en el ciclo (a) y que le gane a alguien del mismo (b), podemos ver que les puede ganar a todos: primero hacemos que b le gane a todos los del ciclo, y luego hacemos que a le gane a b. Analogamente se puede ver que si alguien del ciclo, le gana a alguien que no esta en el; cualquier otro del ciclo le puede ganar.
+Esto nos hace pensar que podemos considerar al cada ciclo como una unidad, como un jugador unico, que les gana a todos aquellos que son derrotados por algun individuo del ciclo y que pierde contra todos aquellos que le ganan a alguien del ciclo.
+Estos ciclos que buscamos no son mas que las componentes fuertemente conexas del grafo. 
+Si reducimos al grafo de modo de que colapsamos a los nodos que pertenecen a una componente fuertemente conexa a un unico nodo, actualizando la informacion de los partidos arreglados, lo que obtenemos es un nuevo grafo que cumple ser libre de ciclos (Demostrar).
+Entonces una vez que tenemos un grafo libre de ciclos, podemos aplicar la propiedad que enunciamos antes, y resolver el problema en O(n).
+
+Como obtener las componentes fuertemente conexas:
+Para poder elminar los ciclos, buscamos las componentes fuertemente conexas. Para hacerlo utilizamos el algoritmo de kosaraju. El mismo logra encontrarlas en O(n+m).
+El mismo es basicamente bfs. Funciona de la siguiente manera:
+Primero realiza un bfs numerando los nodos según el orden de finalizacion de las llamadas recursivas. (se repite hasta numerar todos los nodos).
+Luego se arma el grafo g' que contiene los mismos nodos que g pero a -> b en g' si y solo si b -> a en g.
+Ahora se realiza un bfs en g', partiendo del nodo con mayor numeracion. Al terminar se obtiene una componente fuertemente conexa. El proceso se repite para todos los nodos no visitados, siempre en orden decreciente de numeracion.
+Como lo que hace el algoritmo es bfs dos veces, tiene orden O(n+m)
+
+Como armar el grafo reducido:
+Una vez que ya tenemos las componentes fuertemente conexas, armar el grafo reducido es simple. Primero guardamos en que componente quedo cada jugador, luego tomamos las relaciones entre los jugadores, y las traducimos al nuevo grafo: las releciones dentro de la misma componente se descartan, y dos componentes estan relacionadas si existe un jugador en cada una, tal que esten relacionados.
+Es de notar que es necesario que filtrar las relaciones intracomponente para no obtener un pseudografo que no nos permite usar la propiedad de los grafos sin ciclos, pues un nodo queda relacionado con si mismo, por lo que tiene grado de entrada mayor  a 0.
+Tambien es de notar que no podemos obtener un multigrafo, ya que el grafo es libre de ciclos: si vale que a-> b y b-> a, a y b deberian ser una unica componente fuertemente conexa.
+
+
+ 
