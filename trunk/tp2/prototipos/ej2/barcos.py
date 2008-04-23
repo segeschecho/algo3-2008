@@ -115,21 +115,31 @@ def generarCamino(g):
 
 
 if __name__ == '__main__':
+    
     # Ejemplo del enunciado
     #acuerdos = [(1,2),(2,3),(2,4),(2,5),(3,0),(4,0),(4,5)]
     #n = 6
     #g = GrafoCircular(n, acuerdos)
 
+    # Instancia al azar
     from barcos_generador import generarInstancia
-    from barcos_tester import chequearCaminoValido
-
-    g = generarInstancia()
+    g = generarInstancia(ciudades=100)
+    
     print g
-    c = generarCamino(g)
+    
+    # Metodo recursivo convencional
+    #c = generarCamino(g)
+
+    # Metodo con tabulado por demanda
+    from barcos_tabla import BuscadorCaminoTPD
+    b = BuscadorCaminoTPD(g)
+    c = b.buscarCamino()
     print c
+    
     
     if c is [] and hayCamino(g):
         print "No se pudo encontrar el camino y sin embargo parecía haberlo!"
     
     if c != []:
+        from barcos_tester import chequearCaminoValido
         chequearCaminoValido(g, c)
