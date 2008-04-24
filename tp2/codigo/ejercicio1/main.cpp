@@ -7,7 +7,7 @@
 #define print cout<<
 #include "Grafo.h"
 using namespace std;
-bool* ejercicio1(Grafo* grafo,unsigned& cantGanadores);
+bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned& cantGanadores);
 
 int main(int argc, char* argv[])
 {    // leo los datos de entrada
@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 	if(nodos == relaciones && nodos == 0){
 	    break;
         }
+    unsigned rels = relaciones;
 	list<pair<unsigned,unsigned> > l;
         while(relaciones > 0){
 	    unsigned x, y;
@@ -48,15 +49,18 @@ int main(int argc, char* argv[])
 	}
 	Grafo* g = new Grafo(nodos,l);
 	unsigned cantGanadores = 0;
-    	bool* sol =ejercicio1(g,cantGanadores);
-        o<<cantGanadores;
-    	for(unsigned i = 0; i < g->nodos; i++){
-		if(sol[i]){
-		   o<<" "<<i+1;
-		}
+    	bool* sol =ejercicio1(g,rels,cantGanadores);
+    	o<<cantGanadores;
+    	if( sol != NULL){
 
-	}
-	o<<endl;
+            for(unsigned i = 0; i < g->nodos; i++){
+                if(sol[i]){
+                o<<" "<<i+1;
+                }
+
+            }
+    	}
+        o<<endl;
     	delete g;
     	delete[] sol;
         }
@@ -146,7 +150,11 @@ list<list<unsigned>* > * armarFuertes(Grafo* grafo,bool*visitado,unsigned* valor
     return fuertes;
 }
 
-bool* ejercicio1(Grafo* grafo,unsigned & cantGanadores){
+bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
+    if(rels < grafo->nodos - 1){
+        cantGanadores = 0;
+        return NULL;
+    }
     bool* visitado = new bool[grafo->nodos];
     unsigned* valor= new unsigned[grafo->nodos];
     //construimos las componentes fuertemente conexas
@@ -192,9 +200,10 @@ bool* ejercicio1(Grafo* grafo,unsigned & cantGanadores){
             yaHayUno = true;
         }
         else if(g1.verticesIn[each].empty() && yaHayUno){
-            delete quien;
+        delete quien;
 	    quien = NULL;
-	    break;
+	    cantGanadores = 0;
+	    return NULL
         }
     }
     //cosa que no debe pasar :P

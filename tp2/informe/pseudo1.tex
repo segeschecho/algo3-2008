@@ -1,36 +1,80 @@
 \begin{algorithm}
 \caption{Devuelve la lista de aquellos jugadores, tal que se puede arreglar el torneo}
 \begin{algorithmic}[1]
-\STATE fuertes $\leftarrow$ armarFuertes(grafo)
+\IF{hay menos partidos arreglados que jugadores $-$ 1}
+	\STATE devolver []
+\ENDIF
+\STATE fuertes $\textcolor{orange}{\leftarrow}$ armarFuertes(grafo)
 \COMMENT {Averiguamos en que componente quedo cada nodo}
 \FOR {i $\in$ {$1,...,$ Cantidad de componentes fuertemente conexas}}
 	\FOR {cada nodo $\in$ $fuertes_i$}
-			\STATE dondeQuedo[nodo] $\leftarrow$ i
+			\STATE dondeQuedo\textcolor{orange}{[}nodo\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ i
 	\ENDFOR
 \ENDFOR
-\STATE relacion$\leftarrow[ ]$
+\STATE relacion$\textcolor{orange}{\leftarrow}\textcolor{orange}{[} \textcolor{orange}{]}$
 \FOR{cada nodo del grafo}
 	\FOR{cada nodo2 que llega al nodo}
 			\IF{si el vertice no une elementos de la misma componente}
-				\STATE relacion $+$ $[(dondeQuedo[nodo],dondeQuedo[nodo2])]$
+				\STATE relacion $\textcolor{orange}{+}$ $\textcolor{orange}{[}(dondeQuedo\textcolor{orange}{[}nodo\textcolor{orange}{]},dondeQuedo\textcolor{orange}{[}nodo2\textcolor{orange}{]})\textcolor{orange}{]}$
 			\ENDIF
 	\ENDFOR
 \ENDFOR
-
-\STATE g1 $\leftarrow$ Grafo(cantidad de Componentes, relacion)
+\STATE g1 $\textcolor{orange}{\leftarrow}$ Grafo(cantidad de Componentes, relacion)
 \COMMENT{Una vez que tengo el grafo reducido, busco cuantos hay con $d_{in} = 0$}
 \STATE encontreUno = false
-\STATE quien $\leftarrow$ $\bot$
+\STATE quien $\textcolor{orange}{\leftarrow}$ $\bot$
 \FOR{cada nodo de g1}
 	\IF{ $d_{in}(nodo) == 0$ $\wedge$ no encontreUno}
-		\STATE quien $\leftarrow$ nodo
-		\STATE encontreUno $\leftarrow$ True
+		\STATE quien $\textcolor{orange}{\leftarrow}$ nodo
+		\STATE encontreUno $\textcolor{orange}{\leftarrow}$ True
 	\ELSIF{ $d_{in}(nodo) == 0$ $\wedge$ encontreUno}
-		\STATE devolver $[]$
+		\STATE devolver $\textcolor{orange}{[}\textcolor{orange}{]}$
 	\ENDIF
 \ENDFOR
-\STATE $ordenar(fuertes[quien])$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 0 y cantidad de nodos del grafo original}
-\STATE devolver $fuertes[quien]$	
-
+\STATE $ordenar(fuertes\textcolor{orange}{[}quien\textcolor{orange}{]})$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 0 y cantidad de nodos del grafo original}
+\STATE devolver $fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}$	
 \end{algorithmic}
 \end{algorithm}
+
+\begin{algorithm}
+\caption{Devuelve la lista de las componentes fuertemente conexas mediante algoritmo de Kosaraju}
+\begin{algorithmic}[1]
+\STATE valor = {0...0}
+\STATE dar valor a todos los nodos segun las llamadas recursivas al hacer dsf
+\STATE $visitado = {0...0}$
+\STATE g $\textcolor{orange}{\leftarrow}$ invertirGrafo(grafo)
+\STATE $CompFuertes \textcolor{orange}{\leftarrow} \textcolor{orange}{[}\textcolor{orange}{]}$
+\FOR{cada nodo con mayor valor y sin visitar}
+		\STATE fuerte $\textcolor{orange}{\leftarrow}$ \textcolor{orange}{[}\textcolor{orange}{]}
+		\STATE Realizar dsf desde el nodo, los elementos visitados son una componente fuertemente conexa
+		\STATE fuertes $\textcolor{orange}{\leftarrow}$ fuertes \textcolor{orange}{+} \textcolor{orange}{[}fuerte\textcolor{orange}{]}
+\ENDFOR
+\STATE devolver fuertes
+\end{algorithmic}
+\end{algorithm}
+
+%\begin{algorithm}
+%\caption{numera los nodos mediante dsf}
+%\begin{algorithmic}\textcolor{orange}{[}1\textcolor{orange}{]}
+%\STATE $visitado \textcolor{orange}{\leftarrow} {0...0}$
+%\FOR{cada nodo del grafo}
+%	\IF{no lo visite}
+%		\STATE dsf(grafo, nodo,valor) \COMMENT{dsf que numera}		
+%	\ENDIF
+%	\ENDFOR
+%	
+%\end{algorithmic}
+%\end{algorithm}
+%
+%\begin{algorithm}
+%\caption{Realiz un dsf numerando a cada nodo segun el orden de su llamada, guarda que valor tiene cada nodo}
+%\begin{algorithmic}\textcolor{orange}{[}1\textcolor{orange}{]}
+%\STATE visitado\textcolor{orange}{[}nodo\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ 1
+%\FOR{Cada vertice relacionado con el nodo}
+%	\IF{no lo visite}
+%		\STATE bfp(grafo,vertice}
+%	\ENDIF
+%\ENDFOR
+%\STATE Valor\textcolor{orange}{[}valorActual\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ nodo
+%\STATE valorActual $\textcolor{orange}{+}\textcolor{orange}{+}$
+%
