@@ -30,7 +30,9 @@ Lo primero que observamos es que la relación de ganar, por como esta planteada, 
 Entonces según este modelo, un jugador, jugador A, puede ganar si para cada uno de los otros jugadores, jugador B, existe un 
 camino dirigido que comunica a A con B. Luego si usamos esto, podemos obtener una primera forma de resolver el problema: Para 
 cada nodo, tratamos de recorrer todo el grafo. Si lo logramos, se puede armar un torneo para que gane. Como esto se hace para 
-cada nodo, el orden queda $O(n*m)$.
+cada nodo, el orden queda $O(n*m)$. 
+
+Por otro lado, podemos ver que para que exista un ganador es necesario que si participan n jugadores, la cantidad de partidos arrelgados sea como mínimo n - 1, ya que con menos partidos, necesariamente quedan jugadores sin un partido arreglado. De modo que obtenemos una caracteristica que permite resolver un tipo de instancia particular muy facilmente.
 
 Buscamos entonces alguna forma de mejorar el orden. Una primera alternativa era guardar 
 alguna información en cada recorrida, para no repetir cálculos, pero los ciclos nos impedían lograr alguna solución. Tuvimos  entonces que buscar alguna otra forma.
@@ -123,7 +125,7 @@ Funciona de la siguiente manera:
 \begin{itemize}
 \item Primero realiza un DFS numerando los nodos según el orden de finalización de las llamadas recursivas. (se repite hasta numerar todos los nodos).
 
-\item Luego se arma el grafo $g'$ que contiene los mismos nodos que g pero a$\leadsto$b en $g'$ si y solo si b$\leadsto$a en g.
+\item Luego se arma el grafo $g'$ que contiene los mismos nodos que g pero a$\leadsto$b en $g'$ si y solo si b$\leadsto$a en g. g' tiene como caracteristica que posee las mismas componentes conexas que g. Ademas si existe un camino entre dos vertices u y v en g, vale que existe un camino entre u y v en g' si y solo si estan en la misma componente fuertemente conexa.
 
 \item Una vez armado $g'$, se realiza un DFS en 'el, partiendo del nodo con mayor numeraci'on. Al terminar se obtiene una componente fuertemente conexa. 
 
@@ -203,3 +205,30 @@ Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ n
 \newpage
 \section{Pseudocodigo}
 \input{pseudo1}
+
+\newpage
+\section{Cálculo de complejidad}
+Para estudiar la complejidad del algoritmo consideramos que es apropiado considerar el modelo uniforme, ya que lo que importa en este caso es la cantidad de jugadores y partidos arreglados, mas que el coste que podrian tener las operaciones aritmeticas.
+Por eso consideraremos que el tamaño de la entrada es justamente la cantidad de jugadores (n) y la cantidad de partidos arreglados (m).
+
+Dado que, como dijimos anteriormente, si la cantidad de partidos arreglados es menor que $n-1$ sabemos que el torneo no puede arreglarse, por lo cual el algoritmo funciona en $O(1)$, ya que que solo se pregunta por la cantidad de partidos arreglados y se termina el algoritmo.
+
+Veamos que ocurre en los casos en los que m $\geq$ $n-1$. 
+
+Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju. Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
+
+A continuación creamos el grafo invertido. Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
+
+Cuando ya tenemos al grafo invertido, realizamos nuevamente una dsf para armar las componentes fuertemente conexas, nuevamente como es una dsf solo tocamos una vez a cada nodo y recorremos todos los vertices, tenemos un orden $O(n+m)$. En cada llamada el costo de ir guardando las componentes es constante, ya que solo se agrega un elemento al principio de una lista.
+
+Una vez que tenemos las componentes, lo que hacemos es guardar en que componente quedo cada nodo. Para esto recorremos cada una de las componentes fuertemente conexas y miramos a cada nodo. Como la cantidad total de nodos que tenemos es n, justamente el costo de hacer esto es $O(n)$.
+
+Ahora buscamos la informacion sobre la relación entre las componentes fuertemente conexas. Lo que hacemos es pararnos en cada nodo, ver a quien le gana, y si le gana a alguien que no esta en su misma componente, guardamos la tupla en una lista (O(1)). Miramos cada nodo, y para cada uno miramos a quien le gana. Es decir que miramos cada partido arreglado una vez, y como miramos a cada nodo también una vez, tenemos una complejidad $O(n+m)$.
+
+Con esta informaci'on creamos el grafo reducido. En el peor caso, hay tantos nodos como habia antes e igual cantidad de aristas, por lo cual la cracion del mismo es $O(n+m)$.
+
+A continuaci'on buscamos cuantos nodos hay que tengan grado de entrada 0. Saber el grado de entra cuesta $O(1)$ ya que es preguntar por la longitud de la lista de adyacencia de entrada. Como tenemos que mirar a todos los nodos, el costo total es $O(n)$.
+
+Si nadie gana devolvemos una lista vacia en $O(1)$. En cambio si existe algun ganador, conocemos que componente es la que gana. Entonces tenemos que devolver a los nodos que pertenecen a ella. Como los tenemos que devolver en orden creciente, dado que sabemos que en el peor de los casos hay n ganadores, hacemos un bucket sort que tiene como costo $O(n)$
+
+Luego como en cada paso las operaciones que realizamos tienen un costo $O(n+m)$, podemos afirmar que el algoritmo tiene un costo de $O(n + m)$
