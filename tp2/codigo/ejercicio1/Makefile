@@ -13,4 +13,4 @@ Grafo.o: Grafo.cpp Grafo.h
 
 clean:
 	rm -f *.o
-	rm -f camion
+	rm -f ej1
