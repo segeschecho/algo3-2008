@@ -15,10 +15,10 @@ class GrafoCircular:
 
         # FIXME: la version de produccion no lleva esto
         # cuantos acuerdos hay? (para benchmarking posterior)
-        self.a = sum([sum(x) for x in self.acuerdos]) / 2
+        self.m = sum([sum(x) for x in self.acuerdos]) / 2
 
     def estanConectados(self,a,b):
         return bool(self.acuerdos[a][b])
 
     def __repr__(self):
-        return '<GrafoCircular de %s ciudades y %s acuerdos>' % (self.n, self.a)
+        return '<GrafoCircular de %s ciudades y %s acuerdos>' % (self.n, self.m)
