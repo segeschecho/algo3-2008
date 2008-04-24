@@ -1,0 +1,76 @@
+%%	SECCION documentclass																									 %%	
+%%---------------------------------------------------------------------------%%
+\documentclass{article}
+
+%%---------------------------------------------------------------------------%%
+%%	SECCION usepackage																											 %%	
+%%---------------------------------------------------------------------------%%
+\usepackage{amsmath, amsthm}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{caratula}
+\usepackage{a4wide}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{moreverb}
+\usepackage{graphicx} % Para el logo magico!
+\usepackage{capt-of}
+\usepackage{afterpage}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\usepackage{subfigure}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage[dvipsnames,usenames]{color}
+\usepackage{amsfonts}
+%%---------------------------------------------------------------------------%%
+%%	SECCION opciones																												 %%	
+%%---------------------------------------------------------------------------%%
+\parskip		= 11 pt
+\headheight	= 13.1pt
+\pagestyle	{fancy}
+
+
+\addtolength{\headwidth}{1.8in}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\textwidth}{1.0in}
+\addtolength{\topmargin}{-0.8in}
+\addtolength{\textheight}{0.7in}
+
+
+\pagestyle{fancy}
+\fancyhead[LO]{Gonzalez, Gonzalez, Martinez, Sainz Tr'apaga}
+\fancyhead[C]{}
+\fancyhead[RO]{P\'agina \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot{}
+
+%%---------------------------------------------------------------------------%%
+%%	SECCION document	 %%	
+%%---------------------------------------------------------------------------%%
+\begin{document}
+\input{trans_algorithmic.tex}
+%%---- Caratula -------------------------------------------------------------%%
+\includegraphics{logo}
+\materia{Algoritmos III}
+\titulo{Trabajo Pr'actico no. 2}
+%\subtitulo{Esp\'ia por error (num\'erico) }
+
+\integrante{Gonz'alez, Emiliano}{426/06}{xjesse\_jamesx@hotmail.com}
+\integrante{Gonz'alez, Sergio}{481/06}{gonzalezsergio2003@yahoo.com.ar}
+\integrante{Mart'inez, Federico}{17/06}{federicoemartinez@gmail.com}
+\integrante{Sainz-Tr'apaga, Gonzalo}{454/06}{gonzalo@sainztrapaga.com.ar}
+
+\resumen{
+Poner alguna fruta aca
+}
+
+
+\maketitle
+\tableofcontents
+\newpage
+\input{ej1}
+\label{LastPage}
+\end{document}
