@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
     # Instancia al azar
     from barcos_generador import generarInstancia
-    g = generarInstancia(ciudades=100)
+    g = generarInstancia(ciudades=500)
     
     print g
     
@@ -131,10 +131,14 @@ if __name__ == '__main__':
     #c = generarCamino(g)
 
     # Metodo con tabulado por demanda
-    from barcos_tabla import BuscadorCaminoTPD
+    from barcos_tabla import BuscadorCaminoTPD, BuscadorCaminoTCI
     b = BuscadorCaminoTPD(g)
     c = b.buscarCamino()
+    b2 = BuscadorCaminoTCI(g)
+    c2 = b.buscarCamino()
+    assert(c == c2)
     print c
+    print c2
     
     
     if c is [] and hayCamino(g):
