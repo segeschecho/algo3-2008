@@ -4,6 +4,7 @@
 #include <fstream>
 #include <assert.h>
 #define no !
+#define print cout<<
 #include "Grafo.h"
 using namespace std;
 bool* ejercicio1(Grafo* grafo,unsigned& cantGanadores);
@@ -28,58 +29,53 @@ int main(int argc, char* argv[])
     }
     ofstream o (salida.c_str());
     unsigned buffer, nodos, relaciones;
-    
+
     while (true) {
 	f >> buffer;
         nodos = buffer;
 	f >> buffer;
 	relaciones = buffer;
 	if(nodos == relaciones && nodos == 0){
-	    break; 
+	    break;
         }
 	list<pair<unsigned,unsigned> > l;
         while(relaciones > 0){
 	    unsigned x, y;
-	    f >> x; 
+	    f >> x;
 	    f >> y;
 	    l.push_back(pair<unsigned,unsigned>(x-1,y-1));
 	    relaciones --;
 	}
 	Grafo* g = new Grafo(nodos,l);
-	cout<<*g<<endl;
 	unsigned cantGanadores = 0;
     	bool* sol =ejercicio1(g,cantGanadores);
-	o<<cantGanadores;
-	if(cantGanadores > 0){
-	    o<<" ";
-        }
-    	for(unsigned i = 0; i < cantGanadores; i++){
+        o<<cantGanadores;
+    	for(unsigned i = 0; i < g->nodos; i++){
 		if(sol[i]){
-		   o<<i+1;
+		   o<<" "<<i+1;
 		}
-		if(i != cantGanadores -1){
-			o<<" ";
-		}
+
 	}
+	o<<endl;
     	delete g;
     	delete[] sol;
         }
 	return 0;
     }
 
-void bfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned* valor){
+void dfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned* valor){
     visitado[nodo] = true;
     list<unsigned> :: iterator principio = grafo->verticesOut[nodo].begin();
     list<unsigned> :: iterator final = grafo->verticesOut[nodo].end();
     for(list<unsigned> :: iterator each = principio; each != final; each++){
         if (no visitado[*each])
-            bfs(grafo,*each,num,visitado,valor);
+            dfs(grafo,*each,num,visitado,valor);
     }
     valor[num] = nodo;
     num += 1;
 }
 
-void auxbfs(Grafo* grafo, bool* visitado, unsigned* valor){
+void auxdfs(Grafo* grafo, bool* visitado, unsigned* valor){
     //visitado = new bool[grafo.nodos];
     //valor = new unsigned[grafo.nodos];
     for(unsigned i = 0; i < grafo->nodos; i++){
@@ -89,18 +85,18 @@ void auxbfs(Grafo* grafo, bool* visitado, unsigned* valor){
     unsigned num = 0;
         for(unsigned i = 0;  i < grafo->nodos; i++){
             if(no visitado[i]){
-                bfs(grafo,i,num,visitado,valor);
+                dfs(grafo,i,num,visitado,valor);
             }
 	}
 }
 
-void bfs2(Grafo* grafo, unsigned nodo,bool* visitado, list<unsigned>* fuerte){
+void dfs2(Grafo* grafo, unsigned nodo,bool* visitado, list<unsigned>* fuerte){
     visitado[nodo] = true;
     list<unsigned> :: iterator principio = grafo->verticesOut[nodo].begin();
     list<unsigned> :: iterator final = grafo->verticesOut[nodo].end();
     for(list<unsigned> :: iterator each = principio; each != final; each++){
         if (no visitado[*each])
-            bfs2(grafo,*each,visitado,fuerte);
+            dfs2(grafo,*each,visitado,fuerte);
     }
     fuerte->push_back(nodo);
 }
@@ -123,7 +119,7 @@ Grafo* invertirGrafo(Grafo* grafo){
 
 list<list<unsigned>* > * armarFuertes(Grafo* grafo,bool*visitado,unsigned* valor){
 
-    auxbfs(grafo,visitado,valor);
+    auxdfs(grafo,visitado,valor);
 
      for(unsigned i = 0; i < grafo->nodos; i++){
         visitado[i] = false;
@@ -138,7 +134,7 @@ list<list<unsigned>* > * armarFuertes(Grafo* grafo,bool*visitado,unsigned* valor
 
         if (no visitado[valor[i]]){
 
-            bfs2(g,valor[i],visitado,fuerte);
+            dfs2(g,valor[i],visitado,fuerte);
 
             fuertes->push_back(fuerte);
 
@@ -157,7 +153,7 @@ bool* ejercicio1(Grafo* grafo,unsigned & cantGanadores){
     list<list<unsigned>* > *fuertes = armarFuertes(grafo,visitado,valor);
     delete[] visitado;
     delete[] valor;
-    
+
     // guardamos ahora en que componente quedo cada nodo;
     unsigned *dondeQuedo = new unsigned[grafo->nodos];
     unsigned i = 0;
@@ -169,7 +165,7 @@ bool* ejercicio1(Grafo* grafo,unsigned & cantGanadores){
         }
         i++;
     }
-    
+
     // construimos el grafo reducido donde cada nodo es una componente fuertemente conexa
     i = 0;
     list<pair<unsigned, unsigned> > x;
@@ -183,8 +179,8 @@ bool* ejercicio1(Grafo* grafo,unsigned & cantGanadores){
                 x.push_back(pair<unsigned,unsigned>(dondeQuedo[i], dondeQuedo[*each]));
         }
     }
-    Grafo g1 = Grafo(fuertes->size(), x); 
-    
+    Grafo g1 = Grafo(fuertes->size(), x);
+
     delete[] dondeQuedo;
     bool yaHayUno = false;
     unsigned* quien = NULL;
@@ -212,17 +208,17 @@ bool* ejercicio1(Grafo* grafo,unsigned & cantGanadores){
 	list<list<unsigned>* > :: iterator it = fuertes->begin();
 	for(list<list<unsigned>* > :: iterator it = fuertes->begin(); aux > 0; aux --){
 		it++;
-	} 	
+	}
 	l->assign((*it)->begin(),(*it)->end());
 	delete quien;
     }
-    
+
     for(list<list<unsigned>* > :: iterator each = principio; each != final;){
 	list<list<unsigned>* > :: iterator it = each;
 	each++;
 	delete *it;
     }
-    // como hay que devolverlas en orden hacemos bucketsort en O(n)	
+    // como hay que devolverlas en orden hacemos bucketsort en O(n)
     bool* ganadores = new bool[grafo->nodos];
     for(int i = 0; i < grafo-> nodos; i++){
 	ganadores[i] = false;

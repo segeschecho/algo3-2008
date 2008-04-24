@@ -1,0 +1,36 @@
+\begin{algorithm}
+\caption{Devuelve la lista de aquellos jugadores, tal que se puede arreglar el torneo}
+\begin{algorithmic}[1]
+\STATE fuertes $\leftarrow$ armarFuertes(grafo)
+\COMMENT {Averiguamos en que componente quedo cada nodo}
+\FOR {i $\in$ {$1,...,$ Cantidad de componentes fuertemente conexas}}
+	\FOR {cada nodo $\in$ $fuertes_i$}
+			\STATE dondeQuedo[nodo] $\leftarrow$ i
+	\ENDFOR
+\ENDFOR
+\STATE relacion$\leftarrow[ ]$
+\FOR{cada nodo del grafo}
+	\FOR{cada nodo2 que llega al nodo}
+			\IF{si el vertice no une elementos de la misma componente}
+				\STATE relacion $+$ $[(dondeQuedo[nodo],dondeQuedo[nodo2])]$
+			\ENDIF
+	\ENDFOR
+\ENDFOR
+
+\STATE g1 $\leftarrow$ Grafo(cantidad de Componentes, relacion)
+\COMMENT{Una vez que tengo el grafo reducido, busco cuantos hay con $d_{in} = 0$}
+\STATE encontreUno = false
+\STATE quien $\leftarrow$ $\bot$
+\FOR{cada nodo de g1}
+	\IF{ $d_{in}(nodo) == 0$ $\wedge$ no encontreUno}
+		\STATE quien $\leftarrow$ nodo
+		\STATE encontreUno $\leftarrow$ True
+	\ELSIF{ $d_{in}(nodo) == 0$ $\wedge$ encontreUno}
+		\STATE devolver $[]$
+	\ENDIF
+\ENDFOR
+\STATE $ordenar(fuertes[quien])$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 0 y cantidad de nodos del grafo original}
+\STATE devolver $fuertes[quien]$	
+
+\end{algorithmic}
+\end{algorithm}
