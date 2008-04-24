@@ -114,7 +114,7 @@ class BuscadorCaminoTCI:
         self.camino = None
         self.resuelto = False        
     
-    # este metodo arma la matriz de bools asociada a la solucion
+    # Este metodo arma la matriz de bools asociada a la solucion
     # para un grafo dado (esta matriz permite despues encontrar los
     # caminos existentes)
     def _resolver(self):
@@ -152,8 +152,8 @@ class BuscadorCaminoTCI:
 
         self.resuelto = True
 
-    # Funcion recursiva auxiliar para construir los caminos
-    # requiere que el camino exista!
+    # Funciones recursivas auxiliares para construir los caminos
+    # OJO: requieren que el camino exista!
     def _caminoQueTerminaEnA(self,a,b):
         if b-a == 1 or (b == 0 and a == self.g.n-1):
             return [b,a]
@@ -167,8 +167,6 @@ class BuscadorCaminoTCI:
 
         raise ValueError, "No existe el camino que se intento generar! (de %s a %s)" % (a,b)
 
-    # Funcion recursiva auxiliar para construir los caminos
-    # requiere que el camino exista!
     def _caminoQueTerminaEnB(self,a,b):
         if b-a == 1 or (b == 0 and a == self.g.n-1):
             return [a,b]
@@ -184,6 +182,8 @@ class BuscadorCaminoTCI:
 
     # Devuelve el camino hallado o [] si no fue posible hallar uno.
     def buscarCamino(self):
+        if self.g.m < self.g.n - 1:
+            return []
 
         if not self.resuelto:
             self._resolver()
