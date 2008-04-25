@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cassert>
 #include "Grafo.h"
+#include "BuscadorCaminoTCI.h"
 
 using namespace std;
 
