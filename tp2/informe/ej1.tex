@@ -39,14 +39,20 @@ alguna información en cada recorrida, para no repetir cálculos, pero los ciclos 
 
 \subsection{Resolucion en grafos aciclicos}
 Si el grafo que se obtiene no presenta ciclos, se puede ver que existe un ganador si y solo si existe un único nodo tal que su 
-grado de entrada es 0. Por ejemplo, el grafo de la figura ~\ref{fig:conGanador}:
+grado de entrada es 0. 
+
+Lo que ocurre es que si el grado de entrada de solo un nodo es 0, entonces existe un camino dirigido desde dicho nodo a cualquier otro(ver demostración 1). Por otro lado, si no hay ciclos y existe un ganadorr, a este no le puede ganar nadie, por lo tanto su grado de entrada es 0.
+
+Por ejemplo, el grafo de la figura ~\ref{fig:conGanador}:
 
 \begin{figure}[H]
+
 \centering
-\includegraphics[scale=0.5]{./figuras/conGanador.png}
+\includegraphics[scale=0.5]{./figuras/ConGanador.png}
 \caption{Ejemplo con un solo nodo con grado de entrada nulo}
  \label{fig:conGanador}
 \end{figure}
+
 En este caso, solo puede haber un ganador, el jugador 1.
 
 Si existen varios, no se podrán eliminar nunca, ya que no hay quien les gane con seguridad. Por ejemplo, lo grafos de la figura ~\ref{fig:sinGanador}:
@@ -54,19 +60,19 @@ Si existen varios, no se podrán eliminar nunca, ya que no hay quien les gane con
 \begin{figure}[H]
     \begin{minipage}{.5\linewidth}
     \centering
-     \includegraphics[scale=0.5]{./figuras/sinGanador1.png}
+     \includegraphics[scale=0.5]{./figuras/SinGanador1.png}
     \end{minipage}
     \begin{minipage}{.5\linewidth}
     \centering
-      \includegraphics[scale=0.5]{./figuras/sinGanador2.png}
+      \includegraphics[scale=0.5]{./figuras/SinGanador2.png}
     \end{minipage}
  \caption{Ejemplos con mas de un nodo con grado de entrada nulo}
- \label{fig:sinGanador}
+    \label{fig:sinGanador}
 \end{figure}
 \afterpage{\clearpage}
 En el primer caso, el 5 y el 1 no se pueden eliminar. Análogamente, en el segundo caso, 1 y 6 no se pueden eliminar en ningún momento.
 Por otro lado, no puede ocurrir que no halla ningun nodo con grado de entrada 0, porque si eso ocurre existe un ciclo. (Ver 
-demostración 1).
+demostración 2).
 
 Entonces si no hay ciclos, podemos resolver fácilmente el problema: Si representamos el grafo con listas de adyacencia (tanto 
 de entrada, como de salida), podemos mirar cada nodo, viendo si hay solo uno con grado de entrada 0. Si es así, ese gana. Si 
@@ -76,13 +82,16 @@ su lista de adyacencia de salida (costo constante).
 Ahora bien, no se puede afirmar que el grafo que recibimos no presente ciclos. Es decir hay instancias validas que poseen 
 ciclos, por ejemplo la figura ~\ref{fig:conCiclo}:
 
+
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./figuras/conCiclo.png}
+\includegraphics[scale=0.5]{./figuras/ConCiclo.png}
+
 \caption{Ejemplo sin ningun nodo con grado de entrada 0}
- \label{fig:conCiclo}
-\end{figure} 
-En este caso, el torneo puede arreglarse tanto para 1, como para 2,4 o 5. Debemos entonces buscar alguna manera de salvar esta dificultad.
+\label{fig:conCiclo}
+\end{figure}
+
+En este caso, el torneo puede arreglarse tanto para 1, como para 2, 4 o 5. Debemos entonces buscar alguna manera de salvar esta dificultad.
 
 \subsection{El papel de las componentes fuertemente conexas}
 Si tenemos ciclos, no vale la propiedad antes enunciada sobre los grados de entrada.
@@ -105,6 +114,7 @@ aquellos que son derrotados por algún individuo del ciclo y que pierde contra to
     \centering
       \includegraphics[scale=0.7]{./figuras/reducido.png}
     \end{minipage}
+
  \caption{Ejemplo de reducci'on de un grafo}
  \label{fig:reduccion}
 \end{figure}
@@ -112,7 +122,7 @@ aquellos que son derrotados por algún individuo del ciclo y que pierde contra to
 
 Estos ciclos que buscamos no son mas que las componentes fuertemente conexas del grafo. Si reducimos al grafo de modo de que 
 colapsamos a los nodos que pertenecen a una componente fuertemente conexa a un único nodo (como muestra la figura: ~\ref{fig:reduccion}), actualizando la información de los 
-partidos arreglados, lo que obtenemos es un nuevo grafo que cumple ser libre de ciclos (ver demostracion 2).
+partidos arreglados, lo que obtenemos es un nuevo grafo que cumple ser libre de ciclos (ver demostracion 3).
 
 Entonces una vez que tenemos un grafo libre de ciclos, podemos aplicar la propiedad que enunciamos antes, y resolver el problema en $O(n)$.
 
@@ -154,6 +164,35 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \label{fig:kosaraju1}
 \end{figure}
 
+¿Por que funciona el algoritmo? Primero númeramos a los nodos por el orden de finalizacion de la llamada recursiva al dsf. De esta manera, si tenemos que un nodo de una componente fuertemente conexa (llamemoslo a) esta relacionado con otro elemento que no pertenece a la misma (llamemoslo b), vale que si a$\leadsto$b entonces el número de a es mayor que el de b, pues si empiezo por a o por algunos de los nodos que llegan a el, voy a visitar a b, y recien cuando numere a b (y a todos los demas nodos c tal que a$\leadsto$c) , voy a numerar a a. Esto vale porque estan en distintas componentes, si estuvieran en la misma depende de por cual nodo empiece. Si en cambio, valia que b$\leadsto$a el numero de a es menor que el de b,ya que si empezamos por a no llegamos a b, dado que no estan en la misma componente; y si partimos de b, entonces vamos a numerar primero a a y después a b.
+
+Una vez que damos vuelta el grafo, hacemos dfs partiendo desde el de mayor numeraci'on no visitado, y solamente visitamos a los nodos de su componente. Esto se debe a que si en el grafo original a$\leadsto$b, donde b no pertenece a la misma componente fuertemenete conexa, sabemos que el número de b es menor que el de a, y que en el grafo dado vuelta b$\leadsto$a, por lo cual  no llegamos a b. Si en cambio valia que b$\leadsto$a, el numero de b es mayor que el de a, y por lo tanto ya habriamos visitado a b.
+
+Veamos el siguiente ejemplo donde b$\leadsto$a:
+\begin{figure}[H]
+\centering
+\subfigure[Comenzamos con el grafo original, a esta en una componente conexa, b en otra y b$\leadsto$a]{
+\includegraphics[scale=0.6]{./figuras/aeshijo.png} }\hspace{1in} 
+\subfigure[Numeramos los nodos, y como b$\leadsto$a el numero de b es mayor]{
+\includegraphics[scale=0.6]{./figuras/aeshijoNumerado.png}}\hspace{1in} 
+\subfigure[Cuando invertimos el grafo, b es el nodo por donde vamos a empezar, y no hay camino que lleve de b hacia a, cuando sea el turno de partir de a, a b ya lo visitamos antes por lo que no se tiene en cuenta]{
+\includegraphics[scale=0.6]{./figuras/aeshijoInverso.png}}
+\label{fig:aeshijo}
+\end{figure}
+
+Ahora consideremos un caso donde a$\leadsto$b
+\begin{figure}[H]
+\centering
+\subfigure[Comenzamos con el grafo original, a esta en una componente conexa, b en otra y a$\leadsto$b]{
+\includegraphics[scale=0.6]{./figuras/aespadre.png} }\hspace{1in} 
+\subfigure[Numeramos los nodos, y como a$\leadsto$b el numero de b es menor]{
+\includegraphics[scale=0.6]{./figuras/aespadreNumerado.png}}\hspace{1in} 
+\subfigure[Cuando invertimos el grafo, a es el nodo por donde vamos a empezar, y no hay camino que lleve de a hacia b. Cuando salgamos de b, ya pasamos por a, por lo que se lo ignora]{
+\includegraphics[scale=0.6]{./figuras/aespadreInverso.png}}
+\label{fig:aespadre}
+\end{figure}
+
+
 \subsection{Armado del grafo reducido y resolución del problema}
 Una vez que ya tenemos las componentes fuertemente conexas, armar el grafo reducido es simple. 
 \begin{itemize}
@@ -176,7 +215,21 @@ ciclos: si vale que a$\leadsto$b y b$\leadsto$a, a y b deberian ser una unica co
 \newtheorem{teorema 1}{Teorema}
 \begin{teorema 1}
 \normalsize
-Sea g=(V,X) tal que $\forall$ v $\in$ V, $d_{in}(v)$ $>$ 0 $\Leftarrow$ existe un ciclo en g
+Sea g=(V,X) tal que $\exists$! v1 $\in$ V tal que $d_{in}(v1)=0$, y G es libre de ciclos. Entonces $\forall$ $v_i$ $\in$ V, $v_i$ $\neq$ $v_1$, $\exists$ C, camino dirigido entre $v_1$ y $v_i$
+\end{teorema 1}
+\begin{proof}
+\normalsize
+Sea C1 el camino dirigido de longitud maxima que llega hasta $v_i$.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/demostracion1.png}
+\end{figure} 
+Supongamos que no existe un camino entre $v_1$ y $v_i$, entonces sea $v_k$ el nodo donde comienza dicho camino. Como $v_k$ $\neq$ $v_1$ entonces $d_{in}(v_k) \neq 0$, luego existe $v_n$ tal que $v_n \leadsto v_k$. $v_n$ no puede estar en el camino C1, porque sino existe un ciclo, y por hipotesis esto es falso. Consideremos entonces el camino C2 = ($v_n$,$v_k$)$\cup$C1 (donde $\cup$ es un abuso de notacion, seria agrego el par ($v_n$,$v_k$) al camino C1). Ahora C2 tiene longitud mayor que la de C1, entocnes tenemos un absurdo, ya que C1 era el camino de longitud m'axima.  
+\end{proof}
+
+\begin{teorema 1}
+\normalsize
+Sea g=(V,X) tal que $\forall$ v $\in$ V, $d_{in}(v)$ $>$ 0 $\rightarrow$ existe un ciclo en g
 \end{teorema 1}
 
 \renewcommand*{\proofname}{Demostración}
@@ -193,6 +246,7 @@ Supongamos que no pertenece al camino. Entonces tengo un camino nuevo, que va de
 el camino de $v_1$ a $v_n$, absurdo, puesto que $v_1,v_2,...v_i,...,v_n$ era el camino máximo.
 \end{proof}
 \vspace{0.2in}
+
 \begin{teorema 1}
 \normalsize
 Sea g un grafo reducido, es decir que cada nodo es una componente fuertemente conexa, entonces no existen circuitos en g
@@ -202,7 +256,6 @@ Sea g un grafo reducido, es decir que cada nodo es una componente fuertemente co
 Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ nodos, tal que el circuito pasa por ellos. Como tengo un circuito vale que para cada par de nodos $a_i$, $a_j$, existe un camino. Entonces $a_1$, $a_2$, ..., $a_n$ forman una componente fuertemente conexa. Absurdo, que provino de suponer que existia un circuito en g.
 \end{proof}
 
-\newpage
 \section{Pseudocodigo}
 \input{pseudo1}
 
