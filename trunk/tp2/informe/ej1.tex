@@ -28,11 +28,15 @@ Para resolver el problema, planteamos un dígrafo donde cada nodo es un jugador y
 Lo primero que observamos es que la relación de ganar, por como esta planteada, es transitiva. Decimos que es transitiva en el sentido de que si a$\leadsto$b y b$\leadsto$c, se puede hacer que a le gane a c, haciendo que b le gane a c y luego a le gane a b. Es decir, si bien a$\leadsto$c, se puede organizar los partidos para que a pueda ganar.
 
 Entonces según este modelo, un jugador, jugador A, puede ganar si para cada uno de los otros jugadores, jugador B, existe un 
-camino dirigido que comunica a A con B. Luego si usamos esto, podemos obtener una primera forma de resolver el problema: Para 
-cada nodo, tratamos de recorrer todo el grafo. Si lo logramos, se puede armar un torneo para que gane. Como esto se hace para 
+camino dirigido que comunica a A con B. Sea C el camino que comunica A y B, C=A, $V_1$, $V_2$, ...$V_{k-1}$,$V_k$, B. Podemos entonces armar el fixture de la siguiente manera: primero juegan $V_k$ y B, como hay camino sabemos que $V_k$ $\leadsto$ B, entonces $V_k$ le gana a B. Luego hacemos que $V_{k-1}$ le gane a $V_k$, y asi seguimos hasta que A juegue con $V_1$ y le gane.
+
+%TODO: poner una figura tipo arbol, y comentar como construimos el camino
+
+Luego si usamos esto, podemos obtener una primera forma de resolver el problema: Para 
+cada nodo, tratamos de recorrer todo el grafo. Si lo logramos, sabemos que se puede armar un torneo para que gane. Como esto se hace para 
 cada nodo, el orden queda $O(n*m)$. 
 
-Por otro lado, podemos ver que para que exista un ganador es necesario que si participan n jugadores, la cantidad de partidos arrelgados sea como mínimo n - 1, ya que con menos partidos, necesariamente quedan jugadores sin un partido arreglado. De modo que obtenemos una caracteristica que permite resolver un tipo de instancia particular muy facilmente.
+Por otro lado, podemos ver que para que exista un ganador es necesario que si participan n jugadores, la cantidad de partidos arrelgados sea como mínimo n - 1, ya que con menos partidos, es imposible que desde un jugador se pueda alcanzar a todos los demas. De modo que obtenemos una caracteristica que permite resolver un tipo de instancia particular muy facilmente.
 
 Buscamos entonces alguna forma de mejorar el orden. Una primera alternativa era guardar 
 alguna información en cada recorrida, para no repetir cálculos, pero los ciclos nos impedían lograr alguna solución. Tuvimos  entonces que buscar alguna otra forma.
@@ -97,9 +101,9 @@ En este caso, el torneo puede arreglarse tanto para 1, como para 2, 4 o 5. Debem
 Si tenemos ciclos, no vale la propiedad antes enunciada sobre los grados de entrada.
 
 Analizamos entonces que ocurre si el grafo presenta un ciclo. Como la relación a$\leadsto$b es transitiva (en el sentido que 
-comentamos antes), todos los elementos que pertenecen a un ciclo, se ganan entre si. Por otro lado, si tomamos un elemento que 
+comentamos antes), todos los elementos que pertenecen a un ciclo, se ganan entre si, pues para cualquiera de ellos existe un camino hacia cualquier otro elemento del ciclo y como vimos eso significa que les puede ganar. Por otro lado, si tomamos un elemento que 
 no este en el ciclo (a) y que le gane a alguien del mismo (b), podemos ver que les puede ganar a todos: primero hacemos que b 
-le gane a todos los del ciclo, y luego hacemos que a le gane a b. Análogamente se puede ver que si alguien del ciclo, le gana a 
+le gane a todos otros del ciclo, y luego hacemos que a le gane a b. Análogamente se puede ver que si alguien del ciclo, le gana a 
 alguien que no esta en el; cualquier otro del ciclo le puede ganar.
 
 Esto nos hace pensar que podemos considerar al cada ciclo como una unidad, como un jugador único, que les gana a todos 
@@ -164,7 +168,8 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \label{fig:kosaraju1}
 \end{figure}
 
-¿Por que funciona el algoritmo? Primero númeramos a los nodos por el orden de finalizacion de la llamada recursiva al dsf. De esta manera, si tenemos que un nodo de una componente fuertemente conexa (llamemoslo a) esta relacionado con otro elemento que no pertenece a la misma (llamemoslo b), vale que si a$\leadsto$b entonces el número de a es mayor que el de b, pues si empiezo por a o por algunos de los nodos que llegan a el, voy a visitar a b, y recien cuando numere a b (y a todos los demas nodos c tal que a$\leadsto$c) , voy a numerar a a. Esto vale porque estan en distintas componentes, si estuvieran en la misma depende de por cual nodo empiece. Si en cambio, valia que b$\leadsto$a el numero de a es menor que el de b,ya que si empezamos por a no llegamos a b, dado que no estan en la misma componente; y si partimos de b, entonces vamos a numerar primero a a y después a b.
+\subsection{¿Por que el algoritmo logra obtener las componentes fuertemente conexas?}
+Primero númeramos a los nodos por el orden de finalizacion de la llamada recursiva al dsf. De esta manera, si tenemos que un nodo de una componente fuertemente conexa (llamemoslo a) esta relacionado con otro elemento que no pertenece a la misma (llamemoslo b), vale que si a$\leadsto$b entonces el número de a es mayor que el de b, pues si empiezo por a o por algunos de los nodos que llegan a el, voy a visitar a b, y recien cuando numere a b (y a todos los demas nodos c tal que a$\leadsto$c) , voy a numerar a a. Esto vale porque estan en distintas componentes, si estuvieran en la misma depende de por cual nodo empiece. Si en cambio, valia que b$\leadsto$a el numero de a es menor que el de b,ya que si empezamos por a no llegamos a b, dado que no estan en la misma componente; y si partimos de b, entonces vamos a numerar primero a a y después a b.
 
 Una vez que damos vuelta el grafo, hacemos dfs partiendo desde el de mayor numeraci'on no visitado, y solamente visitamos a los nodos de su componente. Esto se debe a que si en el grafo original a$\leadsto$b, donde b no pertenece a la misma componente fuertemenete conexa, sabemos que el número de b es menor que el de a, y que en el grafo dado vuelta b$\leadsto$a, por lo cual  no llegamos a b. Si en cambio valia que b$\leadsto$a, el numero de b es mayor que el de a, y por lo tanto ya habriamos visitado a b.
 
@@ -258,8 +263,15 @@ Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ n
 
 \section{Pseudocodigo}
 \input{pseudo1}
-
 \newpage
+
+\section{Cuestiones de implementación}
+Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodo y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. Por otro lado crear la matriz nos llevaria O(n*n) y no nos sirve para el orden que pretendemos. 
+
+La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante, nos facilita la creación del grafo inverso, por lo cual decidimos adoptarla.
+
+Con respecto a las listas utilizamos las listas provistas por la std de c++.
+
 \section{Cálculo de complejidad}
 Para estudiar la complejidad del algoritmo consideramos que es apropiado considerar el modelo uniforme, ya que lo que importa en este caso es la cantidad de jugadores y partidos arreglados, mas que el coste que podrian tener las operaciones aritmeticas.
 Por eso consideraremos que el tamaño de la entrada es justamente la cantidad de jugadores (n) y la cantidad de partidos arreglados (m).
