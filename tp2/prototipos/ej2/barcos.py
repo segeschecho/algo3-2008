@@ -130,15 +130,15 @@ if __name__ == '__main__':
     # Metodo recursivo convencional
     #c = generarCamino(g)
 
-    # Metodo con tabulado por demanda
     from barcos_tabla import BuscadorCaminoTPD, BuscadorCaminoTCI
     b = BuscadorCaminoTPD(g)
     c = b.buscarCamino()
     b2 = BuscadorCaminoTCI(g)
-    c2 = b.buscarCamino()
-    assert(c == c2)
+    c2 = b2.buscarCamino()
     print c
     print c2
+
+    #assert(c == c2)
     
     
     if c is [] and hayCamino(g):
@@ -147,3 +147,7 @@ if __name__ == '__main__':
     if c != []:
         from barcos_tester import chequearCaminoValido
         chequearCaminoValido(g, c)
+
+    if c2 != []:
+        from barcos_tester import chequearCaminoValido
+        chequearCaminoValido(g, c2)

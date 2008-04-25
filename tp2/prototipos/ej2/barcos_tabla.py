@@ -145,10 +145,10 @@ class BuscadorCaminoTCI:
                 b = (j+i) % self.g.n
                 bmenos1 = (b-1) % self.g.n
 
-                self.matA[a][b] = (self.matA[a][amas1] and self.matA[amas1][b]) or \
-                                  (self.matA[a][b] and self.matB[amas1][b])
-                self.matB[a][b] = (self.matA[b][bmenos1] and self.matB[a][bmenos1]) or \
-                                  (self.matA[a][b] and self.matA[a][bmenos1])
+                self.matA[a][b] = (self.g.estanConectados(a,amas1) and self.matA[amas1][b]) or \
+                                  (self.g.estanConectados(a,b) and self.matB[amas1][b])
+                self.matB[a][b] = (self.g.estanConectados(b,bmenos1) and self.matB[a][bmenos1]) or \
+                                  (self.g.estanConectados(a,b) and self.matA[a][bmenos1])
 
         self.resuelto = True
 
@@ -160,9 +160,9 @@ class BuscadorCaminoTCI:
 
         amas1 = (a+1) % self.g.n
         
-        if self.matA[a][amas1] and self.matA[amas1][b]:
+        if self.g.estanConectados(a,amas1) and self.matA[amas1][b]:
             return self._caminoQueTerminaEnA(amas1,b) + [a]
-        if self.matA[a][b] and self.matB[amas1][b]:
+        if self.g.estanConectados(a,b) and self.matB[amas1][b]:
             return self._caminoQueTerminaEnB(amas1,b) + [a]
 
         raise ValueError, "No existe el camino que se intento generar! (de %s a %s)" % (a,b)
@@ -173,9 +173,9 @@ class BuscadorCaminoTCI:
 
         bmenos1 = (b-1) % self.g.n
 
-        if self.matA[b][bmenos1] and self.matB[a][bmenos1]:
+        if self.g.estanConectados(b,bmenos1) and self.matB[a][bmenos1]:
             return self._caminoQueTerminaEnB(a,bmenos1) + [b]
-        if self.matA[a][b] and self.matA[a][bmenos1]:
+        if self.g.estanConectados(a,b) and self.matA[a][bmenos1]:
             return self._caminoQueTerminaEnA(a,bmenos1) + [b]
 
         raise ValueError, "No existe el camino que se intento generar! (de %s a %s)" % (a,b)

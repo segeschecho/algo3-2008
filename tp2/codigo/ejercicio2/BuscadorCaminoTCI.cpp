@@ -1,5 +1,15 @@
 #include "BuscadorCaminoTCI.h"
 
+// implementacion razonable de la operacion modulo
+// G++ es un capo!
+unsigned resto(int a, int b) {
+    if (a < 0) {
+        return a % b + b;
+    } else {
+        return a % b;
+    }
+}
+
 BuscadorCaminoTCI :: BuscadorCaminoTCI(Grafo& grafo) : g(grafo) {
     resuelto = false;
     // pido memoria para las matrices
@@ -42,7 +52,7 @@ void BuscadorCaminoTCI :: resolver() {
     // caso base
     for(unsigned i = 0; i < g.n; i++) {
         a = i;
-        b = (i+1) % g.n;
+        b = resto((i+1),g.n);
         if(g.estanConectados(a,b)) {
             matA[a][b] = true;
             matB[a][b] = true;
@@ -53,15 +63,16 @@ void BuscadorCaminoTCI :: resolver() {
     for(unsigned i = 2; i < g.n; i++) {
         for(unsigned j = 0; j < g.n; j++) {
             a = j;
-            amas1 = (a+1) % g.n;
-            b = (j+i) % g.n;
-            bmenos1 = (b-1) % g.n;
+            amas1 = resto((a+1),g.n);
+            b = resto((j+i),g.n);
+            bmenos1 = resto((b-1),g.n);
 
-            matA[a][b] = (matA[a][amas1] && matA[amas1][b]) || (matA[a][b] && matB[amas1][b]);
-            matB[a][b] = (matA[b][bmenos1] && matB[a][bmenos1]) || (matA[a][b] && matA[a][bmenos1]);
+            matA[a][b] = (g.estanConectados(a,amas1) && matA[amas1][b]) || 
+                         (g.estanConectados(a,b) && matB[amas1][b]);
+            matB[a][b] = (g.estanConectados(b,bmenos1) && matB[a][bmenos1]) || 
+                         (g.estanConectados(a,b) && matA[a][bmenos1]);
         }
     }
-
     resuelto = true;
 }
 
@@ -79,7 +90,7 @@ list<unsigned> BuscadorCaminoTCI :: buscarCamino() {
     int a, b;
     for(unsigned i = 0; i < g.n; i++) {
         a = i;
-        b = (i-1) % g.n;
+        b = resto((i-1),g.n);
 
         if (matA[a][b]) {
             return caminoQueTerminaEnA(a,b);
@@ -88,7 +99,6 @@ list<unsigned> BuscadorCaminoTCI :: buscarCamino() {
             return caminoQueTerminaEnB(a,b);
         }
     }
-
     return camino;
 }
 
@@ -101,17 +111,17 @@ list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnA(unsigned a, unsigned b) 
         return l;
     }
 
-    int amas1 = (a+1) % g.n;
+    int amas1 = resto((a+1),g.n);
     list<unsigned> tmp;
     list<unsigned> :: iterator it = l.begin();
     l.push_back(a);
 
-    if (matA[a][amas1] && matA[amas1][b]) {
+    if (g.estanConectados(a,amas1) && matA[amas1][b]) {
         caminoQueTerminaEnA(amas1,b).swap(tmp);
         l.splice(it,tmp);
         return l;
     }
-    if (matA[a][b] && matB[amas1][b]) {
+    if (g.estanConectados(a,b) && matB[amas1][b]) {
         caminoQueTerminaEnB(amas1,b).swap(tmp);
         l.splice(it,tmp);
         return l;
@@ -130,17 +140,17 @@ list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnB(unsigned a, unsigned b) 
         return l;
     }
 
-    int bmenos1 = (b-1) % g.n;
+    int bmenos1 = resto((b-1),g.n);
     list<unsigned> tmp;
     list<unsigned> :: iterator it = l.begin();
     l.push_back(b);
 
-    if (matA[b][bmenos1] && matB[a][bmenos1]) {
+    if (g.estanConectados(b,bmenos1) && matB[a][bmenos1]) {
         caminoQueTerminaEnB(a,bmenos1).swap(tmp);
         l.splice(it,tmp);
         return l;
     }
-    if (matA[a][b] && matA[a][bmenos1]) {
+    if (g.estanConectados(a,b) && matA[a][bmenos1]) {
         caminoQueTerminaEnA(a,bmenos1).swap(tmp);
         l.splice(it,tmp);
         return l;
@@ -149,3 +159,23 @@ list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnB(unsigned a, unsigned b) 
     cout << "No existe el camino que se intento generar!" << endl;
     abort();
 }
+
+
+void BuscadorCaminoTCI :: imprimirCamino() {
+    list<unsigned> l = buscarCamino();
+
+    if (l.size() == 0) {
+        cout << "[]";
+    }
+    else {
+        list<unsigned> :: iterator it = l.begin();
+        cout << "[" << *it;
+        it++;
+        while(it != l.end()) {
+            cout << "," << *it;
+            it++;
+        }
+        cout << "]";
+    }
+}
+
