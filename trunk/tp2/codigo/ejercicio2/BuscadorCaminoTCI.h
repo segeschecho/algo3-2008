@@ -14,6 +14,7 @@ class BuscadorCaminoTCI {
         BuscadorCaminoTCI(Grafo& grafo);
         ~BuscadorCaminoTCI();
         list<unsigned> buscarCamino();
+        void imprimirCamino();
     private:
         Grafo& g;
         bool resuelto;
