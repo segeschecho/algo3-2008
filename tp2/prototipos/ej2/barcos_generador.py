@@ -25,3 +25,9 @@ def generarInstancia(ciudades=10, acuerdos=None):
         acs.add(ordenar(tuple(random.sample(cds,2))))
 
     return GrafoCircular(ciudades, list(acs))
+
+def imprimirInstancia(ciudades=10, acuerdos=None):
+    g = generarInstancia(ciudades, acuerdos)
+    print "%s %s" % (g.n, g.m)
+    for each in g.lista_acuerdos:
+        print "%s %s" % each
