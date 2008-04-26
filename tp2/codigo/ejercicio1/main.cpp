@@ -18,6 +18,8 @@ int main(int argc, char* argv[])
         ruta="Tp2Ej1.in";
     }
     fstream f (ruta.c_str());
+    // FIXME: hay que poner un chequeo no-abortante aca
+    // y poner un mensaje de error.
     assert(f.is_open());
 
     // preparo el archivo de salida
