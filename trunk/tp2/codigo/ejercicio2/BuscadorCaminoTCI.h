@@ -24,7 +24,7 @@ class BuscadorCaminoTCI {
         bool ** matB;
 
         void resolver();
-        list<unsigned> caminoQueTerminaEnA(unsigned a, unsigned b);
-        list<unsigned> caminoQueTerminaEnB(unsigned a, unsigned b);
+        list<unsigned>* caminoQueTerminaEnA(unsigned a, unsigned b);
+        list<unsigned>* caminoQueTerminaEnB(unsigned a, unsigned b);
 };
 #endif /*_BuscadorCaminoTCI_H*/
