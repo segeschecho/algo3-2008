@@ -4,6 +4,7 @@
 class GrafoCircular:
     def __init__(self,n,acuerdos):
         self.n = n
+        self.lista_acuerdos = acuerdos
 
         # creo la matriz de acuerdos
         self.acuerdos = []
