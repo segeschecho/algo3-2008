@@ -113,8 +113,8 @@ list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnA(unsigned a, unsigned b) 
 
     int amas1 = resto((a+1),g.n);
     list<unsigned> tmp;
-    list<unsigned> :: iterator it = l.begin();
     l.push_back(a);
+    list<unsigned> :: iterator it = l.begin();
 
     if (g.estanConectados(a,amas1) && matA[amas1][b]) {
         caminoQueTerminaEnA(amas1,b).swap(tmp);
@@ -142,8 +142,8 @@ list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnB(unsigned a, unsigned b) 
 
     int bmenos1 = resto((b-1),g.n);
     list<unsigned> tmp;
-    list<unsigned> :: iterator it = l.begin();
     l.push_back(b);
+    list<unsigned> :: iterator it = l.begin();
 
     if (g.estanConectados(b,bmenos1) && matB[a][bmenos1]) {
         caminoQueTerminaEnB(a,bmenos1).swap(tmp);
@@ -179,3 +179,20 @@ void BuscadorCaminoTCI :: imprimirCamino() {
     }
 }
 
+
+void BuscadorCaminoTCI :: guardarCamino(ostream& o) {
+    list<unsigned> l = buscarCamino();
+    if (l.size() == 0) {
+        o << "-1" << endl;
+    }
+    else {
+        list<unsigned> :: iterator it = l.begin();
+        o << (*it+1);
+        it++;
+        while(it != l.end()) {
+            o << " " << (*it+1);
+            it++;
+        }
+        o << endl;
+    }
+}
