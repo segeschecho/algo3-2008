@@ -91,39 +91,47 @@ list<unsigned> BuscadorCaminoTCI :: buscarCamino() {
     for(unsigned i = 0; i < g.n; i++) {
         a = i;
         b = resto((i-1),g.n);
-
+        list<unsigned>* lp;
+        list<unsigned> lr;
         if (matA[a][b]) {
-            return caminoQueTerminaEnA(a,b);
+            lp = caminoQueTerminaEnA(a,b);
+            lr = *lp;
+            delete lp;
+            return lr;
         }
         if (matB[a][b]) {
-            return caminoQueTerminaEnB(a,b);
+            lp = caminoQueTerminaEnB(a,b);
+            lr = *lp;
+            delete lp;
+            return lr;
         }
     }
     return camino;
 }
 
 
-list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnA(unsigned a, unsigned b) {
-    list<unsigned> l;
+list<unsigned>* BuscadorCaminoTCI :: caminoQueTerminaEnA(unsigned a, unsigned b) {
+    list<unsigned>* l = new list<unsigned>;
     if ((b-a) == 1 || (b == 0 && a == g.n-1)) {
-        l.push_back(b);
-        l.push_back(a);
+        l->push_back(b);
+        l->push_back(a);
         return l;
     }
 
     int amas1 = resto((a+1),g.n);
-    list<unsigned> tmp;
-    l.push_back(a);
-    list<unsigned> :: iterator it = l.begin();
+    l->push_back(a);
+    list<unsigned> :: iterator it = l->begin();
 
     if (g.estanConectados(a,amas1) && matA[amas1][b]) {
-        caminoQueTerminaEnA(amas1,b).swap(tmp);
-        l.splice(it,tmp);
+        list<unsigned>* tmp1 = caminoQueTerminaEnA(amas1,b);
+        l->splice(it,*tmp1);
+        delete tmp1;
         return l;
     }
     if (g.estanConectados(a,b) && matB[amas1][b]) {
-        caminoQueTerminaEnB(amas1,b).swap(tmp);
-        l.splice(it,tmp);
+        list<unsigned>* tmp2 = caminoQueTerminaEnB(amas1,b);
+        l->splice(it,*tmp2);
+        delete tmp2;
         return l;
     }
 
@@ -132,27 +140,28 @@ list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnA(unsigned a, unsigned b) 
 }
 
 
-list<unsigned> BuscadorCaminoTCI :: caminoQueTerminaEnB(unsigned a, unsigned b) {
-    list<unsigned> l;
+list<unsigned>* BuscadorCaminoTCI :: caminoQueTerminaEnB(unsigned a, unsigned b) {
+    list<unsigned>* l = new list<unsigned>();
     if ((b-a) == 1 || (b == 0 && a == g.n-1)) {
-        l.push_back(a);
-        l.push_back(b);
+        l->push_back(a);
+        l->push_back(b);
         return l;
     }
 
     int bmenos1 = resto((b-1),g.n);
-    list<unsigned> tmp;
-    l.push_back(b);
-    list<unsigned> :: iterator it = l.begin();
+    l->push_back(b);
+    list<unsigned> :: iterator it = l->begin();
 
     if (g.estanConectados(b,bmenos1) && matB[a][bmenos1]) {
-        caminoQueTerminaEnB(a,bmenos1).swap(tmp);
-        l.splice(it,tmp);
+        list<unsigned>* tmp1 = caminoQueTerminaEnB(a,bmenos1);
+        l->splice(it,*tmp1);
+        delete tmp1;
         return l;
     }
     if (g.estanConectados(a,b) && matA[a][bmenos1]) {
-        caminoQueTerminaEnA(a,bmenos1).swap(tmp);
-        l.splice(it,tmp);
+        list<unsigned>* tmp2 = caminoQueTerminaEnA(a,bmenos1);
+        l->splice(it,*tmp2);
+        delete tmp2;
         return l;
     }
 
