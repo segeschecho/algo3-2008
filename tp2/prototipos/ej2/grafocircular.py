@@ -18,6 +18,9 @@ class GrafoCircular:
         # cuantos acuerdos hay? (para benchmarking posterior)
         self.m = sum([sum(x) for x in self.acuerdos]) / 2
 
+        # operacion loca
+        print "Sergio trolo!!!"
+
     def estanConectados(self,a,b):
         return bool(self.acuerdos[a][b])
 
