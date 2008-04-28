@@ -30,7 +30,24 @@ Lo primero que observamos es que la relación de ganar, por como esta planteada, 
 Entonces según este modelo, un jugador, jugador A, puede ganar si para cada uno de los otros jugadores, jugador B, existe un 
 camino dirigido que comunica a A con B. Sea C el camino que comunica A y B, C=A, $V_1$, $V_2$, ...$V_{k-1}$,$V_k$, B. Podemos entonces armar el fixture de la siguiente manera: primero juegan $V_k$ y B, como hay camino sabemos que $V_k$ $\leadsto$ B, entonces $V_k$ le gana a B. Luego hacemos que $V_{k-1}$ le gane a $V_k$, y asi seguimos hasta que A juegue con $V_1$ y le gane.
 
-%TODO: poner una figura tipo arbol, y comentar como construimos el camino
+Por ejemplo, si miramos la figura ~\ref{fig:conGanador}, ese grafo nos representa un torneo donde sabemos que:
+\begin{itemize}
+\item 1$\leadsto$2
+\item 1$\leadsto$4
+\item 2$\leadsto$5
+\item 2$\leadsto$6
+\item 4$\leadsto$3
+\item 4$\leadsto$6
+\end{itemize}
+
+Entonces podemos arreglar el torneo para que gane el jugador 1, jugando los siguientes partidos, en el siguiente orden:
+\begin{enumerate}
+	\item 5 vs 2
+	\item 4 vs 6
+	\item 4 vs 3
+	\item 1 vs 2
+	\item 1 vs 4
+\end{enumerate}
 
 Luego si usamos esto, podemos obtener una primera forma de resolver el problema: Para 
 cada nodo, tratamos de recorrer todo el grafo. Si lo logramos, sabemos que se puede armar un torneo para que gane. Como esto se hace para 
@@ -139,7 +156,7 @@ Funciona de la siguiente manera:
 \begin{itemize}
 \item Primero realiza un DFS numerando los nodos según el orden de finalización de las llamadas recursivas. (se repite hasta numerar todos los nodos).
 
-\item Luego se arma el grafo $g'$ que contiene los mismos nodos que g pero a$\leadsto$b en $g'$ si y solo si b$\leadsto$a en g. g' tiene como caracteristica que posee las mismas componentes conexas que g. Ademas si existe un camino entre dos vertices u y v en g, vale que existe un camino entre u y v en g' si y solo si estan en la misma componente fuertemente conexa.
+\item Luego se arma el grafo $g'$ que contiene los mismos nodos que g pero a$\leadsto$b en $g'$ si y solo si b$\leadsto$a en g. $g'$ tiene como caracteristica que posee las mismas componentes conexas que g. Ademas si existe un camino entre dos vertices u y v en g, vale que existe un camino entre u y v en $g'$ si y solo si estan en la misma componente fuertemente conexa.
 
 \item Una vez armado $g'$, se realiza un DFS en 'el, partiendo del nodo con mayor numeraci'on. Al terminar se obtiene una componente fuertemente conexa. 
 
@@ -165,6 +182,7 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \subfigure[Ahora seguimos con el 1, el de mayor numeraci'on sin visitar. Luego de hacer DFS tenemos otra componente fuertemente conexa de G. Como no quedan mas nodos por visitar, terminamos]{
 \includegraphics[scale=0.6]{./figuras/kosaraju6.png}}
 \caption{Algoritmo de Kosaraju}
+\setcounter{subfigure}{0}
 \label{fig:kosaraju1}
 \end{figure}
 
@@ -183,6 +201,7 @@ Veamos el siguiente ejemplo donde b$\leadsto$a:
 \subfigure[Cuando invertimos el grafo, b es el nodo por donde vamos a empezar, y no hay camino que lleve de b hacia a, cuando sea el turno de partir de a, a b ya lo visitamos antes por lo que no se tiene en cuenta]{
 \includegraphics[scale=0.6]{./figuras/aeshijoInverso.png}}
 \label{fig:aeshijo}
+\setcounter{subfigure}{0}
 \end{figure}
 
 Ahora consideremos un caso donde a$\leadsto$b
@@ -195,6 +214,7 @@ Ahora consideremos un caso donde a$\leadsto$b
 \subfigure[Cuando invertimos el grafo, a es el nodo por donde vamos a empezar, y no hay camino que lleve de a hacia b. Cuando salgamos de b, ya pasamos por a, por lo que se lo ignora]{
 \includegraphics[scale=0.6]{./figuras/aespadreInverso.png}}
 \label{fig:aespadre}
+\setcounter{subfigure}{0}
 \end{figure}
 
 
@@ -266,10 +286,9 @@ Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ n
 \newpage
 
 \section{Cuestiones de implementación}
-Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodo y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. Por otro lado crear la matriz nos llevaria O(n*n) y no nos sirve para el orden que pretendemos. 
+Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodos y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. En cambio si usamos dsf en varias ocasiones y para esta funcion si nos es conveniente usar listas de adyacencia.
 
-La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante, nos facilita la creación del grafo inverso, por lo cual decidimos adoptarla.
-
+La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante,nos permite conocer facilmente el $d_{in}$ de un nodo, el cual necesitamos tener en O(1), por esa razón mantenemos dicha información.
 Con respecto a las listas utilizamos las listas provistas por la std de c++.
 
 \section{Cálculo de complejidad}
@@ -297,3 +316,62 @@ A continuaci'on buscamos cuantos nodos hay que tengan grado de entrada 0. Saber 
 Si nadie gana devolvemos una lista vacia en $O(1)$. En cambio si existe algun ganador, conocemos que componente es la que gana. Entonces tenemos que devolver a los nodos que pertenecen a ella. Como los tenemos que devolver en orden creciente, dado que sabemos que en el peor de los casos hay n ganadores, hacemos un bucket sort que tiene como costo $O(n)$
 
 Luego como en cada paso las operaciones que realizamos tienen un costo $O(n+m)$, podemos afirmar que el algoritmo tiene un costo de $O(n + m)$
+
+\section{Analisis experimental}
+\subsection{Experiencias realizadas}
+Para realizar las experiencias generamos grafos aleatorios variando las variables cantidad de jugadores y cantidad de partidos arreglados.
+Creamos grafos al azar, que cumplieran las pautas del enunciado y realizamos con ellos las siguientes experiencias:
+
+La primer experiencia consistió en medir la cantidad de operaciones en función de ambas variables.
+
+Luego decidimos dejar fija cada una ellas para observar el comportamiento por separado.
+
+Finalmente decidimos hacer una ultima experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos.
+
+Los resultados obtenidos se encuentran a continuación.
+
+\subsection{Resultados}
+\subsubsection{Experiencia 1: Cantidad de operaciones, un funcion de n y m}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia1.png} 
+\label{fig:exp1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{./figuras/graficos/ej1/experiencia1b.png} 
+\label{fig:exp1b}
+\end{figure}
+
+\subsubsection{Experiencia 2: Cantidad de operaciones en funcion de n, con m fijo}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia2.png} 
+\label{fig:exp2}
+\end{figure}
+
+\subsubsection{Experiencia 3: Cantidad de operaciones en funcion de m, con n fijo}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia3.png} 
+\label{fig:exp3}
+\end{figure}
+
+\subsubsection{Experiencia 4: Cantidad de operaciones en funcion de n, con $m=\frac{(n-1)*n}{2}$ }
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia4.png} 
+\label{fig:exp4}
+\end{figure}
+
+\subsection{Discusion}
+En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde m $<$ n - 1 y que se descartan rapidamente. En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
+
+La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores, pero ademas nos permitíó notar una particularidad de nuestro algoritmo y es que en general darse cuenta de que no hay ganador es mas rapido que saber si efectivamente lo hay. Esto es porque si no hay ganador ni bien encontramos en el grafo reducido, dos nodos con $d_{in}=0$ terminamos, y dado que los grafos son al azar, un esperaria no tener que revisar todas las componentes fuertemente conexas para que esto pase. Esta caracteristica se ve plasmada en el grafo, ya que a medida que aumentamos la cantidad de jugadores, dejando fija la cantidad de partidos, es mas probable que no tengamos un ganador. Por eso, para n grande observamos como la recta se parte en otras rectas que estan por debajo.
+
+La tercer experiencia nos permitió ver como se mantenía la tendencia lineal en función del m. En el grafico observamos 2 rectas, la primera corresponde a los casos $m < n -1$ y la segunda es para los casos donde no se puede decidir a priori y tenemos que hacer todo el proceso de los datos.
+
+Finalmente en la grafica de la última experiencia notamos que la cantidad de operaciones crece cuadraticamente. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n)$, entonces O(n + m) es O($n^2$).
+
+A modo de conclusión, podemos decir que las experiencias nos permitieron corroborar el analisis teorico que realizamos previamente.

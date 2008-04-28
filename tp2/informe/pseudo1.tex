@@ -13,7 +13,7 @@
 \ENDFOR
 \STATE relacion$\textcolor{orange}{\leftarrow}\textcolor{orange}{[} \textcolor{orange}{]}$
 \FOR{cada nodo del grafo}
-	\FOR{cada nodo2 que llega al nodo}
+	\FOR{cada nodo2 al que llega nodo}
 			\IF{si el vertice no une elementos de la misma componente}
 				\STATE relacion $\textcolor{orange}{+}$ $\textcolor{orange}{[}(dondeQuedo\textcolor{orange}{[}nodo\textcolor{orange}{]},dondeQuedo\textcolor{orange}{[}nodo2\textcolor{orange}{]})\textcolor{orange}{]}$
 			\ENDIF
@@ -31,7 +31,7 @@
 		\STATE devolver $\textcolor{orange}{[}\textcolor{orange}{]}$
 	\ENDIF
 \ENDFOR
-\STATE $ordenar(fuertes\textcolor{orange}{[}quien\textcolor{orange}{]})$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 0 y cantidad de nodos del grafo original}
+\STATE $ordenar(fuertes\textcolor{orange}{[}quien\textcolor{orange}{]})$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 1 y cantidad de nodos del grafo original}
 \STATE devolver $fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}$	
 \end{algorithmic}
 \end{algorithm}
