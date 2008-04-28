@@ -51,17 +51,18 @@ int main(int argc, char* argv[])
 	    l.push_back(pair<unsigned,unsigned>(x-1,y-1));
 	    relaciones --;
 	}
+	contador= 0;
+	contador = contador+2*nodos+2*(l.size());
 	Grafo* g = new Grafo(nodos,l);
 	unsigned cantGanadores = 0;
 		
-		contador = 0;
 		valor--;
     	bool* sol =ejercicio1(g,rels,cantGanadores);
 		cout<<contador<<" ";
-		if(valor == 1){
+		/*if(valor == 1){
 			cout<<"; ";
 			valor=400;
-		}
+		}*/
     	o<<cantGanadores;
     	if( sol != NULL){
 
@@ -301,7 +302,7 @@ bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
 		contador++;
 		contador++;
     }
-	contador=2*(x.size())+2*(fuertes->size());
+	contador=contador + 2*(x.size())+2*(fuertes->size());
     Grafo g1 = Grafo(fuertes->size(), x);
 	contador++;
     delete[] dondeQuedo;

@@ -1,0 +1,1 @@
+movemos n y m y contamos operaciones, grafos al azar
