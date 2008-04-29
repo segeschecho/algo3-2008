@@ -78,7 +78,8 @@ void BuscadorCaminoTCI :: resolver() {
 
 list<unsigned> BuscadorCaminoTCI :: buscarCamino() {
     if (g.m < (g.n - 1)) {
-        return camino;
+        list<unsigned> vacia;
+        return vacia;
     }
 
     if (!resuelto) {
@@ -86,7 +87,7 @@ list<unsigned> BuscadorCaminoTCI :: buscarCamino() {
     }
 
     // me fijo si hay algun camino posible - de haberlo, lo construyo y devuelvo
-    // en caso contrario devuelvo camino (es una lista vacia)
+    // en caso contrario devuelvo una lista vacia
     int a, b;
     for(unsigned i = 0; i < g.n; i++) {
         a = i;
@@ -106,7 +107,8 @@ list<unsigned> BuscadorCaminoTCI :: buscarCamino() {
             return lr;
         }
     }
-    return camino;
+    list<unsigned> vacia;
+    return vacia;
 }
 
 
@@ -195,6 +197,9 @@ void BuscadorCaminoTCI :: guardarCamino(ostream& o) {
         o << "-1" << endl;
     }
     else {
+        // la implementacion usa indices de 0 a n-1, pero
+        // el archivo debe guardarse de 1 a n por requisito
+        // del enunciado, por lo tanto sumo 1 cada vez que imprimo
         list<unsigned> :: iterator it = l.begin();
         o << (*it+1);
         it++;

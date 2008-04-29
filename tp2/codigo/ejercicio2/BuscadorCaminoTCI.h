@@ -19,7 +19,6 @@ class BuscadorCaminoTCI {
     private:
         Grafo& g;
         bool resuelto;
-        list<unsigned> camino;
         bool ** matA;
         bool ** matB;
 
