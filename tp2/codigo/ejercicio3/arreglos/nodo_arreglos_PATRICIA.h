@@ -1,5 +1,5 @@
-#ifndef _NODO_PATRICIA_H_
-#define _NODO_PATRICIA_H_
+#ifndef _NODO_ARREGLOS_PATRICIA_H_
+#define _NODO_ARREGLOS_PATRICIA_H_
 
 #include <string>
 using namespace std;

@@ -1,5 +1,5 @@
-#ifndef _NODO_PATRICIA_H_
-#define _NODO_PATRICIA_H_
+#ifndef _NODO_LISTAS_PATRICIA_H_
+#define _NODO_LISTAS_PATRICIA_H_
 
 #include <string>
 #include <list>
