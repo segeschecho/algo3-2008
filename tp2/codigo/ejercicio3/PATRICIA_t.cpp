@@ -14,14 +14,14 @@ void PATRICIA :: agregar(const string& s){
     nodo::puntero* ptrActual;
     string palabraArmada;
     nodo* actual = raiz;
-    
+
     bajar(actual, ptrActual, s, palabraArmada);
 
     if ((s != palabraArmada) || (!actual->getExiste())) {
         string cadena = s;
         quitarPrefijoEnComun(cadena, palabraArmada);
         quitarPrefijoEnComun(palabraArmada, s);
-        //ahora cadena y palabraArmada no tienen elementos 
+        //ahora cadena y palabraArmada no tienen elementos
         //en comun (les quite el prefijo)
 
         if(!palabraArmada.empty()) {
@@ -32,7 +32,7 @@ void PATRICIA :: agregar(const string& s){
             //resto lo voy a usar para partir el puntero y agregar en el medio
             //el nuevo elemento
             ptrActual->cadena = resto;
-            
+
             nodo* nuevopadre = new nodo;
             nuevopadre->agregar(palabraArmada, ptrActual->siguiente);
             ptrActual->siguiente = nuevopadre;
@@ -49,7 +49,7 @@ void PATRICIA :: sacar(const string& s){
     nodo::puntero* ptrAnterior;
     string palabraArmada;
     nodo* actual = raiz;
-    
+
     ptrAnterior = bajar(actual, ptrActual, s, palabraArmada);
 
     if(!s.empty() && s == palabraArmada) {
@@ -133,7 +133,6 @@ nodo::puntero* PATRICIA :: bajar(nodo*& actual, nodo::puntero*& ptrActual, const
     puntero* ptrAnterior = NULL;
     ptrActual = NULL;
     palabraArmada.clear();
-    bool encontro = true;
     string recortada = s;
 
     //verifico solo la primer letra pues con solo eso me alcanza
@@ -176,4 +175,57 @@ ostream& operator<<(ostream& os, const PATRICIA& p){
     p.verPatricia(p.raiz, "", os);
     os << "Cardinal = " << p.cantElem << endl;
     return os;
+}
+
+void PATRICIA :: parser(void){
+    int BUFF = 256;
+    int cant = 0;
+    ifstream in("Tp2Ej3.in", ifstream::in);
+    ofstream out("Tp2Ej3.out", ifstream::out);
+
+    if(!in.is_open()){
+        cout << "no se encontro el archivo" << endl;
+        return;
+    }
+
+    if(!out.is_open()){
+        cout << "no se puede crear el archivo" << endl;
+        return;
+    }
+
+    in >> cant;
+
+    while(cant > 0){
+        for(int i = 0; i < cant; i++){
+            char inst[BUFF];
+            in >> inst;
+
+            if(strcmp(inst, "agregar") == 0){
+                //tomo la palabra
+                in >> inst;
+                this->agregar(inst);
+            }
+            else if(strcmp(inst, "pertenece") == 0){
+                //tomo la palabra
+                in >> inst;
+                out << this->pertenece(inst);
+                if(i + 1 < cant)
+                    out << " ";
+            }
+            else if(strcmp(inst, "sacar") == 0){
+                //tomo la palabra
+                in >> inst;
+                this->sacar(inst);
+            }
+            else if(strcmp(inst, "cardinal") == 0){
+                out << this->cardinal();
+                if(i + 1 < cant)
+                    out << " ";
+            }
+        }
+        in >> cant;
+    }
+
+    in.close();
+    out.close();
 }
