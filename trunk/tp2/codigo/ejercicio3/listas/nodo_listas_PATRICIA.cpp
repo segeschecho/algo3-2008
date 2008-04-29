@@ -1,4 +1,4 @@
-#include "nodoPATRICIA.h"
+#include "nodo_listas_PATRICIA.h"
 #include <iostream>
 
 void nodo :: agregar (const string& s, nodo* nuevonodo) {

@@ -1,4 +1,4 @@
-#include "nodoPATRICIA.h"
+#include "nodo_arreglos_PATRICIA.h"
 #include <iostream>
 
 nodo :: nodo() {
