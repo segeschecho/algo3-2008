@@ -1,0 +1,100 @@
+\part{Ejercicio 2}
+\section{Enunciado}
+Un radix tree o PATRICIA es un trie en el cual las cadenas de nodos con un solo hijo
+son compactadas y transformadas en un solo nodo. Esto permite mejorar el consumo de
+memoria de la estructura en el caso en que hay pocas cadenas definidas o que muchas
+cadenas tengan prefijos largos en com'un.
+Esta compactaci'on genera entonces las diferencias b'asicas entre los radix trees y los tries:
+a) Todos los nodos internos de un radix tree tienen como m'inimo dos hijos (excepto
+posiblemente la raiz).
+b) Las ramas de un radix tree pueden estar etiquetadas con m'as de un caracter.
+Si adem'as el conjunto (o del conjunto de claves del diccionario) es un conjunto libre
+de prefijos, sucede que las cadenas (o los valores asociados a las claves) se encuentran
+solamente en las hojas. Un conjunto libre de prefijos es aquel en el cual ningun elemento
+es prefijo de otro.
+Implementar un conjunto de cadenas basado en estas ideas que soporte las siguientes
+operaciones:
+a) Agregar una cadena al conjunto.
+b) Consultar si una cadena pertenece al conjunto.
+c) Sacar una cadena del conjunto.
+d) Consultar la cantidad de cadenas del conjunto.
+Donde las cadenas forman un conjunto libre de prefijos. Las tres primeras operaciones
+deben tener complejidad O(ksk) donde s es la clave m'as larga ya definida y ksk indica la
+longitud de s. La 'ultima operaci'on debe tener complejidad de orden constante.
+El conjunto de caracteres sobre el que se van a definir las cadenas son las 26 letras min'uscu-
+las del ingl'es.
+
+\section{Desarrollo}
+\subsection{Sobre el patricia}
+Un Radix Tree o PATRICIA (Practical Algorithm To Retrieve Information Coded In Alphanumeric) es una estructura de datos basada en los Tries que cumple el rol de diccionario. Sus claves son cadenas, y su significado es de tipo variado, d'andole uso para diferentes propositos. La diferencia entre un PATRICIA y un Trie ya fue mencionada en el enunciado: un trie tiene un nodo por cada caracter de ua cadena, en cambio las ramas de un radix tree pueden estar etiquetadas con m'as de un caracter, y si ademas el conjunto de claves es libre de prefijos, cada nodo del radix tendra almenos dos hijos.
+
+\subsection{Sobre el dise\~{n}o de la estructura}
+Por sus caracter'isticas, el PATRICIA presenta un amplio abanico de posibles implementaciones. Entre ellas las m'as populares son: con nodos formados por un arreglo (en este caso de 26 posiciones) que tiene punteros por elementos; con nodos formados por una lista de punteros; con nodos que contienen una tabla de hash. Un puntero es una tupla de apuntador a un nodo hijo y una cadena adjunta. Los nodos pueden tener un bit que indica la validez o invalidez del mismo y/o el dato (significado) a guardar. En el caso de este TP, no se piden datos a guardar, por lo tanto optamos por implementar los nodos con dos variantes de las ya nombradas: nodos formados por un arreglo de 26 posiciones con un bit de existencia y nodos formados por una lista con un bit de existencia. Como luego veremos, ambos dise\~{n}os de estructura son 'optimos y cumplir'an las complejidades pedidas.
+En cuanto al PATRICIA, se decidi'o que el mismo contendr'a nodos y no los definir'a dentro. O sea, separamos el objeto arbol PATRICIA del objeto nodo. Esto es as'i pues de este modo se implementa la modularidad que resulta de gran utilidad para implementar el PATRICIA para los diferentes tipos de nodo.
+
+\subsection{Pseudoc'odigo}
+
+\subsection{Detalles de implementacion de los nodos}
+Aclaraciones sobre los miembros privados de la estructura: fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano \"existe\" puede carecer de sentido, es de vital importancia a la hora de implementar el PATRICIA, ya que sin ellas no podriamos diferenciar las claves definidas de las no definidas. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
+La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a puntero.
+A continuaci'on explicaremos detalladamente cada funci'on referente a los nodos:
+\begin{itemize}
+\item constructor: inicializa el booleano existe a FALSE. En caso de nodo sobre arreglo, inicializa ademas cantElem a 0 (cero) y ademas inicializa todo el arreglo a NULL.
+
+\item agregar: toma por par'ametro una cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo en cuesti'on. Lo hace asignandole un puntero que tiene un apuntador al nuevo nodo y una cadena adjunta. Si el nodo es pasado por par'ametro, el puntero apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos y el puntero apuntar'a hacia el nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre listas, los punteros son agregados en orden ascendiente por cadena.
+
+\item sacar: toma por par'ametro una cadena. Borra el puntero adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado por el puntero borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el puntero es trivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar sobre la lista hasta encontrar el puntero a borrar.
+
+\item pertenece: toma por par'ametro una cadena. Verifica si existe un puntero adjunto a la cadena pasada por par'ametro. Para los nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un puntero adjunto a la cadena, se devuelve NULL.
+
+\item getExiste: no toma par'ametros. Devuelve TRUE o FALSE, dependiendo de la existencia del nodo.
+
+\item setExiste: toma un booleano como par'ametro. Asigna el valor del par'ametro al booleano \"existe\" dentro del objeto nodo. 
+
+\item elemento(cadena): toma por par'ametro una cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a NULL. Devuelve un apuntador a puntero que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de punteros, hasta encontrar una coincidencia entre la primer letra de la cadena adjunta al puntero iterado con el par'ametro. Si no existe tal puntero, se devuelve NULL.
+
+\item elemento(entero): toma por par'ametro un entero sin signo. Devuelve un apuntador a puntero. Para nodo sobre arreglos, se indexa el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de punteros, hasta iterar n veces, siendo n el par'ametro pasado. Si no existe tal puntero, se devuelve NULL.
+
+\item dameUno: no toma par'ametros. Devuelve un apuntador al primer puntero encontrado. Para nodo sobre arreglos, se busca de 0 a 26 un puntero definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
+
+\item cardinal: no toma par'ametros. Devuelve el cardinal del nodo, entendi'endose por cardinal la cantidad de hijos que tiene. En realidad esta funci'on no hace mas que devolver el valor de la variable cantElem.
+
+\item esHoja: no toma par'ametros. Devuelve TRUE o FALSE indicando si el nodo no tiene ningun nodo hijo o tiene alguno, respectivamente. Simplemente se compara cantElem con 0.
+
+\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando puntero por puntero (NO borra los nodos hijo). En caso de nodo sobre lista, no hace absolutamente nada.
+
+\subsection{Detalles de implementacion del arbol PATRICIA}
+    // Constructor
+    // Parametros:      void
+	// Proposito:       Inicializa la estructura de datos.
+    PATRICIA();
+
+    // Destructor
+    // Parametros:      void
+	// Proposito:       Destruye la estructura de datos.
+    ~PATRICIA();
+
+    // Parametros:      cadena a agregar al PATRICIA
+	// Proposito:       le da significado a la cadena s en el PATRICIA
+    void agregar (const string& s);
+
+    // Parametros:      cadena a eliminar del PATRICIA
+	// Proposito:       le quita significado a la cadena s en el PATRICIA
+    void sacar (const string& s);
+
+    // Parametros:      cadena a verificar si pertenece al PATRICIA
+	// Proposito:       verifica si s pertenece al PATRICIA
+    bool pertenece (const string& s) const;
+
+    // Parametros:      void
+	// Proposito:       devuelve la cantidad de elementos definidos en el PATRICIA
+    unsigned int cardinal(void) const;
+
+private:
+
+    nodo* raiz;
+    unsigned int cantElem;
+    void quitarPrefijoEnComun(string& s1, const string& s2) const;
+    nodo::puntero* bajar(nodo*&, nodo::puntero*&, const string&, string&) const;
+    void destruirPatricia (nodo*);
+    void verPatricia (nodo*, const string&, ostream&) const;
