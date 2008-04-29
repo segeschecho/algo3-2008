@@ -3,6 +3,7 @@
 
 #include "nodoPATRICIA.h"
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 class PATRICIA : private nodo {
@@ -33,6 +34,10 @@ public:
     // Parametros:      void
 	// Proposito:       devuelve la cantidad de elementos definidos en el PATRICIA
     unsigned int cardinal(void) const;
+
+    // Parametros:      void
+	// Proposito:       levanta los datos del archivo Tp2Ej3.in y devuelve el resultado en Tp2Ej3.out
+    void parser(void);
 
 private:
 
