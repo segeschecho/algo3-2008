@@ -33,7 +33,7 @@ def chequearCaminoValido(grafo, camino):
     # se pasa usando un camino valido?
     for i in range(len(camino)-1):
         if not grafo.estanConectados(camino[i], camino[i+1]):
-            raise CaminoNoValido, "El camino propuesto une dos ciudades sin acuerdo (%s y %s)." % (i,i+1)
+            raise CaminoNoValido, "El camino propuesto une dos ciudades sin acuerdo (%s y %s)." % (camino[i],camino[i+1])
 
     
     # el camino no se cruza con si mismo?

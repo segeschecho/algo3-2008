@@ -170,17 +170,17 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \begin{figure}[H]
 \centering
 \subfigure[Comenzamos con el grafo original]{
-\includegraphics[scale=0.6]{./figuras/kosaraju1.png} }\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/kosaraju1.png} }\hspace{1in} 
 \subfigure[Realizamos DFS partindo desde el 1 y numeramos los nodos segun el orden de la llamada recursiva]{
-\includegraphics[scale=0.6]{./figuras/kosaraju2.png}}
-\subfigure[Como el 8 quedo sin marcar, realizamos una segunda DFS partiendo desde el]{
-\includegraphics[scale=0.6]{./figuras/kosaraju3.png}}\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/kosaraju2.png}}\hspace{1in} 
+\subfigure[Como el 7 quedo sin marcar, realizamos una segunda DFS partiendo desde el]{
+\includegraphics[scale=0.5]{./figuras/kosaraju3.png}}\hspace{1in} 
 \subfigure[Una vez que marcamos todos los nodos, invertimos el grafo]{
-\includegraphics[scale=0.6]{./figuras/kosaraju4.png}} 
-\subfigure[Como el 8 es el elemento de mayor numeraci'on comenzamos por él. Hacemos DFS, y todos los nodos que tocamos, son una componente fuertemente conexa]{
-\includegraphics[scale=0.6]{./figuras/kosaraju5.png} }\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/kosaraju4.png}} \hspace{1in} 
+\subfigure[Como el 7 es el elemento de mayor numeraci'on comenzamos por él. Hacemos DFS, y todos los nodos que tocamos, son una componente fuertemente conexa]{
+\includegraphics[scale=0.5]{./figuras/kosaraju5.png} }\hspace{1in} 
 \subfigure[Ahora seguimos con el 1, el de mayor numeraci'on sin visitar. Luego de hacer DFS tenemos otra componente fuertemente conexa de G. Como no quedan mas nodos por visitar, terminamos]{
-\includegraphics[scale=0.6]{./figuras/kosaraju6.png}}
+\includegraphics[scale=0.5]{./figuras/kosaraju6.png}}
 \caption{Algoritmo de Kosaraju}
 \setcounter{subfigure}{0}
 \label{fig:kosaraju1}
@@ -286,7 +286,7 @@ Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ n
 \newpage
 
 \section{Cuestiones de implementación}
-Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodos y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. En cambio si usamos dsf en varias ocasiones y para esta funcion si nos es conveniente usar listas de adyacencia.
+Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodos y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. En cambio si usamos dsf en varias ocasiones y para esta función si nos es conveniente usar listas de adyacencia.
 
 La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante,nos permite conocer facilmente el $d_{in}$ de un nodo, el cual necesitamos tener en O(1), por esa razón mantenemos dicha información.
 Con respecto a las listas utilizamos las listas provistas por la std de c++.
@@ -319,7 +319,8 @@ Luego como en cada paso las operaciones que realizamos tienen un costo $O(n+m)$,
 
 \section{Analisis experimental}
 \subsection{Experiencias realizadas}
-Para realizar las experiencias generamos grafos aleatorios variando las variables cantidad de jugadores y cantidad de partidos arreglados.
+Para realizar las experiencias generamos grafos aleatorios variando las variables cantidad de jugadores y cantidad de partidos arreglados. Para contar operaciones, declaramos una variable global, y la incrementamos por cada operación que realizamos, considerando que la asignacion de n posiciones de memoria cuenta como n operaciones.
+
 Creamos grafos al azar, que cumplieran las pautas del enunciado y realizamos con ellos las siguientes experiencias:
 
 La primer experiencia consistió en medir la cantidad de operaciones en función de ambas variables.
@@ -331,7 +332,7 @@ Finalmente decidimos hacer una ultima experiencia variando ambas variables, pero
 Los resultados obtenidos se encuentran a continuación.
 
 \subsection{Resultados}
-\subsubsection{Experiencia 1: Cantidad de operaciones, un funcion de n y m}
+\subsubsection{Experiencia 1: Cantidad de operaciones, un función de n y m}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia1.png} 
@@ -344,21 +345,21 @@ Los resultados obtenidos se encuentran a continuación.
 \label{fig:exp1b}
 \end{figure}
 
-\subsubsection{Experiencia 2: Cantidad de operaciones en funcion de n, con m fijo}
+\subsubsection{Experiencia 2: Cantidad de operaciones en función de n, con m fijo}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia2.png} 
 \label{fig:exp2}
 \end{figure}
 
-\subsubsection{Experiencia 3: Cantidad de operaciones en funcion de m, con n fijo}
+\subsubsection{Experiencia 3: Cantidad de operaciones en función de m, con n fijo}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia3.png} 
 \label{fig:exp3}
 \end{figure}
 
-\subsubsection{Experiencia 4: Cantidad de operaciones en funcion de n, con $m=\frac{(n-1)*n}{2}$ }
+\subsubsection{Experiencia 4: Cantidad de operaciones en función de n, con $m=\frac{(n-1)*n}{2}$ }
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/graficos/ej1/experiencia4.png} 
@@ -366,7 +367,7 @@ Los resultados obtenidos se encuentran a continuación.
 \end{figure}
 
 \subsection{Discusion}
-En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde m $<$ n - 1 y que se descartan rapidamente. En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
+En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde $m < n - 1$ y que se descartan rapidamente. En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
 
 La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores, pero ademas nos permitíó notar una particularidad de nuestro algoritmo y es que en general darse cuenta de que no hay ganador es mas rapido que saber si efectivamente lo hay. Esto es porque si no hay ganador ni bien encontramos en el grafo reducido, dos nodos con $d_{in}=0$ terminamos, y dado que los grafos son al azar, un esperaria no tener que revisar todas las componentes fuertemente conexas para que esto pase. Esta caracteristica se ve plasmada en el grafo, ya que a medida que aumentamos la cantidad de jugadores, dejando fija la cantidad de partidos, es mas probable que no tengamos un ganador. Por eso, para n grande observamos como la recta se parte en otras rectas que estan por debajo.
 

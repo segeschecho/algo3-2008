@@ -1,0 +1,70 @@
+/* tipo de grafos */
+/*
+graph: grafo no orientado
+digraph: grafo orientado
+*/
+/* estilos */
+/*
+hay varios, en gral nos interesan dos:
+dot: lo arma con forma "arbolada"
+circo: lo arma con forma circular
+*/
+
+
+graph EjPrueba {
+	/* defino el formato de los nodos */
+	/* en general si quiero solamente un circulo comun, no pongo nada y lo dejo por defecto */
+	/* si solo quiero cambiar cosas como  el color, alcanza con que especifique colo */
+	node [
+		fontname = "Arial"
+		label = "\N"
+		shape = "circle"
+		width = "0.300000"
+		height = "0.300000"
+		color = "black"
+	]
+	
+
+	/* defino un formato de ejes */
+	edge [
+		color = "grey"
+		weight = "2"
+	]
+	/* declaro los ejes del grafo */
+	/* notar q no declaro previamente los nodos, puede hacerse si se desea */
+	/* las comillas son opcionales en el caso donde tengo un caracater, o una palabra sin espacios */
+	/* los ejes toman el ultimo formato declarado, por eso estos son de color gris */
+	/* pasa lo mismo con los nodos */
+	"1" -- "2";
+	"6" -- "1";
+	"5" -- "6";
+	"1" -- "3";
+	"6" -- "3";
+	"4" -- "3";
+
+	/* defino otro formato de ejes /
+	/* los ejes que declare a partir de aca, toman este formato -*/
+	edge [
+		color = "red"
+		weight = "2"
+	]
+
+	/* otra forma de declarar ejes */
+	/* estoy abreviando 1 -- 2 y 2 -- 3 */
+	/* util para forzar forma de circulo */
+	/* notar que los defino, le pongo el formato al lado */
+	/* es lo mismo que declarar primero el formato y despues definir los ejes */
+	"1" -- "2" -- "3" -- "4" -- "5" -- "6" -- "1" [
+		color = "white"
+		weight = "1"
+	]
+	
+	/* usar linea punteada */
+	1 -- 8 [style=dotted];
+	
+	/* formato de nodo pintado */
+	/* en color pongo algun color por defecto : blue, red, green, gray, yellow o lo pongo en rgb con un numero en hexa: #RRGGBB */
+	node [shape=box,style=filled,color="#FF0000"];
+	1 -- 4
+	
+}

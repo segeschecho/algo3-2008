@@ -9,6 +9,7 @@
 using namespace std;
 bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned& cantGanadores);
 
+/* parseo de la entrada, grabacion de la salida */
 int main(int argc, char* argv[])
 {    // leo los datos de entrada
     string ruta;
@@ -69,6 +70,8 @@ int main(int argc, char* argv[])
 	return 0;
     }
 
+/* dfs que ademas numera los nodos por fin de llamada */
+/* en valor[num] dejamos al nodo con el valor num */
 void dfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned* valor){
     visitado[nodo] = true;
     list<unsigned> :: iterator principio = grafo->verticesOut[nodo].begin();
@@ -81,9 +84,9 @@ void dfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned* v
     num += 1;
 }
 
+/* parte recursiva del dfs */
 void auxdfs(Grafo* grafo, bool* visitado, unsigned* valor){
-    //visitado = new bool[grafo.nodos];
-    //valor = new unsigned[grafo.nodos];
+
     for(unsigned i = 0; i < grafo->nodos; i++){
         visitado[i] = false;
         valor[i] = 0;
@@ -96,6 +99,8 @@ void auxdfs(Grafo* grafo, bool* visitado, unsigned* valor){
 	}
 }
 
+/* simil a dfs, pero en vez de numerar, guarda los nodos visitados */
+/* la llamamos luego de invertir el grafo, para armar las componentes fuertemente conexas */
 void dfs2(Grafo* grafo, unsigned nodo,bool* visitado, list<unsigned>* fuerte){
     visitado[nodo] = true;
     list<unsigned> :: iterator principio = grafo->verticesOut[nodo].begin();
@@ -107,6 +112,7 @@ void dfs2(Grafo* grafo, unsigned nodo,bool* visitado, list<unsigned>* fuerte){
     fuerte->push_back(nodo);
 }
 
+/* invierte un grafo, de modo que si a -> b en G, devolvemos un G' tal que b->a */
 Grafo* invertirGrafo(Grafo* grafo){
     list<pair<unsigned, unsigned> > x;
 
@@ -123,19 +129,23 @@ Grafo* invertirGrafo(Grafo* grafo){
     return g;
 }
 
+/* arma las componentes fuertemente conexas segun el algoritmo de kosaraju */
 list<list<unsigned>* > * armarFuertes(Grafo* grafo,bool*visitado,unsigned* valor){
-
+    // primero numeramos los nodos
     auxdfs(grafo,visitado,valor);
-
+    // reiniciamos el marcador de visitado
      for(unsigned i = 0; i < grafo->nodos; i++){
         visitado[i] = false;
     }
-
+    // invertimos el grafo
     Grafo* g = invertirGrafo(grafo);
 
     list<unsigned> * fuerte = new list<unsigned>();
     list<list<unsigned>* > * fuertes = new list<list<unsigned>* >();
 
+    // hacemos dfs desde cada nodo
+    // agarramos siempre a los que tienen mayor valor
+    // no recorre todo el arbol, sino solo una componente fuertemente conexa por vez
     for(int i = grafo->nodos-1; i >= 0; i--){
 
         if (no visitado[valor[i]]){
@@ -152,6 +162,7 @@ list<list<unsigned>* > * armarFuertes(Grafo* grafo,bool*visitado,unsigned* valor
     return fuertes;
 }
 
+/* resuelve el ejercicio 1 */
 bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
     if(rels < grafo->nodos - 1){
         cantGanadores = 0;
@@ -208,9 +219,9 @@ bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
 	    return NULL;
         }
     }
-    //cosa que no debe pasar :P
+    //cosa que no debe (ni puede) pasar :P
     if(no yaHayUno){
-        cout<<"cacacacacaca"<<endl;
+        cout<<"Error inesperado"<<endl;
     }
     //buscamos a la componente ganadora (si hay)
     list<unsigned> * l = new list<unsigned>();
