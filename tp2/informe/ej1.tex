@@ -291,6 +291,8 @@ Para resolver los problemas representamos los grafos mediante listas de adyacenc
 La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante,nos permite conocer facilmente el $d_{in}$ de un nodo, el cual necesitamos tener en O(1), por esa razón mantenemos dicha información.
 Con respecto a las listas utilizamos las listas provistas por la std de c++.
 
+La clase grafo, entonces, permite conocer en O(1) la cantidad de nodos, tambien con ese orden brinda los elementos que inciden sobre un nodo, y aquellos sobre los que el nodo incide.
+
 \section{Cálculo de complejidad}
 Para estudiar la complejidad del algoritmo consideramos que es apropiado considerar el modelo uniforme, ya que lo que importa en este caso es la cantidad de jugadores y partidos arreglados, mas que el coste que podrian tener las operaciones aritmeticas.
 Por eso consideraremos que el tamaño de la entrada es justamente la cantidad de jugadores (n) y la cantidad de partidos arreglados (m).
@@ -373,6 +375,6 @@ La segunda experiencia nos permitio notar que el comportamiento es lineal en la 
 
 La tercer experiencia nos permitió ver como se mantenía la tendencia lineal en función del m. En el grafico observamos 2 rectas, la primera corresponde a los casos $m < n -1$ y la segunda es para los casos donde no se puede decidir a priori y tenemos que hacer todo el proceso de los datos.
 
-Finalmente en la grafica de la última experiencia notamos que la cantidad de operaciones crece cuadraticamente. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n)$, entonces O(n + m) es O($n^2$).
+Finalmente en la grafica de la última experiencia notamos que la cantidad de operaciones crece cuadraticamente. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
 
 A modo de conclusión, podemos decir que las experiencias nos permitieron corroborar el analisis teorico que realizamos previamente.
