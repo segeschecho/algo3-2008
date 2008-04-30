@@ -1,12 +1,12 @@
 #ifndef _PATRICIA_H_
 #define _PATRICIA_H_
 
-#include "nodoPATRICIA.h"
+#include "nodo_listas_PATRICIA.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
 
-class PATRICIA : private nodo {
+class PATRICIA {
     friend ostream& operator<<(ostream&, const PATRICIA&);
 public:
     // Constructor
@@ -44,7 +44,7 @@ private:
     nodo* raiz;
     unsigned int cantElem;
     void quitarPrefijoEnComun(string& s1, const string& s2) const;
-    nodo::puntero* bajar(nodo*&, nodo::puntero*&, const string&, string&) const;
+    nodo::eje* bajar(nodo*&, nodo::eje*&, const string&, string&) const;
     void destruirPatricia (nodo*);
     void verPatricia (nodo*, const string&, ostream&) const;
 };

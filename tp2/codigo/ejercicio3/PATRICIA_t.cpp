@@ -11,89 +11,94 @@ PATRICIA :: PATRICIA(){
 }
 
 void PATRICIA :: agregar(const string& s){
-    nodo::puntero* ptrActual;
+    nodo::eje* ejeActual;
     string palabraArmada;
     nodo* actual = raiz;
 
-    bajar(actual, ptrActual, s, palabraArmada);
+    //primero bajo por las ramas hasta no econtrar mas prefijo
+    bajar(actual, ejeActual, s, palabraArmada);
 
-    if ((s != palabraArmada) || (!actual->getExiste())) {
+    //si s == palabraArmada y el actual sobre el que estoy ya existe, entonces
+    //la clave ya se encuentra definida. En esos casos no agrego nada.
+    if ( !((s == palabraArmada) && (actual->getExiste())) ) {
         string cadena = s;
         quitarPrefijoEnComun(cadena, palabraArmada);
         quitarPrefijoEnComun(palabraArmada, s);
         //ahora cadena y palabraArmada no tienen elementos
         //en comun (les quite el prefijo)
 
+        //si palabraArmada no queda vacia luego de quitarle el prefijo,
+        //quiere decir que tengo que partir el eje actual
         if(!palabraArmada.empty()) {
-            string resto = ptrActual->cadena;
-            resto.erase(resto.length() - palabraArmada.length(), resto.length());
-            //si palabraArmada sin prefijo es "so", y la cadena que estaba en el
-            //puntero actual era "queso", entonces resto es "que".
-            //resto lo voy a usar para partir el puntero y agregar en el medio
-            //el nuevo elemento
-            ptrActual->cadena = resto;
+            size_t longitud = (ejeActual->cadena).length() - palabraArmada.length();
+            (ejeActual->cadena).erase(longitud, (ejeActual->cadena).length());
+            //ahora ejeActual->cadena tiene la parte final de la palabraArmada
 
             nodo* nuevopadre = new nodo;
-            nuevopadre->agregar(palabraArmada, ptrActual->siguiente);
-            ptrActual->siguiente = nuevopadre;
+            nuevopadre->agregar(palabraArmada, actual);
+            ejeActual->puntero = nuevopadre;
             actual = nuevopadre;
         }
 
+        //finalmente, agrego la parte final del string s
         actual->agregar(cadena);
         cantElem++;
     }
 }
 
 void PATRICIA :: sacar(const string& s){
-    nodo::puntero* ptrActual;
-    nodo::puntero* ptrAnterior;
+    nodo::eje* ejeActual;
+    nodo::eje* ejeAnterior;
     string palabraArmada;
     nodo* actual = raiz;
 
-    ptrAnterior = bajar(actual, ptrActual, s, palabraArmada);
+    //primero bajo por las ramas hasta no econtrar mas prefijo
+    ejeAnterior = bajar(actual, ejeActual, s, palabraArmada);
 
-    if(!s.empty() && s == palabraArmada) {
+    //me aseguro de haber encontrado la clave a borrar
+    if(!s.empty() && s == palabraArmada && actual->getExiste()) {
         nodo* anterior = raiz;
-        if (ptrAnterior != NULL)
-            anterior = ptrAnterior->siguiente;
+        if (ejeAnterior != NULL)
+            anterior = ejeAnterior->puntero;
 
+        //si el actual es hoja, lo borro y luego verifico si tengo que mergear
         if(actual->esHoja()) {
-            anterior->sacar(ptrActual->cadena);
+            anterior->sacar(ejeActual->cadena);
             delete actual;
+
+            //hago merge del anterior con el actual en caso de haber borrado una hoja 
+            if ((anterior != NULL) && (anterior->cantHijos() == 1) && (!anterior->getExiste())) {
+                nodo::eje* aux = anterior->primerEje();
+
+                ejeAnterior->cadena = ejeAnterior->cadena + aux->cadena;
+
+                ejeAnterior->puntero = aux->puntero;
+                delete anterior;
+            }
         }
         else {
-            if (actual->cardinal() == 1) {
+            //si el actual a sacar tiene 1 solo hijo
+            if (actual->cantHijos() == 1) {
                 //hago merge del actual con el siguiente
-                puntero* ptrSiguiente = actual->dameUno();
-                ptrActual->cadena = ptrActual->cadena + ptrSiguiente->cadena;
+                nodo::eje* ejeSiguiente = actual->primerEje();
+                ejeActual->cadena = ejeActual->cadena + ejeSiguiente->cadena;
 
-                ptrActual->siguiente = ptrSiguiente->siguiente;
+                ejeActual->puntero = ejeSiguiente->puntero;
                 delete actual;
             }
             else
                 actual->setExiste(false);
         }
-
         cantElem--;
-
-        //hago merge del anterior con el actual
-        if ((anterior != NULL) && (anterior->cardinal() == 1) && (!anterior->getExiste())) {
-            puntero* ptrAux = anterior->dameUno();
-
-            ptrAnterior->cadena = ptrAnterior->cadena + ptrAux->cadena;
-
-            ptrAnterior->siguiente = ptrAux->siguiente;
-            delete anterior;
-        }
     }
 }
 
 bool PATRICIA :: pertenece(const string& s) const{
     nodo* actual = raiz;
-    puntero* ptrActual;
+    nodo::eje* ejeActual;
     string palabraArmada;
 
-    bajar(actual, ptrActual, s, palabraArmada);
+    bajar(actual, ejeActual, s, palabraArmada);
     return ((s == palabraArmada) && (actual->getExiste()));
 }
 
@@ -128,25 +133,26 @@ void PATRICIA :: quitarPrefijoEnComun(string& s1, const string& s2) const{
     s1.erase(0, cantLetras);
 }
 
-nodo::puntero* PATRICIA :: bajar(nodo*& actual, nodo::puntero*& ptrActual, const string& s, string& palabraArmada) const{
+nodo::eje* PATRICIA :: bajar(nodo*& actual, nodo::eje*& ejeActual, const string& s, string& palabraArmada) const{
     actual = raiz;
-    puntero* ptrAnterior = NULL;
-    ptrActual = NULL;
+    nodo::eje* ejeAnterior = NULL;
+    ejeActual = NULL;
     palabraArmada.clear();
     string recortada = s;
+    //recortada es el string s sacandole los prefijos encontrados cada vez que bajamos por una rama
 
     //verifico solo la primer letra pues con solo eso me alcanza
-    puntero* aux = actual->elemento(recortada.substr(0,1));
+    nodo::eje* aux = actual->ejeQueEmpiezaCon(recortada.substr(0,1));
     while(aux != NULL) {
-        ptrAnterior = ptrActual;
-        ptrActual = aux;
-        actual = aux->siguiente;
+        ejeAnterior = ejeActual;
+        ejeActual = aux;
+        actual = aux->puntero;
         palabraArmada += aux->cadena;
         quitarPrefijoEnComun(recortada, aux->cadena);
 
-        aux = actual->elemento(recortada.substr(0,1));
+        aux = actual->ejeQueEmpiezaCon(recortada.substr(0,1));
     }
-    return ptrAnterior;
+    return ejeAnterior;
 }
 
 void PATRICIA :: verPatricia (nodo* n, const string& s, ostream& os) const{
@@ -155,17 +161,17 @@ void PATRICIA :: verPatricia (nodo* n, const string& s, ostream& os) const{
     os << "\n-------------------------------------------" << endl;
 
     for(unsigned int i = 0; i < 26; i++) {
-        puntero* e = n->elemento(i);
+        nodo::eje* e = n->iesimoEje(i);
         if(e != NULL)
-            verPatricia(e->siguiente, e->cadena, os);
+            verPatricia(e->puntero, e->cadena, os);
     }
 }
 
 void PATRICIA :: destruirPatricia (nodo* n) {
     for(unsigned int i = 0; i < 26; i++) {
-        puntero* e = n->elemento(i);
+        nodo::eje* e = n->iesimoEje(i);
         if(e != NULL)
-            destruirPatricia(e->siguiente);
+            destruirPatricia(e->puntero);
     }
 
     delete n;
@@ -178,7 +184,6 @@ ostream& operator<<(ostream& os, const PATRICIA& p){
 }
 
 void PATRICIA :: parser(void){
-    int BUFF = 256;
     int cant = 0;
     ifstream in("Tp2Ej3.in", ifstream::in);
     ofstream out("Tp2Ej3.out", ifstream::out);
@@ -197,7 +202,7 @@ void PATRICIA :: parser(void){
 
     while(cant > 0){
         for(int i = 0; i < cant; i++){
-            char inst[BUFF];
+            char inst [256];
             in >> inst;
 
             if(strcmp(inst, "agregar") == 0){
