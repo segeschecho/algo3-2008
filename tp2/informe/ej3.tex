@@ -25,45 +25,95 @@ El conjunto de caracteres sobre el que se van a definir las cadenas son las 26 l
 las del ingl'es.
 
 \section{Desarrollo}
-\subsection{Sobre el patricia}
-Un Radix Tree o PATRICIA (Practical Algorithm To Retrieve Information Coded In Alphanumeric) es una estructura de datos basada en los Tries que cumple el rol de diccionario. Sus claves son cadenas, y su significado es de tipo variado, d'andole uso para diferentes propositos. La diferencia entre un PATRICIA y un Trie ya fue mencionada en el enunciado: un trie tiene un nodo por cada caracter de ua cadena, en cambio las ramas de un radix tree pueden estar etiquetadas con m'as de un caracter, y si ademas el conjunto de claves es libre de prefijos, cada nodo del radix tendra almenos dos hijos.
+\subsection{PATRICIA}
+Un Radix Tree o PATRICIA (Practical Algorithm To Retrieve Information Coded In Alphanumeric) es una estructura de datos basada en los Tries que cumple el rol de diccionario. Sus claves son cadenas, y su significado es de tipo variado, d'andole uso para diferentes prop'ositos. La diferencia entre un PATRICIA y un Trie ya fue mencionada en el enunciado: un trie tiene un nodo por cada caracter de ua cadena, en cambio las ramas de un radix tree pueden estar etiquetadas con m'as de un caracter, y si adem'as el conjunto de claves es libre de prefijos, cada nodo del radix tendr'a almenos dos hijos.
 
 \subsection{Sobre el dise\~{n}o de la estructura}
-Por sus caracter'isticas, el PATRICIA presenta un amplio abanico de posibles implementaciones. Entre ellas las m'as populares son: con nodos formados por un arreglo (en este caso de 26 posiciones) que tiene punteros por elementos; con nodos formados por una lista de punteros; con nodos que contienen una tabla de hash. Un puntero es una tupla de apuntador a un nodo hijo y una cadena adjunta. Los nodos pueden tener un bit que indica la validez o invalidez del mismo y/o el dato (significado) a guardar. En el caso de este TP, no se piden datos a guardar, por lo tanto optamos por implementar los nodos con dos variantes de las ya nombradas: nodos formados por un arreglo de 26 posiciones con un bit de existencia y nodos formados por una lista con un bit de existencia. Como luego veremos, ambos dise\~{n}os de estructura son 'optimos y cumplir'an las complejidades pedidas.
-En cuanto al PATRICIA, se decidi'o que el mismo contendr'a nodos y no los definir'a dentro. O sea, separamos el objeto arbol PATRICIA del objeto nodo. Esto es as'i pues de este modo se implementa la modularidad que resulta de gran utilidad para implementar el PATRICIA para los diferentes tipos de nodo.
+Por sus caracter'isticas, el PATRICIA presenta un amplio abanico de posibles implementaciones. Las que se nos ocurrieron son: con nodos formados por un arreglo (en este caso de 26 posiciones) que tiene ejes por elementos; con nodos formados por una lista de ejes; con nodos que contienen una tabla de hash. Un eje es una tupla de puntero a un nodo hijo y una cadena adjunta. Los nodos pueden tener un bit que indica la validez o invalidez del mismo y/o el dato (significado) a guardar. En el caso de este TP, no se piden datos a guardar, por lo tanto optamos por implementar los nodos con dos variantes de las ya nombradas: nodos formados por un arreglo de 26 posiciones con un bit de existencia y nodos formados por una lista con un bit de existencia. Como luego veremos, ambos dise\~{n}os de estructura son 'optimos y cumplir'an las complejidades pedidas.
+En cuanto al PATRICIA, se decidi'o que el mismo contendr'a nodos y no los definir'a dentro. O sea, separamos el objeto 'arbol PATRICIA del objeto nodo. Esto es as'i pues de este modo se implementa la modularidad que resulta de gran utilidad para implementar el PATRICIA para los diferentes tipos de nodo.
+
+\subsection{Sobre el PATRICIA como 'arbol}
+El enunciado presenta un invariante para el PATRICIA: 
+\begin{itemize}
+\item Todos los nodos internos de un radix tree tienen como m'inimo dos hijos (excepto
+posiblemente la raiz).
+\item Las ramas de un radix tree pueden estar etiquetadas con m'as de un caracter.
+\item Si adem'as el conjunto (o del conjunto de claves del diccionario) es un conjunto libre
+de prefijos, sucede que las cadenas (o los valores asociados a las claves) se encuentran
+solamente en las hojas. Un conjunto libre de prefijos es aquel en el cual ningun elemento
+es prefijo de otro.
+\end{itemize}
+Este invariante deber'a conservarse durante todas las funciones.
+El diccionario PATRICIA nos sugiere un 'arbol formado de un conjunto de palabras dispersas en su estructura, como muestra el siguiente gr'afico.
+
+[Grafico de un PATRICIA completo] 1
+
+Los nodos azules representan a las claves definidas. Este 'arbol se va formando a medida que agregamos y sacamos palabras del conjunto de claves. A continuacion describiremos cuales fueron las pautas a seguir para armar dichas funciones.
+
+\subsection{Agregando un elemento}
+Cuando agregamos un elemento nos enfrentamos ante los siguientes casos:
+
+[Grafico Caso 1 (no se parte eje) agregando caravana] 2
+[Grafico Caso 2 (se parte eje) agregando avellaneda] 3
+
+Para solucionar estos casos comenzaremos situ'andonos sobre la raiz. Luego bajamos por las ramas recordando qu'e palabra formamos con el camino de las 
+ramas que hice y donde estamos, con la condicion de que la palabra armada concatenada con la cadena de la rama por la cual bajamos sea prefijo de la palabra a agregar, como se muestra en el gr'afico:
+
+[Grafico bajando por rama, con un ejemplo de agregar(caravana)] 4
+
+Una vez que bajamos por las ramas lo m'aximo posible, si la palabra formada es prefijo de la clave a definir, quiere decir que caimos en el primer caso. Este caso es simple y solo resta agregar el nodo y el eje correspondiente, con la clave sin prefijo, como se muestra en el gr'afico 2.
+Supongamos ahora que se desea agregar \"avellaneda\". Bajamos, igual que antes, por las ramas:
+
+[Grafico bajando por rama, con un ejemplo de agregar(avellaneda)] 5
+
+Si la palabra formada no es prefijo de la clave a definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que no lo son. Entonces haremos lo siguiente: partimos el 'ultimo eje y crearemos un nuevo padre para el nodo en el cual quedamos, de manera que la primera parte del 'ultimo eje (la que tiene letras en com'un con la clave) quedar'a adjunta a un eje que apunte desde el nuevo padre hacia el nodo actual, y agregamos un nuevo nodo y un nuevo eje, apuntando del nuevo padre al nuevo nodo hijo, que tenga adjunto la parte restante de la clave, como se muestra en el gr'afico 3.
+
+\subsection{Eliminando un elemento}
+Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
+[Grafico Caso 1 (se borra la hoja y no mergea) sacando dama] 6
+[Grafico Caso 2 (se borra la hoja y se mergea) sacando caracter] 7
+Para solucionar estos casos comenzamos situ'andonos sobre la raiz, y bajando, al igual que agregar. Gracias a que el conjunto de entrada es libre de prefijos, sabemos que al sacar una clave siempre eliminaremos una hoja del 'arbol. De esta manera, al bajar el 'arbol siempre llegaremos a una hoja, en caso de querer eliminar una clave existente, como lo muestra el siguiente gr'afico:
+[Grafico bajando por rama para sacar(dama)] 8
+Al borrar la hoja, debemos verificar cuantos hermanos ten'ia. Si ten'ia m'as de un hermano, caeremos en el primer caso, el cual se resuelve simplemente eliminando la hoja y su eje, como lo muestra el gr'afico 6. Si, por el contrario, ten'ia solo un hermano, al borrar este nodo al padre le restar'a un solo hijo. Supongamos que queremos entonces borrar \"caracter\". Bajamos por la rama de la siguiente manera:
+[Grafico bajando por rama para sacar(caracter)] 9
+Para reestablecer el invariante, como la rama hasta el nodo padre no conforma una clave definida, podemos unir el padre con su 'unico hijo. Lo hacemos simplemente borrando el nodo hijo y concatenando la cadena adjunta al eje que apunta del nodo abuelo al nodo padre con la cadena adjunta al eje que apunte del nodo padre al nodo hijo, y finalmente eliminamos el eje, como lo muestra el grafico 7.
 
 \subsection{Pseudoc'odigo}
 
 \subsection{Detalles de implementacion de los nodos}
 Aclaraciones sobre los miembros privados de la estructura: fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano \"existe\" puede carecer de sentido, es de vital importancia a la hora de implementar el PATRICIA, ya que sin ellas no podriamos diferenciar las claves definidas de las no definidas. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
-La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a puntero.
+La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a eje.
 A continuaci'on explicaremos detalladamente cada funci'on referente a los nodos:
 \begin{itemize}
 \item constructor: inicializa el booleano existe a FALSE. En caso de nodo sobre arreglo, inicializa ademas cantElem a 0 (cero) y ademas inicializa todo el arreglo a NULL.
 
-\item agregar: toma por par'ametro una cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo en cuesti'on. Lo hace asignandole un puntero que tiene un apuntador al nuevo nodo y una cadena adjunta. Si el nodo es pasado por par'ametro, el puntero apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos y el puntero apuntar'a hacia el nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre listas, los punteros son agregados en orden ascendiente por cadena.
+\item agregar: toma por par'ametro una cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo en cuesti'on. Lo hace asignandole un eje que tiene un apuntador al nuevo nodo y una cadena adjunta. Si el nodo es pasado por par'ametro, el eje apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos y el eje apuntar'a hacia el nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre listas, los ejes son agregados en orden ascendiente por cadena.
 
-\item sacar: toma por par'ametro una cadena. Borra el puntero adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado por el puntero borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el puntero es trivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar sobre la lista hasta encontrar el puntero a borrar.
+\item sacar: toma por par'ametro una cadena. Borra el eje adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado por el eje borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el eje es trivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar sobre la lista hasta encontrar el eje a borrar.
 
-\item pertenece: toma por par'ametro una cadena. Verifica si existe un puntero adjunto a la cadena pasada por par'ametro. Para los nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un puntero adjunto a la cadena, se devuelve NULL.
+\item pertenece: toma por par'ametro una cadena. Verifica si existe un eje adjunto a la cadena pasada por par'ametro. Para los nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un eje adjunto a la cadena, se devuelve NULL.
 
 \item getExiste: no toma par'ametros. Devuelve TRUE o FALSE, dependiendo de la existencia del nodo.
 
 \item setExiste: toma un booleano como par'ametro. Asigna el valor del par'ametro al booleano \"existe\" dentro del objeto nodo. 
 
-\item elemento(cadena): toma por par'ametro una cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a NULL. Devuelve un apuntador a puntero que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de punteros, hasta encontrar una coincidencia entre la primer letra de la cadena adjunta al puntero iterado con el par'ametro. Si no existe tal puntero, se devuelve NULL.
+\item elemento(cadena): toma por par'ametro una cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a NULL. Devuelve un apuntador a eje que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta encontrar una coincidencia entre la primer letra de la cadena adjunta al eje iterado con el par'ametro. Si no existe tal eje, se devuelve NULL.
 
-\item elemento(entero): toma por par'ametro un entero sin signo. Devuelve un apuntador a puntero. Para nodo sobre arreglos, se indexa el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de punteros, hasta iterar n veces, siendo n el par'ametro pasado. Si no existe tal puntero, se devuelve NULL.
+\item elemento(entero): toma por par'ametro un entero sin signo. Devuelve un apuntador a eje. Para nodo sobre arreglos, se indexa el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta iterar n veces, siendo n el par'ametro pasado. Si no existe tal eje, se devuelve NULL.
 
-\item dameUno: no toma par'ametros. Devuelve un apuntador al primer puntero encontrado. Para nodo sobre arreglos, se busca de 0 a 26 un puntero definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
+\item dameUno: no toma par'ametros. Devuelve un apuntador al primer eje encontrado. Para nodo sobre arreglos, se busca de 0 a 26 un eje definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
 
 \item cardinal: no toma par'ametros. Devuelve el cardinal del nodo, entendi'endose por cardinal la cantidad de hijos que tiene. En realidad esta funci'on no hace mas que devolver el valor de la variable cantElem.
 
 \item esHoja: no toma par'ametros. Devuelve TRUE o FALSE indicando si el nodo no tiene ningun nodo hijo o tiene alguno, respectivamente. Simplemente se compara cantElem con 0.
 
-\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando puntero por puntero (NO borra los nodos hijo). En caso de nodo sobre lista, no hace absolutamente nada.
+\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando eje por eje (NO borra los nodos hijo). En caso de nodo sobre lista, no hace absolutamente nada.
+\end{itemize}
 
-\subsection{Detalles de implementacion del arbol PATRICIA}
+\subsection{Detalles de implementacion del 'arbol PATRICIA}
+Aclaraciones sobre la clase: el PATRICIA es heredero de la clase nodo y adem'as lo contiene.
+\begin{itemize}
+\item constructor: inicializa cantElem a 0 (cero) y la raiz, sete'andole TRUE a su valor existe.
     // Constructor
     // Parametros:      void
 	// Proposito:       Inicializa la estructura de datos.
@@ -95,6 +145,6 @@ private:
     nodo* raiz;
     unsigned int cantElem;
     void quitarPrefijoEnComun(string& s1, const string& s2) const;
-    nodo::puntero* bajar(nodo*&, nodo::puntero*&, const string&, string&) const;
+    nodo::eje* bajar(nodo*&, nodo::eje*&, const string&, string&) const;
     void destruirPatricia (nodo*);
     void verPatricia (nodo*, const string&, ostream&) const;
