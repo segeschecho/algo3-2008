@@ -5,19 +5,9 @@
 #include <list>
 using namespace std;
 
-class iterador;
 class nodo{
+    friend class PATRICIA;
     friend ostream& operator<<(ostream&, const nodo&);
-protected:
-    struct puntero{
-        nodo* siguiente;
-        string cadena;
-    };
-
-private:
-    bool _existe;
-    list<puntero> listaHijos;
-
 public:
 
     // Constructor
@@ -45,22 +35,9 @@ public:
 	// Proposito:       asignar la existencia o no existencia del nodo
     void setExiste(bool);
 
-    // Parametros:      cadena con un solo elemento que simboliza el
-    //                  primer caracter de la cadena que se quiere ver
-	// Proposito:       ver un elemento especifico
-    nodo::puntero* elemento(string c);
-
-    // Parametros:      posicion de la cadena que se quiere ver (0-n)
-	// Proposito:       ver un elemento especifico
-    nodo::puntero* elemento(int i);
-
-    // Parametros:      posicion de la cadena que se quiere ver (0-n)
-	// Proposito:       ver un elemento
-    nodo::puntero* dameUno(void);
-
     // Parametros:      void
 	// Proposito:       ver la cantidad de elementos que hay linkeados en el nodo
-    unsigned int cardinal(void);
+    unsigned int cantHijos(void);
 
     // Parametros:      void
 	// Proposito:       ver si el nodo no tiene ningun elemento linkeado
@@ -70,6 +47,28 @@ public:
     // Parametros:      void
 	// Proposito:       Destruye la estructura de datos.
     ~nodo(){};
+
+private:
+    struct eje{
+        nodo* puntero;
+        string cadena;
+    };
+
+    bool _existe;
+    list<eje> listaEjes;
+
+    // Parametros:      cadena con un solo elemento que simboliza el
+    //                  primer caracter de la cadena que se quiere ver
+	// Proposito:       ver un elemento especifico
+    nodo::eje* ejeQueEmpiezaCon(string c);
+
+    // Parametros:      posicion de la cadena que se quiere ver (0-n)
+	// Proposito:       ver un elemento especifico
+    nodo::eje* iesimoEje(int i);
+
+    // Parametros:      posicion de la cadena que se quiere ver (0-n)
+	// Proposito:       ver un elemento
+    nodo::eje* primerEje(void);
 };
 
 #endif

@@ -27,9 +27,9 @@ void nodo :: agregar (const string& s, nodo* nuevonodo) {
 
             nuevonodo->_existe = true;
 
-            arregloHijos[i] = new puntero;
+            arregloHijos[i] = new eje;
             arregloHijos[i]->cadena = s;
-            arregloHijos[i]->siguiente = nuevonodo;
+            arregloHijos[i]->puntero = nuevonodo;
             cantElem++;
         }
     }
@@ -54,7 +54,7 @@ void nodo :: setExiste(bool b) {
     _existe = b;
 }
 
-unsigned int nodo :: cardinal(void) {
+unsigned int nodo :: cantHijos(void) {
     return cantElem;
 }
 
@@ -70,7 +70,7 @@ bool nodo :: getExiste(void){
     return _existe;
 }
 
-nodo::puntero* nodo :: elemento(string c) {
+nodo::eje* nodo :: ejeQueEmpiezaCon(string c) {
     if(c.length() == 1) {
         return arregloHijos[toupper((int)*c.begin()) - 65];
     }
@@ -78,13 +78,13 @@ nodo::puntero* nodo :: elemento(string c) {
     return NULL;
 }
 
-nodo::puntero* nodo :: elemento(unsigned int i) {
+nodo::eje* nodo :: iesimoEje(unsigned int i) {
     if(i >= 26)
         return NULL;
     return arregloHijos[i];
 }
 
-nodo::puntero* nodo :: dameUno(void) {
+nodo::eje* nodo :: primerEje(void) {
     unsigned int i = 0;
     while(i < 26 && arregloHijos[i] == NULL) {
         i++;
