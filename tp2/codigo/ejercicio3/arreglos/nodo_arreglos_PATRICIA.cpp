@@ -23,9 +23,8 @@ void nodo :: agregar (const string& s, nodo* nuevonodo) {
         if(arregloHijos[i] == NULL) {
             if(nuevonodo == NULL) {
                 nuevonodo = new nodo;
+                nuevonodo->_existe = true;
             }
-
-            nuevonodo->_existe = true;
 
             arregloHijos[i] = new eje;
             arregloHijos[i]->cadena = s;
