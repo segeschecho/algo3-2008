@@ -65,7 +65,7 @@ El diccionario PATRICIA nos sugiere un 'arbol formado de un conjunto de palabras
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./figuras/e3/patricia.png}
+\includegraphics[scale=0.5]{./figuras/ej3/patricia.png}
 \caption{Ejemplo de árbol patricia}
 \end{figure}
 
@@ -144,7 +144,7 @@ Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en c
 \end{itemize}
 \begin{figure}[H]
 \centering
-\subfigure[Bajando por el 'arbol original para agregar \"cosa\"]{
+\subfigure[Bajando por el 'arbol original para agregar cosa]{
 \includegraphics[scale=0.4]{./figuras/ej3/BajandoPartirYExiste.png} }\hspace{1in} 
 \centering
 \subfigure[ ]{
@@ -241,8 +241,6 @@ Excediendo el l'imite del enunciado, nuestro algoritmo sacar podr'a tener en cue
 Estos dos nuevos casos son consecuencia directa de los casos de entrada que no esta libre de prefijos de agregar. Luego de bajar por las ramas del 'arbol verificamos que la palabra armada es igual a la clave y el nodo existe. De esta forma nos aseguramos que la clave a borrar haya sido definida. Si el nodo a borrar es un nodo interno (no es una hoja), caemos en alguno de estos dos casos. Si el nodo a borrar tiene mas de un hijo, caemos en el primer caso. Este se soluciona seteando el bit de existencia del nodo a falso, como muestra la figura \ref{fig:casoExtraSacarA}. Si el nodo a borrar tiene solo un hijo, este es el segundo caso. Se resuelve borrando el nodo padre y concatenando el eje que apuntaba del nodo padre al nodo actual, y el eje del nodo actual al nodo siguiente, como lo muestra la figura \ref{fig:casoExtraSacarB}.
 Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues los primeros borran solo nodos internos, los segundos borran solo hojas. Esto me asegura que el producto pedido no ser'a cambiado.
 
-\subsection{Pseudoc'odigo}
-\input{pseudo3}
 
 \subsection{Detalles de implementacion de los nodos}
 Aclaraciones sobre los miembros privados de la estructura: fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano \"existe\" puede carecer de sentido, es de vital importancia a la hora de implementar el PATRICIA, ya que sin ellas no podriamos diferenciar las claves definidas de las no definidas. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
@@ -308,3 +306,62 @@ Aclaraciones sobre la clase: el PATRICIA es heredero de la clase nodo y adem'as 
 %    void destruirPatricia (nodo*);
 %    void verPatricia (nodo*, const string&, ostream&) const;
 \end{itemize}
+
+\subsection{Pseudoc'odigo}
+\input{pseudo3}
+
+\section{Cálculo de complejidad}
+Para realizar el analisis de la complejidad vamos a considerar el modelo uniforme ya que las principales operaciones se realizan a nivel de caracteres, por lo cual podemos considerar que tienen un costo acotado. Ahora bien, con respecto al tamaño de la entrada, en este caso consideramos que es la cantidad de caracteres que componen a la cadena sobre la que se va a operar, ya sea para agregarla, borrarla o saber si esta definida. Llamos s a la cadena de entrada, y $long_s$ a el largo (cantidad de caracteres) de la misma
+
+A continuación analizaremos las cuatro funciones que debíamos implementar, para determinar el orden de complejidad logrado en cada una.
+
+\subsection{Agregar}
+Lo primero que hacemos es bajar por las ramas mientras entonctremos prefijo para s (cada vez que pasamos por un eje que es prefijo, le quitamos esa parte a s). En cada eje comparamos una porción de s, que al pasar al siguiente eje no se toca. Por esta razón cada caracter de s se va a tocar a lo sumo una vez. Cuando estamos en un nodo, debemos encontrar el eje hacia donde nos vamos a mover. Si el nodo cuenta con un arreglo de ejes, esto se hace en O(1).
+
+Por otro lado, con las listas ocurre lo mismo, ya que a lo sumo hay 26 caracteres, es decir 26 ejes de salida para el nodo. Por lo tanto, como es una cantidad acotada por una constante, recorrer esa lista también es O(1). Luego llegar hasta la posición donde debemos agregar a s, nos costo hacer a lo sumo $long_s$ busquedas de ejes, con un costo O(1), por lo tanto tenemos un costo $O(long_s)$. 
+
+Notemos que en general hacemos menos busquedas de nodos, ya que en un eje suele haber varios caracteres. Sin embargo, hay que comparar el string del eje con s, por lo que en definitivda se terminan haciendo menos busquedas pero en ellas se hacen comparaciones de varios caracteres.
+
+A medida que bajamos, vamos guardando la cadena que se va formando. Armar dicha cadena consiste en ir juntando los strings de cada eje, nuevamente el costo es $O(long_s)$. 
+
+Si la palabra ya estaba en el conjunto, no hacemos nada y terminamos. El costo fue en total $O(long_s)$.
+
+Si en cambio la palabra no estaba, lo proximo que hacemos es eliminar los prefijos comunes entre s y la palabra armada durante el descenso, nuevamente para hacer esto, recorremos a lo sumo $long_s$ caracteres. 
+
+Si hay que partir el nodo, lo que se hace es partir la cadena del ultimo eje visitado en la parte que es igual a s y la parte que difiere. Nuevamente, vamos a recorrer como mucho $long_s$, msa no podemos porque a partir del caracter $long_s$ + 1 no hay caracter en s con el cual comparar.
+
+Una vez que partimos esta cadena creamos un eje nuevo, que se hace en O($long_max$) donde $long_max$ es el tamaño de la mayor palabra en el patricia porque si armamos un eje nuevo hay que copiar la parte de la cadena del eje, que no era prefijo en s, y esa parte de la cadena puede ser mas larga que s, por esa razon es O($long_max$) y no O($long_s$). Tambien creamos un nuevo nodo, que se hace en O(1).
+
+Luego de esto, linkeamos los nodos mediante el eje antes creado. Y seteamos el valor de existencia del nodo. Estas acciones se hacen en O(1), lo primero es setear un puntero y lo segundo es asignar un bool.
+
+Despues de esto, si hay que agregar un nuevo eje para s, se hace, pero esta vez el costo es O($long_s$). Se crea un nuevo nodo y se linkea con el nodo hasta donde habia bajado en O(1).
+
+Si no habia que partir nodo, ni agregar un nodo nuevo, solo se setea el bit de existe en el ultimo nodo que visite.
+
+Por ultimo si la palabra no estaba ya en el conjunto, incrementamos en uno el cardinal del conjunto
+
+Luego tenemos una cantidad acotada de operaciones de costo O($long_s$) y O($long_max$). Ahora bien, como $long_max \geq long_s$, O($long_s$) $\subset$ O($long_max$). Por lo tanto, el orden del algoritmo tiene un orden O($long_max$)
+
+\subsection{Sacar}
+Primero bajamos mientras en los ejes encontremos prefijo de s. Como vimos antes, esto se hace en $O(long_s)$. 
+ 
+Si el nodo a borrar es una hoja, eliminamos el nodo y al eje correspondiente. Borrar el eje, tiene $O(long_s)$ porque dicho eje, era subcadena de s. 
+
+Una vez hecho esto, podria ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_max$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del `hermano` de s.
+
+Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de él con su padre y de él con su unico hijo. Nuevamente el costo de esto es O($long_max$).
+
+Si no era hoja y no tenia solo un hijo, lo que hacemos es setear su flag de existe en false, que se hace en O(1). 
+
+Si la palabra estaba definida, lo ultimo que hacemos es decrementar en uno el cardinal del conjunto.
+
+Luego el orden de esta operacion es  O($long_max$)
+
+\subsection{Pertenece}
+Al igual que con las dos operaciones anteriores, lo que hacemos es bajar mientras encontremos en los ejes, prefijos de s. Esto, como dijimos anteriormente tiene costo $O(long_s)$. Una vez que bajamos, comparamos la cadena obtenida durante la bajada, con s. La cadena se obtiene en $O(long_s)$ mientras bajamos, y la comparació se hace también en $O(long_s)$. 
+Por otro lado se pregunta si el nodo existe, pero esta operacion la realizamos en O(1).
+
+Como $long_max \geq long_s$, vale que $O(long_s)$$\subset$ O($long_max$), luego la operación es O($long_max$)
+
+\subsection{Cantidad de elementos}
+Como cada vez que guardamos o sacamos una palabra actualizamos el cardinal del conjunto, en caso de que se solicite la cantidad de palabras del conjunto, se devuelve este contador, sin tener que hacer mas operaciones, por lo tanto la operacion es O(1).
