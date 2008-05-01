@@ -7,8 +7,21 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     PATRICIA patri;
-    patri.agregar("iiii");
-    patri.agregar("i");
+    patri.agregar("tatetito");
+    cout << patri << endl << endl;
+    patri.agregar("taqetito");
+    cout << patri << endl << endl;
+    patri.agregar("ttetito");
+    cout << patri << endl << endl;
+
+    cout << patri << endl << endl;
+    patri.sacar("ttetito");
+    cout << patri << endl << endl;
+    patri.sacar("tatetito");
+    cout << patri << endl << endl;
+    patri.sacar("taqetito");
+    cout << patri << endl << endl;
+    /*
     patri.agregar("iii");
     patri.agregar("zero");
     patri.agregar("emiliano");
@@ -55,42 +68,42 @@ int main(int argc, char* argv[]) {
     patri.pertenece("egmilio") ? cout << "TRUE" << endl : cout << "FALSE" << endl;
     patri.pertenece("emili") ? cout << "TRUE" << endl : cout << "FALSE" << endl;
 
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("iii");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("i");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("iiii");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("emilio");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("emiliano");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("emi");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("cacona");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("cacique");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("caconete");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("caballete");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("caca");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("cacapupu");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("ze");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("anana");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("anan");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("ana");
-    cout << patri;
+    cout << patri << endl << endl;
     patri.sacar("zero");
-    cout << patri;
-
+    cout << patri << endl << endl;
+*/
     system("PAUSE");
     return 0;
 }

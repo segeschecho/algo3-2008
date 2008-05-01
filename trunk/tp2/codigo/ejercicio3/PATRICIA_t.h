@@ -43,7 +43,7 @@ private:
 
     nodo* raiz;
     unsigned int cantElem;
-    void quitarPrefijoEnComun(string& s1, const string& s2) const;
+    bool quitarPrefijoEnComun(string& s1, const string& s2) const;
     nodo::eje* bajar(nodo*&, nodo::eje*&, const string&, string&) const;
     void destruirPatricia (nodo*);
     void verPatricia (nodo*, const string&, ostream&) const;
