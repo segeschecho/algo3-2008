@@ -30,12 +30,18 @@ void PATRICIA :: agregar(const string& s){
         //si palabraArmada no queda vacia luego de quitarle el prefijo,
         //quiere decir que tengo que partir el eje actual
         if(!palabraArmada.empty()) {
+            bool existia = actual->getExiste();
             size_t longitud = (ejeActual->cadena).length() - palabraArmada.length();
             (ejeActual->cadena).erase(longitud, (ejeActual->cadena).length());
             //ahora ejeActual->cadena tiene la parte final de la palabraArmada
 
             nodo* nuevopadre = new nodo;
             nuevopadre->agregar(palabraArmada, actual);
+            if(existia)
+                actual->setExiste(true);
+            else
+                actual->setExiste(false);
+
             ejeActual->puntero = nuevopadre;
             actual = nuevopadre;
         }
@@ -117,7 +123,7 @@ PATRICIA :: ~PATRICIA(){
  *  METODOS PRIVADOS
  */
 
-void PATRICIA :: quitarPrefijoEnComun(string& s1, const string& s2) const{
+bool PATRICIA :: quitarPrefijoEnComun(string& s1, const string& s2) const{
     string::const_iterator it1, it2;
     unsigned int cantLetras = 0;
 
@@ -131,6 +137,7 @@ void PATRICIA :: quitarPrefijoEnComun(string& s1, const string& s2) const{
     }
 
     s1.erase(0, cantLetras);
+    return cantLetras == s2.length();
 }
 
 nodo::eje* PATRICIA :: bajar(nodo*& actual, nodo::eje*& ejeActual, const string& s, string& palabraArmada) const{
@@ -143,12 +150,13 @@ nodo::eje* PATRICIA :: bajar(nodo*& actual, nodo::eje*& ejeActual, const string&
 
     //verifico solo la primer letra pues con solo eso me alcanza
     nodo::eje* aux = actual->ejeQueEmpiezaCon(recortada.substr(0,1));
-    while(aux != NULL) {
+    bool puedoBajar = (aux != NULL);
+    while(aux != NULL && puedoBajar) {
         ejeAnterior = ejeActual;
         ejeActual = aux;
         actual = aux->puntero;
         palabraArmada += aux->cadena;
-        quitarPrefijoEnComun(recortada, aux->cadena);
+        puedoBajar = quitarPrefijoEnComun(recortada, aux->cadena);
 
         aux = actual->ejeQueEmpiezaCon(recortada.substr(0,1));
     }
