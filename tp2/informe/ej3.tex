@@ -39,10 +39,10 @@ Un eje es una tupla de puntero a un nodo hijo y una cadena adjunta. Los nodos pu
 \begin{figure}[H]
 \centering
 \subfigure[La palabra emi no esta definida]{
-\includegraphics[scale=0.5]{./figuras/ej3/bitDeExistencia.png} }\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/ejercicio3/bitDeExistencia.png} }\hspace{1in} 
 \centering
 \subfigure[La palabra emi si esta definida]{
-\includegraphics[scale=0.5]{./figuras/ej3/bitDeExistencia1.png} }
+\includegraphics[scale=0.5]{./figuras/ejercicio3/bitDeExistencia1.png} }
 \setcounter{subfigure}{0}
 \caption{Utilización del bit de existencia}
 \label{fig:bitExistencia}
@@ -55,7 +55,6 @@ El enunciado presenta un invariante para el PATRICIA:
 \begin{itemize}
 \item Todos los nodos internos de un radix tree tienen como m'inimo dos hijos (excepto
 posiblemente la raiz).
-\item Las ramas de un radix tree pueden estar etiquetadas con m'as de un caracter.
 \item Si adem'as el conjunto (o del conjunto de claves del diccionario) es un conjunto libre
 de prefijos, sucede que las cadenas (o los valores asociados a las claves) se encuentran
 solamente en las hojas. Un conjunto libre de prefijos es aquel en el cual ningun elemento
@@ -66,7 +65,7 @@ El diccionario PATRICIA nos sugiere un 'arbol formado de un conjunto de palabras
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./figuras/ej3/patricia.png}
+\includegraphics[scale=0.5]{./figuras/ejercicio3/patricia.png}
 \caption{Ejemplo de árbol patricia}
 \end{figure}
 
@@ -80,16 +79,16 @@ Cuando agregamos un elemento nos enfrentamos ante los siguientes casos:
 \begin{figure}[H]
 \centering
 \subfigure[PATRICIA original]{
-\includegraphics[scale=0.4]{./figuras/ej3/patricia.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/patricia.png} }
 \centering
 \subfigure[ ]{
-\includegraphics[scale=0.2]{./figuras/ej3/arrow.png} }
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow.png} }
 \centering
 \subfigure[Bajamos lo m'aximo posible]{
-\includegraphics[scale=0.4]{./figuras/ej3/patriciaCaravanaBajando.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/patriciaCaravanaBajando.png} }
 \centering
 \subfigure[Patricia luego de agregar caravana]{
-\includegraphics[scale=0.4]{./figuras/ej3/patriciaCaravana.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/patriciaCaravana.png} }
 \setcounter{subfigure}{0}
 \caption{}
 \label{fig:noPartirNodo}
@@ -100,17 +99,17 @@ Cuando agregamos un elemento nos enfrentamos ante los siguientes casos:
 \begin{figure}[H]
 \centering
 \subfigure[PATRICIA original]{
-\includegraphics[scale=0.4]{./figuras/ej3/patricia.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/patricia.png} }
 \centering
 \subfigure[ ]{
-\includegraphics[scale=0.2]{./figuras/ej3/arrow2.png} }
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow2.png} }
 \centering
 \subfigure[Tenemos que partir el nodo de llana]{
-\includegraphics[scale=0.4]{./figuras/ej3/partiendoNodo.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/partiendoNodo.png} }
 \subfigure[Ahora que lo partimos podemos agregar la palabra como en el caso anterior]{
-\includegraphics[scale=0.4]{./figuras/ej3/NodoPartido.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/NodoPartido.png} }
 \subfigure[Patricia luego de agregar avellaneda]{
-\includegraphics[scale=0.4]{./figuras/ej3/patriciaAvellaneda.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/patriciaAvellaneda.png} }
 \setcounter{subfigure}{0}
 \caption{}
 \label{fig:partirNodo}
@@ -118,9 +117,9 @@ Cuando agregamos un elemento nos enfrentamos ante los siguientes casos:
 
 \end{itemize}
 
-Para solucionar estos casos comenzaremos situ'andonos sobre la ra'iz. Luego bajamos por las ramas de la siguiente manera: en cada paso mantenemos guardada la palabra formada a partir de la concatenacion de las cadenas adjuntas de los ejes por los cuales baj'e, y la cadena recortada que resulta de quitarle a la clave el prefijo en com'un que tiene con la palabra formada. De esta forma en cada paso buscamos el eje tal que la primer letra de su cadena adjunta coincida con la primer letra de palabra recortada. De esta manera bajaremos por los ejes el m'aximo posible, hasta no encontrar eje que cumpla la condici'on, como se muestra en la figura \ref{fig:noPartirNodo}, gr'afico c. Este algoritmo no presenta ambiguedades a la hora de buscar el eje por el cual bajar, pues cada nodo tiene un m'aximo de 26 hijos, correspondientes a las 26 letras del abecedario ingl'es, y no puede tener mas de un eje que su cadena adjunta comience con la misma letra.
+Para solucionar estos casos comenzaremos situ'andonos sobre la ra'iz. Luego bajamos por las ramas de la siguiente manera: en cada paso mantenemos guardada la palabra formada a partir de la concatenacion de las cadenas adjuntas de los ejes por los cuales baj'e, y la cadena recortada que resulta de quitarle a la clave el prefijo en com'un que tiene con cada eje por el cual baj'e. De esta forma en cada paso buscamos el eje tal que la primer letra de su cadena adjunta coincida con la primer letra de palabra recortada. As'i bajaremos por los ejes hasta que encontremos un eje que no sea prefijo, en su totalidad, de la cadena recortada, como se muestran los dos casos en las figuras \ref{fig:noPartirNodo}c y \ref{fig:partirNodo}c. Este algoritmo no presenta ambiguedades a la hora de buscar el eje por el cual bajar, pues cada nodo tiene un m'aximo de 26 hijos, correspondientes a las 26 letras del abecedario ingl'es, y no puede tener mas de un eje que su cadena adjunta comience con la misma letra. O sea, no puede haber nodos con, por ejemplo, ejes con cadenas casa y cosa.
 Una vez que bajamos por las ramas lo m'aximo posible, si la palabra formada es prefijo de la clave a definir, quiere decir que caimos en el primer caso. Este caso es simple y solo resta agregar el nodo y el eje correspondiente, con la clave sin prefijo, como se muestra en la figura \ref{fig:noPartirNodo}, gr'afico d.
-Supongamos ahora que se desea agregar \"avellaneda\". Bajamos, igual que antes, por las ramas. Si la palabra formada no es prefijo de la clave a definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que no lo son. Entonces haremos lo siguiente: partimos el 'ultimo eje (ver figura \ref{fig:partirNodo}, gr'afico c) y crearemos un nuevo padre para el nodo en el cual quedamos, de manera que la primera parte del 'ultimo eje (la que tiene letras en com'un con la clave) quedar'a adjunta a un eje que apunte desde el padre anterior hacia el nuevo padre, y la cadena restante del eje partido quedar'a adjunta al eje que le apunta desde el nuevo padre (ver figura \ref{fig:partirNodo},gr'afico d). Finalmente, para reestablecer el invariante, agregamos un nuevo nodo y un nuevo eje, apuntando del nuevo padre al nuevo nodo hijo, que tenga adjunto la parte restante de la clave (ver figura \ref{fig:partirNodo}, gr'afico e).
+Supongamos ahora que se desea agregar \"avellaneda\". Bajamos por las ramas. Si la palabra formada no es prefijo de la clave a definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que no lo son. Entonces haremos lo siguiente: partimos el 'ultimo eje (ver figura \ref{fig:partirNodo}, gr'afico c) y crearemos un nuevo padre para el nodo en el cual quedamos, de manera que la primera parte del 'ultimo eje (la que tiene letras en com'un con la clave) quedar'a adjunta a un eje que apunte desde el padre anterior hacia el nuevo padre, y la cadena restante del eje partido quedar'a adjunta al eje que le apunta desde el nuevo padre (ver figura \ref{fig:partirNodo},gr'afico d). Finalmente, para reestablecer el invariante, agregamos un nuevo nodo y un nuevo eje, apuntando del nuevo padre al nuevo nodo hijo, que tenga adjunto la parte restante de la clave (ver figura \ref{fig:partirNodo}, gr'afico e).
 
 Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en cuenta conjuntos de entrada que no sean libre de prefijos, sin alterar el producto pedido. Esto nos agregar'a dos casos m'as: 
 \begin{itemize}
@@ -129,13 +128,13 @@ Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en c
 \begin{figure}[H]
 \centering
 \subfigure[La palabra emi no esta definida]{
-\includegraphics[scale=0.4]{./figuras/ej3/bitDeExistencia.png} }\hspace{1in} 
+\includegraphics[scale=0.4]{./figuras/ejercicio3/bitDeExistencia.png} }\hspace{1in} 
 \centering
 \subfigure[ ]{
-\includegraphics[scale=0.2]{./figuras/ej3/arrow3.png} }
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow3.png} }
 \centering
 \subfigure[La palabra emi si esta definida]{
-\includegraphics[scale=0.4]{./figuras/ej3/bitDeExistencia1.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/bitDeExistencia1.png} }
 \setcounter{subfigure}{0}
 \caption{}
 \label{fig:seteaExiste}
@@ -145,14 +144,14 @@ Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en c
 \end{itemize}
 \begin{figure}[H]
 \centering
-\subfigure[Bajando por el 'arbol original para agregar cosa]{
-\includegraphics[scale=0.4]{./figuras/ej3/BajandoPartirYExiste.png} }\hspace{1in} 
+\subfigure[Bajando por el 'arbol original para agregar \"cosa\"]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/BajandoPartirYExiste.png} }\hspace{1in} 
 \centering
 \subfigure[ ]{
-\includegraphics[scale=0.2]{./figuras/ej3/arrow4.png} }
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow4.png} }
 \centering
 \subfigure[Parto el eje y seteo bit de existe]{
-\includegraphics[scale=0.4]{./figuras/ej3/PartoUnEjeYSeteoExiste.png} }
+\includegraphics[scale=0.4]{./figuras/ejercicio3/PartoUnEjeYSeteoExiste.png} }
 \setcounter{subfigure}{0}
 \caption{}
 \label{fig:parteYSeteaExiste}
@@ -164,8 +163,41 @@ Claramente los dos primeros casos correspondientes al enunciado son excluyentes 
 
 \subsection{Eliminando un elemento}
 Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
-[Grafico Caso 1 (se borra la hoja y no mergea) sacando dama] 6
-[Grafico Caso 2 (se borra la hoja y se mergea) sacando caracter] 7
+\begin{figure}[H]
+\centering
+\subfigure[PATRICIA]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/SeBorraLaHojaYNoSeMergea1.png} }
+\centering
+\subfigure[ ]{
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow5.png} }
+\centering
+\subfigure[Bajamos lo m'aximo posible]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/SeBorraLaHojaYNoSeMergea2.png} }
+\centering
+\subfigure[Patricia luego de sacar dama]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/SeBorraLaHojaYNoSeMergea3.png} }
+\setcounter{subfigure}{0}
+\caption{}
+\label{fig:borroYNoMergea}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\subfigure[PATRICIA original]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/patricia.png} }
+\centering
+\subfigure[ ]{
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow6.png} }
+\centering
+\subfigure[Bajamos lo m'aximo posible]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/BorroHojaYMergeo1.png} }
+\centering
+\subfigure[Patricia luego de sacar dato]{
+\includegraphics[scale=0.4]{./figuras/ejercicio3/BorroHojaYMergeo2.png} }
+\setcounter{subfigure}{0}
+\caption{}
+\label{fig:borroYMergea}
+\end{figure}
 Para solucionar estos casos comenzamos situ'andonos sobre la ra'iz, y bajando, al igual que agregar. Gracias a que el conjunto de entrada es libre de prefijos, sabemos que al sacar una clave siempre eliminaremos una hoja del 'arbol. De esta manera, en caso de querer eliminar una clave existente, esta siempre ser'a una hoja, como lo muestra el siguiente gr'afico:
 [Grafico bajando por rama para sacar(dama)] 8
 Al borrar la hoja, debemos verificar cuantos hermanos ten'ia. Si ten'ia m'as de un hermano, caeremos en el primer caso, el cual se resuelve simplemente eliminando la hoja y su eje, como lo muestra el gr'afico 6. Si, por el contrario, ten'ia solo un hermano, al borrar este nodo al padre le restar'a un solo hijo, como lo muestra la figura. Para reestablecer el invariante, como la rama hasta el nodo padre no conforma una clave definida, podemos unir el padre con su 'unico hijo. Lo hacemos simplemente borrando el nodo hijo y concatenando el eje que apunta del nodo abuelo al nodo padre con el eje que apunte del nodo padre al nodo hijo, como lo muestra el grafico 7.
@@ -173,11 +205,40 @@ Al borrar la hoja, debemos verificar cuantos hermanos ten'ia. Si ten'ia m'as de 
 Excediendo el l'imite del enunciado, nuestro algoritmo sacar podr'a tener en cuenta conjuntos de entrada que no sean libre de prefijos, sin alterar el producto pedido. Esto nos agregar'a dos casos m'as: 
 \begin{itemize}
 \item Para sacar un elemento hay que setear FALSE el bit de existe
-[grafico sin sacar ningun nodo, se setea un existe a FALSE]
+\begin{figure}[H]
+\centering
+\subfigure[La palabra emi esta definida]{
+\includegraphics[scale=0.5]{./figuras/ejercicio3/bitDeExistencia1.png} }\hspace{1in} 
+\centering
+\subfigure[ ]{
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow7.png} }\hspace{1in} 
+\centering
+\subfigure[La palabra emi no esta definida]{
+\includegraphics[scale=0.5]{./figuras/ejercicio3/bitDeExistencia.png} }
+\setcounter{subfigure}{0}
+\caption{}
+\label{fig:casoExtraSacarA}
+\end{figure}
+
 \item Para sacar un elemento hay que concatenar dos ejes y borrar un nodo
-[grafico eliminando un nodo y concatenando ejes, este es el ejemplo de: agregar(xxxx), luego agregar(xx) y luego sacar(xx)]
+
+\begin{figure}[H]
+\centering
+\subfigure[La palabra emi esta definida]{
+\includegraphics[scale=0.5]{./figuras/ejercicio3/casoExtraSacar1.png} }\hspace{1in} 
+\centering
+\subfigure[ ]{
+\includegraphics[scale=0.2]{./figuras/ejercicio3/arrow8.png} }\hspace{1in} 
+\centering
+\subfigure[PATRICIA luego de eliminar emi]{
+\includegraphics[scale=0.5]{./figuras/ejercicio3/casoExtraSacar2.png} }
+\setcounter{subfigure}{0}
+\caption{}
+\label{fig:casoExtraSacarB}
+\end{figure}
+
 \end{itemize}
-Estos dos nuevos casos son consecuencia directa de los casos de entrada que no esta libre de prefijos de agregar. Luego de bajar por las ramas del 'arbol verificamos que la palabra armada es igual a la clave y el nodo existe. De esta forma nos aseguramos que la clave a borrar haya sido definida. Si el nodo a borrar es un nodo interno (no es una hoja), caemos en alguno de estos dos casos. Si el nodo a borrar tiene mas de un hijo, caemos en el primer caso. Este se soluciona seteando el bit de existencia del nodo a falso, como muestra la figura. Si el nodo a borrar tiene solo un hijo, este es el segundo caso. Se resuelve borrando el nodo padre y concatenando el eje que apuntaba del nodo padre al nodo actual, y el eje del nodo actual al nodo siguiente, como lo muestra la figura.
+Estos dos nuevos casos son consecuencia directa de los casos de entrada que no esta libre de prefijos de agregar. Luego de bajar por las ramas del 'arbol verificamos que la palabra armada es igual a la clave y el nodo existe. De esta forma nos aseguramos que la clave a borrar haya sido definida. Si el nodo a borrar es un nodo interno (no es una hoja), caemos en alguno de estos dos casos. Si el nodo a borrar tiene mas de un hijo, caemos en el primer caso. Este se soluciona seteando el bit de existencia del nodo a falso, como muestra la figura \ref{fig:casoExtraSacarA}. Si el nodo a borrar tiene solo un hijo, este es el segundo caso. Se resuelve borrando el nodo padre y concatenando el eje que apuntaba del nodo padre al nodo actual, y el eje del nodo actual al nodo siguiente, como lo muestra la figura \ref{fig:casoExtraSacarB}.
 Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues los primeros borran solo nodos internos, los segundos borran solo hojas. Esto me asegura que el producto pedido no ser'a cambiado.
 
 \subsection{Pseudoc'odigo}
