@@ -109,6 +109,24 @@ def generarCamino(g):
     return []
 
 
+def grafoDesdeArchivo(fname):
+    f = open(fname)
+    l = f.readline()
+    n,m = [int(x) for x in l.split()]
+    
+    acuerdos = []
+    for i in range(m):
+        l = f.readline()
+        a,b = [int(x) for x in l.split()]
+        
+        if l == '' or (a,b) == (0,0):
+            raise ValueError, "El archivo no tenia el formato esperado!"
+
+        acuerdos.append((a-1,b-1))
+
+    return GrafoCircular(n,acuerdos)
+
+
 #################################################################
 # Prueba simple                                                 #
 #################################################################
@@ -123,26 +141,33 @@ if __name__ == '__main__':
 
     # Instancia al azar
     from barcos_generador import generarInstancia
-    g = generarInstancia(ciudades=100)
+    g = generarInstancia(ciudades=20)
+
+    # Instancia desde archivo
+    #g = grafoDesdeArchivo('Tp2Ej2.in')
     
     print g
+    
     
     # Metodo recursivo convencional
     #c = generarCamino(g)
 
-    from barcos_tabla import BuscadorCaminoTPD, BuscadorCaminoTCI
+    # Metodo con tabulado por demanda
+    from barcos_tabla import BuscadorCaminoTPD
     b = BuscadorCaminoTPD(g)
     c = b.buscarCamino()
     print c
+
+    # Metodo con tabulado al inicio
+    from barcos_tabla import BuscadorCaminoTCI
     b2 = BuscadorCaminoTCI(g)
     c2 = b2.buscarCaminoLoco()
-    
     print c2
 
-    #assert(c == c2)
+    if c == [] and hayCamino(g):
+        print "No se pudo encontrar el camino y sin embargo parecía haberlo!"
     
-    
-    if c is [] and hayCamino(g):
+    if c2 == [] and hayCamino(g):
         print "No se pudo encontrar el camino y sin embargo parecía haberlo!"
     
     if c != []:
