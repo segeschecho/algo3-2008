@@ -145,7 +145,7 @@ Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en c
 \end{itemize}
 \begin{figure}[H]
 \centering
-\subfigure[Bajando por el 'arbol original para agregar \"cosa\"]{
+\subfigure[Bajando por el 'arbol original para agregar cosa]{
 \includegraphics[scale=0.4]{./figuras/ejercicio3/BajandoPartirYExiste.png} }\hspace{1in} 
 \centering
 \subfigure[ ]{
@@ -181,6 +181,7 @@ Estos dos nuevos casos son consecuencia directa de los casos de entrada que no e
 Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues los primeros borran solo nodos internos, los segundos borran solo hojas. Esto me asegura que el producto pedido no ser'a cambiado.
 
 \subsection{Pseudoc'odigo}
+\input{pseudo3}
 
 \subsection{Detalles de implementacion de los nodos}
 Aclaraciones sobre los miembros privados de la estructura: fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano \"existe\" puede carecer de sentido, es de vital importancia a la hora de implementar el PATRICIA, ya que sin ellas no podriamos diferenciar las claves definidas de las no definidas. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
