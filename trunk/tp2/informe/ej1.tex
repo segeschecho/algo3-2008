@@ -69,7 +69,7 @@ Por ejemplo, el grafo de la figura ~\ref{fig:conGanador}:
 \begin{figure}[H]
 
 \centering
-\includegraphics[scale=0.5]{./figuras/ConGanador.png}
+\includegraphics[scale=0.5]{./figuras/ej1/ConGanador.png}
 \caption{Ejemplo con un solo nodo con grado de entrada nulo}
  \label{fig:conGanador}
 \end{figure}
@@ -81,11 +81,11 @@ Si existen varios, no se podrán eliminar nunca, ya que no hay quien les gane con
 \begin{figure}[H]
     \begin{minipage}{.5\linewidth}
     \centering
-     \includegraphics[scale=0.5]{./figuras/SinGanador1.png}
+     \includegraphics[scale=0.5]{./figuras/ej1/SinGanador1.png}
     \end{minipage}
     \begin{minipage}{.5\linewidth}
     \centering
-      \includegraphics[scale=0.5]{./figuras/SinGanador2.png}
+      \includegraphics[scale=0.5]{./figuras/ej1/SinGanador2.png}
     \end{minipage}
  \caption{Ejemplos con mas de un nodo con grado de entrada nulo}
     \label{fig:sinGanador}
@@ -106,7 +106,7 @@ ciclos, por ejemplo la figura ~\ref{fig:conCiclo}:
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./figuras/ConCiclo.png}
+\includegraphics[scale=0.5]{./figuras/ej1/ConCiclo.png}
 
 \caption{Ejemplo sin ningun nodo con grado de entrada 0}
 \label{fig:conCiclo}
@@ -129,11 +129,11 @@ aquellos que son derrotados por algún individuo del ciclo y que pierde contra to
 \begin{figure}[H]
     \begin{minipage}{.5\linewidth}
     \centering
-     \includegraphics[scale=0.5]{./figuras/componentesConexas.png}
+     \includegraphics[scale=0.5]{./figuras/ej1/componentesConexas.png}
     \end{minipage}
     \begin{minipage}{.5\linewidth}
     \centering
-      \includegraphics[scale=0.7]{./figuras/reducido.png}
+      \includegraphics[scale=0.7]{./figuras/ej1/reducido.png}
     \end{minipage}
 
  \caption{Ejemplo de reducci'on de un grafo}
@@ -170,17 +170,17 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \begin{figure}[H]
 \centering
 \subfigure[Comenzamos con el grafo original]{
-\includegraphics[scale=0.5]{./figuras/kosaraju1.png} }\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/ej1/kosaraju1.png} }\hspace{1in} 
 \subfigure[Realizamos DFS partindo desde el 1 y numeramos los nodos segun el orden de la llamada recursiva]{
-\includegraphics[scale=0.5]{./figuras/kosaraju2.png}}\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/ej1/kosaraju2.png}}\hspace{1in} 
 \subfigure[Como el 7 quedo sin marcar, realizamos una segunda DFS partiendo desde el]{
-\includegraphics[scale=0.5]{./figuras/kosaraju3.png}}\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/ej1/kosaraju3.png}}\hspace{1in} 
 \subfigure[Una vez que marcamos todos los nodos, invertimos el grafo]{
-\includegraphics[scale=0.5]{./figuras/kosaraju4.png}} \hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/ej1/kosaraju4.png}} \hspace{1in} 
 \subfigure[Como el 7 es el elemento de mayor numeraci'on comenzamos por él. Hacemos DFS, y todos los nodos que tocamos, son una componente fuertemente conexa]{
-\includegraphics[scale=0.5]{./figuras/kosaraju5.png} }\hspace{1in} 
+\includegraphics[scale=0.5]{./figuras/ej1/kosaraju5.png} }\hspace{1in} 
 \subfigure[Ahora seguimos con el 1, el de mayor numeraci'on sin visitar. Luego de hacer DFS tenemos otra componente fuertemente conexa de G. Como no quedan mas nodos por visitar, terminamos]{
-\includegraphics[scale=0.5]{./figuras/kosaraju6.png}}
+\includegraphics[scale=0.5]{./figuras/ej1/kosaraju6.png}}
 \caption{Algoritmo de Kosaraju}
 \setcounter{subfigure}{0}
 \label{fig:kosaraju1}
@@ -195,11 +195,11 @@ Veamos el siguiente ejemplo donde b$\leadsto$a:
 \begin{figure}[H]
 \centering
 \subfigure[Comenzamos con el grafo original, a esta en una componente conexa, b en otra y b$\leadsto$a]{
-\includegraphics[scale=0.6]{./figuras/aeshijo.png} }\hspace{1in} 
+\includegraphics[scale=0.6]{./figuras/ej1/aeshijo.png} }\hspace{1in} 
 \subfigure[Numeramos los nodos, y como b$\leadsto$a el numero de b es mayor]{
-\includegraphics[scale=0.6]{./figuras/aeshijoNumerado.png}}\hspace{1in} 
+\includegraphics[scale=0.6]{./figuras/ej1/aeshijoNumerado.png}}\hspace{1in} 
 \subfigure[Cuando invertimos el grafo, b es el nodo por donde vamos a empezar, y no hay camino que lleve de b hacia a, cuando sea el turno de partir de a, a b ya lo visitamos antes por lo que no se tiene en cuenta]{
-\includegraphics[scale=0.6]{./figuras/aeshijoInverso.png}}
+\includegraphics[scale=0.6]{./figuras/ej1/aeshijoInverso.png}}
 \label{fig:aeshijo}
 \setcounter{subfigure}{0}
 \end{figure}
@@ -208,11 +208,11 @@ Ahora consideremos un caso donde a$\leadsto$b
 \begin{figure}[H]
 \centering
 \subfigure[Comenzamos con el grafo original, a esta en una componente conexa, b en otra y a$\leadsto$b]{
-\includegraphics[scale=0.6]{./figuras/aespadre.png} }\hspace{1in} 
+\includegraphics[scale=0.6]{./figuras/ej1/aespadre.png} }\hspace{1in} 
 \subfigure[Numeramos los nodos, y como a$\leadsto$b el numero de b es menor]{
-\includegraphics[scale=0.6]{./figuras/aespadreNumerado.png}}\hspace{1in} 
+\includegraphics[scale=0.6]{./figuras/ej1/aespadreNumerado.png}}\hspace{1in} 
 \subfigure[Cuando invertimos el grafo, a es el nodo por donde vamos a empezar, y no hay camino que lleve de a hacia b. Cuando salgamos de b, ya pasamos por a, por lo que se lo ignora]{
-\includegraphics[scale=0.6]{./figuras/aespadreInverso.png}}
+\includegraphics[scale=0.6]{./figuras/ej1/aespadreInverso.png}}
 \label{fig:aespadre}
 \setcounter{subfigure}{0}
 \end{figure}
@@ -247,7 +247,7 @@ Sea g=(V,X) tal que $\exists$! v1 $\in$ V tal que $d_{in}(v1)=0$, y G es libre d
 Sea C1 el camino dirigido de longitud maxima que llega hasta $v_i$.
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./figuras/demostracion1.png}
+\includegraphics[scale=0.5]{./figuras/ej1/demostracion1.png}
 \end{figure} 
 Supongamos que no existe un camino entre $v_1$ y $v_i$, entonces sea $v_k$ el nodo donde comienza dicho camino. Como $v_k$ $\neq$ $v_1$ entonces $d_{in}(v_k) \neq 0$, luego existe $v_n$ tal que $v_n \leadsto v_k$. $v_n$ no puede estar en el camino C1, porque sino existe un ciclo, y por hipotesis esto es falso. Consideremos entonces el camino C2 = ($v_n$,$v_k$)$\cup$C1 (donde $\cup$ es un abuso de notacion, seria agrego el par ($v_n$,$v_k$) al camino C1). Ahora C2 tiene longitud mayor que la de C1, entocnes tenemos un absurdo, ya que C1 era el camino de longitud m'axima.  
 \end{proof}
@@ -264,7 +264,7 @@ Sea g=(V,X) tal que $\forall$ v $\in$ V, $d_{in}(v)$ $>$ 0 $\rightarrow$ existe 
 Sea g=(V,X) tal que  $\forall$ v $\in$ V, d(v) $>$ 0, consideremos el camino maximo de g, $v_1,v_2,...v_i,...,v_n$
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./figuras/demostracion.png}
+\includegraphics[scale=0.5]{./figuras/ej1/demostracion.png}
 \end{figure} 
 Pero como f $d_{in}(v)$ $>$ 0, existe $v_k$ tal que $v_k$ $\leadsto$ $v_1$. Si $v_k$ pertenece al camino, tenemos un ciclo, que era lo que quer'iamos demostrar.
 Supongamos que no pertenece al camino. Entonces tengo un camino nuevo, que va de $v_k$ a $v_n$, que tiene mayor longitud que
