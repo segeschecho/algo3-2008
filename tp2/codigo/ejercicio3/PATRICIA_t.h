@@ -1,7 +1,7 @@
 #ifndef _PATRICIA_H_
 #define _PATRICIA_H_
 
-#include "nodo_listas_PATRICIA.h"
+#include "nodo_arreglos_PATRICIA.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -37,7 +37,7 @@ public:
 
     // Parametros:      void
 	// Proposito:       levanta los datos del archivo Tp2Ej3.in y devuelve el resultado en Tp2Ej3.out
-    void parser(void);
+    //void parser(void);
 
 private:
 
@@ -50,3 +50,4 @@ private:
 };
 
 #endif
+

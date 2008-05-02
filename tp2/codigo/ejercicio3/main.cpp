@@ -6,9 +6,78 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    PATRICIA patri;
-    patri.agregar("tatetito");
-    cout << patri << endl << endl;
+     string ruta;
+    if(argc >= 2) {
+        ruta = argv[1];
+    } else {
+        ruta="Tp2Ej3.in";
+    }
+    // preparo el archivo de salida
+    string salida;
+    if(argc > 2) {
+        salida = argv[2];
+    } else {
+        salida = "Tp2Ej3.out";
+    }
+    int cant = 0;
+    ifstream in(ruta.c_str(), ifstream::in);
+    ofstream out(salida.c_str(), ifstream::out);
+
+    if(!in.is_open()){
+        cout << "no se encontro el archivo" << endl;
+        return 1;
+    }
+
+    if(!out.is_open()){
+        cout << "no se puede crear el archivo" << endl;
+        return 1;
+    }
+
+    in >> cant;	
+    while(cant > 0){
+	PATRICIA *pat = new PATRICIA();
+        for(int i = 0; i < cant; i++){
+
+            string inst;
+	    in >> inst;
+	    cout<<i<<endl;
+	    cout<<inst<<endl;
+            if(inst == "agregar"){
+                //tomo la palabra
+                in >> inst;
+		//cout<<"agregando "<<inst<<endl;
+                pat->agregar(inst);
+            }
+            else if(inst =="pertenece"){
+                //tomo la palabra
+                in >> inst;
+                out << pat->pertenece(inst);
+                if(i + 1 < cant)
+                    out << " ";
+            }
+            else if(inst == "sacar"){
+                //tomo la palabra
+                in >> inst;
+                pat->sacar(inst);
+            }
+            else if(inst =="cardinal"){
+                out << pat->cardinal();
+                if(i + 1 < cant)
+                    out << " ";
+            }
+        }
+	in>>cant;
+	delete pat;
+        
+    }
+
+    in.close();
+    out.close();
+    return 0;
+ 
+}
+    //patri.agregar("tatetito");
+    /*cout << patri << endl << endl;
     patri.agregar("taqetito");
     cout << patri << endl << endl;
     patri.agregar("ttetito");
@@ -20,8 +89,7 @@ int main(int argc, char* argv[]) {
     patri.sacar("tatetito");
     cout << patri << endl << endl;
     patri.sacar("taqetito");
-    cout << patri << endl << endl;
-    /*
+    cout << patri << endl << endl;
     patri.agregar("iii");
     patri.agregar("zero");
     patri.agregar("emiliano");
@@ -102,8 +170,7 @@ int main(int argc, char* argv[]) {
     patri.sacar("ana");
     cout << patri << endl << endl;
     patri.sacar("zero");
-    cout << patri << endl << endl;
-*/
+    cout << patri << endl << endl;
     system("PAUSE");
     return 0;
-}
+}*/
