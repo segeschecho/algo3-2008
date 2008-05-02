@@ -1,0 +1,349 @@
+\part{Ejercicio 2}
+
+
+
+\section{Enunciado}
+Alrededor de un lago se encuentran ubicados $n$ pueblos guerreros, numerados de $1$ a $n$
+en sentido horario. Entre algunos de esos pueblos hay acuerdos comerciales que permiten
+intercambiar bienes en bote a través del lago. Los líderes de estos pueblos han decido crear
+una ruta comercial que una todos los pueblos y satisfaga las siguiente condiciones:
+\begin{itemize}
+\item Comience en un pueblo $A$ y termine en un pueblo $B$ pasando por todos los demás pueblos en el medio.
+\item Entre cada par de pueblos consecutivos en la ruta haya un acuerdo comercial.
+\item La ruta no se cruce a sí misma para evitar choques entre los barcos.
+\end{itemize}
+Desarrollar un algoritmo que decida si existe una ruta comercial para los líderes. 
+\textbf{Justificar} el algoritmo, explicando por qué el algoritmo planteado resuelve el problema.
+Además, de existir rutas que cumplan con lo pedido, deberá devolverse una de ellas.
+
+Sugerencia: Resolver usando programación dinámica. Considerar el orden circular de
+las ciudades de $1$ a $n$ y plantear la recursión en función de si es posible pasar sólo por
+todos los pueblos entre $i$ y $j$ (en el orden circular) con una subruta que termine en alguno
+de estos dos.
+
+
+
+\section{Desarrollo}
+
+\subsection{Sobre el modelo}
+
+Modelamos la relación de acuerdos comerciales entre ciudades como los ejes de un grafo
+cuyos nodos son las propias ciudades. A continuación buscamos resolver el problema planteado:
+hallar un camino hamiltoniano que no contenga a dos ejes que se "crucen" en el interior del
+círculo sobre el cual se disponen las ciudades.
+
+En principio intentamos abordar este problema desde la teoría de grafos y buscamos propiedades
+u otras características, así como investigaciones previas que nos permitieran encontrar un
+problema análogo más fácil de abordar con algoritmos conocidos. Sin embargo, no tuvimos
+éxito con esta aproximación puesto que resulta complicado definir la restricción de que los
+caminos no deben cruzarse en términos de teoría de grafos. El grafo compuesto únicamente
+por las ciudades (nodos) y acuerdos (ejes) no describe apropiadamente el problema a resolver.
+Por conveniencia durante toda esta sección del trabajo, denominaremos $n$ a la cantidad de nodos
+del grafo (cantidad de ciudades) y $m$ a la cantidad de ejes del mismo (cantidad de acuerdos
+comerciales).
+
+Finalmente, decidimos abandonar esta línea y seguir la sugerencia del enunciado para buscar
+una solución de programación dinámica, aprovechando la propiedad de optimalidad que presenta 
+el siguiente problema adjunto: ``Dadas dos ciudades $i$ y $j$, hallar un camino que pase
+por éstas así como por todas las ciudades intermedias en el sentido horario, y termine
+en $i$ o en $j$, sin cruzarse consigo mismo.''
+
+Las ciudades intermedias en sentido horario son un conjunto que depende del orden de los valores
+$i$ y $j$ (no es lo mismo hallar las ciudades que se encuentran entre $i$ y $j$, que entre $j$ y $i$).
+La interpretación de ciudades intermedias puede verse en la figura ~\ref{fig:sentido_horario}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{./figuras/ej2/sentido_horario.png}
+    \caption{Intepretación de ciudades intermedias en sentido horario}
+    \label{fig:sentido_horario}
+\end{figure}
+
+Si podemos resolver el problema adjunto descripto, es sencillo hallar la solución al
+problema original: para hallar un camino que recorra todos los nodos una única vez,
+alcanza con instanciar el problema adjunto en ($i$, $i-1$ mod $n$) $\forall$ $i$ $\in$
+$0,...,n-1$, siendo $n$ la cantidad total de ciudades en el problema. 
+Si existe algún camino para estos casos, entonces es también solución
+del problema original. Si no existe, no existe entonces tampoco solución del problema
+original. Esto se debe a que el conjunto definido en sentido horario por ($i$, $i-1$ mod $n$)
+es el conjunto de todos los nodos, y todo camino que los recorra a todos debe necesariamente
+comenzar en alguno de los mismos, como se ve en la figura ~\ref{fig:ejemplo_camino}.
+
+Nótese que a diferencia de lo planteado en el enunciado, enumeraremos los nodos
+del grafo entre $0$ y $n-1$ ya que simplifica la notación, en particular respecto
+del uso de la operación módulo para el orden circular.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{./figuras/ej2/ejemplo_camino.png}
+    \caption{Ejempo de camino hallado entre $i$ y $i-1$ mod $n$}
+    \label{fig:ejemplo_camino}
+\end{figure}
+
+Examinaremos a continuación la propiedad de optimalidad que presenta este nuevo problema,
+así como un algoritmo eficiente para su resolución y la construcción de los caminos buscados.
+
+\subsection{Solución de programación dinámica}
+
+Postulamos previamente que el problema que intentaremos resolver exhibe optimalidad.
+Veamos por qué esto es cierto. Nos interesa hallar un camino que no se cruce con sí mismo
+y recorra un subconjunto de todas las ciudades, terminando en uno de los puntos $i$ o $j$
+indicados, que son los extremos del conjunto si consideramos el orden en que se disponen
+los nodos sobre el círculo que los contiene a todos.
+
+Supongamos en principio que buscamos un camino de estas características que termine (o
+comience, dependiendo de como uno desee verlo) en el nodo $i$. Puede verse a partir
+de esto que los únicos posibles nodos que suceden a $i$ en el camino son los nodos
+$i+1$ o $j$, ya que de otro modo se introduce una separación en los nodos que resta
+visitar, haciendo imposible alcanzarlos sin cruzarse con el camino que estamos
+construyendo. 
+
+Analicemos esta cuestión: puede observarse fácilmente que moverse desde $i$ al nodo
+$i+1$ o al nodo $j$ es una opción válida para construir un camino que recorra
+todos los nodos intermedios y termine en $i$. Se presentan dos ejemplos en la figura
+~\ref{fig:demo_caminos_ok}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{./figuras/ej2/demo_caminos_ok.png}
+    \caption{Posibles sucesores del nodo $i$ en un camino que comienza en él}
+    \label{fig:demo_caminos_ok}
+\end{figure}
+
+Sin embargo, no solo es una posibilidad válida, sino que es la única. Al movernos
+hacia nodos distintos de $i+1$ y $j$, se produce una separación entre dos conjuntos
+de nodos que no puede franquearse debido a la limitación de que el camino no puede
+intersecarse con sí mismo. Esto se observa con claridad en la figura 
+~\ref{fig:demo_caminos_error}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{./figuras/ej2/demo_caminos_error.png}
+    \caption{Separación inducida por dirigir el camino a un nodo distinto de $i+1$ o $j$}
+    \label{fig:demo_caminos_error}
+\end{figure}
+
+Como se observa, al dirigir el camino a un nodo intermedio, debe producirse
+una elección a la hora de colocar el siguiente tramo del camino, y dicha decisión conduce
+necesariamente a un camino imposible de completar con éxito, ya que deja algunos nodos
+en una posición inaccesible sin cortar el camino ya transitado.
+
+Teniendo a disposición esta propiedad, podemos comenzar a dar forma a la propiedad de optimalidad de
+este problema: si existe un camino de las propiedades buscadas termina en $i$ y recorre todos los
+nodos entre $i$ y $j$, entonces existe un acuerdo entre $i$ y $i+1$ o un acuerdo entre $i$ y $j$.
+
+En este punto introducimos la formulación recursiva de la solución: como sabemos si existe un camino
+apropiado entre $i$ y $j$, sabiendo que $i$ tiene un acuerdo al menos con $i+1$ o con $j$?
+Si $i$ tiene un acuerdo con $i+1$, entonces este camino existe si y solo si existe un nuevo camino
+de las propiedades deseadas entre $i+1$ y $j$, que termina en $i+1$. Alternativamente, si
+$i$ tiene un acuerdo con $j$. el camino existe si y solo si existe el camino deseado entre $i+1$ y $j$
+que termina en $j$. Los caminos así definidos expresan la solución al problema entre $i$ y $j$ en función
+de los problemas de menor tamaño en ($i+1$,$j$). Como además el caso base ($i$, $i+1$) está correctamente
+definido según la existencia o no de un acuerdo comercial entre ellos, tenemos una formulación recursiva
+correcta de la solución al problema.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{./figuras/ej2/demo_caminos_subproblemas.png}
+    \caption{Construcción recursiva de los caminos}
+    \label{fig:demo_caminos_subproblemas}
+\end{figure}
+
+Conversamente podemos hacer un razonamiento análogo para los caminos terminados en $j$ (recordemos que
+hasta este punto estábamos argumentando únicamente para caminos terminados en $i$). Esto nos conduce a
+una definición similar en función de $i$, $j$ y $j-1$ mod $n$, que veremos a continuación en la definición completa.
+
+Llamemos $f(x,y)$ a la versión de decisión del problema (esto es, a la función asociada al problema
+que en lugar de asociar un camino a una instancia dada, asocia únicamente un valor que indica si dicho
+camino existe o no).
+\begin{itemize}
+\item f($x$,$x+1$ mod $n$) = hayAcuerdo($x$,$x+1$ mod $n$)
+\item f($x$,$y$) = $f1(x,y)$ $\vee$ $f2(x,y)$
+\end{itemize}
+
+Siendo $f1$ y $f2$ las funciones de decisión asociadas a si existe o no un camino entre $x$ e $y$ terminado
+respectivamente en $x$ o en $y$. Como vimos antes, pueden definirse a su vez recursivamente:
+\begin{itemize}
+\item f1($x$,$x+1$ mod $n$) = f2($x$,$x+1$ mod $n$) = hayAcuerdo($x$,$x+1$ mod $n$)
+\item f1($x$,$y$) = (hayAcuerdo($x$,$x+1$ mod $n$) $\wedge$ f1($x+1$ mod $n$, $y$)) $\vee$ (hayAcuerdo($x$,$y$) $\wedge$ f2($x+1$ mod $n$, $y$))
+\item f2($x$,$y$) = (hayAcuerdo($y$,$x$) $\wedge$ f1($x$, $y-1$ mod $n$)) $\vee$ (hayAcuerdo($y$, $y-1$ mod $n$) $\wedge$ f2($x$, $y-1$ mod $n$))
+\end{itemize}
+
+Estas definiciones nos permiten utilizar el recurso clásico de la programación dinámica que consiste
+en tabular los resultados de operaciones ya realizadas para así disminuir sustancialmente el costo
+temporal de obtener una solución, a cambio de espacio en memoria. Esto puede realizarse esencialmente
+de dos maneras, ya sea "tabulado por demanda" (consistente en calcular únicamente los valores
+que se piden, y almacenarlos en una tabla para que no deban ser recalculados en el futuro) o "tabulado
+al inicio" (donde se precalculan todos los posibles valores de la función y luego se examina la tabla
+para obtener la solución). Si bien se realizaron prototipos en Python de ambas versiones, y se observó un
+comportamiento similar en las dos, optamos finalmente por la versión con tabulado al inicio ya que su código
+es más breve y facilita la demostración de complejidad del algoritmo. 
+
+En ambos casos se utiliza una matriz de $n*n$ para almacenar los resultados, obteniendo entonces 
+una complejidad espacial de $O(n^2)$. Se puede notar también que si no fuera necesario luego reconstruir
+el camino (operación para la cual necesitaremos toda la tabla) y nos contentáramos con la versión de decisión
+del problema, se podría implementar utilizando solamente $O(n)$ bytes de memoria si recurrimos
+a tabular al inicio e ir descartando los valores que ya no son necesarios.
+
+Examinaremos a continuación el procedimiento que reconstruye el camino buscado a partir de la tabla
+que contiene los valores de las funciones de decisión $f1$ y $f2$.
+
+
+\subsection{Reconstrucción del camino buscado}
+
+Para reconstruir el camino buscado a partir de las funciones de decisión $f1$ y $f2$ (que 
+tabulamos previamente), procedemos de forma muy similar al mecanismo recursivo descripto
+anteriormente.
+
+Si sabemos que existe un camino entre $i$ y $j$ que termina en $i$, podemos colocar
+$i$ en una lista que vamos construyendo y proceder a continuación a buscar el siguiente
+nodo en forma recursiva, ya que como explicamos antes, solo hay 2 posibles sucesores, y 
+por lo tanto la búsqueda está acotada. Así se desciende progresivamente por la tabla hasta llegar
+a la base de la misma - cuando se pide de construir un camino entre un nodo y sí mismo,
+simplemente se agrega este nodo al final de la lista que se fue construyendo, y el
+procedimiento devuelve dicha lista.
+
+El código de este algoritmo es muy sencillo y resulta más expresivo el pseudocódigo
+que una explicación en palabras. A modo de aclaración, podemos recalcar que una vez
+más existen dos versiones del método según donde se desea que termine el camino (en $i$
+o en $j$). Se podría haber hecho una sola función que tomara un parámetro adicional,
+pero nos resultó más simple de leer y comprender de esta manera.
+
+El segundo algoritmo presentado a continuación corresponde a este problema.
+
+\subsection{Regreso al problema original}
+
+Una vez que nos armamos de los procedimientos para resolver la versión completa
+del problema adjunto que estudiamos a lo largo de esta sección, como logramos
+resolver nuestro problema original?
+
+Es simplemente cuestión de recorrer la tabla de la función de decisión en busca de la existencia
+de caminos de largo $n$, que son los que nos interesan. Dichos caminos son los que comienzan
+en un punto $i$ y terminan en un punto $i-1$ mod $n$, y por lo tanto hay a lo sumo $2*n$
+valores que verificar (uno para cada tabla). Tan pronto como se encuentra un camino
+entre un $i$ y un $j$ particular, se construye la secuencia utilizando el método de reconstrucción
+y se retorna inmediatamente, puesto que es suficiente con construir un único camino.
+
+El tercer y último algoritmo de la siguiente sección es el correspondiente a este problema,
+que es el que nos concierne.
+
+\newpage
+\section{Pseudocódigo}
+\input{pseudo2}
+
+
+
+\section{Cuestiones de implementación}
+
+Examinemos ahora algunos detalles de la implementación presentada, que fue realizada en
+C++. Lo más inmediato a analizar en un algoritmo de programación dinámica es el almacenamiento
+de los valores precomputados. Se utiliza un diccionario, y en nuestro caso decidimos
+implementarlo sobre arreglos de $bool$ (anidados de forma a ser indexados como matriz) ya que
+minimiza el tiempo de acceso y como la tabla puede ser completada en su totalidad, no tiene
+sentido pensar en una implementación de diccionario que minimice el espacio en memoria, ya
+que no se producirán ahorros significativos y perderíamos el tiempo constante de acceso
+a la tabla.
+
+La representación elegida para el grafo de ciudades y acuerdos fue la de matriz de adyacencia,
+una vez más implementada sobre arreglos de $bool$. Esto nos brinda una mayor velocidad de
+acceso y en principio no hay razón para suponer que la matriz de adyacencia será rala, por lo
+que no se producen necesariamente ahorros de espacio en memoria. Además, como no se realizan
+operaciones de modificación del grafo, no se obtiene beneficio alguno en usar una estructura
+de listas.
+
+Cabe aclarar que al utilizar el tipo arreglo de $bool$ en C++ se desperdicia mucha memoria
+ya que la implementación de $bool$ utiliza un byte completo para cada instancia en lugar
+de un bit. Esto responde a las capacidades de direccionamiento de las computadoras 
+corrientes, que no pueden direccionar a bit. 
+El efecto se ve duplicado porque utilizamos dos matrices separadas para la tabla de valores.
+Si bien existe en la STL el contenedor vector<bool> numerosas fuentes desaconsejan su uso
+ya que no es una instanciación corriente de vector<T> sino que es una implementación
+aparte con varias cuestiones particulares en su uso. Podríamos haber implementado
+un tipo sobre $char$ que mantuviera el valor de los 2 $bools$ que utilizamos dentro
+de un único byte (y combinar las 2 matrices en una)  pero lo evitamos para mantener 
+sencillo y legible el código.
+
+Al momento de reconstruir la secuencia de caminos, se eligió devolver un puntero a lista
+en lugar de la propia lista para permitir el $splicing$ de las mismas en $O(1)$. Si bien
+devolver una lista por copia no hubiera afectado la complejidad global del algoritmo, nos
+pareció una optimización razonable que evita muchísimas copias innecesarias de datos.
+
+Finalmente, se introdujo una optimización sencilla que retorna inmediatamente si
+se observa que la cantidad de ejes del grafo es insuficiente para construir un grafo
+conexo (y por lo tanto será imposible hallar el camino hamiltoniano que buscamos, puesto
+que no existe).
+
+
+\section{Cálculo de complejidad}
+% TODO: mencionar el uso de modelo de tiempos constantes!
+
+
+
+\section{Análisis experimental}
+
+\subsection{Experiencias realizadas}
+
+Tras el análisis teórico de los algoritmos, decidimos que sería suficiente con 2 gráficos de
+tiempo en función del tamaño de las instancias. Siendo que la complejidad del algoritmo
+está acotada por una función de $n$, decidimos en primer lugar verificar que el tiempo de
+ejecución del algoritmo es independiente del valor de $m$, y en segundo lugar contrastar
+la predicción de tiempo teórica en función de $n$ con las mediciones reales del tiempo 
+insumido por las corridas.
+
+Para $n$ constante y $m$ variable se tomó un valor de $n=200$ cuyo tiempo de corrida
+es apreciable (del orden de 10ms en el Pentium 4 2.8 donde se realizaron las pruebas),
+y $m$ fue incrementado hasta 10000 (la máxima cantidad de ejes en un grafo de 200 nodos
+es de alrededor de 20000).
+
+Para $n$ variable se ejecutó hasta $n=1000$ con cantidades de ejes aleatorias, utilizándose
+este límite no por cuestiones de velocidad del algoritmo de resolución, sino del generador
+de casos aleatorios que utilizamos para armar los grafos. Hay que tener en cuenta que
+deben construirse hasta $n^2/2$ ejes aleatorios por caso para un cierto $n$.
+
+No se realizaron conteos de operaciones puesto que la naturaleza recursiva del algoritmo,
+y su implementación en C++ en varias clases separadas, hacen complicada la implementación
+del contador (que si se tratara de un único archivo, consistiría en incrementar una única
+global).
+
+\subsection{Resultados}
+\subsubsection{Experiencia 1: Tiempo para N fijo y M variable}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{./figuras/graficos/ej2/datos_m.png}
+    \caption{Tiempo de ejecución para $n=200$ y $m$ variable}
+    \label{fig:grafico_m}
+\end{figure}
+\subsubsection{Experiencia 2: Tiempo para N variable y M aleatorio}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.45]{./figuras/graficos/ej2/datos_n.png}
+    \caption{Tiempo de ejecución para $n$ variable y $m$ aleatorio}
+    \label{fig:grafico_n}
+\end{figure}
+
+\subsection{Discusión}
+
+Como era de esperarse los gráficos exhiben el comportamiento predicho por el análisis
+teórico, con algunas imprecisiones producto de los errores de medición característicos
+de un sistema multiprogramado.
+
+En la primera experiencia se hace visible la optimización realizada cuando $m$ $<$ $n-1$,
+ya que con valores pequeños de $m$ se observa una discontinuidad y un tiempo de ejecución
+despreciable. Fuera de este detalle, el algoritmo exhibe el comportamiento esperado: el
+tiempo de resolución no se ve afectado por la cantidad de ejes del grafo. Esto no es en
+lo más mínimo sorprendente, puesto que respecto del algoritmo de resolución, el grafo
+se representa mediante una matriz cuyo tamaño está determinado por $n$, no por $m$, y que
+no varía nunca en función de este último parámetro. La única diferencia que causa $m$ 
+está en el llenado de dicha matriz a partir de la lista de ejes que se obtiene en el
+constructor. Sin embargo, puede observarse en el gráfico que para instancias pequeñas, el
+costo de recorrer una única vez la lista de ejes no influye de forma apreciable en el tiempo
+total del algoritmo. Es de esperarse que para instancias grandes este costo sea aún menor
+comparado al de la resolución del problema en sí.
+
+En la segunda experiencia se observa el comportamiento cuadrático en tiempo del algoritmo
+de resolución. La mayor dispersión para los valores más grandes se corresponde probablemente
+a una cuestión de escala, el error de medición es proporcional al tiempo de corrida del
+algoritmo y en valores más grandes estos errores se amplifican y son por tanto más visibles
+en el gráfico. Aún a pesar de esto, la tendencia se observa claramente en el gráfico.
+
+En resumen, ambos gráficos corroboran las predicciones del cálculo de complejidad.
