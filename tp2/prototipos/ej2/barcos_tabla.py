@@ -100,14 +100,6 @@ class BuscadorCaminoTPD:
         return []
 
 
-# para prueba loca
-def beta(b):
-    if b:
-        return 1
-    else:
-        return 0
-
-
 #################################################################
 # Versión con tabulado completo al inicio                       #
 #################################################################
@@ -136,10 +128,6 @@ class BuscadorCaminoTCI:
             self.matA.append([False] * self.g.n)
             self.matB.append([False] * self.g.n)
 
-        # todos los nodos estan relacionados con si mismos
-        for i in range(self.g.n):
-            self.matA[i][i] = True
-            self.matB[i][i] = True
 
         # caso base (hay camino entre nodos adyacentes?)
         for i in range(self.g.n):
@@ -156,40 +144,11 @@ class BuscadorCaminoTCI:
                 amas1 = (a+1) % self.g.n
                 b = (j+i) % self.g.n
                 bmenos1 = (b-1) % self.g.n
-                
-                ########################### 
-                # prueba del metodo loco! #
-                ###########################
-                
-                
-                # codigo original:
 
-                #self.matA[a][b] = (self.g.estanConectados(a,amas1) and self.matA[amas1][b]) or \
-                #                  (self.g.estanConectados(a,b) and self.matB[amas1][b])
-                #self.matB[a][b] = (self.g.estanConectados(b,bmenos1) and self.matB[a][bmenos1]) or \
-                #                  (self.g.estanConectados(a,b) and self.matA[a][bmenos1])
-                
-                
-                
-                # codigo "loco"
-
-                bmenos2 = (b-2) % self.g.n
-                amas2 = (a+2) % self.g.n
-
-                rel = self.g.estanConectados
-                f = lambda x,y: bool(self.matA[x][y] or self.matB[x][y])
-
-                # a= f(i,j-1) &(rel(j,j-1) & f(i,j-2))
-                fa = f(a,bmenos1) and rel(b,bmenos1) and f(a,bmenos2)
-                # b= f(i,j-1)&rel(j,i)&f(i+1,j-1)
-                fb = f(a,bmenos1) and rel(a,b) and f(amas1,bmenos1)                
-                # c= f(i+1,j)&rel(i,i+1)&f(i+2,j)
-                fc = f(amas1,b) and rel(a,amas1) and f(amas2,b)
-                # d= f(i+1,j)&rel(i,j)&f(i+1,j-1)
-                fd = f(amas1,b) and rel(a,b) and f(amas1,bmenos1)
-
-                self.matA[a][b] = fc or fd
-                self.matB[a][b] = fa or fb
+                self.matA[a][b] = (self.g.estanConectados(a,amas1) and self.matA[amas1][b]) or \
+                                  (self.g.estanConectados(a,b) and self.matB[amas1][b])
+                self.matB[a][b] = (self.g.estanConectados(b,bmenos1) and self.matB[a][bmenos1]) or \
+                                  (self.g.estanConectados(a,b) and self.matA[a][bmenos1])
 
         self.resuelto = True
 
@@ -221,40 +180,6 @@ class BuscadorCaminoTCI:
 
         raise ValueError, "No existe el camino que se intento generar! (de %s a %s)" % (a,b)
 
-    def buscarCaminoLoco(self):
-            if not self.resuelto:
-                self._resolver()
-
-            camino =[]
-            i=0
-            while (i < self.g.n) and(self.matA[i][(i+self.g.n-1) % self.g.n] == False  and self.matB[i][(i+self.g.n-1)% self.g.n] == False):
-                i=i+1
-            if i >= self.g.n:
-                return []
-            a=i
-            b=(i+self.g.n-1) % self.g.n
-            while(a != b):
-                
-                if self.matA[a][b] and self.matB[a][b]:
-                    if len(camino) == 0:
-                       camino=camino+[b]
-                       b = (b-1) % self.g.n
-                    else:
-                        if self.g.estanConectados(camino[len(camino)-1],b):
-                            camino=camino+[b]
-                            b = (b-1) % self.g.n
-                        else:
-                            camino=camino+[a]
-                            a = (a+1)%self.g.n
-                elif self.matB[a][b]:
-                    camino=camino+[b]
-                    b = (b-1) % self.g.n
-                else:
-                     camino=camino+[a]
-                     a = (a+1)%self.g.n
-            camino=camino+[a]
-            return camino
-        
     # Devuelve el camino hallado o [] si no fue posible hallar uno.
     def buscarCamino(self):
         if self.g.m < self.g.n - 1:
@@ -269,12 +194,9 @@ class BuscadorCaminoTCI:
             a = i
             b = (i-1) % self.g.n
             
-                        
-                
             if self.matA[a][b]:
                 return self._caminoQueTerminaEnA(a,b)
             if self.matB[a][b]:
-                return self._caminoQueTerminaEnB(a,b) 
-            
+                return self._caminoQueTerminaEnB(a,b)
 
         return []
