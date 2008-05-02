@@ -161,7 +161,7 @@ if __name__ == '__main__':
     # Metodo con tabulado al inicio
     from barcos_tabla import BuscadorCaminoTCI
     b2 = BuscadorCaminoTCI(g)
-    c2 = b2.buscarCaminoLoco()
+    c2 = b2.buscarCamino()
     print c2
 
     if c == [] and hayCamino(g):
