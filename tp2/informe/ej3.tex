@@ -312,90 +312,50 @@ nodos internos, los segundos borran solo hojas. Esto me asegura que el producto 
 
 
 \subsection{Detalles de implementacion de los nodos}
-Aclaraciones sobre los miembros privados de la estructura: fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano \"existe\" puede carecer de sentido, es de vital importancia a la hora de implementar el PATRICIA, ya que sin ellas no podriamos diferenciar las claves definidas de las no definidas. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
+Aclaraciones sobre los miembros privados de la estructura: para implementar las listas (para los nodos que las usan) usamos Standard Template Library (STL). Fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano "existe" puede carecer de sentido, lo adquiere al implementar el PATRICIA, ya que sin ella no podriamos diferenciar los elementos definidos de los no definidos. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
 La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a eje.
-
 A continuaci'on explicaremos detalladamente cada funci'on referente a los nodos:
 \begin{itemize}
-\item constructor: inicializa el booleano existe a FALSE. En caso de nodo sobre arreglo, inicializa ademas cantElem a 0 (cero) y 
-ademas inicializa todo el arreglo a NULL.
+\item constructor: inicializa el booleano existe a FALSE. En caso de nodo sobre arreglo, inicializa adem'as cantElem a 0 (cero) y todo el arreglo a NULL.
+\item agregar: toma por par'ametro una referencia constante a cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo en cuesti'on. Lo hace asign'andole un eje que tiene un puntero al nuevo nodo y una cadena adjunta. Si el nodo es pasado por par'ametro, el eje apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos, con el bit existe en TRUE, y el eje apuntar'a hacia el nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre listas, los ejes son agregados en orden ascendiente por cadena.
 
-\item agregar: toma por par'ametro una cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo 
-en cuesti'on. Lo hace asignandole un eje que tiene un apuntador al nuevo nodo y una cadena adjunta. Si el nodo es pasado por 
-par'ametro, el eje apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos y el eje apuntar'a hacia el
- nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre 
- arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre 
- listas, los ejes son agregados en orden ascendiente por cadena.
+\item sacar: toma por par'ametro una referencia constante a cadena. Borra el eje adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado por el eje borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el eje es trivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar sobre la lista hasta encontrar el eje a borrar.
 
-\item sacar: toma por par'ametro una cadena. Borra el eje adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado
- por el eje borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el eje es t
- rivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar 
- sobre la lista hasta encontrar el eje a borrar.
+\item pertenece: toma por par'ametro una referencia constante a cadena. Verifica si existe un eje adjunto a la cadena pasada por par'ametro. Para los nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un eje adjunto a la cadena, se devuelve NULL.
 
-\item pertenece: toma por par'ametro una cadena. Verifica si existe un eje adjunto a la cadena pasada por par'ametro. Para los 
-nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre 
-listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un eje adjunto a la 
-cadena, se devuelve NULL.
+\item ejeQueEmpiezaCon(cadena): toma por par'ametro una referencia constante a cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a NULL. Devuelve un puntero a eje que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta encontrar una coincidencia entre la primer letra de la cadena adjunta al eje iterado con el par'ametro. Si no existe tal eje, se devuelve NULL.
 
-\item getExiste: no toma par'ametros. Devuelve TRUE o FALSE, dependiendo de la existencia del nodo.
+\item iesimoEje(entero): toma por par'ametro un entero sin signo $n$. Devuelve un apuntador a eje. Para nodo sobre arreglos, se indexa el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta iterar $n$ veces. Si no existe tal eje, se devuelve NULL.
 
-\item setExiste: toma un booleano como par'ametro. Asigna el valor del par'ametro al booleano existe dentro del objeto nodo. 
+\item primerEje: no toma par'ametros. Devuelve un apuntador al primer eje encontrado. Para nodo sobre arreglos, se busca de 0 a 26 un eje definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
 
-\item elemento(cadena): toma por par'ametro una cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a 
-NULL. Devuelve un apuntador a eje que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre 
-la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta encontrar una coincidencia entre la 
-primer letra de la cadena adjunta al eje iterado con el par'ametro. Si no existe tal eje, se devuelve NULL.
+\item cantHijos: no toma par'ametros. Devuelve el cardinal del nodo, entendi'endose por cardinal la cantidad de hijos que tiene. En realidad esta funci'on no hace mas que devolver el valor de la variable cantElem.
 
-\item elemento(entero): toma por par'ametro un entero sin signo. Devuelve un apuntador a eje. Para nodo sobre arreglos, se indexa
- el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta iterar n veces, 
- siendo n el par'ametro pasado. Si no existe tal eje, se devuelve NULL.
+\item esHoja: no toma par'ametros. Devuelve TRUE o FALSE indicando si el nodo no tiene ningun nodo hijo o tiene alguno, respectivamente. Simplemente se compara cantElem con 0.
 
-\item dameUno: no toma par'ametros. Devuelve un apuntador al primer eje encontrado. Para nodo sobre arreglos, se busca de 0 a 26
- un eje definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
-
-\item cardinal: no toma par'ametros. Devuelve el cardinal del nodo, entendi'endose por cardinal la cantidad de hijos que tiene.
- En realidad esta funci'on no hace mas que devolver el valor de la variable cantElem.
-
-\item esHoja: no toma par'ametros. Devuelve TRUE o FALSE indicando si el nodo no tiene ningun nodo hijo o tiene alguno, 
-respectivamente. Simplemente se compara cantElem con 0.
-
-\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando eje por eje (NO borra los nodos hijo). En caso de nodo 
-sobre lista, no hace absolutamente nada.
+\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando eje por eje (NO borra los nodos hijo). En caso de nodo sobre lista, no hace absolutamente nada.
 \end{itemize}
 
 \subsection{Detalles de implementacion del 'arbol PATRICIA}
-Aclaraciones sobre la clase: el PATRICIA es heredero de la clase nodo y adem'as lo contiene.
+Aclaraciones sobre la clase: el PATRICIA es amigo de la clase nodo y adem'as lo contiene. Necesita ser amigo para tener acceso a la creaci'on de ejes y uso de los metodos privados.
+Aclaraciones sobre la variable privada: aqu'i tambi'en tenemos una variable llamada cantElem, que contabilizar'a la cantidad de elementos definidos en el conjunto de cadenas. Esta variable nos permitir'a cumplir con las complejidades pedidas, como se explica en la secci'on de c'alculo de la complejidad.
 \begin{itemize}
 \item constructor: inicializa cantElem a 0 (cero) y la raiz, sete'andole TRUE a su valor existe.
 
-\item destructor: hace un recorrido postorder sobre el 'arbol, borrando los nodos.
+\item destructor: hace un recorrido postorder sobre el 'arbol: primero recorre la lista de hijos, llamando recursivamente, y luego borra el nodo actual.
 
-\item agregar: 
-%
-%    // Parametros:      cadena a agregar al PATRICIA
-%	// Proposito:       le da significado a la cadena s en el PATRICIA
-%    void agregar (const string& s);
-%
-%    // Parametros:      cadena a eliminar del PATRICIA
-%	// Proposito:       le quita significado a la cadena s en el PATRICIA
-%    void sacar (const string& s);
-%
-%    // Parametros:      cadena a verificar si pertenece al PATRICIA
-%	// Proposito:       verifica si s pertenece al PATRICIA
-%    bool pertenece (const string& s) const;
-%
-%    // Parametros:      void
-%	// Proposito:       devuelve la cantidad de elementos definidos en el PATRICIA
-%    unsigned int cardinal(void) const;
-%
-%private:
-%
-%    nodo* raiz;
-%    unsigned int cantElem;
-%    void quitarPrefijoEnComun(string& s1, const string& s2) const;
-%    nodo::eje* bajar(nodo*&, nodo::eje*&, const string&, string&) const;
-%    void destruirPatricia (nodo*);
-%    void verPatricia (nodo*, const string&, ostream&) const;
+\item agregar: toma por par'ametro una referencia constante a cadena. Se baja por las ramas con el m'etodo bajar. Se verifica si la palabra armada es igual a la cadena y si el nodo existe. Si esto se cumple, terminar'a, pues quiere decir que la palabra ya estaba definida, sino sigue su ejecuci'on. A partir de este paso, sabemos que hay un elemento que ser'a agregado, pues es un elemento no existente en el conjunto. Luego se toma la cadena pasada por par'ametro y la palabra armada, y se les quita el prefijo. Esto lo hacemos pues as'i podemos ver si debemos partir el eje o no, ya que si la palabra armada, que es la concatenaci'on de todos los ejes por los que baj'e, no es prefijo de la cadena, quiere decir que el 'ultimo eje no coincid'ia totalmente con la parte de la cadena sin prefijo. Verificamos entonces si la palabra armada es vac'ia luego de sacarle el prefijo, si no lo es, partimos el eje y creamos un nuevo padre para este nodo. Si era vacia, no hacemos nada. Luego dependiendo si se partio el eje o no, colgamos el nuevo nodo del nuevo padre o del nodo en el que quedamos luego de bajar, y a ese eje le adjuntamos la parte sin prefijo de la cadena, con el m'etodo agregar de nodo. Finalmente se incrementa la variable cantElem, sin importar en qu'e caso entr'o, pues antes hab'iamos comprobado si la cadena a agregar no est'a definida en el conjunto.
+
+\item sacar: toma por par'ametro una referencia constante a cadena. Se baja por las ramas con el m'etodo bajar. Se verifica si se logr'o encontrar la cadena comparandola en relaci'on de igualdad con la palabra armada, y si el nodo existe. Si esto se cumple, el algoritmo sigue su ejecuci'on, sino termina. Nuevamente decimos que a partir de este paso, sabemos que hay un elemento que ser'a eliminado. Para este m'etodo resulta necesario el retorno de bajar, el eje anterior al eje actual (el que va del abuelo al padre del nodo actual), pues este nos permite resolver casos de uni'on de ejes cuando el padre del actual tiene dos hijos o menos. Empezamos por resolver los casos que el enunciado nos da: aquellos que borramos una hoja. Si el actual es hoja, lo borramos, junto con su eje, y verificamos lo siguiente: si exist'ia un nodo anterior (no se est'a borrando ning'un elemento que esta colgado de la raiz) y el anterior no existe y, luego de borrar la hoja, tiene 1 hijo, entonces tenemos que unir los ejes anterior y el eje que va del padre al 'unico hermano del nodo borrado. Los casos restantes son aquellos que se debe borrar un nodo interno. Estos se contemplan entre todo el conjunto de casos que son disjuntos con el anterior (aquellos en los que se borran hojas). Se comienza preguntando si el nodo actual tiene un unico hijo, pues debemos evitar podar toda una rama del 'arbol incorrectamente. En este caso, se concatenan los ejes del padre del actual al actual, y del actual al hijo del actual. Luego se procede a borrar el actual. Si el actual tenia m'as de un hijo, se setea el bit existe a FALSE. Finalmente se decrementa la variable cantElem en uno. Es importante notar que la variable decrementa sin importar en qu'e caso entr'o, pues antes hab'iamos comprobado si la cadena a borrar est'a definida en el conjunto.
+
+\item pertenece: toma por par'ametro una referencia constante a cadena. Devuelve un booleano. Se procede bajando por el 'arbol con el m'etodo bajar, y se verifica si se logr'o encontrar la cadena comparandola en relaci'on de igualdad con la palabra armada, y si actual existe.
+
+\item cardinal: no toma par'ametros. Devuelve un entero positivo. Esta funci'on devuelve el valor de cantElem.
+
+\item bajar: toma por par'ametro una referencia a puntero a nodo, una referencia a puntero a eje, una referencia constante de cadena, y una referencia a cadena. Devuelve un puntero a eje. El primer par'ametro corresponde al nodo actual, y funciona como variable para devolver resultados. Al algoritmo no le interesa lo que le manden en esa variable, pues al entrar define actual como raiz. An'alogamente, el segundo par'ametro funciona tambi'en como variable de retorno del eje actual (el que apunta al nodo actual) y el algoritmo asigna su valor al entrar a la funci'on. El tercer par'ametro es la cadena que se le pasa por par'ametro a agregar y a bajar. El cuarto par'ametro es la palabra armada, que es la concatenacion de todas las cadenas adjuntas a los ejes por los cuales bajaremos. A este par'ametro tambi'en se le asigna un valor, que es la cadena vac'ia, apenas se llama la funci'on. Este m'etodo tiene como fin ser reciclable: puede ser usado para bajar por el 'arbol, sin importar el caso para el cual se lo quiere usar, sea agregar, sacar o verificar pertenencia.
+Bajar define cuatro variables auxiliares: puedeBajar (bool), recortada (string), aux (puntero a eje) y ejeAnterior (puntero a eje). La primera define si el algoritmo puede seguir bajando o no por las ramas del 'arbol, la segunda sirve para guardar la parte que falta por recorrer del tercer argumento, la tercera sirve para mirar a los ejes antes de bajar, y la cuarta guarda el valor de ejeActual (segundo par'ametro) antes de ser cambiado. El m'etodo comienza llamando a actual.ejeQueEmpiezaCon d'andole la primer letra de recortada (que al principio coincide con la primer letra del tercer par'ametro). Si existe tal eje, se asigna TRUE a puedeBajar. Sino, el algoritmo finaliza. Si es cierto que se puede bajar, se procede a hacerlo actualizando los valores de eje anterior, eje actual, nodo actual, la palabra armada, la palabra recortada y puedoBajar. A puedoBajar se le asigna TRUE si el eje actual es prefijo (completo) de recortada. Sino se le asigna falso. Este procedimiento se ejecuta hasta que puedoBajar sea falso, sea porque lleg'o a una hoja o porque el eje que contiene eje actual no es totalmente prefijo de recortada.
+
+\item quitarPrefijoEnComun: toma por par'ametro una referencia a cadena y una referencia constante a cadena. Recorre letra por letra de los par'ametros, hasta que alguno de los dos llegue al final, y guarda un contador de cu'antas letras recorri'o. Al finalizar, le borra al primer par'ametro desde el principio de la cadena hasta contador. La funci'on devuelve TRUE si la longitud del segundo par'ametro es igual al valor de contador, o sea devuelve true si el segundo par'ametro es prefijo del primero. Caso contrario, devuelve FALSE.
 \end{itemize}
 
 \section{Pseudoc'odigo}
