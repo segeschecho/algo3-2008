@@ -417,3 +417,60 @@ Como $long_max \geq long_s$, vale que $O(long_s)$$\subset$ O($long_max$), luego 
 
 \subsection{Cantidad de elementos}
 Como cada vez que guardamos o sacamos una palabra actualizamos el cardinal del conjunto, en caso de que se solicite la cantidad de palabras del conjunto, se devuelve este contador, sin tener que hacer mas operaciones, por lo tanto la operacion es O(1).
+
+\section{Analisis experimental}
+\subsection{Experiencias realizadas}
+Para este ejercicio decidimos no solo realizar un analisis para contrastar con el analisis teorico de los algortimos, sino también comparar las dos implementaciones del patricia.
+
+Para esto, lo que hicimos fue contar operaciones al agregar, buscar y borrar elementos en ambas implementaciones del patricia. Para esto generamos conjuntos de palabras y las agregamos en orden creciente con respecto a la cantidad de caracteres. Luego las buscamos, y finalmente las borramos. 
+
+Ademas medimos los tiempos para agregar conjuntos de palabras en cada una de ellas.
+
+Finalmente consideramos que otro factor que debia ser tenido en cuenta era el espacio que ocupaban ambas estructuras, por esa razon decidimos medir la memoria que consumia cada uno al agregar varios conjuntos de palabras.
+
+\subsection{Resultados}
+
+\subsubsection{Experiencia 1: Cantidad de operaciones al agregar palabras de largo creciente en ambas implementaciones}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{./figuras/graficos/ej3/operacionesAgregar.png} 
+\label{fig:ej3exp1}
+\end{figure}
+Los puntos rojos, corresponden a la implementaci'on con listas, los azules con arreglos.
+
+\subsubsection{Experiencia 2: Cantidad de operaciones al buscar palabras de largo creciente en ambas implementaciones}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{./figuras/graficos/ej3/operacionesPertenece.png} 
+\label{fig:ej3exp2}
+\end{figure}
+
+\subsubsection{Experiencia 3: Cantidad de operaciones al quitar palabras de largo creciente en ambas implementaciones}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{./figuras/graficos/ej3/operacionesSacar.png} 
+\label{fig:ej3exp3}
+\end{figure}
+
+\subsubsection{Experiencia 4: Tiempo requerido para agregar diferentes conjuntos de palabras}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{./figuras/graficos/ej3/comparacionArreglosListas.png} 
+\label{fig:ej3exp4}
+\end{figure}
+
+\subsubsection{Experiencia 5: Cantidad de memoria utilizada para agregar diferentes conjuntos de palabras}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{./figuras/graficos/ej3/katchi.JPG} 
+\label{fig:ej3exp5}
+\end{figure}
+
+\subsection{Discusión}
+En las experiencias 1,2 y 3 observamos como la cantidad de operaciones es considerablemente mayor en la implementación con listas, esto es de esperarse ya que encontrar el eje por el cual bajar es mucho mas rapido en los arreglos, si bien en ambos es O(1), las listas presentan una constante mucho mas alta, ya que si un nodo tiene 26 hijos la busqueda es lineal y se recorren en peor caso los 26 ejes.
+
+Independientemente de la implementación se noto como la cantidad de operaciones se incrementa linealmente a medida que se agregan palabras mas largas, esto es de esperarse ya que la complejidad nos dio O($long_max$).
+
+La experiencia 4 vuelve a poner de minifiesto lo que observamos anteriormente, es decir que la implementación con arreglos es mas veloz que la implementación con listas.
+
+Finalmente la experiencia 5 nos muestra como la implementación con arreglos, que se mostro claramente mas rapida, consume una gran cantidad de memoria mas que la implementación con listas. Esta es una buena razón por la cual podria considerarse pese a que es mas lenta, la implementación sobre listas antes que sobre arreglos.
