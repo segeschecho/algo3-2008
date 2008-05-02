@@ -1,0 +1,102 @@
+
+\subsection{Algoritmo de tabulado}
+\begin{algorithm}
+\caption{Construye la tabla de valores precalculados para hallar el camino}
+\begin{algorithmic}[1]
+
+\STATE matA $\leftarrow$ matrizCuadradaDeCeros(n)
+\STATE matB $\leftarrow$ matrizCuadradaDeCeros(n)
+
+\COMMENT {Carga los casos base (nodos adyacentes)}
+\FOR {$i$ $\in$ $0,...,n-1$}
+    \STATE a $\leftarrow$ $i$
+    \STATE b $\leftarrow$ $i+1$ mod $n$
+    \IF {estanConectados(a,b)}
+        \STATE matA[a][b] $\leftarrow$ 1
+        \STATE matB[a][b] $\leftarrow$ 1
+    \ENDIF
+\ENDFOR
+
+\COMMENT {Carga los casos recursivos (nodos no adyacentes)}
+\FOR {$i$ $\in$ $2,...,n-1$}
+    \FOR {$j$ $\in$ $0,...,n-1$}
+        \STATE a $\leftarrow$ j
+        \STATE b $\leftarrow$ $j+i$ mod $n$
+        \STATE amas1 $\leftarrow$ $a+1$ mod $n$
+        \STATE bmenos1 $\leftarrow$ $b-1$ mod $n$
+
+        \STATE aux\_a1 $\leftarrow$ estanConectados(a,amas1) y matA[amas1][b]
+        \STATE aux\_a2 $\leftarrow$ estanConectados(a,b) y matB[amas1,b]
+        \STATE aux\_b1 $\leftarrow$ estanConectados(b,bmenos1) y matB[a][bmenos1]
+        \STATE aux\_b2 $\leftarrow$ estanConectados(a,b) y matA[a][bmenos1]
+
+        \STATE matA[a][b] $\leftarrow$ aux\_a1 o aux\_a2
+        \STATE matB[a][b] $\leftarrow$ aux\_b1 o aux\_b2
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+Se utilizan las funciones auxiliares:
+\begin{itemize}
+\item \textbf{matrizCuadradaDeCeros(n)}, que construye una matriz cuadrada de $n*n$ inicializada
+      completamente con ceros.
+\item \textbf{estanConectados(a,b)}, que determina si dos ciudades $a$ y $b$ tienen un acuerdo comercial
+      entre sí.
+\end{itemize}
+
+\newpage
+\subsection{Algoritmo auxiliar de construcci'on de caminos entre dos nodos}
+\begin{algorithm}
+\caption{Halla un camino que recorre los nodos entre a y b y termina en A}
+\begin{algorithmic}[1]
+\REQUIRE que estén cargados los valores correctos en $matA$ y $matB$
+\REQUIRE que exista el camino que se intentará generar
+\IF { $b-a$ == $1$ o ($b$ == $0$ y $a$ == $n-1$) }
+    \RETURN [b,a]
+\ENDIF
+\STATE amas1 $\leftarrow$ $a+1$ mod $n$
+\IF {estanConectados(a,amas1) y matA[amas1][b]}
+    \RETURN caminoQueTerminaEnA(amas1,b) + [a]
+\ENDIF
+\IF {estanConectados(a,b) y matB[amas1][b]}
+    \RETURN caminoQueTerminaEnB(amas1,b) + [a]
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+Se utilizan las funciones auxiliares:
+\begin{itemize}
+\item \textbf{caminoQueTerminaEnA}, llamada recursiva a este mismo procedimiento.
+\item \textbf{caminoQueTerminaEnB}, función análoga a la aquí ­descripta que genera
+      caminos que terminan en B en lugar de hacerlo en A.
+\item \textbf{estanConectados(a,b)}, idem que para el algoritmo anterior.
+\end{itemize}
+
+
+\subsection{Algoritmo de búsqueda de caminos en todo el grafo propuesto}
+\begin{algorithm}
+\caption{Construye un camino apropiado a partir de las tablas precalculadas}
+\begin{algorithmic}[1]
+\IF { $m < n-1$ }
+\RETURN [ ]
+\ENDIF
+\STATE completarTablas()
+\COMMENT{Completo las tablas $matA$ y $matB$}
+\FOR {$i$ $\in$ $0,...,n-1$}
+    \STATE a $\leftarrow$ i
+    \STATE b $\leftarrow$ $i-1$ mod $n$
+    \IF {matA[a][b]}
+        \RETURN caminoQueTerminaEnA(a,b)
+    \ENDIF
+    \IF {matB[a][b]}
+        \RETURN caminoQueTerminaEnB(a,b)
+    \ENDIF
+\ENDFOR
+\RETURN [ ]
+\end{algorithmic}
+\end{algorithm}
+Se utilizan las funciones auxiliares:
+\begin{itemize}
+\item \textbf{caminoQueTerminaEnA}, \textbf{caminoQueTerminaEnB}, el procedimiento descripto
+      anteriormente y su función análoga para B como se indicó previamente.
+\end{itemize}
