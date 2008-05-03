@@ -15,12 +15,12 @@
 		\STATE ejeActual.cadena \textcolor{orange}{$\leftarrow$} Ejactual.cadena \textcolor{orange}{-} palabraArmada  \COMMENT{dejar en el eje actual la parte que concidia con s}
 		\STATE padreActual \textcolor{orange}{$\leftarrow$} nuevoNodo 
 		\STATE crear eje (j) entre padreActual y nodoActual
-		\STATE j.cadena \textcolor{orange}{$\leftarrow$} palabraArmada
+		\STATE cadena de j \textcolor{orange}{$\leftarrow$} palabraArmada
 		\STATE apuntar ejeActual a nuevoPadre 
 		\IF{existia}
-			\STATE setear existe del nodoActual
+			\STATE poner que existe el nodoActual
 		\ELSE
-			\STATE seterar en no existe al nodoActual
+			\STATE poner que no existe el nodoActual
 		\ENDIF
 \ENDIF
 \ENDIF
@@ -77,14 +77,14 @@
 \caption{baja por las ramas segun una cadena s, ademas va armando la palabra que se forma durante el recorrido }
 \begin{algorithmic}[1]
 \STATE cadenaArmada \textcolor{orange}{$\leftarrow$}  $""$
-\STATE ejeAnterior \textcolor{orange}{$\leftarrow$}  \textcolor{Tan}{NULL}
-\STATE ejeActual\textcolor{orange}{$\leftarrow$}  \textcolor{Tan}{NULL}
+\STATE ejeAnterior \textcolor{orange}{$\leftarrow$}  \textcolor{orange}{$\bot$}
+\STATE ejeActual\textcolor{orange}{$\leftarrow$}  \textcolor{orange}{$\bot$}
 \STATE nodoActual \textcolor{orange}{$\leftarrow$} raiz
 \STATE eje \textcolor{orange}{$\leftarrow$} eje de nodo actual que comienza con la primer letra de s
-\STATE puedoBajar \textcolor{orange}{$\leftarrow$} (eje \textcolor{orange}{$\neq$} \textcolor{Tan}{NULL});
-\WHILE{ eje \textcolor{orange}{$\neq$} \textcolor{Tan}{NULL} \textcolor{orange}{$\wedge$} puedoBajar }
-	\STATE ejeAnterior \textcolor{orange}{$\leftarrow$} ejeActual
-	\STATE ejeActual \textcolor{orange}{$\leftarrow$} eje
+\STATE puedoBajar \textcolor{orange}{$\leftarrow$} (existe dicho eje);
+\WHILE{ exista el eje \textcolor{orange}{$\wedge$} puedoBajar }
+	\STATE guardamos en eje anterior el ejeActual
+	\STATE guardamos en ejeActual el eje que estamos mirando ahora 
 	\STATE nodoActual \textcolor{orange}{$\leftarrow$} nodo apuntado por el eje
 	\STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabraArmada \textcolor{orange}{++} cadena del eje
 	\STATE sacar a s la parte del eje que le es prefijo

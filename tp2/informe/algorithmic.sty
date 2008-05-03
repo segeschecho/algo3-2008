@@ -56,6 +56,7 @@
 % ALGORITHMIC
 \newcommand{\algorithmicrequire}{\textbf{Require:}}
 \newcommand{\algorithmicensure}{\textbf{Ensure:}}
+\newcommand{\algorithmicparams}[1]{\textcolor{RawSienna}{\textbf{Parametros:}} #1}
 \newcommand{\algorithmiccomment}[1]{\textcolor{Purple}{\{#1\}}}
 \newcommand{\algorithmicend}{\textbf{end}}
 \newcommand{\algorithmicif}{\textbf{if}}
@@ -139,6 +140,7 @@
   \newcommand{\FALSE}{\algorithmicfalse{}}
   \newcommand{\STATE}{\ALC@it}
   \newcommand{\STMT}{\ALC@it}
+  \newcommand{\PARAMS}[1]{\item[\algorithmicparams{##1}]}
   \newcommand{\COMMENT}[1]{\algorithmiccomment{##1}}
   \newenvironment{ALC@if}{\begin{ALC@g}}{\end{ALC@g}}
   \newenvironment{ALC@for}{\begin{ALC@g}}{\end{ALC@g}}

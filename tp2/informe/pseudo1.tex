@@ -1,8 +1,10 @@
 \begin{algorithm}
 \caption{Devuelve la lista de aquellos jugadores, tal que se puede arreglar el torneo}
+\label{alg:algoritmo1}
 \begin{algorithmic}[1]
+\PARAMS {Grafo con jugadores como nodos, y partidos arreglados como aristas direccionadas}
 \IF{hay menos partidos arreglados que jugadores \textcolor{orange}{$-$} 1}
-	\STATE devolver \textcolor{orange}{[ ]}
+	\RETURN \textcolor{orange}{[ ]}
 \ENDIF
 \STATE fuertes $\textcolor{orange}{\leftarrow}$ armarFuertes\textcolor{SkyBlue}{(}grafo\textcolor{SkyBlue}{)}
 \COMMENT {Averiguamos en que componente quedo cada nodo}
@@ -28,17 +30,19 @@
 		\STATE quien $\textcolor{orange}{\leftarrow}$ nodo
 		\STATE encontreUno $\textcolor{orange}{\leftarrow}$ True
 	\ELSIF{ $d_{in}\textcolor{SkyBlue}{(}nodo\textcolor{SkyBlue}{)} \textcolor{orange}{==} 0$ \textcolor{orange}{$\wedge$} encontreUno}
-		\STATE devolver $\textcolor{orange}{[ }\textcolor{orange}{ ]}$
+		\RETURN  $\textcolor{orange}{[ }\textcolor{orange}{ ]}$
 	\ENDIF
 \ENDFOR
 \STATE $ordenar\textcolor{SkyBlue}{(}fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}\textcolor{SkyBlue}{)}$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 1 y cantidad de nodos del grafo original}
-\STATE devolver $fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}$	
+\RETURN $fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}$	
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}
 \caption{Devuelve la lista de las componentes fuertemente conexas mediante algoritmo de Kosaraju}
+\label{alg:algoritmo2}
 \begin{algorithmic}[1]
+\PARAMS{Grafo con jugadores como nodos, y partidos arreglados como aristas direccionadas}
 \STATE valor $\textcolor{orange}{\leftarrow}$ {0...0}
 \STATE dar valor a todos los nodos segun las llamadas recursivas al hacer dsf
 \STATE en valor\textcolor{orange}{[}i\textcolor{orange}{]} colocar al nodo que tiene valor i
@@ -50,10 +54,27 @@
 		\STATE Realizar dsf desde el nodo, los elementos visitados son una componente fuertemente conexa
 		\STATE $CompFuertes$ $\textcolor{orange}{\leftarrow}$ $CompFuertes$ \textcolor{orange}{+} \textcolor{orange}{[}fuerte\textcolor{orange}{]}
 \ENDFOR
-\STATE devolver fuertes
+\RETURN fuertes
 \end{algorithmic}
 \end{algorithm}
 
+\begin{algorithm}
+\caption{Genera el grafo inverso de un grafo dado}
+\label{alg:algoritmo3}
+\begin{algorithmic}
+\PARAMS{Grafo que se desea invertir}
+\STATE relaciones $\textcolor{orange}{\leftarrow}$ [ ]
+\FOR{ cada nodo a del grafo}
+	\FOR{ cada otro nodo b del grafo, tal que a$\leadsto$b}
+		\STATE agregar a relaciones (b,a)
+	\ENDFOR
+\ENDFOR
+\RETURN Grafo(cantidad de nodos del grafo, relaciones)	
+\end{algorithmic}
+\end{algorithm}
+
+No se incluyen los algoritmos que usan dsf, ya que hacen exactamente dsf y, o bien numeran los nodos o bien los agregan a una lista. Creemos que no es necesario el pseudocodigo de dichos algoritmos.
+			
 %\begin{algorithm}
 %\caption{numera los nodos mediante dsf}
 %\begin{algorithmic}\textcolor{orange}{[}1\textcolor{orange}{]}

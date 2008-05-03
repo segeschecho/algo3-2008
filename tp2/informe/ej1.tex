@@ -230,7 +230,7 @@ pseudografo que no nos permite usar la propiedad de los grafos sin ciclos, pues 
 que tiene grado de entrada mayor  a 0. Tambien es de notar que no podemos obtener un multigrafo, ya que el grafo es libre de 
 ciclos: si vale que a$\leadsto$b y b$\leadsto$a, a y b deberian ser una unica componente fuertemente conexa.
 
-\item Con esta información podemos armar el nuevo grafo.
+\item Con esta información podemos armar el nuevo grafo reducido, como el de la figura \ref{fig:reduccion}
 
 \item Contamos cuantos elementos tienen grado de llegada 0, si solo hay uno ese gano. Entonces ganan todos los elementos de la componente. Como podrian no estar en orden, las ordenamos mediante bucket sort en $O(n)$
 
@@ -301,15 +301,15 @@ Dado que, como dijimos anteriormente, si la cantidad de partidos arreglados es m
 
 Veamos que ocurre en los casos en los que m $\geq$ $n-1$. 
 
-Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju. Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
+Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju (algoritmo \ref{alg:algoritmo2}). Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
 
-A continuación creamos el grafo invertido. Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
+A continuación creamos el grafo invertido (algoritmo \ref{alg:algoritmo3}). Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
 
 Cuando ya tenemos al grafo invertido, realizamos nuevamente una dsf para armar las componentes fuertemente conexas, nuevamente como es una dsf solo tocamos una vez a cada nodo y recorremos todos los vertices, tenemos un orden $O(n+m)$. En cada llamada el costo de ir guardando las componentes es constante, ya que solo se agrega un elemento al principio de una lista.
 
-Una vez que tenemos las componentes, lo que hacemos es guardar en que componente quedo cada nodo. Para esto recorremos cada una de las componentes fuertemente conexas y miramos a cada nodo. Como la cantidad total de nodos que tenemos es n, justamente el costo de hacer esto es $O(n)$.
+Una vez que tenemos las componentes, lo que hacemos es guardar en que componente quedo cada nodo (línea 6,\ref{alg:algoritmo1}) . Para esto recorremos cada una de las componentes fuertemente conexas y miramos a cada nodo. Como la cantidad total de nodos que tenemos es n, justamente el costo de hacer esto es $O(n)$.
 
-Ahora buscamos la informacion sobre la relación entre las componentes fuertemente conexas. Lo que hacemos es pararnos en cada nodo, ver a quien le gana, y si le gana a alguien que no esta en su misma componente, guardamos la tupla en una lista (O(1)). Miramos cada nodo, y para cada uno miramos a quien le gana. Es decir que miramos cada partido arreglado una vez, y como miramos a cada nodo también una vez, tenemos una complejidad $O(n+m)$.
+Ahora buscamos la informacion sobre la relación entre las componentes fuertemente conexas (línea 6,\ref{alg:algoritmo1}). Lo que hacemos es pararnos en cada nodo, ver a quien le gana, y si le gana a alguien que no esta en su misma componente, guardamos la tupla en una lista (O(1)). Miramos cada nodo, y para cada uno miramos a quien le gana. Es decir que miramos cada partido arreglado una vez, y como miramos a cada nodo también una vez, tenemos una complejidad $O(n+m)$.
 
 Con esta informaci'on creamos el grafo reducido. En el peor caso, hay tantos nodos como habia antes e igual cantidad de aristas, por lo cual la cracion del mismo es $O(n+m)$.
 
@@ -319,17 +319,19 @@ Si nadie gana devolvemos una lista vacia en $O(1)$. En cambio si existe algun ga
 
 Luego como en cada paso las operaciones que realizamos tienen un costo $O(n+m)$, podemos afirmar que el algoritmo tiene un costo de $O(n + m)$
 
+Si bien el algoritmo no tiene un peor caso claro, lo que si se puede notar es que en el caso en que existe un ganador, vamos a recorrer todas las componentes conexas para asegurarnos de eso, las mismas podrian llegar a ser n. Ahora bien, en cambio si no hay ganador, ni bien encontremos a dos con grado de entrada cero podemos parar porque sabemos que nadie gana. Si bien en el peor caso, para determinar que nadie gana necesitamos ver todas las componentes conexas, se podria esperar que en caso promedio, no haga falta revisar todas para encontrar dos con grado de entrada cero, por lo cual el algoritmo terminaria mas rapido (mas aun si consideramos que no tenemos el overhead del bucketsort)
+
 \section{Analisis experimental}
 \subsection{Experiencias realizadas}
 Para realizar las experiencias generamos grafos aleatorios variando las variables cantidad de jugadores y cantidad de partidos arreglados. Para contar operaciones, declaramos una variable global, y la incrementamos por cada operación que realizamos, considerando que la asignacion de n posiciones de memoria cuenta como n operaciones.
 
 Creamos grafos al azar, que cumplieran las pautas del enunciado y realizamos con ellos las siguientes experiencias:
 
-La primer experiencia consistió en medir la cantidad de operaciones en función de ambas variables.
+La primer experiencia consistió en medir la cantidad de operaciones en función de ambas variables para ver su influencia conjunta en el comportamiento del algoritmo.
 
 Luego decidimos dejar fija cada una ellas para observar el comportamiento por separado.
 
-Finalmente decidimos hacer una ultima experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos.
+Finalmente decidimos hacer una ultima experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos. Queriamos observar como se comporta el algoritmo en grafos que poseen la cantidad maxima de aristas
 
 Los resultados obtenidos se encuentran a continuación.
 
@@ -369,12 +371,12 @@ Los resultados obtenidos se encuentran a continuación.
 \end{figure}
 
 \subsection{Discusion}
-En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde $m < n - 1$ y que se descartan rapidamente. En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
+En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde $m < n - 1$ y que se descartan rapidamente, en O(1). En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
 
-La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores, pero ademas nos permitíó notar una particularidad de nuestro algoritmo y es que en general darse cuenta de que no hay ganador es mas rapido que saber si efectivamente lo hay. Esto es porque si no hay ganador ni bien encontramos en el grafo reducido, dos nodos con $d_{in}=0$ terminamos, y dado que los grafos son al azar, un esperaria no tener que revisar todas las componentes fuertemente conexas para que esto pase. Esta caracteristica se ve plasmada en el grafo, ya que a medida que aumentamos la cantidad de jugadores, dejando fija la cantidad de partidos, es mas probable que no tengamos un ganador. Por eso, para n grande observamos como la recta se parte en otras rectas que estan por debajo.
+La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores. Por otro lado notamos una peculiaridad en el grafico, y que explicamos como una particularidad de nuestro algoritmo (la cual mencionamos anteriormente) y es que en general darse cuenta de que no hay ganador es mas rapido que saber si efectivamente lo hay. Esto es porque si no hay ganador ni bien encontramos en el grafo reducido, dos nodos con $d_{in}=0$ terminamos, y dado que los grafos son al azar, un esperaria no tener que revisar todas las componentes fuertemente conexas para que esto pase. Esta caracteristica se ve plasmada en el grafo, ya que a medida que aumentamos la cantidad de jugadores, dejando fija la cantidad de partidos, es mas probable que no tengamos un ganador. Por eso, para n grande observamos como la recta se parte en otras rectas que estan por debajo.
 
 La tercer experiencia nos permitió ver como se mantenía la tendencia lineal en función del m. En el grafico observamos 2 rectas, la primera corresponde a los casos $m < n -1$ y la segunda es para los casos donde no se puede decidir a priori y tenemos que hacer todo el proceso de los datos.
 
-Finalmente en la grafica de la última experiencia notamos que la cantidad de operaciones crece cuadraticamente. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
+Finalmente en la grafica de la última experiencia notamos que en grafos completos, la cantidad de operaciones crece cuadraticamente con respecto al n. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
 
 A modo de conclusión, podemos decir que las experiencias nos permitieron corroborar el analisis teorico que realizamos previamente.

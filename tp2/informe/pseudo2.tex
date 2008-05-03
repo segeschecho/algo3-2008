@@ -4,34 +4,34 @@
 \caption{Construye la tabla de valores precalculados para hallar el camino}
 \begin{algorithmic}[1]
 
-\STATE matA $\leftarrow$ matrizCuadradaDeCeros(n)
-\STATE matB $\leftarrow$ matrizCuadradaDeCeros(n)
+\STATE matA $\textcolor{orange}{\leftarrow}$ matrizCuadradaDeCeros(n)
+\STATE matB $\textcolor{orange}{\leftarrow}$ matrizCuadradaDeCeros(n)
 
 \COMMENT {Carga los casos base (nodos adyacentes)}
 \FOR {$i$ $\in$ $0,...,n-1$}
-    \STATE a $\leftarrow$ $i$
-    \STATE b $\leftarrow$ $i+1$ mod $n$
+    \STATE a $\textcolor{orange}{\leftarrow}$ $i$
+    \STATE b $\textcolor{orange}{\leftarrow}$ $i+1$ mod $n$
     \IF {estanConectados(a,b)}
-        \STATE matA[a][b] $\leftarrow$ 1
-        \STATE matB[a][b] $\leftarrow$ 1
+        \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ 1
+        \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ 1
     \ENDIF
 \ENDFOR
 
 \COMMENT {Carga los casos recursivos (nodos no adyacentes)}
 \FOR {$i$ $\in$ $2,...,n-1$}
     \FOR {$j$ $\in$ $0,...,n-1$}
-        \STATE a $\leftarrow$ j
-        \STATE b $\leftarrow$ $j+i$ mod $n$
-        \STATE amas1 $\leftarrow$ $a+1$ mod $n$
-        \STATE bmenos1 $\leftarrow$ $b-1$ mod $n$
+        \STATE a $\textcolor{orange}{\leftarrow}$ j
+        \STATE b $\textcolor{orange}{\leftarrow}$ $j+i$ mod $n$
+        \STATE amas1 $\textcolor{orange}{\leftarrow}$ $a+1$ mod $n$
+        \STATE bmenos1 $\textcolor{orange}{\leftarrow}$ $b-1$ mod $n$
 
-        \STATE aux\_a1 $\leftarrow$ estanConectados(a,amas1) y matA[amas1][b]
-        \STATE aux\_a2 $\leftarrow$ estanConectados(a,b) y matB[amas1,b]
-        \STATE aux\_b1 $\leftarrow$ estanConectados(b,bmenos1) y matB[a][bmenos1]
-        \STATE aux\_b2 $\leftarrow$ estanConectados(a,b) y matA[a][bmenos1]
+        \STATE aux\_a1 $\textcolor{orange}{\leftarrow}$ estanConectados(a,amas1) y matA[amas1][b]
+        \STATE aux\_a2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) y matB[amas1,b]
+        \STATE aux\_b1 $\textcolor{orange}{\leftarrow}$ estanConectados(b,bmenos1) y matB[a][bmenos1]
+        \STATE aux\_b2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) y matA[a][bmenos1]
 
-        \STATE matA[a][b] $\leftarrow$ aux\_a1 o aux\_a2
-        \STATE matB[a][b] $\leftarrow$ aux\_b1 o aux\_b2
+        \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ aux\_a1 o aux\_a2
+        \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ aux\_b1 o aux\_b2
     \ENDFOR
 \ENDFOR
 \end{algorithmic}
@@ -55,7 +55,7 @@ Se utilizan las funciones auxiliares:
 \IF { $b-a$ == $1$ o ($b$ == $0$ y $a$ == $n-1$) }
     \RETURN [b,a]
 \ENDIF
-\STATE amas1 $\leftarrow$ $a+1$ mod $n$
+\STATE amas1 $\textcolor{orange}{\leftarrow}$ $a+1$ mod $n$
 \IF {estanConectados(a,amas1) y matA[amas1][b]}
     \RETURN caminoQueTerminaEnA(amas1,b) + [a]
 \ENDIF
@@ -83,8 +83,8 @@ Se utilizan las funciones auxiliares:
 \STATE completarTablas()
 \COMMENT{Completo las tablas $matA$ y $matB$}
 \FOR {$i$ $\in$ $0,...,n-1$}
-    \STATE a $\leftarrow$ i
-    \STATE b $\leftarrow$ $i-1$ mod $n$
+    \STATE a $\textcolor{orange}{\leftarrow}$ i
+    \STATE b $\textcolor{orange}{\leftarrow}$ $i-1$ mod $n$
     \IF {matA[a][b]}
         \RETURN caminoQueTerminaEnA(a,b)
     \ENDIF
