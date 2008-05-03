@@ -43,15 +43,18 @@ un trie tiene un nodo por cada caracter de ua cadena, en cambio las ramas de un 
 un caracter, y si adem'as el conjunto de claves es libre de prefijos, cada nodo del radix tendr'a almenos dos hijos.
 
 \subsection{Sobre el dise\~{n}o de la estructura}
-Por sus caracter'isticas, el PATRICIA presenta un amplio abanico de posibles implementaciones. Nosotros basicamente pensamos en tres formas:
+Por sus caracter'isticas, el PATRICIA presenta un amplio abanico de posibles implementaciones. Nosotros basicamente pensamos en cuatro formas:
 \begin{itemize}
 \item Con nodos formados por un arreglo (en este caso de 26 posiciones) que tiene ejes por elementos
 \item con nodos formados por una lista de ejes 
 \item con nodos que contienen una tabla de hash
+\item con nodos que contienen un diccionario sobre AVLs
 \end{itemize}
 
 Un eje es una tupla de puntero a un nodo hijo y una cadena adjunta. Los nodos pueden tener un bit que indica la validez o invalidez del 
-mismo y/o el dato (significado) a guardar. En el caso de este TP, no se piden datos a guardar, por lo tanto optamos por implementar
+mismo y/o el dato (significado) a guardar. En el caso de este TP, no se piden datos a guardar, sino un conjunto. 
+
+Optamos por implementar
 los nodos con dos variantes de las ya nombradas: nodos formados por un arreglo de 26 posiciones con un bit de existencia y nodos 
 formados por una lista con un bit de existencia. Como luego veremos, ambos dise\~{n}os de estructura cumplir'an las complejidades pedidas. 
 El bit de existencia permite que podamos usar el patricia aun en casos donde el conjunto de entrada no este libre de prefijos, 
@@ -154,10 +157,11 @@ letras del abecedario ingl'es, y no puede tener mas de un eje que su cadena adju
 haber nodos con, por ejemplo, ejes con cadenas casa y cosa.
 
 Una vez que bajamos por las ramas lo m'aximo posible, si la palabra formada es prefijo de la palabra a agregar, quiere decir que 
-caimos en el primer caso. Este caso es simple y solo resta agregar el nodo y el eje correspondiente, con la clave sin prefijo, 
+caimos en el primer caso. Este caso es simple y solo resta agregar el nodo y el eje correspondiente, con la palabra sin prefijo, 
 como se muestra en la figura \ref{fig:noPartirNodo}, gr'afico d.
 
-Supongamos ahora que se desea agregar avellaneda. Bajamos por las ramas. Si la palabra formada no es prefijo de la clave a 
+%TODO: esto es un quilombo
+Si la palabra formada no es prefijo de la clave a 
 definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que 
 no lo son. Entonces haremos lo siguiente: partimos el 'ultimo eje (ver figura \ref{fig:partirNodo}, gr'afico c) y crearemos un 
 nuevo padre para el nodo en el cual quedamos, de manera que la primera parte del 'ultimo eje (la que tiene letras en com'un con 
@@ -167,7 +171,7 @@ reestablecer el invariante, agregamos un nuevo nodo y un nuevo eje, apuntando de
 adjunto la parte restante de la clave (ver figura \ref{fig:partirNodo}, gr'afico e).
 
 Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en cuenta conjuntos de entrada que no sean libre de 
-prefijos, sin alterar el producto pedido. Esto nos agregar'a dos casos m'as: 
+prefijos. Esto nos agregar'a dos casos m'as: 
 \begin{itemize}
 \item Para agregar un elemento hay que simplemente setear el bit de existe
 
@@ -214,6 +218,7 @@ Claramente los dos primeros casos correspondientes al enunciado son excluyentes 
 
 \subsection{Eliminando un elemento}
 Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
+%FIXME: cuales son los casos, solo hay figuras
 \begin{figure}[H]
 \centering
 \subfigure[PATRICIA]{
@@ -249,10 +254,9 @@ Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
 \caption{}
 \label{fig:borroYMergea}
 \end{figure}
-Para solucionar estos casos comenzamos situ'andonos sobre la ra'iz, y bajando, al igual que agregar. Gracias a que el conjunto
- de entrada es libre de prefijos, sabemos que al sacar una clave siempre eliminaremos una hoja del 'arbol. De esta manera, en 
- caso de querer eliminar una clave existente, esta siempre ser'a una hoja, como lo muestra el siguiente gr'afico:
- 
+Para solucionar estos casos comenzamos situ'andonos sobre la ra'iz, y bajando, al igual que agregar. En estos casos, hay que eliminar una hoja, como lo muestra el siguiente gr'afico:
+
+%FIXME: hacer este grafico 
 [Grafico bajando por rama para sacar(dama)] 8
 
 Al borrar la hoja, debemos verificar cuantos hermanos ten'ia. Si ten'ia m'as de un hermano, caeremos en el primer caso, 
@@ -263,7 +267,7 @@ como la rama hasta el nodo padre no conforma una clave definida, podemos unir el
  nodo hijo, como lo muestra el grafico \ref{fig:borroYMergea}.
 
 Excediendo el l'imite del enunciado, nuestro algoritmo sacar podr'a tener en cuenta conjuntos de entrada que no sean libre de 
-prefijos, sin alterar el producto pedido. Esto nos agregar'a dos casos m'as: 
+prefijos. Esto nos agregar'a dos casos m'as: 
 \begin{itemize}
 \item Para sacar un elemento hay que setear FALSE el bit de existe
 \begin{figure}[H]
@@ -307,63 +311,79 @@ Luego de bajar por las ramas del 'arbol verificamos que la palabra armada es igu
  el segundo caso. Se resuelve borrando el nodo padre y concatenando el eje que apuntaba del nodo padre al nodo actual, y el eje
  del nodo actual al nodo siguiente, como lo muestra la figura \ref{fig:casoExtraSacarB}.
  
-Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues los primeros borran solo 
-nodos internos, los segundos borran solo hojas. Esto me asegura que el producto pedido no ser'a cambiado.
+Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues en ellos se borran solo hojas, mientras que estos ultimos se borran nodos internos.
+
+\subsection{Pertenencia de una cadena al conjunto}
+La idea es bajar por los ejes que son prefijos de s, hasta que o bien completamos s o bien no tenemos ejes que sean prefijo de s. Si completamos s, revisamos que el nodo exista  y si esa asi se devuelve verdadero; en otro caso devolvemos false.
+
+\subsection{Cardinal}
+Dado que se nos pedia devolver el cardinal en orden constante, no nos quedo otra alternativa que tenerlo calculado cuando se llame a la función. Por eso, tenemos el valor calculado, incrementándolo y decrementándolo cuando se agrega o saca una palabra, respectivamente.
 
 
-\subsection{Detalles de implementacion de los nodos}
-Aclaraciones sobre los miembros privados de la estructura: para implementar las listas (para los nodos que las usan) usamos Standard Template Library (STL). Fueron definidas 2 (dos) variables auxiliares: existe y cantElem. Si bien aislando el nodo como estructura independiente el booleano "existe" puede carecer de sentido, lo adquiere al implementar el PATRICIA, ya que sin ella no podriamos diferenciar los elementos definidos de los no definidos. En cuanto a cantElem, solo existe para nodo sobre arreglos. La variable se agrega para informarnos la cantidad de hijos que tiene el nodo, y se contabiliza a medida que se agregan y sacan nodos hijos. No lo necesitamos para los nodos sobre listas, pues contamos con la funcion size de STL list.
-La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a eje.
-A continuaci'on explicaremos detalladamente cada funci'on referente a los nodos:
-\begin{itemize}
-\item constructor: inicializa el booleano existe a FALSE. En caso de nodo sobre arreglo, inicializa adem'as cantElem a 0 (cero) y todo el arreglo a NULL.
-\item agregar: toma por par'ametro una referencia constante a cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo en cuesti'on. Lo hace asign'andole un eje que tiene un puntero al nuevo nodo y una cadena adjunta. Si el nodo es pasado por par'ametro, el eje apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos, con el bit existe en TRUE, y el eje apuntar'a hacia el nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre listas, los ejes son agregados en orden ascendiente por cadena.
+\section{Cuestiones de implementacion de los nodos y del PATRICIA}
+Con respecto a las listas (para los nodos que las usan) usamos las porvistas por la Standard Template Library (STL). Un nodo guarda la cantidad de hijos que tiene y si el existe. Si bien aislando el nodo como estructura independiente, el booleano `` existe' puede carecer de sentido, lo adquiere al implementar el PATRICIA, ya que sin ella no podriamos diferenciar los elementos definidos de los no definidos. La cantidad de hijos es util para saber cuantos hijos contiene un nodo implementado sobre arreglos.
 
-\item sacar: toma por par'ametro una referencia constante a cadena. Borra el eje adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado por el eje borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el eje es trivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar sobre la lista hasta encontrar el eje a borrar.
+La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a eje, analogamente la implementaciópn con listas cuenta con una lista con apuntadores a ejes. Un eje, es una cadena asociada y un puntero a otro nodos
 
-\item pertenece: toma por par'ametro una referencia constante a cadena. Verifica si existe un eje adjunto a la cadena pasada por par'ametro. Para los nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un eje adjunto a la cadena, se devuelve NULL.
+Cada nodo es capaz de agregar nodos hijos mediante un eje con una cadena adjunta, siempre y cuando no tenga hijos cuya cadena asociada a su eje comience con la misma letra. El nodo hijo lo puede crear o recibirlo como un parametro.
+Asimismo, un nodo es capaz de sacar un eje que lo une a alguno de sus hijos, sin embargo no borra a dicho hijo, esto será tarea del trie. Tambien saben que palabra tiene asociada cada uno de sus hijos, lo cual sirve para poder realizar la bajada por el PATRICIA.
 
-\item ejeQueEmpiezaCon(cadena): toma por par'ametro una referencia constante a cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a NULL. Devuelve un puntero a eje que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta encontrar una coincidencia entre la primer letra de la cadena adjunta al eje iterado con el par'ametro. Si no existe tal eje, se devuelve NULL.
+%TODO: creo q alcanza con lo q dije antes
 
-\item iesimoEje(entero): toma por par'ametro un entero sin signo $n$. Devuelve un apuntador a eje. Para nodo sobre arreglos, se indexa el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta iterar $n$ veces. Si no existe tal eje, se devuelve NULL.
+%A continuaci'on explicaremos detalladamente cada funci'on referente a los nodos:
+%\begin{itemize}
+%\item constructor: inicializa el booleano existe a FALSE. En caso de nodo sobre arreglo, inicializa adem'as cantElem a 0 (cero) y todo el arreglo a NULL.
+%\item agregar: toma por par'ametro una referencia constante a cadena y un opcional apuntador a nodo. Adhiere un nuevo nodo al conjunto de hijos del nodo en cuesti'on. Lo hace asign'andole un eje que tiene un puntero al nuevo nodo y una cadena adjunta. Si el nodo es pasado por par'ametro, el eje apuntar'a hacia ese nodo. Caso contrario se crear'a un nuevo nodo sin nodos hijos, con el bit existe en TRUE, y el eje apuntar'a hacia el nuevo nodo. Esto es as'i a causa de efectos pr'acticos a la hora de implementar el PATRICIA. Para el caso de los nodos sobre arreglos, a la i-esima letra del abecedario ingl'es le corresponde la i-esima posici'on del arreglo. En caso de los nodos sobre listas, los ejes son agregados en orden ascendiente por cadena.
+%
+%\item sacar: toma por par'ametro una referencia constante a cadena. Borra el eje adjunto a la cadena pasada por par'ametro. No borrar'a el nodo apuntado por el eje borrado. Esto, en cambio, ser'a tarea del PATRICIA. Para el caso de los nodos sobre arreglos, borrar el eje es trivial si indexamos el arreglo  sobre la primer letra del par'ametro. En cambio, para los nodos sobre listas, se deber'a iterar sobre la lista hasta encontrar el eje a borrar.
+%
+%\item pertenece: toma por par'ametro una referencia constante a cadena. Verifica si existe un eje adjunto a la cadena pasada por par'ametro. Para los nodos sobre arreglos, indexamos el arreglo sobre la primer letra del par'ametro y verificamos la igualdad. Para los nodos sobre listas, iteramos sobre la lista hasta encontrar la cadena buscada. Para ambos casos, si no se encuentra un eje adjunto a la cadena, se devuelve NULL.
+%
+%\item ejeQueEmpiezaCon(cadena): toma por par'ametro una referencia constante a cadena. Requiere que la cadena sea de longitud 1 (uno). Caso contrario devolver'a NULL. Devuelve un puntero a eje que tiene por primer letra el parametro. Para nodo sobre arreglos, simplemente se indexa sobre la letra del par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta encontrar una coincidencia entre la primer letra de la cadena adjunta al eje iterado con el par'ametro. Si no existe tal eje, se devuelve NULL.
+%
+%\item iesimoEje(entero): toma por par'ametro un entero sin signo $n$. Devuelve un apuntador a eje. Para nodo sobre arreglos, se indexa el arreglo sobre el entero pasado par'ametro. Para nodo sobre listas, se itera sobre la lista de ejes, hasta iterar $n$ veces. Si no existe tal eje, se devuelve NULL.
+%
+%\item primerEje: no toma par'ametros. Devuelve un apuntador al primer eje encontrado. Para nodo sobre arreglos, se busca de 0 a 26 un eje definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
+%
+%\item cantHijos: no toma par'ametros. Devuelve el cardinal del nodo, entendi'endose por cardinal la cantidad de hijos que tiene. En realidad esta funci'on no hace mas que devolver el valor de la variable cantElem.
+%
+%\item esHoja: no toma par'ametros. Devuelve TRUE o FALSE indicando si el nodo no tiene ningun nodo hijo o tiene alguno, respectivamente. Simplemente se compara cantElem con 0.
+%
+%\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando eje por eje (NO borra los nodos hijo). En caso de nodo sobre lista, no hace absolutamente nada.
+%\end{itemize}
 
-\item primerEje: no toma par'ametros. Devuelve un apuntador al primer eje encontrado. Para nodo sobre arreglos, se busca de 0 a 26 un eje definido. Para nodo sobre listas, se devuelve el primer elemento de la lista.
+Definimos la clase PATRICIA que es `` amiga '' de la clase nodo y adem'as lo contiene. Necesita ser amigo para tener acceso a la creaci'on de ejes y uso de los metodos privados.
 
-\item cantHijos: no toma par'ametros. Devuelve el cardinal del nodo, entendi'endose por cardinal la cantidad de hijos que tiene. En realidad esta funci'on no hace mas que devolver el valor de la variable cantElem.
+Un PATRICIA tiene ademas la cantidad de palabras definidas, la cual necesitamos para poder cumplir con el orden pedido para la función cardinal.
 
-\item esHoja: no toma par'ametros. Devuelve TRUE o FALSE indicando si el nodo no tiene ningun nodo hijo o tiene alguno, respectivamente. Simplemente se compara cantElem con 0.
+Un PATRICIA esta compuesto entonces por un nodo llamado raiz y por la cantidad de palabras que lo componen.
 
-\item destructor: para nodo sobre arreglo, recorre el arreglo eliminando eje por eje (NO borra los nodos hijo). En caso de nodo sobre lista, no hace absolutamente nada.
-\end{itemize}
-
-\subsection{Detalles de implementacion del 'arbol PATRICIA}
-Aclaraciones sobre la clase: el PATRICIA es amigo de la clase nodo y adem'as lo contiene. Necesita ser amigo para tener acceso a la creaci'on de ejes y uso de los metodos privados.
-Aclaraciones sobre la variable privada: aqu'i tambi'en tenemos una variable llamada cantElem, que contabilizar'a la cantidad de elementos definidos en el conjunto de cadenas. Esta variable nos permitir'a cumplir con las complejidades pedidas, como se explica en la secci'on de c'alculo de la complejidad.
-\begin{itemize}
-\item constructor: inicializa cantElem a 0 (cero) y la raiz, sete'andole TRUE a su valor existe.
-
-\item destructor: hace un recorrido postorder sobre el 'arbol: primero recorre la lista de hijos, llamando recursivamente, y luego borra el nodo actual.
-
-\item agregar: toma por par'ametro una referencia constante a cadena. Se baja por las ramas con el m'etodo bajar. Se verifica si la palabra armada es igual a la cadena y si el nodo existe. Si esto se cumple, terminar'a, pues quiere decir que la palabra ya estaba definida, sino sigue su ejecuci'on. A partir de este paso, sabemos que hay un elemento que ser'a agregado, pues es un elemento no existente en el conjunto. Luego se toma la cadena pasada por par'ametro y la palabra armada, y se les quita el prefijo. Esto lo hacemos pues as'i podemos ver si debemos partir el eje o no, ya que si la palabra armada, que es la concatenaci'on de todos los ejes por los que baj'e, no es prefijo de la cadena, quiere decir que el 'ultimo eje no coincid'ia totalmente con la parte de la cadena sin prefijo. Verificamos entonces si la palabra armada es vac'ia luego de sacarle el prefijo, si no lo es, partimos el eje y creamos un nuevo padre para este nodo. Si era vacia, no hacemos nada. Luego dependiendo si se partio el eje o no, colgamos el nuevo nodo del nuevo padre o del nodo en el que quedamos luego de bajar, y a ese eje le adjuntamos la parte sin prefijo de la cadena, con el m'etodo agregar de nodo. Finalmente se incrementa la variable cantElem, sin importar en qu'e caso entr'o, pues antes hab'iamos comprobado si la cadena a agregar no est'a definida en el conjunto.
-
-\item sacar: toma por par'ametro una referencia constante a cadena. Se baja por las ramas con el m'etodo bajar. Se verifica si se logr'o encontrar la cadena comparandola en relaci'on de igualdad con la palabra armada, y si el nodo existe. Si esto se cumple, el algoritmo sigue su ejecuci'on, sino termina. Nuevamente decimos que a partir de este paso, sabemos que hay un elemento que ser'a eliminado. Para este m'etodo resulta necesario el retorno de bajar, el eje anterior al eje actual (el que va del abuelo al padre del nodo actual), pues este nos permite resolver casos de uni'on de ejes cuando el padre del actual tiene dos hijos o menos. Empezamos por resolver los casos que el enunciado nos da: aquellos que borramos una hoja. Si el actual es hoja, lo borramos, junto con su eje, y verificamos lo siguiente: si exist'ia un nodo anterior (no se est'a borrando ning'un elemento que esta colgado de la raiz) y el anterior no existe y, luego de borrar la hoja, tiene 1 hijo, entonces tenemos que unir los ejes anterior y el eje que va del padre al 'unico hermano del nodo borrado. Los casos restantes son aquellos que se debe borrar un nodo interno. Estos se contemplan entre todo el conjunto de casos que son disjuntos con el anterior (aquellos en los que se borran hojas). Se comienza preguntando si el nodo actual tiene un unico hijo, pues debemos evitar podar toda una rama del 'arbol incorrectamente. En este caso, se concatenan los ejes del padre del actual al actual, y del actual al hijo del actual. Luego se procede a borrar el actual. Si el actual tenia m'as de un hijo, se setea el bit existe a FALSE. Finalmente se decrementa la variable cantElem en uno. Es importante notar que la variable decrementa sin importar en qu'e caso entr'o, pues antes hab'iamos comprobado si la cadena a borrar est'a definida en el conjunto.
-
-\item pertenece: toma por par'ametro una referencia constante a cadena. Devuelve un booleano. Se procede bajando por el 'arbol con el m'etodo bajar, y se verifica si se logr'o encontrar la cadena comparandola en relaci'on de igualdad con la palabra armada, y si actual existe.
-
-\item cardinal: no toma par'ametros. Devuelve un entero positivo. Esta funci'on devuelve el valor de cantElem.
-
-\item bajar: toma por par'ametro una referencia a puntero a nodo, una referencia a puntero a eje, una referencia constante de cadena, y una referencia a cadena. Devuelve un puntero a eje. El primer par'ametro corresponde al nodo actual, y funciona como variable para devolver resultados. Al algoritmo no le interesa lo que le manden en esa variable, pues al entrar define actual como raiz. An'alogamente, el segundo par'ametro funciona tambi'en como variable de retorno del eje actual (el que apunta al nodo actual) y el algoritmo asigna su valor al entrar a la funci'on. El tercer par'ametro es la cadena que se le pasa por par'ametro a agregar y a bajar. El cuarto par'ametro es la palabra armada, que es la concatenacion de todas las cadenas adjuntas a los ejes por los cuales bajaremos. A este par'ametro tambi'en se le asigna un valor, que es la cadena vac'ia, apenas se llama la funci'on. Este m'etodo tiene como fin ser reciclable: puede ser usado para bajar por el 'arbol, sin importar el caso para el cual se lo quiere usar, sea agregar, sacar o verificar pertenencia.
-Bajar define cuatro variables auxiliares: puedeBajar (bool), recortada (string), aux (puntero a eje) y ejeAnterior (puntero a eje). La primera define si el algoritmo puede seguir bajando o no por las ramas del 'arbol, la segunda sirve para guardar la parte que falta por recorrer del tercer argumento, la tercera sirve para mirar a los ejes antes de bajar, y la cuarta guarda el valor de ejeActual (segundo par'ametro) antes de ser cambiado. El m'etodo comienza llamando a actual.ejeQueEmpiezaCon d'andole la primer letra de recortada (que al principio coincide con la primer letra del tercer par'ametro). Si existe tal eje, se asigna TRUE a puedeBajar. Sino, el algoritmo finaliza. Si es cierto que se puede bajar, se procede a hacerlo actualizando los valores de eje anterior, eje actual, nodo actual, la palabra armada, la palabra recortada y puedoBajar. A puedoBajar se le asigna TRUE si el eje actual es prefijo (completo) de recortada. Sino se le asigna falso. Este procedimiento se ejecuta hasta que puedoBajar sea falso, sea porque lleg'o a una hoja o porque el eje que contiene eje actual no es totalmente prefijo de recortada.
-
-\item quitarPrefijoEnComun: toma por par'ametro una referencia a cadena y una referencia constante a cadena. Recorre letra por letra de los par'ametros, hasta que alguno de los dos llegue al final, y guarda un contador de cu'antas letras recorri'o. Al finalizar, le borra al primer par'ametro desde el principio de la cadena hasta contador. La funci'on devuelve TRUE si la longitud del segundo par'ametro es igual al valor de contador, o sea devuelve true si el segundo par'ametro es prefijo del primero. Caso contrario, devuelve FALSE.
-\end{itemize}
+%\begin{itemize}
+%\item constructor: inicializa cantElem a 0 (cero) y la raiz, sete'andole TRUE a su valor existe.
+%
+%\item destructor: hace un recorrido postorder sobre el 'arbol: primero recorre la lista de hijos, llamando recursivamente, y luego borra el nodo actual.
+%
+%\item agregar: toma por par'ametro una referencia constante a cadena. Se baja por las ramas con el m'etodo bajar. Se verifica si la palabra armada es igual a la cadena y si el nodo existe. Si esto se cumple, terminar'a, pues quiere decir que la palabra ya estaba definida, sino sigue su ejecuci'on. A partir de este paso, sabemos que hay un elemento que ser'a agregado, pues es un elemento no existente en el conjunto. Luego se toma la cadena pasada por par'ametro y la palabra armada, y se les quita el prefijo. Esto lo hacemos pues as'i podemos ver si debemos partir el eje o no, ya que si la palabra armada, que es la concatenaci'on de todos los ejes por los que baj'e, no es prefijo de la cadena, quiere decir que el 'ultimo eje no coincid'ia totalmente con la parte de la cadena sin prefijo. Verificamos entonces si la palabra armada es vac'ia luego de sacarle el prefijo, si no lo es, partimos el eje y creamos un nuevo padre para este nodo. Si era vacia, no hacemos nada. Luego dependiendo si se partio el eje o no, colgamos el nuevo nodo del nuevo padre o del nodo en el que quedamos luego de bajar, y a ese eje le adjuntamos la parte sin prefijo de la cadena, con el m'etodo agregar de nodo. Finalmente se incrementa la variable cantElem, sin importar en qu'e caso entr'o, pues antes hab'iamos comprobado si la cadena a agregar no est'a definida en el conjunto.
+%
+%\item sacar: toma por par'ametro una referencia constante a cadena. Se baja por las ramas con el m'etodo bajar. Se verifica si se logr'o encontrar la cadena comparandola en relaci'on de igualdad con la palabra armada, y si el nodo existe. Si esto se cumple, el algoritmo sigue su ejecuci'on, sino termina. Nuevamente decimos que a partir de este paso, sabemos que hay un elemento que ser'a eliminado. Para este m'etodo resulta necesario el retorno de bajar, el eje anterior al eje actual (el que va del abuelo al padre del nodo actual), pues este nos permite resolver casos de uni'on de ejes cuando el padre del actual tiene dos hijos o menos. Empezamos por resolver los casos que el enunciado nos da: aquellos que borramos una hoja. Si el actual es hoja, lo borramos, junto con su eje, y verificamos lo siguiente: si exist'ia un nodo anterior (no se est'a borrando ning'un elemento que esta colgado de la raiz) y el anterior no existe y, luego de borrar la hoja, tiene 1 hijo, entonces tenemos que unir los ejes anterior y el eje que va del padre al 'unico hermano del nodo borrado. Los casos restantes son aquellos que se debe borrar un nodo interno. Estos se contemplan entre todo el conjunto de casos que son disjuntos con el anterior (aquellos en los que se borran hojas). Se comienza preguntando si el nodo actual tiene un unico hijo, pues debemos evitar podar toda una rama del 'arbol incorrectamente. En este caso, se concatenan los ejes del padre del actual al actual, y del actual al hijo del actual. Luego se procede a borrar el actual. Si el actual tenia m'as de un hijo, se setea el bit existe a FALSE. Finalmente se decrementa la variable cantElem en uno. Es importante notar que la variable decrementa sin importar en qu'e caso entr'o, pues antes hab'iamos comprobado si la cadena a borrar est'a definida en el conjunto.
+%
+%\item pertenece: toma por par'ametro una referencia constante a cadena. Devuelve un booleano. Se procede bajando por el 'arbol con el m'etodo bajar, y se verifica si se logr'o encontrar la cadena comparandola en relaci'on de igualdad con la palabra armada, y si actual existe.
+%
+%\item cardinal: no toma par'ametros. Devuelve un entero positivo. Esta funci'on devuelve el valor de cantElem.
+%
+%\item bajar: toma por par'ametro una referencia a puntero a nodo, una referencia a puntero a eje, una referencia constante de cadena, y una referencia a cadena. Devuelve un puntero a eje. El primer par'ametro corresponde al nodo actual, y funciona como variable para devolver resultados. Al algoritmo no le interesa lo que le manden en esa variable, pues al entrar define actual como raiz. An'alogamente, el segundo par'ametro funciona tambi'en como variable de retorno del eje actual (el que apunta al nodo actual) y el algoritmo asigna su valor al entrar a la funci'on. El tercer par'ametro es la cadena que se le pasa por par'ametro a agregar y a bajar. El cuarto par'ametro es la palabra armada, que es la concatenacion de todas las cadenas adjuntas a los ejes por los cuales bajaremos. A este par'ametro tambi'en se le asigna un valor, que es la cadena vac'ia, apenas se llama la funci'on. Este m'etodo tiene como fin ser reciclable: puede ser usado para bajar por el 'arbol, sin importar el caso para el cual se lo quiere usar, sea agregar, sacar o verificar pertenencia.
+%Bajar define cuatro variables auxiliares: puedeBajar (bool), recortada (string), aux (puntero a eje) y ejeAnterior (puntero a eje). La primera define si el algoritmo puede seguir bajando o no por las ramas del 'arbol, la segunda sirve para guardar la parte que falta por recorrer del tercer argumento, la tercera sirve para mirar a los ejes antes de bajar, y la cuarta guarda el valor de ejeActual (segundo par'ametro) antes de ser cambiado. El m'etodo comienza llamando a actual.ejeQueEmpiezaCon d'andole la primer letra de recortada (que al principio coincide con la primer letra del tercer par'ametro). Si existe tal eje, se asigna TRUE a puedeBajar. Sino, el algoritmo finaliza. Si es cierto que se puede bajar, se procede a hacerlo actualizando los valores de eje anterior, eje actual, nodo actual, la palabra armada, la palabra recortada y puedoBajar. A puedoBajar se le asigna TRUE si el eje actual es prefijo (completo) de recortada. Sino se le asigna falso. Este procedimiento se ejecuta hasta que puedoBajar sea falso, sea porque lleg'o a una hoja o porque el eje que contiene eje actual no es totalmente prefijo de recortada.
+%
+%\item quitarPrefijoEnComun: toma por par'ametro una referencia a cadena y una referencia constante a cadena. Recorre letra por letra de los par'ametros, hasta que alguno de los dos llegue al final, y guarda un contador de cu'antas letras recorri'o. Al finalizar, le borra al primer par'ametro desde el principio de la cadena hasta contador. La funci'on devuelve TRUE si la longitud del segundo par'ametro es igual al valor de contador, o sea devuelve true si el segundo par'ametro es prefijo del primero. Caso contrario, devuelve FALSE.
+%\end{itemize}
 
 \section{Pseudoc'odigo}
 \input{pseudo3}
-\newpage
+\input{pseudo3b}
 
+%TODO: esta bien que el tamaño de la entrada sea longs?
 \section{Cálculo de complejidad}
-Para realizar el analisis de la complejidad vamos a considerar el modelo uniforme ya que las principales operaciones se realizan a nivel de caracteres, por lo cual podemos considerar que tienen un costo acotado. Ahora bien, con respecto al tamaño de la entrada, en este caso consideramos que es la cantidad de caracteres que componen a la cadena sobre la que se va a operar, ya sea para agregarla, borrarla o saber si esta definida. Llamos s a la cadena de entrada, y $long_s$ a el largo (cantidad de caracteres) de la misma
+Para realizar el analisis de la complejidad vamos a considerar el modelo uniforme ya que las principales operaciones se realizan a nivel de caracteres, por lo cual podemos considerar que tienen un costo acotado. Ahora bien, con respecto al tamaño de la entrada, en este caso consideramos que es la cantidad de caracteres que componen a la cadena sobre la que se va a operar, ya sea para agregarla, borrarla o saber si esta definida. Llamos s a la cadena de entrada, y $long_s$ a el largo (cantidad de caracteres) de la misma.
 
 A continuación analizaremos las cuatro funciones que debíamos implementar, para determinar el orden de complejidad logrado en cada una.
 
@@ -382,7 +402,7 @@ Si en cambio la palabra no estaba, lo proximo que hacemos es eliminar los prefij
 
 Si hay que partir el nodo, lo que se hace es partir la cadena del ultimo eje visitado en la parte que es igual a s y la parte que difiere. Nuevamente, vamos a recorrer como mucho $long_s$, msa no podemos porque a partir del caracter $long_s$ + 1 no hay caracter en s con el cual comparar.
 
-Una vez que partimos esta cadena creamos un eje nuevo, que se hace en O($long_max$) donde $long_max$ es el tamaño de la mayor palabra en el patricia porque si armamos un eje nuevo hay que copiar la parte de la cadena del eje, que no era prefijo en s, y esa parte de la cadena puede ser mas larga que s, por esa razon es O($long_max$) y no O($long_s$). Tambien creamos un nuevo nodo, que se hace en O(1).
+Una vez que partimos esta cadena creamos un eje nuevo, que se hace en O($long_{max}$) donde $long_{max}$ es el tamaño de la mayor palabra en el patricia porque si armamos un eje nuevo hay que copiar la parte de la cadena del eje, que no era prefijo en s, y esa parte de la cadena puede ser mas larga que s, por esa razon es O($long_{max}$) y no O($long_s$). Tambien creamos un nuevo nodo, que se hace en O(1).
 
 Luego de esto, linkeamos los nodos mediante el eje antes creado. Y seteamos el valor de existencia del nodo. Estas acciones se hacen en O(1), lo primero es setear un puntero y lo segundo es asignar un bool.
 
@@ -392,48 +412,48 @@ Si no habia que partir nodo, ni agregar un nodo nuevo, solo se setea el bit de e
 
 Por ultimo si la palabra no estaba ya en el conjunto, incrementamos en uno el cardinal del conjunto
 
-Luego tenemos una cantidad acotada de operaciones de costo O($long_s$) y O($long_max$). Ahora bien, como $long_max \geq long_s$, O($long_s$) $\subset$ O($long_max$). Por lo tanto, el orden del algoritmo tiene un orden O($long_max$)
+Luego tenemos una cantidad acotada de operaciones de costo O($long_s$) y O($long_{max}$). Ahora bien, como $long_{max} \geq long_s$, O($long_s$) $\subset$ O($long_{max}$). Por lo tanto, el orden del algoritmo tiene un orden O($long_{max}$)
 
 \subsection{Sacar}
 Primero bajamos mientras en los ejes encontremos prefijo de s. Como vimos antes, esto se hace en $O(long_s)$. 
  
 Si el nodo a borrar es una hoja, eliminamos el nodo y al eje correspondiente. Borrar el eje, tiene $O(long_s)$ porque dicho eje, era subcadena de s. 
 
-Una vez hecho esto, podria ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_max$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del `hermano` de s.
+Una vez hecho esto, podria ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_{max}$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del `hermano` de s.
 
-Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de él con su padre y de él con su unico hijo. Nuevamente el costo de esto es O($long_max$).
+Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de él con su padre y de él con su unico hijo. Nuevamente el costo de esto es O($long_{max}$).
 
 Si no era hoja y no tenia solo un hijo, lo que hacemos es setear su flag de existe en false, que se hace en O(1). 
 
 Si la palabra estaba definida, lo ultimo que hacemos es decrementar en uno el cardinal del conjunto.
 
-Luego el orden de esta operacion es  O($long_max$)
+Luego el orden de esta operacion es  O($long_{max}$)
 
 \subsection{Pertenece}
 Al igual que con las dos operaciones anteriores, lo que hacemos es bajar mientras encontremos en los ejes, prefijos de s. Esto, como dijimos anteriormente tiene costo $O(long_s)$. Una vez que bajamos, comparamos la cadena obtenida durante la bajada, con s. La cadena se obtiene en $O(long_s)$ mientras bajamos, y la comparació se hace también en $O(long_s)$. 
 Por otro lado se pregunta si el nodo existe, pero esta operacion la realizamos en O(1).
 
-Como $long_max \geq long_s$, vale que $O(long_s)$$\subset$ O($long_max$), luego la operación es O($long_max$)
+Como $long_{max} \geq long_s$, vale que $O(long_s)$$\subset$ O($long_{max}$), luego la operación es O($long_{max}$)
 
 \subsection{Cantidad de elementos}
 Como cada vez que guardamos o sacamos una palabra actualizamos el cardinal del conjunto, en caso de que se solicite la cantidad de palabras del conjunto, se devuelve este contador, sin tener que hacer mas operaciones, por lo tanto la operacion es O(1).
 
 \section{Analisis experimental}
 \subsection{Experiencias realizadas}
-Para este ejercicio decidimos no solo realizar un analisis para contrastar con el analisis teorico de los algortimos, sino también comparar las dos implementaciones del patricia.
+Para este ejercicio decidimos no solo realizar un analisis para contrastar con el analisis teorico de los algortimos, sino también comparar las dos implementaciones del PATRICIA.
 
-Para esto, lo que hicimos fue contar operaciones al agregar, buscar y borrar elementos en ambas implementaciones del patricia. Para esto generamos conjuntos de palabras y las agregamos en orden creciente con respecto a la cantidad de caracteres. Luego las buscamos, y finalmente las borramos. 
+Primero, lo que hicimos fue contar operaciones al agregar, buscar y borrar elementos en ambas implementaciones del PATRICIA para contrastar los resultados con el calculo de complejidad anterior. Para esto generamos conjuntos de palabras y las agregamos en orden creciente con respecto a la cantidad de caracteres. Luego las buscamos, y finalmente las borramos. 
 
-Ademas medimos los tiempos para agregar conjuntos de palabras en cada una de ellas.
+Ademas medimos los tiempos para agregar conjuntos de palabras en cada una de ellas, de esta forma buscamos comparar cual de las dos implementaciones era mas veloz.
 
-Finalmente consideramos que otro factor que debia ser tenido en cuenta era el espacio que ocupaban ambas estructuras, por esa razon decidimos medir la memoria que consumia cada uno al agregar varios conjuntos de palabras.
+Finalmente consideramos que otro factor que debia ser tenido en cuenta era el espacio que ocupaban ambas estructuras, por esa razon decidimos medir la memoria que consumia cada uno al agregar varios conjuntos de palabras. Uno espera que con respecto al tiempo se comporte mejor el trie sobre arreglos, sin embargo también es de esperarse que ocupe mucha mas memoria que las listas, por esa razon nos parecion interesante ver cuanta era esta diferencia.
 
 \subsection{Resultados}
 
 \subsubsection{Experiencia 1: Cantidad de operaciones al agregar palabras de largo creciente en ambas implementaciones}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{./figuras/graficos/ej3/operacionesAgregar.png} 
+\includegraphics[scale=0.5]{./figuras/graficos/ej3/operacionesAgregar.png} 
 \label{fig:ej3exp1}
 \end{figure}
 Los puntos rojos, corresponden a la implementaci'on con listas, los azules con arreglos.
@@ -441,36 +461,38 @@ Los puntos rojos, corresponden a la implementaci'on con listas, los azules con a
 \subsubsection{Experiencia 2: Cantidad de operaciones al buscar palabras de largo creciente en ambas implementaciones}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.6]{./figuras/graficos/ej3/operacionesPertenece.png} 
+\includegraphics[scale=0.7]{./figuras/graficos/ej3/operacionesPertenece.png} 
 \label{fig:ej3exp2}
 \end{figure}
 
 \subsubsection{Experiencia 3: Cantidad de operaciones al quitar palabras de largo creciente en ambas implementaciones}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.4]{./figuras/graficos/ej3/operacionesSacar.png} 
+\includegraphics[scale=0.5]{./figuras/graficos/ej3/operacionesSacar.png} 
 \label{fig:ej3exp3}
 \end{figure}
 
 \subsubsection{Experiencia 4: Tiempo requerido para agregar diferentes conjuntos de palabras}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.6]{./figuras/graficos/ej3/comparacionArreglosListas.png} 
+\includegraphics[scale=0.7]{./figuras/graficos/ej3/comparacionArreglosListas.png} 
 \label{fig:ej3exp4}
 \end{figure}
 
 \subsubsection{Experiencia 5: Cantidad de memoria utilizada para agregar diferentes conjuntos de palabras}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.6]{./figuras/graficos/ej3/katchi.JPG} 
+\includegraphics[scale=0.5]{./figuras/graficos/ej3/memoria.png} 
 \label{fig:ej3exp5}
 \end{figure}
 
 \subsection{Discusión}
-En las experiencias 1,2 y 3 observamos como la cantidad de operaciones es considerablemente mayor en la implementación con listas, esto es de esperarse ya que encontrar el eje por el cual bajar es mucho mas rapido en los arreglos, si bien en ambos es O(1), las listas presentan una constante mucho mas alta, ya que si un nodo tiene 26 hijos la busqueda es lineal y se recorren en peor caso los 26 ejes.
+En las experiencias 1, 2 y 3 observamos como la cantidad de operaciones es considerablemente mayor en la implementación con listas, esto es de esperarse ya que encontrar el eje por el cual bajar es mucho mas rapido en los arreglos, si bien en ambos es O(1), las listas presentan una constante mucho mas alta, ya que si un nodo tiene 26 hijos la busqueda es lineal y se recorren en peor caso los 26 ejes.
 
-Independientemente de la implementación se noto como la cantidad de operaciones se incrementa linealmente a medida que se agregan palabras mas largas, esto es de esperarse ya que la complejidad nos dio O($long_max$).
+Independientemente de la implementación se noto como la cantidad de operaciones se incrementa linealmente a medida que se agregan palabras mas largas, esto es de esperarse ya que la complejidad nos dio O($long_{max}$).
 
 La experiencia 4 vuelve a poner de minifiesto lo que observamos anteriormente, es decir que la implementación con arreglos es mas veloz que la implementación con listas.
 
-Finalmente la experiencia 5 nos muestra como la implementación con arreglos, que se mostro claramente mas rapida, consume una gran cantidad de memoria mas que la implementación con listas. Esta es una buena razón por la cual podria considerarse pese a que es mas lenta, la implementación sobre listas antes que sobre arreglos.
+Finalmente la experiencia 5 nos muestra como la implementación con arreglos, que se mostro claramente mas rapida, consume una gran cantidad de memoria mas que la implementación con listas. Esta es una buena razón por la cual podria considerarse pese a que es mas lenta, la implementación sobre listas antes que sobre arreglos. 
+
+A modo de conclusión podemos decir en primer lugar que el las experiencias coincidieron con lo calculado teoricamente. Y por otro lado observamos como cada implementación de los nodos presenta sus ventajas y desventajas, razon por la cual para utilizar una u otra implementación debe considerarse el contexto donde se va a usar, es decir, a la hora de utilizar una u otra, es importante plantearse que es mas critico: si el tiempo de respuesta (nodos con arreglos) o la utilización de la memoria (nodos con listas).
