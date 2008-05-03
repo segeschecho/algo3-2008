@@ -1,6 +1,30 @@
 \begin{algorithm}
+\caption{baja por las ramas segun una cadena s, ademas va armando la palabra que se forma durante el recorrido }
+\begin{algorithmic}[1]
+\PARAMS{una cadena s y otra cadena, cadenaArmada que se va a modificar}
+\STATE cadenaArmada \textcolor{orange}{$\leftarrow$}  $""$
+\STATE ejeAnterior \textcolor{orange}{$\leftarrow$}  \textcolor{orange}{$\bot$}
+\STATE ejeActual\textcolor{orange}{$\leftarrow$}  \textcolor{orange}{$\bot$}
+\STATE nodoActual \textcolor{orange}{$\leftarrow$} raiz
+\STATE eje \textcolor{orange}{$\leftarrow$} eje de nodo actual que comienza con la primer letra de s
+\STATE puedoBajar \textcolor{orange}{$\leftarrow$} (existe dicho eje);
+\WHILE{ exista el eje \textcolor{orange}{$\wedge$} puedoBajar }
+	\STATE guardamos en eje anterior el ejeActual
+	\STATE guardamos en ejeActual el eje que estamos mirando ahora 
+	\STATE nodoActual \textcolor{orange}{$\leftarrow$} nodo apuntado por el eje
+	\STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabraArmada \textcolor{orange}{++} cadena del eje
+	\STATE sacar a s la parte del eje que le es prefijo
+	\STATE puedoBajar \textcolor{orange}{$\leftarrow$} el eje entero era prefijo de s
+	\STATE eje \textcolor{orange}{$\leftarrow$} eje del nodo actual que empieza con la primer letra de s
+\ENDWHILE
+\RETURN ejeAnterior
+\end{algorithmic}
+\end{algorithm}	
+
+\begin{algorithm}
 \caption{agrega una palabra s al conjunto}
 \begin{algorithmic}[1]
+\PARAMS{ la palabra s a agregar}
 \STATE bajar por las ramas hasta no encontrar mas prefijo en el trie
 \STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabra armada durante el recorrido
 \STATE acutal \textcolor{orange}{$\leftarrow$} nodo hasta donde baje
@@ -35,65 +59,16 @@
 \end{algorithm}
 
 \begin{algorithm}
-\caption{saca una palabra s del conjunto}
-\begin{algorithmic}[1]
-\STATE bajar por las ramas hasta no encontrar mas prefijo
-\STATE ejeAnterior \textcolor{orange}{$\leftarrow$} ultimo eje que pase
-\STATE actual \textcolor{orange}{$\leftarrow$} nodo en el que quede parado
-\IF{la palabra esta definida}
-	\IF{ el nodo actual es una hoja}
-		\STATE elminar nodo y eje
-		\IF{el padre de la hoja ahora solo tiene un hijo, y el no esta definido} \STATE \COMMENT{si el nodo esta definido, es porque el conjunto no era libre de prefijos}
-		\STATE agregar al eje del padre, la cadena del eje del hijo
-		\STATE linkear al padre con los hijos de su hijo
-		\STATE borrar al hijo
-		\STATE setear al padre como definido
-		\ENDIF
-	\ELSE
-		\IF{el nodo a borrar tiene solo un hijo}
-		\STATE \COMMENT{este caso no puede ocurrir en un conjunto libre de prefijos}
-		\STATE combinar las cadenas del eje desde el padre de actual a actual y el eje desde actual a su hijo 
-		\STATE borrar actual
-		\ELSE
-				\STATE \COMMENT{tiene mas de un hijo}
-				\STATE setear actual como no definido
-		\ENDIF
-	\ENDIF
-	\STATE palabras definidas \textcolor{orange}{--}
-\ENDIF
-\end{algorithmic}
-\end{algorithm}		
-
-\begin{algorithm}
 \caption{determina si una palabras esta en el conjunto}
 \begin{algorithmic}[1]
+\PARAMS{ la palabra s a buscar}
 			\STATE bajar por las ramas hasta que no quede mas prefijo
 			\STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabra armada durante el recorrido
-			\STATE devolver palabraArmada \textcolor{orange}{==} s \textcolor{orange}{$\wedge$} el nodo existe
+			\RETURN palabraArmada \textcolor{orange}{==} s \textcolor{orange}{$\wedge$} el nodo existe
 \end{algorithmic}
 \end{algorithm}		
 
-\begin{algorithm}
-\caption{baja por las ramas segun una cadena s, ademas va armando la palabra que se forma durante el recorrido }
-\begin{algorithmic}[1]
-\STATE cadenaArmada \textcolor{orange}{$\leftarrow$}  $""$
-\STATE ejeAnterior \textcolor{orange}{$\leftarrow$}  \textcolor{orange}{$\bot$}
-\STATE ejeActual\textcolor{orange}{$\leftarrow$}  \textcolor{orange}{$\bot$}
-\STATE nodoActual \textcolor{orange}{$\leftarrow$} raiz
-\STATE eje \textcolor{orange}{$\leftarrow$} eje de nodo actual que comienza con la primer letra de s
-\STATE puedoBajar \textcolor{orange}{$\leftarrow$} (existe dicho eje);
-\WHILE{ exista el eje \textcolor{orange}{$\wedge$} puedoBajar }
-	\STATE guardamos en eje anterior el ejeActual
-	\STATE guardamos en ejeActual el eje que estamos mirando ahora 
-	\STATE nodoActual \textcolor{orange}{$\leftarrow$} nodo apuntado por el eje
-	\STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabraArmada \textcolor{orange}{++} cadena del eje
-	\STATE sacar a s la parte del eje que le es prefijo
-	\STATE puedoBajar \textcolor{orange}{$\leftarrow$} el eje entero era prefijo de s
-	\STATE eje \textcolor{orange}{$\leftarrow$} eje del nodo actual que empieza con la primer letra de s
-\ENDWHILE
-\STATE devolver ejeAnterior
-\end{algorithmic}
-\end{algorithm}	
+
 
 
 

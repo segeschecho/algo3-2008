@@ -1,0 +1,30 @@
+\begin{algorithm}[H]
+\caption{saca una palabra s del conjunto}
+\begin{algorithmic}[1]
+\PARAMS{ la palabra s a sacar}
+\STATE bajar por las ramas hasta no encontrar mas prefijo
+\STATE ejeAnterior \textcolor{orange}{$\leftarrow$} ultimo eje que pase
+\STATE actual \textcolor{orange}{$\leftarrow$} nodo en el que quede parado
+\IF{la palabra esta definida}
+	\IF{ el nodo actual es una hoja}
+		\STATE elminar nodo y eje
+		\IF{el padre de la hoja ahora solo tiene un hijo, y el no esta definido} \STATE \COMMENT{si el nodo esta definido, es porque el conjunto no era libre de prefijos}
+		\STATE agregar al eje del padre, la cadena del eje del hijo
+		\STATE linkear al padre con los hijos de su hijo
+		\STATE borrar al hijo
+		\STATE setear al padre como definido
+		\ENDIF
+	\ELSE
+		\IF{el nodo a borrar tiene solo un hijo}
+		\STATE \COMMENT{este caso no puede ocurrir en un conjunto libre de prefijos}
+		\STATE combinar las cadenas del eje desde el padre de actual a actual y el eje desde actual a su hijo 
+		\STATE borrar actual
+		\ELSE
+				\STATE \COMMENT{tiene mas de un hijo}
+				\STATE setear actual como no definido
+		\ENDIF
+	\ENDIF
+	\STATE palabras definidas \textcolor{orange}{--}
+\ENDIF
+\end{algorithmic}
+\end{algorithm}		
