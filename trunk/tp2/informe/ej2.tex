@@ -29,7 +29,7 @@ de estos dos.
 
 Modelamos la relación de acuerdos comerciales entre ciudades como los ejes de un grafo
 cuyos nodos son las propias ciudades. A continuación buscamos resolver el problema planteado:
-hallar un camino hamiltoniano que no contenga a dos ejes que se "crucen" en el interior del
+hallar un camino hamiltoniano que no contenga a dos ejes que se ``crucen'' en el interior del
 círculo sobre el cual se disponen las ciudades.
 
 En principio intentamos abordar este problema desde la teoría de grafos y buscamos propiedades
@@ -172,9 +172,9 @@ respectivamente en $x$ o en $y$. Como vimos antes, pueden definirse a su vez rec
 Estas definiciones nos permiten utilizar el recurso clásico de la programación dinámica que consiste
 en tabular los resultados de operaciones ya realizadas para así disminuir sustancialmente el costo
 temporal de obtener una solución, a cambio de espacio en memoria. Esto puede realizarse esencialmente
-de dos maneras, ya sea "tabulado por demanda" (consistente en calcular únicamente los valores
-que se piden, y almacenarlos en una tabla para que no deban ser recalculados en el futuro) o "tabulado
-al inicio" (donde se precalculan todos los posibles valores de la función y luego se examina la tabla
+de dos maneras, ya sea ``tabulado por demanda'' (consistente en calcular únicamente los valores
+que se piden, y almacenarlos en una tabla para que no deban ser recalculados en el futuro) o ´´tabulado
+al inicio'' (donde se precalculan todos los posibles valores de la función y luego se examina la tabla
 para obtener la solución). Si bien se realizaron prototipos en Python de ambas versiones, y se observó un
 comportamiento similar en las dos, optamos finalmente por la versión con tabulado al inicio ya que su código
 es más breve y facilita la demostración de complejidad del algoritmo. 
@@ -256,8 +256,8 @@ ya que la implementación de $bool$ utiliza un byte completo para cada instancia 
 de un bit. Esto responde a las capacidades de direccionamiento de las computadoras 
 corrientes, que no pueden direccionar a bit. 
 El efecto se ve duplicado porque utilizamos dos matrices separadas para la tabla de valores.
-Si bien existe en la STL el contenedor vector<bool> numerosas fuentes desaconsejan su uso
-ya que no es una instanciación corriente de vector<T> sino que es una implementación
+Si bien existe en la STL el contenedor vector$<$bool$>$ numerosas fuentes desaconsejan su uso
+ya que no es una instanciación corriente de vector$<$T$>$ sino que es una implementación
 aparte con varias cuestiones particulares en su uso. Podríamos haber implementado
 un tipo sobre $char$ que mantuviera el valor de los 2 $bools$ que utilizamos dentro
 de un único byte (y combinar las 2 matrices en una)  pero lo evitamos para mantener 
