@@ -6,97 +6,45 @@
 \IF{hay menos partidos arreglados que jugadores \textcolor{orange}{$-$} 1}
 	\RETURN \textcolor{orange}{[ ]}
 \ENDIF
-\STATE fuertes $\textcolor{orange}{\leftarrow}$ armarFuertes\textcolor{SkyBlue}{(}grafo\textcolor{SkyBlue}{)}
-\COMMENT {Averiguamos en que componente quedo cada nodo}
-\FOR {i \textcolor{orange}{$\in$} {$1,...,$ Cantidad de componentes fuertemente conexas}}
-	\FOR {cada nodo \textcolor{orange}{$\in$} $fuertes_i$}
-			\STATE dondeQuedo\textcolor{orange}{[}nodo\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ i
-	\ENDFOR
-\ENDFOR
-\STATE relacion$\textcolor{orange}{\leftarrow}\textcolor{orange}{[} \textcolor{orange}{ ]}$
-\FOR{cada nodo del grafo}
-	\FOR{cada nodo2 al que llega nodo}
-			\IF{si el vertice no une elementos de la misma componente}
-				\STATE relacion $\textcolor{orange}{+}$ $\textcolor{orange}{[ }\textcolor{SkyBlue}{(}dondeQuedo\textcolor{orange}{[}nodo\textcolor{orange}{]},dondeQuedo\textcolor{orange}{[}nodo2\textcolor{orange}{]}\textcolor{SkyBlue}{)}\textcolor{orange}{ ]}$
-			\ENDIF
-	\ENDFOR
-\ENDFOR
-\STATE g1 $\textcolor{orange}{\leftarrow}$ Grafo\textcolor{SkyBlue}{(}cantidad de Componentes, relacion\textcolor{SkyBlue}{)}
-\COMMENT{Una vez que tengo el grafo reducido, busco cuantos hay con $d_{in} = 0$}
-\STATE encontreUno $\textcolor{orange}{\leftarrow}$ false
-\STATE quien $\textcolor{orange}{\leftarrow}$ \textcolor{orange}{$\bot$}
-\FOR{cada nodo de g1}
-	\IF{ $d_{in}\textcolor{SkyBlue}{(}nodo\textcolor{SkyBlue}{)} \textcolor{orange}{==} 0$ \textcolor{orange}{$\wedge$} no encontreUno}
-		\STATE quien $\textcolor{orange}{\leftarrow}$ nodo
-		\STATE encontreUno $\textcolor{orange}{\leftarrow}$ True
-	\ELSIF{ $d_{in}\textcolor{SkyBlue}{(}nodo\textcolor{SkyBlue}{)} \textcolor{orange}{==} 0$ \textcolor{orange}{$\wedge$} encontreUno}
-		\RETURN  $\textcolor{orange}{[ }\textcolor{orange}{ ]}$
+\STATE DFS numerando todos los nodos por fin de llamada recursiva
+\STATE hacer DFS solo para el nodo de mayor numeración
+\STATE aCuantosLlega $\textcolor{orange}{\leftarrow}$ cantidad de nodos tocados en el DFS anterior
+\IF{aCuantosLlega $\textcolor{orange}{==}$ todos los nodos del grafo}
+	\STATE hacer DFS desde el nodo pero con las aristas de salida
+	\STATE ganadores $\textcolor{orange}{\leftarrow}$ todos los nodos tocados por el dfs anterior
+	\STATE ordenar(ganadores) \COMMENT{ lo hago con bucketSort porque los ganadores estan entre 1 y cantidad de nodos}
+\ELSE
+	\RETURN \textcolor{orange}{[ ]}
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+	
+\begin{algorithm}
+\caption{numera nodos, guarda quien el que tiene el valor mas alto (cantidad de nodos -1)}
+\label{alg:algoritmo1b}
+\begin{algorithmic}[1]
+\PARAMS{un grafo, un nodo del grafo, un contador que se modifica, un marcador de nodos visitados}
+\PARAMS{una variable que se modifica y guarda el nodo de max valor}
+\FOR{cada nodoAdyacente tal que nodo $\leadsto$ nodoAdyacente}
+	\IF{ no lo visite}
+		\STATE dfs(grafo,nodoAdyacente,contador,visitados,masValioso)
 	\ENDIF
 \ENDFOR
-\STATE $ordenar\textcolor{SkyBlue}{(}fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}\textcolor{SkyBlue}{)}$ \COMMENT{lo hago con bucket sort, ya que se que estan entre 1 y cantidad de nodos del grafo original}
-\RETURN $fuertes\textcolor{orange}{[}quien\textcolor{orange}{]}$	
+\IF{a este nodo le toca el valor mas alto}
+	\STATE valioso $\textcolor{orange}{\leftarrow}$ nodo
+\ENDIF
+\STATE incrementar el contador
 \end{algorithmic}
 \end{algorithm}
 
-\begin{algorithm}
-\caption{Devuelve la lista de las componentes fuertemente conexas mediante algoritmo de Kosaraju}
-\label{alg:algoritmo2}
-\begin{algorithmic}[1]
-\PARAMS{Grafo con jugadores como nodos, y partidos arreglados como aristas direccionadas}
-\STATE valor $\textcolor{orange}{\leftarrow}$ {0...0}
-\STATE dar valor a todos los nodos segun las llamadas recursivas al hacer dsf
-\STATE en valor\textcolor{orange}{[}i\textcolor{orange}{]} colocar al nodo que tiene valor i
-\STATE $visitado \textcolor{orange}{\leftarrow} {0...0}$
-\STATE g $\textcolor{orange}{\leftarrow}$ invertirGrafo\textcolor{SkyBlue}{(}grafo\textcolor{SkyBlue}{)}
-\STATE $CompFuertes \textcolor{orange}{\leftarrow} \textcolor{orange}{[}\textcolor{orange}{]}$
-\FOR{cada nodo con mayor valor y sin visitar}
-		\STATE fuerte $\textcolor{orange}{\leftarrow}$ \textcolor{orange}{[}\textcolor{orange}{]}
-		\STATE Realizar dsf desde el nodo, los elementos visitados son una componente fuertemente conexa
-		\STATE $CompFuertes$ $\textcolor{orange}{\leftarrow}$ $CompFuertes$ \textcolor{orange}{+} \textcolor{orange}{[}fuerte\textcolor{orange}{]}
-\ENDFOR
-\RETURN fuertes
-\end{algorithmic}
-\end{algorithm}
+Esta funcion debe llamarse con el contador inicializado en cero
+y todos los visitados en false. Cada vez que termina, si no se visitaron todos
+debe ser llamada de nuevo, manteniendo el contador y los visitados.
 
-\begin{algorithm}
-\caption{Genera el grafo inverso de un grafo dado}
-\label{alg:algoritmo3}
-\begin{algorithmic}
-\PARAMS{Grafo que se desea invertir}
-\STATE relaciones $\textcolor{orange}{\leftarrow}$ [ ]
-\FOR{ cada nodo a del grafo}
-	\FOR{ cada otro nodo b del grafo, tal que a$\leadsto$b}
-		\STATE agregar a relaciones (b,a)
-	\ENDFOR
-\ENDFOR
-\RETURN Grafo(cantidad de nodos del grafo, relaciones)	
-\end{algorithmic}
-\end{algorithm}
-
-No se incluyen los algoritmos que usan dsf, ya que hacen exactamente dsf y, o bien numeran los nodos o bien los agregan a una lista. Creemos que no es necesario el pseudocodigo de dichos algoritmos.
-			
-%\begin{algorithm}
-%\caption{numera los nodos mediante dsf}
-%\begin{algorithmic}\textcolor{orange}{[}1\textcolor{orange}{]}
-%\STATE $visitado \textcolor{orange}{\leftarrow} {0...0}$
-%\FOR{cada nodo del grafo}
-%	\IF{no lo visite}
-%		\STATE dsf(grafo, nodo,valor) \COMMENT{dsf que numera}		
-%	\ENDIF
-%	\ENDFOR
-%	
-%\end{algorithmic}
-%\end{algorithm}
-%
-%\begin{algorithm}
-%\caption{Realiz un dsf numerando a cada nodo segun el orden de su llamada, guarda que valor tiene cada nodo}
-%\begin{algorithmic}\textcolor{orange}{[}1\textcolor{orange}{]}
-%\STATE visitado\textcolor{orange}{[}nodo\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ 1
-%\FOR{Cada vertice relacionado con el nodo}
-%	\IF{no lo visite}
-%		\STATE bfp(grafo,vertice}
-%	\ENDIF
-%\ENDFOR
-%\STATE Valor\textcolor{orange}{[}valorActual\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ nodo
-%\STATE valorActual $\textcolor{orange}{+}\textcolor{orange}{+}$
-%
+Los otros algoritmos que hacen dsf no se detallan en esta sección ya que el pseudocodigo de los mismos es muy similar
+al anterior.
+El algoritmo que realiza dfs para ver a cuantos llego, es muy similar a este ultimo
+solo que no se numeran nodos, sino que se cuenta a cuantos toco desde el nodo donde empiezo
+De forma similar el algoritmo que realiza dfs en reverso, hace los mismo pero en vez de numerar
+guarda cada nodo que visita en una lista, y en vez de usar los otros nodos tal que nodo $\leadsto$otro nodo
+se mueve hacia los otros nodos tal que otor nodo $\leadsto$nodo 

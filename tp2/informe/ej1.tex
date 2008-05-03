@@ -236,6 +236,16 @@ ciclos: si vale que a$\leadsto$b y b$\leadsto$a, a y b deberian ser una unica co
 
 \end{itemize}
 
+\subsection{ Nuevo algoritmo a partir de un mejor uso de la información}
+Si bien el algoritmo planteado recientemente nos satisfacia, al punto de que casi lo implementamos como solución definitiva, ya que lograba el orden pedido, notamos que no estabamos aprovechando toda la información que nos brindaba el algoritmo que obtiene las componentes fuertemente conexas: El nodo que tiene mayor numero luego del primer dfs es un potencial ganador. Potencial ganador significa que esta en una componente fuertemente conexa con grado de entrada 0. El abuso de expresión se refiere a que no hay ningun nodo fuera de su componente fuertemente conexa que le gane a el o a otro de dicha componente. Es decir que en el grafo reducido, el nodo correspondiente a dicha componente tendrá grado de entrada 0. Esto lo vemos porque como mostramos antes, si hay un nodo fuera de su componente conexa que le gane a él o a alguno de la misma, este tendría un número asignado mas alto.
+
+De esta manera, al numerar los nodos sabemos que si hay ganadores, es decir jugadores para los cuales se puede arreglar el torneo, en nodo de mayor número estara si o si entre ellos. Podria ocurrir que sea el de mayor número pero que su componente conexa no sea la única con grado de entada nulo (es decir en el grafo reducido hay mas de un nodo con grado de entrada cero) en cuyo caso no hay ningún ganador.
+
+¿Podemos entonces usando esta información mejorar el algoritmo anterior?
+La respuesta es afirmativa: podemos hacer dfs primero para numerar los nodos (en verdad alcanza con saber quien tiene el valor mas alto), luego verificar que el de mayor numeración llegue a todos (para filtar los casos donde hay mas de una componente conexa con grado 0) y si es asi usar la otra idea del algoritmo de Kosaraju para obtener su componente conexa: el grafo inverso. Como no buscamos todas, sino la que parte del nodo de mayor numeración lo que podemos hacer es un dfs desde este nodo pero usando las aristas que llegan a él, en vez de las que salen de él (notar que es equivalente a dar vuelta las flechas y hacer dsf común). De esta manera nos ahorramos tener que armar el grafo inverso, el grafo reducido y luego verificar los grados de entrada de cada nodo.
+
+Este nuevo algoritmo, basado en el anterior; es el que decidmos implementar.
+
 \subsection{Demostraciones auxiliares}
 \newtheorem{teorema 1}{Teorema}
 \begin{teorema 1}
@@ -288,7 +298,7 @@ Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ n
 \section{Cuestiones de implementación}
 Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodos y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. En cambio si usamos dsf en varias ocasiones y para esta función si nos es conveniente usar listas de adyacencia.
 
-La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante,nos permite conocer facilmente el $d_{in}$ de un nodo, el cual necesitamos tener en O(1), por esa razón mantenemos dicha información.
+La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante,nos permite conocer facilmente los nodos que inciden sobre otro nodo dado, y de esta manera podemos obtener rapidamente la componente fuertemente conexa de uno de los nodos ganadores.
 Con respecto a las listas utilizamos las listas provistas por la std de c++.
 
 La clase grafo, entonces, permite conocer en O(1) la cantidad de nodos, tambien con ese orden brinda los elementos que inciden sobre un nodo, y aquellos sobre los que el nodo incide.
@@ -301,25 +311,38 @@ Dado que, como dijimos anteriormente, si la cantidad de partidos arreglados es m
 
 Veamos que ocurre en los casos en los que m $\geq$ $n-1$. 
 
-Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju (algoritmo \ref{alg:algoritmo2}). Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
+Lo primero que hacemos es un dfs que nos permite numerar los nodos según el orden de finalización de la llamada recursiva. Como un dfs que asigna un valor numerico en una posición de un arreglo, su orden es O(n + m).
 
-A continuación creamos el grafo invertido (algoritmo \ref{alg:algoritmo3}). Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
+Una vez que hacemos esto, realizamos otro dfs desde el nodo de mayor numeracion, para ver a cuantos nodos se puede llegar. Nuevamente, como en el caso anterior, por ser un dfs el orden es O(n + m).
 
-Cuando ya tenemos al grafo invertido, realizamos nuevamente una dsf para armar las componentes fuertemente conexas, nuevamente como es una dsf solo tocamos una vez a cada nodo y recorremos todos los vertices, tenemos un orden $O(n+m)$. En cada llamada el costo de ir guardando las componentes es constante, ya que solo se agrega un elemento al principio de una lista.
+En el caso en que no llegue a todos los nodos, terminamos devolviendo vacio. Es decir que la complejidad en este caso es la de los dos dfs anteriores O(n + m).
 
-Una vez que tenemos las componentes, lo que hacemos es guardar en que componente quedo cada nodo (línea 6,\ref{alg:algoritmo1}) . Para esto recorremos cada una de las componentes fuertemente conexas y miramos a cada nodo. Como la cantidad total de nodos que tenemos es n, justamente el costo de hacer esto es $O(n)$.
+En cambio, si llegaba todos, tenemos que hacer un nuevo dfs usando los ejes de entrada en vez de los de salida. Como son los mismos ejes; pero con sentido inverso, la cantidad de ejes es la misma que antes: m. Cada nodo que visitamos lo agregamos a una lista en O(1). Por lo tanto como se trata de una variante del dfs que no realiza operaciones con costo extra, el orden es nuevamente O(n+m).
 
-Ahora buscamos la informacion sobre la relación entre las componentes fuertemente conexas (línea 6,\ref{alg:algoritmo1}). Lo que hacemos es pararnos en cada nodo, ver a quien le gana, y si le gana a alguien que no esta en su misma componente, guardamos la tupla en una lista (O(1)). Miramos cada nodo, y para cada uno miramos a quien le gana. Es decir que miramos cada partido arreglado una vez, y como miramos a cada nodo también una vez, tenemos una complejidad $O(n+m)$.
+Esta lista es la que finalmente devolvemos, luego de ordenarla mediante bucketSort en orden O(n), ya que por enunciado la salida debe estar ordenanda de menor a mayor.
 
-Con esta informaci'on creamos el grafo reducido. En el peor caso, hay tantos nodos como habia antes e igual cantidad de aristas, por lo cual la cracion del mismo es $O(n+m)$.
+En el caso de que el grafo sea completo, sabemos que m = $\frac{n*(n-1)}{2}$ por lo cual, en este caso O(n+m) $\subset$ O($n^2$).
 
-A continuaci'on buscamos cuantos nodos hay que tengan grado de entrada 0. Saber el grado de entra cuesta $O(1)$ ya que es preguntar por la longitud de la lista de adyacencia de entrada. Como tenemos que mirar a todos los nodos, el costo total es $O(n)$.
-
-Si nadie gana devolvemos una lista vacia en $O(1)$. En cambio si existe algun ganador, conocemos que componente es la que gana. Entonces tenemos que devolver a los nodos que pertenecen a ella. Como los tenemos que devolver en orden creciente, dado que sabemos que en el peor de los casos hay n ganadores, hacemos un bucket sort que tiene como costo $O(n)$
-
-Luego como en cada paso las operaciones que realizamos tienen un costo $O(n+m)$, podemos afirmar que el algoritmo tiene un costo de $O(n + m)$
-
-Si bien el algoritmo no tiene un peor caso claro, lo que si se puede notar es que en el caso en que existe un ganador, vamos a recorrer todas las componentes conexas para asegurarnos de eso, las mismas podrian llegar a ser n. Ahora bien, en cambio si no hay ganador, ni bien encontremos a dos con grado de entrada cero podemos parar porque sabemos que nadie gana. Si bien en el peor caso, para determinar que nadie gana necesitamos ver todas las componentes conexas, se podria esperar que en caso promedio, no haga falta revisar todas para encontrar dos con grado de entrada cero, por lo cual el algoritmo terminaria mas rapido (mas aun si consideramos que no tenemos el overhead del bucketsort)
+Si bien el algoritmo no tiene un peor caso a priori, podemos notar que si no hay ganador no hacemos el tercer dfs, ni tampoco hacemos el bucketSort, por lo cual si bien a nivel de orde la situación es la misma, uno esperaria que esos casos se resuelvan mas rapidamente.
+%Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju (algoritmo \ref{alg:algoritmo2}). Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
+%
+%A continuación creamos el grafo invertido (algoritmo \ref{alg:algoritmo3}). Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
+%
+%Cuando ya tenemos al grafo invertido, realizamos nuevamente una dsf para armar las componentes fuertemente conexas, nuevamente como es una dsf solo tocamos una vez a cada nodo y recorremos todos los vertices, tenemos un orden $O(n+m)$. En cada llamada el costo de ir guardando las componentes es constante, ya que solo se agrega un elemento al principio de una lista.
+%
+%Una vez que tenemos las componentes, lo que hacemos es guardar en que componente quedo cada nodo (línea 6,\ref{alg:algoritmo1}) . Para esto recorremos cada una de las componentes fuertemente conexas y miramos a cada nodo. Como la cantidad total de nodos que tenemos es n, justamente el costo de hacer esto es $O(n)$.
+%
+%Ahora buscamos la informacion sobre la relación entre las componentes fuertemente conexas (línea 6,\ref{alg:algoritmo1}). Lo que hacemos es pararnos en cada nodo, ver a quien le gana, y si le gana a alguien que no esta en su misma componente, guardamos la tupla en una lista (O(1)). Miramos cada nodo, y para cada uno miramos a quien le gana. Es decir que miramos cada partido arreglado una vez, y como miramos a cada nodo también una vez, tenemos una complejidad $O(n+m)$.
+%
+%Con esta informaci'on creamos el grafo reducido. En el peor caso, hay tantos nodos como habia antes e igual cantidad de aristas, por lo cual la cracion del mismo es $O(n+m)$.
+%
+%A continuaci'on buscamos cuantos nodos hay que tengan grado de entrada 0. Saber el grado de entra cuesta $O(1)$ ya que es preguntar por la longitud de la lista de adyacencia de entrada. Como tenemos que mirar a todos los nodos, el costo total es $O(n)$.
+%
+%Si nadie gana devolvemos una lista vacia en $O(1)$. En cambio si existe algun ganador, conocemos que componente es la que gana. Entonces tenemos que devolver a los nodos que pertenecen a ella. Como los tenemos que devolver en orden creciente, dado que sabemos que en el peor de los casos hay n ganadores, hacemos un bucket sort que tiene como costo $O(n)$
+%
+%Luego como en cada paso las operaciones que realizamos tienen un costo $O(n+m)$, podemos afirmar que el algoritmo tiene un costo de $O(n + m)$
+%
+%Si bien el algoritmo no tiene un peor caso claro, lo que si se puede notar es que en el caso en que existe un ganador, vamos a recorrer todas las componentes conexas para asegurarnos de eso, las mismas podrian llegar a ser n. Ahora bien, en cambio si no hay ganador, ni bien encontremos a dos con grado de entrada cero podemos parar porque sabemos que nadie gana. Si bien en el peor caso, para determinar que nadie gana necesitamos ver todas las componentes conexas, se podria esperar que en caso promedio, no haga falta revisar todas para encontrar dos con grado de entrada cero, por lo cual el algoritmo terminaria mas rapido (mas aun si consideramos que no tenemos el overhead del bucketsort)
 
 \section{Analisis experimental}
 \subsection{Experiencias realizadas}
@@ -331,7 +354,9 @@ La primer experiencia consistió en medir la cantidad de operaciones en función d
 
 Luego decidimos dejar fija cada una ellas para observar el comportamiento por separado.
 
-Finalmente decidimos hacer una ultima experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos. Queriamos observar como se comporta el algoritmo en grafos que poseen la cantidad maxima de aristas
+Realizamos otra experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos. Queriamos observar como se comporta el algoritmo en grafos que poseen la cantidad maxima de aristas
+
+Finalmente decidimos hacer una ultima experiencia, generamos instancias donde para todos los jugadores se puede armar el troneo y otras donde para ninguno puede arreglarse y comparamos la cantidad de operaciones de ambas, la idea es notar si efectivamente cuando no hay ganadores se observe que el algoritmo termina mas rapidamente.
 
 Los resultados obtenidos se encuentran a continuación.
 
@@ -370,13 +395,22 @@ Los resultados obtenidos se encuentran a continuación.
 \label{fig:exp4}
 \end{figure}
 
+\subsubsection{Experiencia 5: Cantidad de operaciones en instancias con ganadores y sin ganadores}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/graficos/ej1/TodosYNadie.png} 
+\label{fig:exp5}
+\end{figure}
+
 \subsection{Discusion}
 En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde $m < n - 1$ y que se descartan rapidamente, en O(1). En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
 
-La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores. Por otro lado notamos una peculiaridad en el grafico, y que explicamos como una particularidad de nuestro algoritmo (la cual mencionamos anteriormente) y es que en general darse cuenta de que no hay ganador es mas rapido que saber si efectivamente lo hay. Esto es porque si no hay ganador ni bien encontramos en el grafo reducido, dos nodos con $d_{in}=0$ terminamos, y dado que los grafos son al azar, un esperaria no tener que revisar todas las componentes fuertemente conexas para que esto pase. Esta caracteristica se ve plasmada en el grafo, ya que a medida que aumentamos la cantidad de jugadores, dejando fija la cantidad de partidos, es mas probable que no tengamos un ganador. Por eso, para n grande observamos como la recta se parte en otras rectas que estan por debajo.
+La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores. Sin embargo si dejamos fija la cantidad de partidos, y aumentamos la cantidad de jugadores, hay un momento a partir del cual vale que $m < n - 1$ y podemos resolver el problema en O(1), esto se manifiesta en la caida de la cantidad de operaciones a partir de n $>$ 501.
 
 La tercer experiencia nos permitió ver como se mantenía la tendencia lineal en función del m. En el grafico observamos 2 rectas, la primera corresponde a los casos $m < n -1$ y la segunda es para los casos donde no se puede decidir a priori y tenemos que hacer todo el proceso de los datos.
 
-Finalmente en la grafica de la última experiencia notamos que en grafos completos, la cantidad de operaciones crece cuadraticamente con respecto al n. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
+En la cuarta grafica notamos que en grafos completos, la cantidad de operaciones crece cuadraticamente con respecto al n. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
+
+Finalmente, la experiencia 5 nos permitió reforzar la idea de que si no hay ganadores el algoritmo termina mucho mas rapido que en aquellos casos donde si hay ganadores, lo cual habiamos predicho.
 
 A modo de conclusión, podemos decir que las experiencias nos permitieron corroborar el analisis teorico que realizamos previamente.
