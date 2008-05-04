@@ -69,6 +69,7 @@ int main(int argc, char* argv[])
 	return 0;
     }
 
+// hace un dfs y asigna en valioso a que nodo le toca la numeracion mas alta
 void dfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned& valioso){
     visitado[nodo] = true;
     list<unsigned> :: iterator principio = grafo->verticesOut[nodo].begin();
@@ -77,8 +78,8 @@ void dfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned& v
         if (! visitado[*each])
             dfs(grafo,*each,num,visitado,valioso);
     }
-	// guardamos a que nodo le toco el valor num
-	
+
+
     if(num == (grafo -> nodos-1)){
 		valioso = nodo;
 	}
@@ -86,6 +87,8 @@ void dfs(Grafo* grafo, unsigned nodo, unsigned& num, bool* visitado, unsigned& v
     num += 1;
 }
 
+// hace dfs hasta tocar a todos los nodos, y obtener uno con numeracion
+// cantidad de nodos - 1
 void auxdfs(Grafo* grafo, bool* visitado, unsigned& valioso){
     unsigned num = 0;
         for(unsigned i = 0;  i < grafo->nodos; i++){
@@ -95,6 +98,7 @@ void auxdfs(Grafo* grafo, bool* visitado, unsigned& valioso){
 	}
 }
 
+// hace dfs partiendo desde un nodo y cuenta a cuantos nodos llegamos
 unsigned dfsContador(Grafo* grafo, unsigned nodo, bool* visitado){
     unsigned contador = 1;
     visitado[nodo] = true;
@@ -107,6 +111,9 @@ unsigned dfsContador(Grafo* grafo, unsigned nodo, bool* visitado){
     return contador;
 }
 
+// hace dfs pero usando las aristas de salida
+// guarda en una lista a todos los nodos que toca
+// en el contexto que se usa, determina la componente fuertemente conexa en la que esta el nodo de origen
 void dfsReverso(Grafo* grafo, unsigned nodo, bool* visitado,list<unsigned>* listaGanadores){
     visitado[nodo] = true;
     listaGanadores->push_back(nodo);
@@ -121,6 +128,7 @@ void dfsReverso(Grafo* grafo, unsigned nodo, bool* visitado,list<unsigned>* list
 }
 /* resuelve el ejercicio 1 */
 bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
+    //caso facil: el grafo subyacente no puede ser conexo
      if(rels < grafo->nodos - 1){
         cantGanadores = 0;
         return NULL;
@@ -129,8 +137,7 @@ bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
 	for(unsigned i = 0; i < grafo->nodos; i++){
 			visitado[i] = false;
      }
-    //unsigned* valor= new unsigned[grafo->nodos];
-     // primero numeramos los nodos
+     // primero averiguamos quien es el mas valioso
     unsigned valioso;
 	auxdfs(grafo,visitado,valioso);
     // reiniciamos el marcador de visitado
