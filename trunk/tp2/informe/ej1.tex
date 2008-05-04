@@ -25,7 +25,7 @@ El mejor algoritmo que conocemos es de O(n + m).
 \subsection{Sobre el modelo}
 Para resolver el problema, planteamos un dígrafo donde cada nodo es un jugador y a$\leadsto$b si  a le gana a b. 
 
-Lo primero que observamos es que la relación de ganar, por como esta planteada, es transitiva. Decimos que es transitiva en el sentido de que si a$\leadsto$b y b$\leadsto$c, se puede hacer que a le gane a c, haciendo que b le gane a c y luego a le gane a b. Es decir, si bien a$\leadsto$c, se puede organizar los partidos para que a pueda ganar.
+Lo primero que observamos es que la relación de ganar, por como esta planteada, es transitiva. Decimos que es transitiva en el sentido de que si a$\leadsto$b y b$\leadsto$c, se puede hacer que a le gane a c, haciendo que b le gane a c y luego a le gane a b. Es decir, si bien no vale que a$\leadsto$c, se puede organizar los partidos para que a pueda ganar.
 
 Entonces según este modelo, un jugador, jugador A, puede ganar si para cada uno de los otros jugadores, jugador B, existe un 
 camino dirigido que comunica a A con B. Sea C el camino que comunica A y B, C=A, $V_1$, $V_2$, ...$V_{k-1}$,$V_k$, B. Podemos entonces armar el fixture de la siguiente manera: primero juegan $V_k$ y B, como hay camino sabemos que $V_k$ $\leadsto$ B, entonces $V_k$ le gana a B. Luego hacemos que $V_{k-1}$ le gane a $V_k$, y asi seguimos hasta que A juegue con $V_1$ y le gane.
@@ -53,16 +53,16 @@ Luego si usamos esto, podemos obtener una primera forma de resolver el problema:
 cada nodo, tratamos de recorrer todo el grafo. Si lo logramos, sabemos que se puede armar un torneo para que gane. Como esto se hace para 
 cada nodo, el orden queda $O(n*m)$. 
 
-Por otro lado, podemos ver que para que exista un ganador es necesario que si participan n jugadores, la cantidad de partidos arrelgados sea como mínimo n - 1, ya que con menos partidos, es imposible que desde un jugador se pueda alcanzar a todos los demas. De modo que obtenemos una caracteristica que permite resolver un tipo de instancia particular muy facilmente.
+Por otro lado, podemos ver que para que exista un ganador es necesario que si participan n jugadores, la cantidad de partidos arreglados sea como mínimo n - 1, ya que con menos partidos, es imposible que desde un jugador se pueda alcanzar a todos los dem'as. De modo que obtenemos una caracter'istica que permite resolver un tipo de instancia particular muy f'acilmente.
 
 Buscamos entonces alguna forma de mejorar el orden. Una primera alternativa era guardar 
 alguna información en cada recorrida, para no repetir cálculos, pero los ciclos nos impedían lograr alguna solución. Tuvimos  entonces que buscar alguna otra forma.
 
-\subsection{Resolucion en grafos aciclicos}
+\subsection{Resolucion en grafos ac'iclicos}
 Si el grafo que se obtiene no presenta ciclos, se puede ver que existe un ganador si y solo si existe un único nodo tal que su 
 grado de entrada es 0. 
 
-Lo que ocurre es que si el grado de entrada de solo un nodo es 0, entonces existe un camino dirigido desde dicho nodo a cualquier otro(ver demostración 1). Por otro lado, si no hay ciclos y existe un ganadorr, a este no le puede ganar nadie, por lo tanto su grado de entrada es 0.
+Lo que ocurre es que si el grado de entrada de solo un nodo es 0, entonces existe un camino dirigido desde dicho nodo a cualquier otro(ver demostración 1). Por otro lado, si no hay ciclos y existe un ganador, a este no le puede ganar nadie, por lo tanto su grado de entrada es 0.
 
 Por ejemplo, el grafo de la figura ~\ref{fig:conGanador}:
 
@@ -92,7 +92,7 @@ Si existen varios, no se podrán eliminar nunca, ya que no hay quien les gane con
 \end{figure}
 \afterpage{\clearpage}
 En el primer caso, el 5 y el 1 no se pueden eliminar. Análogamente, en el segundo caso, 1 y 6 no se pueden eliminar en ningún momento.
-Por otro lado, no puede ocurrir que no halla ningun nodo con grado de entrada 0, porque si eso ocurre existe un ciclo. (Ver 
+Por otro lado, no puede ocurrir que no halla ning'un nodo con grado de entrada 0, porque si eso ocurre existe un ciclo. (Ver 
 demostración 2).
 
 Entonces si no hay ciclos, podemos resolver fácilmente el problema: Si representamos el grafo con listas de adyacencia (tanto 
@@ -108,7 +108,7 @@ ciclos, por ejemplo la figura ~\ref{fig:conCiclo}:
 \centering
 \includegraphics[scale=0.5]{./figuras/ej1/ConCiclo.png}
 
-\caption{Ejemplo sin ningun nodo con grado de entrada 0}
+\caption{Ejemplo sin ning'un nodo con grado de entrada 0}
 \label{fig:conCiclo}
 \end{figure}
 
@@ -143,7 +143,7 @@ aquellos que son derrotados por algún individuo del ciclo y que pierde contra to
 
 Estos ciclos que buscamos no son mas que las componentes fuertemente conexas del grafo. Si reducimos al grafo de modo de que 
 colapsamos a los nodos que pertenecen a una componente fuertemente conexa a un único nodo (como muestra la figura: ~\ref{fig:reduccion}), actualizando la información de los 
-partidos arreglados, lo que obtenemos es un nuevo grafo que cumple ser libre de ciclos (ver demostracion 3).
+partidos arreglados, lo que obtenemos es un nuevo grafo que cumple ser libre de ciclos (ver demostraci'on 3).
 
 Entonces una vez que tenemos un grafo libre de ciclos, podemos aplicar la propiedad que enunciamos antes, y resolver el problema en $O(n)$.
 
@@ -156,7 +156,7 @@ Funciona de la siguiente manera:
 \begin{itemize}
 \item Primero realiza un DFS numerando los nodos según el orden de finalización de las llamadas recursivas. (se repite hasta numerar todos los nodos).
 
-\item Luego se arma el grafo $g'$ que contiene los mismos nodos que g pero a$\leadsto$b en $g'$ si y solo si b$\leadsto$a en g. $g'$ tiene como caracteristica que posee las mismas componentes conexas que g. Ademas si existe un camino entre dos vertices u y v en g, vale que existe un camino entre u y v en $g'$ si y solo si estan en la misma componente fuertemente conexa.
+\item Luego se arma el grafo $g'$ que contiene los mismos nodos que g pero a$\leadsto$b en $g'$ si y solo si b$\leadsto$a en g. $g'$ tiene como caracter'istica que posee las mismas componentes conexas que g. Ademas si existe un camino entre dos vertices u y v en g, vale que existe un camino entre u y v en $g'$ si y solo si estan en la misma componente fuertemente conexa.
 
 \item Una vez armado $g'$, se realiza un DFS en 'el, partiendo del nodo con mayor numeraci'on. Al terminar se obtiene una componente fuertemente conexa. 
 
@@ -171,13 +171,13 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \centering
 \subfigure[Comenzamos con el grafo original]{
 \includegraphics[scale=0.5]{./figuras/ej1/kosaraju1.png} }\hspace{1in} 
-\subfigure[Realizamos DFS partindo desde el 1 y numeramos los nodos segun el orden de la llamada recursiva]{
+\subfigure[Realizamos DFS partiendo desde el 1 y numeramos los nodos seg'un el orden de la llamada recursiva]{
 \includegraphics[scale=0.5]{./figuras/ej1/kosaraju2.png}}\hspace{1in} 
 \subfigure[Como el 7 quedo sin marcar, realizamos una segunda DFS partiendo desde el]{
 \includegraphics[scale=0.5]{./figuras/ej1/kosaraju3.png}}\hspace{1in} 
 \subfigure[Una vez que marcamos todos los nodos, invertimos el grafo]{
 \includegraphics[scale=0.5]{./figuras/ej1/kosaraju4.png}} \hspace{1in} 
-\subfigure[Como el 7 es el elemento de mayor numeraci'on comenzamos por él. Hacemos DFS, y todos los nodos que tocamos, son una componente fuertemente conexa]{
+\subfigure[Como el 7 es el elemento de ma-yor numeraci'on comenzamos por él. Hacemos DFS, y todos los nodos que tocamos, son una componente fuertemente conexa]{
 \includegraphics[scale=0.5]{./figuras/ej1/kosaraju5.png} }\hspace{1in} 
 \subfigure[Ahora seguimos con el 1, el de mayor numeraci'on sin visitar. Luego de hacer DFS tenemos otra componente fuertemente conexa de G. Como no quedan mas nodos por visitar, terminamos]{
 \includegraphics[scale=0.5]{./figuras/ej1/kosaraju6.png}}
@@ -187,9 +187,9 @@ Por ejemplo, apliquemos el algoritmo al grafo de la figura ~\ref{fig:kosaraju1}:
 \end{figure}
 
 \subsection{¿Por que el algoritmo logra obtener las componentes fuertemente conexas?}
-Primero númeramos a los nodos por el orden de finalizacion de la llamada recursiva al dsf. De esta manera, si tenemos que un nodo de una componente fuertemente conexa (llamemoslo a) esta relacionado con otro elemento que no pertenece a la misma (llamemoslo b), vale que si a$\leadsto$b entonces el número de a es mayor que el de b, pues si empiezo por a o por algunos de los nodos que llegan a el, voy a visitar a b, y recien cuando numere a b (y a todos los demas nodos c tal que a$\leadsto$c) , voy a numerar a a. Esto vale porque estan en distintas componentes, si estuvieran en la misma depende de por cual nodo empiece. Si en cambio, valia que b$\leadsto$a el numero de a es menor que el de b,ya que si empezamos por a no llegamos a b, dado que no estan en la misma componente; y si partimos de b, entonces vamos a numerar primero a a y después a b.
+Primero numeramos a los nodos por el orden de finalizaci'on de la llamada recursiva al DFS. De esta manera, si tenemos que un nodo de una componente fuertemente conexa (llam'emoslo a) esta relacionado con otro elemento que no pertenece a la misma (llam'emoslo b), vale que si a$\leadsto$b entonces el número de a es mayor que el de b, pues si empiezo por a o por algunos de los nodos que llegan a el, voy a visitar a b, y reci'en cuando numere a b (y a todos los dem'as nodos c tal que a$\leadsto$c) , voy a numerar a a. Esto vale porque est'an en distintas componentes, si estuvieran en la misma depende de por cual nodo empiece. Si en cambio, val'ia que b$\leadsto$a el n'umero de a es menor que el de b, ya que si empezamos por a no llegamos a b, dado que no est'an en la misma componente; y si partimos de b, entonces vamos a numerar primero al nodo a y después a b.
 
-Una vez que damos vuelta el grafo, hacemos dfs partiendo desde el de mayor numeraci'on no visitado, y solamente visitamos a los nodos de su componente. Esto se debe a que si en el grafo original a$\leadsto$b, donde b no pertenece a la misma componente fuertemenete conexa, sabemos que el número de b es menor que el de a, y que en el grafo dado vuelta b$\leadsto$a, por lo cual  no llegamos a b. Si en cambio valia que b$\leadsto$a, el numero de b es mayor que el de a, y por lo tanto ya habriamos visitado a b.
+Una vez que damos vuelta el grafo, hacemos DFS partiendo desde el nodo de mayor numeraci'on no visitado, y solamente visitamos a los nodos de su componente. Esto se debe a que si en el grafo original a$\leadsto$b, donde b no pertenece a la misma componente fuertemente conexa, sabemos que el número de b es menor que el de a, y que en el grafo dado vuelta b$\leadsto$a, por lo cual  no llegamos a b. Si en cambio val'ia que b$\leadsto$a, el n'umero de b es mayor que el de a, y por lo tanto ya habr'iamos visitado a b.
 
 Veamos el siguiente ejemplo donde b$\leadsto$a:
 \begin{figure}[H]
@@ -209,7 +209,7 @@ Ahora consideremos un caso donde a$\leadsto$b
 \centering
 \subfigure[Comenzamos con el grafo original, a esta en una componente conexa, b en otra y a$\leadsto$b]{
 \includegraphics[scale=0.6]{./figuras/ej1/aespadre.png} }\hspace{1in} 
-\subfigure[Numeramos los nodos, y como a$\leadsto$b el numero de b es menor]{
+\subfigure[Numeramos los nodos, y como a$\leadsto$b el n'umero de b es menor]{
 \includegraphics[scale=0.6]{./figuras/ej1/aespadreNumerado.png}}\hspace{1in} 
 \subfigure[Cuando invertimos el grafo, a es el nodo por donde vamos a empezar, y no hay camino que lleve de a hacia b. Cuando salgamos de b, ya pasamos por a, por lo que se lo ignora]{
 \includegraphics[scale=0.6]{./figuras/ej1/aespadreInverso.png}}
@@ -224,25 +224,25 @@ Una vez que ya tenemos las componentes fuertemente conexas, armar el grafo reduc
 \item Primero guardamos en que componente quedo cada jugador
 
 \item Luego tomamos las relaciones entre los jugadores, y las traducimos al nuevo grafo: las 
-releciones dentro de la misma componente se descartan, y dos componentes estan relacionadas si existe un jugador en cada una, 
-tal que esten relacionados.Es de notar que es necesario filtrar las relaciones intracomponente para no obtener un 
+relaciones dentro de la misma componente se descartan, y dos componentes est'an relacionadas si existe un jugador en cada una, 
+tal que est'en relacionados. Es de notar que es necesario filtrar las relaciones intracomponente para no obtener un 
 pseudografo que no nos permite usar la propiedad de los grafos sin ciclos, pues un nodo queda relacionado con si mismo, por lo 
-que tiene grado de entrada mayor  a 0. Tambien es de notar que no podemos obtener un multigrafo, ya que el grafo es libre de 
-ciclos: si vale que a$\leadsto$b y b$\leadsto$a, a y b deberian ser una unica componente fuertemente conexa.
+que tiene grado de entrada mayor  a 0. Tambi'en es de notar que no podemos obtener un multigrafo, ya que el grafo es libre de 
+ciclos: si vale que a$\leadsto$b y b$\leadsto$a, a y b deber'ian ser una 'unica componente fuertemente conexa.
 
 \item Con esta información podemos armar el nuevo grafo reducido, como el de la figura \ref{fig:reduccion}
 
-\item Contamos cuantos elementos tienen grado de llegada 0, si solo hay uno ese gano. Entonces ganan todos los elementos de la componente. Como podrian no estar en orden, las ordenamos mediante bucket sort en $O(n)$
+\item Contamos cuantos elementos tienen grado de llegada 0, si solo hay uno ese gano. Entonces ganan todos los elementos de la componente. Como podr'ian no estar en orden, las ordenamos mediante bucket sort en $O(n)$
 
 \end{itemize}
 
 \subsection{ Nuevo algoritmo a partir de un mejor uso de la información}
-Si bien el algoritmo planteado recientemente nos satisfacia, al punto de que casi lo implementamos como solución definitiva, ya que lograba el orden pedido, notamos que no estabamos aprovechando toda la información que nos brindaba el algoritmo que obtiene las componentes fuertemente conexas: El nodo que tiene mayor numero luego del primer dfs es un potencial ganador. Potencial ganador significa que esta en una componente fuertemente conexa con grado de entrada 0. El abuso de expresión se refiere a que no hay ningun nodo fuera de su componente fuertemente conexa que le gane a el o a otro de dicha componente. Es decir que en el grafo reducido, el nodo correspondiente a dicha componente tendrá grado de entrada 0. Esto lo vemos porque como mostramos antes, si hay un nodo fuera de su componente conexa que le gane a él o a alguno de la misma, este tendría un número asignado mas alto.
+Si bien el algoritmo planteado anteriormente nos satisfacía, al punto de que casi lo implementamos como solución definitiva, ya que lograba el orden pedido, notamos que no est'abamos aprovechando toda la información que nos brindaba el algoritmo que obtiene las componentes fuertemente conexas: El nodo que tiene mayor numero luego del primer DFS es un potencial ganador. Potencial ganador significa que esta en una componente fuertemente conexa con grado de entrada 0. El abuso de expresión se refiere a que no hay ning'un nodo fuera de su componente fuertemente conexa que le gane a el o a otro de dicha componente. Es decir que en el grafo reducido, el nodo correspondiente a dicha componente tendrá grado de entrada 0. Esto lo vemos porque como mostramos antes, si hay un nodo fuera de su componente conexa que le gane a él o a alguno de la misma, este tendría un número asignado m'as alto.
 
-De esta manera, al numerar los nodos sabemos que si hay ganadores, es decir jugadores para los cuales se puede arreglar el torneo, en nodo de mayor número estara si o si entre ellos. Podria ocurrir que sea el de mayor número pero que su componente conexa no sea la única con grado de entada nulo (es decir en el grafo reducido hay mas de un nodo con grado de entrada cero) en cuyo caso no hay ningún ganador.
+De esta manera, al numerar los nodos sabemos que si hay ganadores, es decir jugadores para los cuales se puede arreglar el torneo, en nodo de mayor número estar'a si o si entre ellos. Podr'ia ocurrir que sea el de mayor número pero que su componente conexa no sea la única con grado de entada nulo (es decir en el grafo reducido hay mas de un nodo con grado de entrada cero) en cuyo caso no hay ningún ganador.
 
 ¿Podemos entonces usando esta información mejorar el algoritmo anterior?
-La respuesta es afirmativa: podemos hacer dfs primero para numerar los nodos (en verdad alcanza con saber quien tiene el valor mas alto), luego verificar que el de mayor numeración llegue a todos (para filtar los casos donde hay mas de una componente conexa con grado 0) y si es asi usar la otra idea del algoritmo de Kosaraju para obtener su componente conexa: el grafo inverso. Como no buscamos todas, sino la que parte del nodo de mayor numeración lo que podemos hacer es un dfs desde este nodo pero usando las aristas que llegan a él, en vez de las que salen de él (notar que es equivalente a dar vuelta las flechas y hacer dsf común). De esta manera nos ahorramos tener que armar el grafo inverso, el grafo reducido y luego verificar los grados de entrada de cada nodo.
+La respuesta es afirmativa: podemos hacer DFS primero para numerar los nodos (en verdad alcanza con saber quien tiene el valor mas alto), luego verificar que el de mayor numeración llegue a todos (para filtrar los casos donde hay mas de una componente conexa con grado 0) y si es asi usar la otra idea del algoritmo de Kosaraju para obtener su componente conexa: el grafo inverso. Como no buscamos todas, sino la que parte del nodo de mayor numeración lo que podemos hacer es un DFS desde este nodo pero usando las aristas que llegan a él, en vez de las que salen de él (notar que es equivalente a dar vuelta las flechas y hacer DFS común). De esta manera nos ahorramos tener que armar el grafo inverso, el grafo reducido y luego verificar los grados de entrada de cada nodo.
 
 Este nuevo algoritmo, basado en el anterior; es el que decidmos implementar.
 
@@ -254,12 +254,12 @@ Sea g=(V,X) tal que $\exists$! v1 $\in$ V tal que $d_{in}(v1)=0$, y G es libre d
 \end{teorema 1}
 \begin{proof}
 \normalsize
-Sea C1 el camino dirigido de longitud maxima que llega hasta $v_i$.
+Sea C1 el camino dirigido de longitud m'axima que llega hasta $v_i$.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/ej1/demostracion1.png}
 \end{figure} 
-Supongamos que no existe un camino entre $v_1$ y $v_i$, entonces sea $v_k$ el nodo donde comienza dicho camino. Como $v_k$ $\neq$ $v_1$ entonces $d_{in}(v_k) \neq 0$, luego existe $v_n$ tal que $v_n \leadsto v_k$. $v_n$ no puede estar en el camino C1, porque sino existe un ciclo, y por hipotesis esto es falso. Consideremos entonces el camino C2 = ($v_n$,$v_k$)$\cup$C1 (donde $\cup$ es un abuso de notacion, seria agrego el par ($v_n$,$v_k$) al camino C1). Ahora C2 tiene longitud mayor que la de C1, entocnes tenemos un absurdo, ya que C1 era el camino de longitud m'axima.  
+Supongamos que no existe un camino entre $v_1$ y $v_i$, entonces sea $v_k$ el nodo donde comienza dicho camino. Como $v_k$ $\neq$ $v_1$ entonces $d_{in}(v_k) \neq 0$, luego existe $v_n$ tal que $v_n \leadsto v_k$. $v_n$ no puede estar en el camino C1, porque sino existe un ciclo, y por hip'otesis esto es falso. Consideremos entonces el camino C2 = ($v_n$,$v_k$)$\cup$C1 (donde $\cup$ es un abuso de notacion, seria agrego el par ($v_n$,$v_k$) al camino C1). Ahora C2 tiene longitud mayor que la de C1, entocnes tenemos un absurdo, ya que C1 era el camino de longitud m'axima.  
 \end{proof}
 
 \begin{teorema 1}
@@ -271,12 +271,12 @@ Sea g=(V,X) tal que $\forall$ v $\in$ V, $d_{in}(v)$ $>$ 0 $\rightarrow$ existe 
 
 \begin{proof}
 \normalsize
-Sea g=(V,X) tal que  $\forall$ v $\in$ V, d(v) $>$ 0, consideremos el camino maximo de g, $v_1,v_2,...v_i,...,v_n$
+Sea g=(V,X) tal que  $\forall$ v $\in$ V, d(v) $>$ 0, consideremos el camino m'aximo de g, $v_1,v_2,...v_i,...,v_n$
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/ej1/demostracion.png}
 \end{figure} 
-Pero como f $d_{in}(v)$ $>$ 0, existe $v_k$ tal que $v_k$ $\leadsto$ $v_1$. Si $v_k$ pertenece al camino, tenemos un ciclo, que era lo que quer'iamos demostrar.
+Pero como $d_{in}(v)$ $>$ 0, existe $v_k$ tal que $v_k$ $\leadsto$ $v_1$. Si $v_k$ pertenece al camino, tenemos un ciclo, que era lo que quer'iamos demostrar.
 Supongamos que no pertenece al camino. Entonces tengo un camino nuevo, que va de $v_k$ a $v_n$, que tiene mayor longitud que
 el camino de $v_1$ a $v_n$, absurdo, puesto que $v_1,v_2,...v_i,...,v_n$ era el camino máximo.
 \end{proof}
@@ -288,7 +288,7 @@ Sea g un grafo reducido, es decir que cada nodo es una componente fuertemente co
 \end{teorema 1}
 \begin{proof}
 \normalsize
-Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ nodos, tal que el circuito pasa por ellos. Como tengo un circuito vale que para cada par de nodos $a_i$, $a_j$, existe un camino. Entonces $a_1$, $a_2$, ..., $a_n$ forman una componente fuertemente conexa. Absurdo, que provino de suponer que existia un circuito en g.
+Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ nodos, tal que el circuito pasa por ellos. Como tengo un circuito vale que para cada par de nodos $a_i$, $a_j$, existe un camino. Entonces $a_1$, $a_2$, ..., $a_n$ forman una componente fuertemente conexa. Absurdo, que provino de suponer que exist'ia un circuito en g.
 \end{proof}
 
 \section{Pseudocodigo}
@@ -296,39 +296,42 @@ Supongamos que existe un circuito en g. Sean $a_1$,$a_2$,..., $a_i$,..., $a_n$ n
 \newpage
 
 \section{Cuestiones de implementación}
-Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodos y m es la cantidad de vertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. En cambio si usamos dsf en varias ocasiones y para esta función si nos es conveniente usar listas de adyacencia.
+Para resolver los problemas representamos los grafos mediante listas de adyacencias. De esta manera podemos crearlos en O(n + m) donde n es la cantidad de nodos y m es la cantidad de v'ertices. Si bien el costo de saber si a $\leadsto$ b es mayor que usando una matriz de adyacencia, como no lo usamos para la resolución del problema no es algo que nos afecte. En cambio si usamos DFS en varias ocasiones y para esta función si nos es conveniente usar listas de adyacencia.
 
-La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i inside. Si bien tenemos informacion redundante,nos permite conocer facilmente los nodos que inciden sobre otro nodo dado, y de esta manera podemos obtener rapidamente la componente fuertemente conexa de uno de los nodos ganadores.
-Con respecto a las listas utilizamos las listas provistas por la std de c++.
+La estructura que usamos utiliza dos arreglos de listas, en la posición i de uno guarda los elementos que inciden en el nodo i, y en el otro guarda la lista de los elementos sobre los que i incide. Si bien tenemos informaci'on redundante, nos permite conocer facilmente los nodos que inciden sobre otro nodo dado, y de esta manera podemos obtener r'apidamente la componente fuertemente conexa de uno de los nodos ganadores.
+
+Con respecto a las listas utilizamos las listas provistas por la stl de c++.
 
 La clase grafo, entonces, permite conocer en O(1) la cantidad de nodos, tambien con ese orden brinda los elementos que inciden sobre un nodo, y aquellos sobre los que el nodo incide.
 
 \section{Cálculo de complejidad}
-Para estudiar la complejidad del algoritmo consideramos que es apropiado considerar el modelo uniforme, ya que lo que importa en este caso es la cantidad de jugadores y partidos arreglados, mas que el coste que podrian tener las operaciones aritmeticas.
+Para estudiar la complejidad del algoritmo consideramos que es apropiado considerar el modelo uniforme, ya que lo que importa en este caso es la cantidad de jugadores y partidos arreglados, mas que el coste que podr'ian tener las operaciones aritm'eticas.
 Por eso consideraremos que el tamaño de la entrada es justamente la cantidad de jugadores (n) y la cantidad de partidos arreglados (m).
 
-Dado que, como dijimos anteriormente, si la cantidad de partidos arreglados es menor que $n-1$ sabemos que el torneo no puede arreglarse, por lo cual el algoritmo funciona en $O(1)$, ya que que solo se pregunta por la cantidad de partidos arreglados y se termina el algoritmo.
+Antes que nada creamos el grafo, como usamos listas de adyacencia, hacer esto nos cuesta O(n+m): primero armamos dos arreglos de n posiciones, en cada uno vamos a tener una lista. Luego por cada par (a,b) insertamos a b en la lista de salida de a y hacemos lo propio con a en la lista de entrada de b.
+ 
+Dado que, como dijimos anteriormente, si la cantidad de partidos arreglados es menor que $n-1$ sabemos que el torneo no puede arreglarse, por lo cual el algoritmo funciona en $O(1)$, ya que solo se pregunta por la cantidad de partidos arreglados y se termina el algoritmo.
 
 Veamos que ocurre en los casos en los que m $\geq$ $n-1$. 
 
-Lo primero que hacemos es un dfs que nos permite numerar los nodos según el orden de finalización de la llamada recursiva. Como un dfs que asigna un valor numerico en una posición de un arreglo, su orden es O(n + m).
+Lo primero que hacemos es un DFS (línea 4) que nos permite numerar los nodos según el orden de finalización de la llamada recursiva(En realidad al único que se le asigna número es al que tiene el mayor valor). Como un DFS que asigna un valor n'umerico a un nodo, su orden es O(n + m).
 
-Una vez que hacemos esto, realizamos otro dfs desde el nodo de mayor numeracion, para ver a cuantos nodos se puede llegar. Nuevamente, como en el caso anterior, por ser un dfs el orden es O(n + m).
+Una vez que hacemos esto, realizamos otro DFS desde el nodo de mayor numeraci'on (línea 5), para ver a cuantos nodos se puede llegar. Nuevamente, como en el caso anterior, por ser un DFS el orden es O(n + m).
 
-En el caso en que no llegue a todos los nodos, terminamos devolviendo vacio. Es decir que la complejidad en este caso es la de los dos dfs anteriores O(n + m).
+En el caso en que no llegue a todos los nodos, terminamos devolviendo vac'io. Es decir que la complejidad en este caso es la de los dos DFS anteriores O(n + m).
 
-En cambio, si llegaba todos, tenemos que hacer un nuevo dfs usando los ejes de entrada en vez de los de salida. Como son los mismos ejes; pero con sentido inverso, la cantidad de ejes es la misma que antes: m. Cada nodo que visitamos lo agregamos a una lista en O(1). Por lo tanto como se trata de una variante del dfs que no realiza operaciones con costo extra, el orden es nuevamente O(n+m).
+En cambio, si llegaban todos, tenemos que hacer un nuevo DFS usando los ejes de entrada en vez de los de salida (línea 8). Como son los mismos ejes; pero con sentido inverso, la cantidad de ejes es la misma que antes: m. Cada nodo que visitamos lo agregamos a una lista en O(1). Por lo tanto como se trata de una variante del DFS que no realiza operaciones con costo extra, el orden es nuevamente O(n+m).
 
-Esta lista es la que finalmente devolvemos, luego de ordenarla mediante bucketSort en orden O(n), ya que por enunciado la salida debe estar ordenanda de menor a mayor.
+Esta lista es la que finalmente devolvemos, luego de ordenarla mediante bucketSort (línea 10) en orden O(n), ya que por enunciado la salida debe estar ordenanda de menor a mayor.
 
 En el caso de que el grafo sea completo, sabemos que m = $\frac{n*(n-1)}{2}$ por lo cual, en este caso O(n+m) $\subset$ O($n^2$).
 
-Si bien el algoritmo no tiene un peor caso a priori, podemos notar que si no hay ganador no hacemos el tercer dfs, ni tampoco hacemos el bucketSort, por lo cual si bien a nivel de orde la situación es la misma, uno esperaria que esos casos se resuelvan mas rapidamente.
+Si bien el algoritmo no tiene un peor caso a priori, podemos notar que si no hay ganador no hacemos el tercer dfs, ni tampoco hacemos el bucketSort, por lo cual si bien a nivel de orde la situación es la misma, uno esperar'ia que esos casos se resuelvan mas r'apidamente.
 %Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju (algoritmo \ref{alg:algoritmo2}). Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
 %
 %A continuación creamos el grafo invertido (algoritmo \ref{alg:algoritmo3}). Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
 %
-%Cuando ya tenemos al grafo invertido, realizamos nuevamente una dsf para armar las componentes fuertemente conexas, nuevamente como es una dsf solo tocamos una vez a cada nodo y recorremos todos los vertices, tenemos un orden $O(n+m)$. En cada llamada el costo de ir guardando las componentes es constante, ya que solo se agrega un elemento al principio de una lista.
+%Cuando ya tenemos al grafo invertido, realizamos nuevamente una DFS para armar las componentes fuertemente conexas, nuevamente como es una DFS solo tocamos una vez a cada nodo y recorremos todos los vertices, tenemos un orden $O(n+m)$. En cada llamada el costo de ir guardando las componentes es constante, ya que solo se agrega un elemento al principio de una lista.
 %
 %Una vez que tenemos las componentes, lo que hacemos es guardar en que componente quedo cada nodo (línea 6,\ref{alg:algoritmo1}) . Para esto recorremos cada una de las componentes fuertemente conexas y miramos a cada nodo. Como la cantidad total de nodos que tenemos es n, justamente el costo de hacer esto es $O(n)$.
 %
@@ -344,9 +347,9 @@ Si bien el algoritmo no tiene un peor caso a priori, podemos notar que si no hay
 %
 %Si bien el algoritmo no tiene un peor caso claro, lo que si se puede notar es que en el caso en que existe un ganador, vamos a recorrer todas las componentes conexas para asegurarnos de eso, las mismas podrian llegar a ser n. Ahora bien, en cambio si no hay ganador, ni bien encontremos a dos con grado de entrada cero podemos parar porque sabemos que nadie gana. Si bien en el peor caso, para determinar que nadie gana necesitamos ver todas las componentes conexas, se podria esperar que en caso promedio, no haga falta revisar todas para encontrar dos con grado de entrada cero, por lo cual el algoritmo terminaria mas rapido (mas aun si consideramos que no tenemos el overhead del bucketsort)
 
-\section{Analisis experimental}
+\section{An'alisis experimental}
 \subsection{Experiencias realizadas}
-Para realizar las experiencias generamos grafos aleatorios variando las variables cantidad de jugadores y cantidad de partidos arreglados. Para contar operaciones, declaramos una variable global, y la incrementamos por cada operación que realizamos, considerando que la asignacion de n posiciones de memoria cuenta como n operaciones.
+Para realizar las experiencias generamos grafos aleatorios variando las variables cantidad de jugadores y cantidad de partidos arreglados. Para contar operaciones, declaramos una variable global, y la incrementamos por cada operación que realizamos, considerando que la asignaci'on de n posiciones de memoria cuenta como n operaciones.
 
 Creamos grafos al azar, que cumplieran las pautas del enunciado y realizamos con ellos las siguientes experiencias:
 
@@ -354,9 +357,9 @@ La primer experiencia consistió en medir la cantidad de operaciones en función d
 
 Luego decidimos dejar fija cada una ellas para observar el comportamiento por separado.
 
-Realizamos otra experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos. Queriamos observar como se comporta el algoritmo en grafos que poseen la cantidad maxima de aristas
+Realizamos otra experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos. Quer'iamos observar como se comporta el algoritmo en grafos que poseen la cantidad m'axima de aristas
 
-Finalmente decidimos hacer una ultima experiencia, generamos instancias donde para todos los jugadores se puede armar el troneo y otras donde para ninguno puede arreglarse y comparamos la cantidad de operaciones de ambas, la idea es notar si efectivamente cuando no hay ganadores se observe que el algoritmo termina mas rapidamente.
+Finalmente decidimos hacer una ultima experiencia, generamos instancias donde para todos los jugadores se puede armar el torneo y otras donde para ninguno puede arreglarse y comparamos la cantidad de operaciones de ambas, la idea es notar si efectivamente cuando no hay ganadores se observe que el algoritmo termina mas r'apidamente.
 
 Los resultados obtenidos se encuentran a continuación.
 
@@ -402,15 +405,15 @@ Los resultados obtenidos se encuentran a continuación.
 \label{fig:exp5}
 \end{figure}
 
-\subsection{Discusion}
-En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde $m < n - 1$ y que se descartan rapidamente, en O(1). En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos habia dado O(n + m).
+\subsection{Discusi'on}
+En la primer experiencia observamos que el gráfico esta compuesto por dos planos, el primero muestra aquellos casos donde $m < n - 1$ y que se descartan r'apidamente, en O(1). En cambio el otro representa aquellos casos donde m $\geq$ n - 1 y por lo tanto hay que realizar todo el proceso para determinar si hay un ganador o no. Que sea un plano se condice con el calculo de complejidad realizado ya que esta nos hab'ia dado O(n + m).
 
-La segunda experiencia nos permitio notar que el comportamiento es lineal en la cantidad de jugadores. Sin embargo si dejamos fija la cantidad de partidos, y aumentamos la cantidad de jugadores, hay un momento a partir del cual vale que $m < n - 1$ y podemos resolver el problema en O(1), esto se manifiesta en la caida de la cantidad de operaciones a partir de n $>$ 501.
+La segunda experiencia nos permiti'o notar que el comportamiento es lineal en la cantidad de jugadores. Sin embargo si dejamos fija la cantidad de partidos, y aumentamos la cantidad de jugadores, hay un momento a partir del cual vale que $m < n - 1$ y podemos resolver el problema en O(1), esto se manifiesta en la ca'ida de la cantidad de operaciones a partir de n $>$ 501.
 
 La tercer experiencia nos permitió ver como se mantenía la tendencia lineal en función del m. En el grafico observamos 2 rectas, la primera corresponde a los casos $m < n -1$ y la segunda es para los casos donde no se puede decidir a priori y tenemos que hacer todo el proceso de los datos.
 
-En la cuarta grafica notamos que en grafos completos, la cantidad de operaciones crece cuadraticamente con respecto al n. Nosotros esperabamos que eso ocurra, ya que esta forma parabolica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
+En la cuarta grafica notamos que en grafos completos, la cantidad de operaciones crece cuadraticamente con respecto al n. Nosotros esper'abamos que eso ocurra, ya que esta forma parab'olica se explica en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que m es $\Theta(n^2)$, entonces O(n + m) es O($n^2$).
 
-Finalmente, la experiencia 5 nos permitió reforzar la idea de que si no hay ganadores el algoritmo termina mucho mas rapido que en aquellos casos donde si hay ganadores, lo cual habiamos predicho.
+Finalmente, la experiencia 5 nos permitió reforzar la idea de que si no hay ganadores el algoritmo termina mucho mas r'apido que en aquellos casos donde si hay ganadores, lo cual hab'iamos predicho.
 
-A modo de conclusión, podemos decir que las experiencias nos permitieron corroborar el analisis teorico que realizamos previamente.
+A modo de conclusión, podemos decir que las experiencias nos permitieron corroborar el an'alisis te'orico que realizamos previamente.
