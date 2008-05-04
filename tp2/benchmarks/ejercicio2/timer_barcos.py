@@ -62,11 +62,9 @@ def imprimirInstancia(ciudades=10, acuerdos=None):
     for each in g.lista_acuerdos:
         print "%s %s" % each
 
-if __name__ == '__main__':
 
-    # genera los datos para el grafico en funcion de N
-    max_n = 1000
-
+# generadores de archivos de tiempos
+def datos_n(max_n=1000):
     print "Generando datos para el grafico en funcion de N..."
     print
     fn = open('datos_n.m','w')
@@ -78,18 +76,54 @@ if __name__ == '__main__':
     fn.close()
     print
 
-    # genera los datos para el grafico en funcion de M
-    max_m = 10000
+def datos_m(max_m=10000):
     print "Generando datos para el grafico en funcion de M (N constante)..."
     print
     fm = open('datos_m.m','w')
     fm.write('m = [')
     for i in xrange(10, max_m):
-        print "%s/%s" % (i, max_m)
+        if i % 100 == 0:
+            print "%s/%s" % (i, max_m)
         fm.write('%s %s;' % (i, medirTiempo(generarInstancia(ciudades=200, acuerdos=i))))
     fm.write('];')
     fm.close()
     print
 
+def datos_conosinsolucion(n=200,puntos=5000):
+    print "Generando datos para el grafico que compara casos con o sin solución..."
+    print
+    consol = []
+    sinsol = []
+    for i in xrange(puntos):
+        if i % 100 == 0:
+            print "%s/%s" % (i, puntos)
+
+        g = generarInstancia(ciudades=n)
+        t = medirTiempo(g)
+        fres = open(outfile)
+        res = fres.read()
+        fres.close()
+        if res[:2] == '-1':
+            sinsol.append((g.m,t))
+        else:
+            consol.append((g.m,t))
+
+    fd = open('datos_conosinsol.m','w')
+    fd.write('m_consol = [')
+    for each in consol:
+        fd.write('%s %s;' % each)
+    fd.write('];\n')
+
+    fd.write('m_sinsol = [')
+    for each in sinsol:
+        fd.write('%s %s;' % each)
+    fd.write('];\n')
+
+    fd.close()
+    print
 
 
+if __name__ == '__main__':
+    datos_n()
+    datos_m()
+    datos_conosinsolucion();
