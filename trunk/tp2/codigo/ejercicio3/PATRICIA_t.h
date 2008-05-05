@@ -1,7 +1,7 @@
 #ifndef _PATRICIA_H_
 #define _PATRICIA_H_
 
-#include "nodo_arreglos_PATRICIA.h"
+#include "nodo_listas_PATRICIA.h"
 #include <iostream>
 #include <fstream>
 using namespace std;

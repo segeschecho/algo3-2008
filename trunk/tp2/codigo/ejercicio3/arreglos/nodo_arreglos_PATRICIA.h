@@ -57,10 +57,9 @@ private:
     unsigned int cantElem;
     eje* arregloHijos[26];
 
-    // Parametros:      cadena con un solo elemento que simboliza el
-    //                  primer caracter de la cadena que se quiere ver
+    // Parametros:      primer caracter de la cadena que se quiere ver
 	// Proposito:       ver un elemento especifico
-    nodo::eje* ejeQueEmpiezaCon(string c);
+    nodo::eje* ejeQueEmpiezaCon(char c);
 
     // Parametros:      posicion de la cadena que se quiere ver (0-n)
 	// Proposito:       ver un elemento especifico
