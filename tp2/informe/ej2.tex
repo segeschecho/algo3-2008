@@ -274,9 +274,101 @@ que no existe).
 
 
 \section{Cálculo de complejidad}
-% TODO: mencionar el uso de modelo de tiempos constantes!
+
+Para examinar los algoritmos propuestos para este problema, utilizaremos el modelo de tiempos
+constantes ya que las operaciones aritméticas son simples y no son centrales desde el punto
+de vista de la resolución del problema. La mayor parte de las llamadas que se realizan
+consultan tablas en memoria o realizan operaciones booleanas, resultando así razonable
+despreciar el tiempo de efectuar operaciones aritméticas como sumas y restas.
+
+El algoritmo central es el tercero y último de los propuestos en pseudocódigo, pero
+como éste realiza llamadas a los otros dos, examinaremos primero a éstos últimos para
+luego utilizar las complejidades obtenidas en el cálculo de costo temporal del
+tercer algoritmo.
+
+\subsection{Algoritmo de tabulado} 
+
+En primer lugar el algoritmo de tabulado construye 2 matrices de ceros en memoria,
+cada una de tamaño $n*n$. El costo de realizar esta operación está en $O(n^2)$, si
+asumimos que las llamadas al sistema para obtener $b$ bytes de memoria están en $O(b)$,
+lo cual es razonable.
+
+El primer bucle realiza $n$ iteraciones, como se desprende de su guarda. Como tomamos
+la decisión de implementar nuestro tipo \textbf{Grafo} sobre una matriz de adyacencias,
+el costo de la operación \textbf{estanConectados()} está en $O(1)$. Por consiguiente,
+todo el bloque que se ejecuta dentro del bucle tiene un costo contenido en $O(1)$, puesto
+que las demás operaciones que se llevan a cabo son simples acceso a memoria, asignaciones 
+o operaciones aritméticas.
+
+El segundo bucle tiene un bucle anidado. Si observamos las guardas, vemos que el bucle externo
+itera $n-2$ veces, mientras que el interno lo hace $n$ veces. El costo del cuerpo del bucle
+interno es nuevamente $O(1)$, análogamente a lo visto para el primer ciclo del algoritmo.
+Éste se ejecuta un total de $(n-2)*n$ veces, resultando:
+$$ n*(n-2) = n^2 - 2*n \in O(n^2) $$
+
+Finalmente la concatenación de estos 3 bloques de complejidad a lo sumo cuadrática,
+mantiene la complejidad y podemos concluir que el algoritmo de tabulado tiene un costo
+temporal en $O(n^2)$.
 
 
+\subsection{Algoritmo auxiliar de construcción de caminos}
+
+Este segundo algoritmo es una función recursiva. Si examinamos el pseudocódigo vemos
+que comporta dos secciones: un caso base, y un caso recursivo. Si bien este último
+contiene 2 llamadas recursivas, solo puede ejecutarse una de ellas, ya que si alguna
+de las guardas es verdadera (y por precondición, siempre una de ellas lo es), se hace
+la llamada recursiva y se devuelve inmediatamente.
+
+El caso base está definido en el primer bloque condicional, y se ejecuta visiblemente
+en tiempo constante ya que se hacen algunas comparaciones aritméticas y se construye
+una lista de largo acotado que se devuelve a continuación. Definimos la función $T(i)$ 
+que corresponde al tiempo de construir un camino de largo $i$. El caso base corresponde
+a $i=1$, y por lo tanto:
+$$T(1) = k_1$$
+
+El caso recursivo comporta una sección de costo constante: asignaciones de variables,
+accesos y comparaciones booleanas, evaluación de las guardas y combinación de listas
+encadenadas utilizando \textit{splicing} en $O(1)$. Asimismo, hay también una de costo
+variable correspondiente a la llamada recursiva propiamente dicha. Resulta claro
+que en cada llamada, el tamaño de la instancia en que se hace la evaluación recursiva
+disminuye en uno (ya sea avanzando a, o retrocediendo b). Para la deducción que sigue
+usamos que la implementación de \textit{caminoQueTerminaEnA} y la de 
+\textit{caminoQueTerminaEnB} tienen el mismo costo, lo cual es razonable puesto que tienen
+implementaciones idénticas. Si elegimos un $k$ conveniente que acote el tiempo de ejecución 
+de las partes constantes de la función, resulta que el costo para una instancia de tamaño 
+$n$ sigue la siguiente expresión:
+$$T(i) = T(i-1) + k$$
+Luego:
+$$T(n) = \sum_{i=2}^{n} k + k_1 = (n-1)*k + k_1 \in O(n)$$
+
+De esta manera, el costo de construir un camino de largo $n$ está en $O(n)$.
+
+\subsection{Algoritmo de búsqueda de caminos}
+
+Sobre la base de los costos de los algoritmos anteriores, podemos ahora deducir la
+complejidad del algoritmo que encuentra el camino buscado.
+
+La función comienza con un atajo para casos imposibles que se resuelve en tiempo
+constante. A continuación, se completan las tablas mediante una llamada al algoritmo
+de tabulado que como vimos se ejecuta en $O(n)$.
+
+Enseguida tenemos un bucle de $n$ iteraciones, que contiene nuevamente operaciones
+de costo constante, a excepción del caso en que el bucle detecta que existe un camino.
+En esa situación, se llama a la función que construye dicho camino en $O(n)$ y se
+termina inmediatamente la ejecución del ciclo. Como se devuelve una lista por copia,
+operación que se realiza en $O(n)$, podemos asumir que el costo de devolver está
+dentro del costo de construir el camino.
+
+Abusando de la notación, tenemos que la complejidad de esta función es:
+$$O(1) + O(n^2) + O(n)*O(1) + O(n) \in max(O(1), O(n), O(n^2)) = O(n^2)$$
+
+Finalmente el algoritmo para construir el camino que recorre todas las ciudades
+se puede computar en $O(n^2)$. A continuación analizaremos la complejidad del
+algoritmo en función del tamaño de la entrada que recibe.
+
+\subsection{Costo en función del tamaño de la entrada}
+
+%TODO: completar esto
 
 \section{Análisis experimental}
 
