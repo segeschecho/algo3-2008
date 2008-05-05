@@ -31,9 +31,8 @@ void nodo :: agregar (const string& s, nodo* nuevonodo) {
         if((it == listaEjes.end()) || (it != listaEjes.end() && (it->cadena) != s)) {
             if(nuevonodo == NULL) {
                 nuevonodo = new nodo;
+                nuevonodo->_existe = true;
             }
-
-            nuevonodo->_existe = true;
 
             eje nuevoptr;
             nuevoptr.cadena = s;
@@ -84,12 +83,9 @@ bool nodo :: esHoja(void){
  *  METODOS PRIVADOS
  */
 
-nodo::eje* nodo :: ejeQueEmpiezaCon(string c) {
-    if(c.length() > 1)
-        return NULL;
-
+nodo::eje* nodo :: ejeQueEmpiezaCon(char c) {
     list<nodo::eje>::iterator it = listaEjes.begin();
-    while(it != listaEjes.end() && c != it->cadena.substr(0,1)) {
+    while(it != listaEjes.end() && c != *it->cadena.begin()) {
         it++;
     }
 

@@ -69,12 +69,8 @@ bool nodo :: getExiste(void){
     return _existe;
 }
 
-nodo::eje* nodo :: ejeQueEmpiezaCon(string c) {
-    if(c.length() == 1) {
-        return arregloHijos[toupper((int)*c.begin()) - 65];
-    }
-
-    return NULL;
+nodo::eje* nodo :: ejeQueEmpiezaCon(char c) {
+    return arregloHijos[toupper((int)c) - 65];
 }
 
 nodo::eje* nodo :: iesimoEje(unsigned int i) {

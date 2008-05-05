@@ -37,11 +37,6 @@ void PATRICIA :: agregar(const string& s){
 
             nodo* nuevopadre = new nodo;
             nuevopadre->agregar(palabraArmada, actual);
-            if(existia)
-                actual->setExiste(true);
-            else
-                actual->setExiste(false);
-
             ejeActual->puntero = nuevopadre;
             actual = nuevopadre;
         }
@@ -149,16 +144,24 @@ nodo::eje* PATRICIA :: bajar(nodo*& actual, nodo::eje*& ejeActual, const string&
     //recortada es el string s sacandole los prefijos encontrados cada vez que bajamos por una rama
 
     //verifico solo la primer letra pues con solo eso me alcanza
-    nodo::eje* aux = actual->ejeQueEmpiezaCon(recortada.substr(0,1));
-    bool puedoBajar = (aux != NULL);
-    while(aux != NULL && puedoBajar) {
-        ejeAnterior = ejeActual;
-        ejeActual = aux;
-        actual = aux->puntero;
-        palabraArmada += aux->cadena;
-        puedoBajar = quitarPrefijoEnComun(recortada, aux->cadena);
+    if(!recortada.empty()) {
+        nodo::eje* aux = actual->ejeQueEmpiezaCon(*recortada.begin());
+        bool puedoBajar = (aux != NULL);
 
-        aux = actual->ejeQueEmpiezaCon(recortada.substr(0,1));
+        while(aux != NULL && puedoBajar) {
+            ejeAnterior = ejeActual;
+            ejeActual = aux;
+            actual = aux->puntero;
+            palabraArmada += aux->cadena;
+            puedoBajar = quitarPrefijoEnComun(recortada, aux->cadena);
+
+            if(!recortada.empty()) {
+                aux = actual->ejeQueEmpiezaCon(*recortada.begin());
+            }
+            else {
+                aux = NULL;
+            }
+        }
     }
     return ejeAnterior;
 }
