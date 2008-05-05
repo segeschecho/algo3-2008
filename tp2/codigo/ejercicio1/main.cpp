@@ -37,6 +37,7 @@ int main(int argc, char* argv[])
         nodos = buffer;
 	f >> buffer;
 	relaciones = buffer;
+	unsigned relas = relaciones;
 	if(nodos == relaciones && nodos == 0){
 	    break;
         }
@@ -49,9 +50,17 @@ int main(int argc, char* argv[])
 	    l.push_back(pair<unsigned,unsigned>(x-1,y-1));
 	    relaciones --;
 	}
-	Grafo* g = new Grafo(nodos,l);
-	unsigned cantGanadores = 0;
-    	bool* sol =ejercicio1(g,rels,cantGanadores);
+	bool* sol;
+	unsigned cantGanadores;
+	Grafo* g;
+	if( relas < nodos -1){
+	    sol = NULL;
+	    cantGanadores = 0;
+	}
+	else {
+	g = new Grafo(nodos,l);
+    sol =ejercicio1(g,rels,cantGanadores);
+	}
     	o<<cantGanadores;
     	if( sol != NULL){
 
@@ -61,10 +70,11 @@ int main(int argc, char* argv[])
                 }
 
             }
+        delete g;
+    	delete[] sol;
     	}
         o<<endl;
-    	delete g;
-    	delete[] sol;
+
         }
 	return 0;
     }
@@ -129,10 +139,10 @@ void dfsReverso(Grafo* grafo, unsigned nodo, bool* visitado,list<unsigned>* list
 /* resuelve el ejercicio 1 */
 bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
     //caso facil: el grafo subyacente no puede ser conexo
-     if(rels < grafo->nodos - 1){
+     /*if(rels < grafo->nodos - 1){
         cantGanadores = 0;
         return NULL;
-    }
+    }*/
     bool* visitado = new bool[grafo->nodos];
 	for(unsigned i = 0; i < grafo->nodos; i++){
 			visitado[i] = false;
