@@ -358,6 +358,8 @@ Un PATRICIA tiene ademas la cantidad de palabras definidas, la cual necesitamos 
 
 Un PATRICIA esta compuesto entonces por un nodo llamado raiz y por la cantidad de palabras que lo componen.
 
+A la hora de agregar, optamos por copiar la cadena s de entrada, ya que nos parecio que era mas prolijo, pues la otra forma que no requeria copiar la cadena era usando una referencia de entrada, ir rompiendola y guardandola en el eje correspondiente; sin embargo es probable que un potencial usuario de este conjunto no desee que si le pasa una palbra se le destruya. Si bien nos desmejoró un poco el orden (como se verá mas adelante el orden es O($long_s + long_{max}$) creemos que hace que el conjunto sea mas ameno de usar.
+
 %TODO: y si mejor nos hacemos los pelotudos?
 Para el manejo de las cadenas, usamos string de ls stl. Para las mismas necesitamos que la concatenación de una cadena s a una cadena t sea O(s), que comparar dos cadenas s y t se pueda hacer en O(min($long_s$,$long_t$)). Si bien no pudimos encontrar los ordenes en los que la stl provee estas operaciones, son ordenes faciles de cumplir, por lo que podemos suponer que valen.
 

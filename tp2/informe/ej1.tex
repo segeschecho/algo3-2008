@@ -306,7 +306,7 @@ La clase grafo, entonces, permite conocer en O(1) la cantidad de nodos, tambien 
 
 \section{Cálculo de complejidad}
 Para estudiar la complejidad del algoritmo consideramos que es apropiado considerar el modelo uniforme, ya que lo que importa en este caso es la cantidad de jugadores y partidos arreglados, mas que el coste que podr'ian tener las operaciones aritm'eticas.
-Por eso consideraremos que el tamaño de la entrada es justamente la cantidad de jugadores (n) y la cantidad de partidos arreglados (m).
+Por eso realizaremos el an'alisis en funci'on de la cantidad de jugadores (n) y la cantidad de partidos arreglados (m).
 
 Antes que nada creamos el grafo, como usamos listas de adyacencia, hacer esto nos cuesta O(n+m): primero armamos dos arreglos de n posiciones, en cada uno vamos a tener una lista. Luego por cada par (a,b) insertamos a b en la lista de salida de a y hacemos lo propio con a en la lista de entrada de b.
  
@@ -327,6 +327,24 @@ Esta lista es la que finalmente devolvemos, luego de ordenarla mediante bucketSo
 En el caso de que el grafo sea completo, sabemos que m = $\frac{n*(n-1)}{2}$ por lo cual, en este caso O(n+m) $\subset$ O($n^2$).
 
 Si bien el algoritmo no tiene un peor caso a priori, podemos notar que si no hay ganador no hacemos el tercer dfs, ni tampoco hacemos el bucketSort, por lo cual si bien a nivel de orde la situación es la misma, uno esperar'ia que esos casos se resuelvan mas r'apidamente.
+
+Con respecto al tamaño de la entrada, si consideramos que ni n ni m estan acotados, podemos considerar que el tamaño de la entrada es el siguiente:
+$$t = log(n) + log(m) + log(n)*m$$ puesto que como n y m no estan acotados y son valores que recibo en el input, tengo que considerar que su tamaño es logaritmico; luego recibo los m partidos arreglados, y los jugadores que conforman esos partidos son del orden de n, por lo que su tamaño tambi'en es logaritmico.
+
+Veamos entonces que complejidad obtenemos en función del tamaño de la entrada. Para el caso donde m $<$ n - 1, sabemos que lo resolvemos en O(1), eso se mantiene en funcion del tamaño de la entrada. Ahora para el caso donde m $\geq$ n - 1, podemos considerar que:
+
+Si m = n - 1:
+
+	$$t = log(n) + log(n - 1) + log(n)*(n-1)$$
+	
+	Luego n $<$ t, entonces $m < n < t$. Entonces n + m $\leq$ t + t, por lo tanto, O(n + m) $\subset$ O(t)
+	
+Si m $\geq$ n:
+	
+	$$n \leq m \leq t$$
+	
+	Luego, al igual que en el caso anterior, n + m $\leq$ t + t, entonces nuevamente O(n + m) $\subset$ en O(t), es decir que a lo sumo tenemos una complejidad lineal en función del tamaño de la entrada.
+
 %Al empezar buscamos obtener las componentes fuermente conexas mediante el algoritmo de kosaraju (algoritmo \ref{alg:algoritmo2}). Para eso, lo primero que hacemos es hacer una dfs para numerar a los nodos como se explico anteriormente. Dado que hacemos un dfs, tocamos a cada nodo una vez, y recorremos todos los vertices. Por esta razon tenemos un costo de $O(n+m)$.
 %
 %A continuación creamos el grafo invertido (algoritmo \ref{alg:algoritmo3}). Como tenemos la informacion de las relaciones en listas de adyacencia, la construccion del mismo, nos cuesta nuevamente $O(n+m)$.
@@ -360,6 +378,8 @@ Luego decidimos dejar fija cada una ellas para observar el comportamiento por se
 Realizamos otra experiencia variando ambas variables, pero manteniendo constante la relación entre ellas, en particular consideramos m = (n-1)*n/2, es decir, generando grafos completos. Quer'iamos observar como se comporta el algoritmo en grafos que poseen la cantidad m'axima de aristas
 
 Finalmente decidimos hacer una ultima experiencia, generamos instancias donde para todos los jugadores se puede armar el torneo y otras donde para ninguno puede arreglarse y comparamos la cantidad de operaciones de ambas, la idea es notar si efectivamente cuando no hay ganadores se observe que el algoritmo termina mas r'apidamente.
+
+Los gráficos los hicimos con respecto a n y a m y no con respecto a t por poder hacer un mejor análisis, dado que t = f(n,m) no era un funcion sencilla de observar, consideramos que ibamos a poder obtener mejores observaciones si usamos n y m.
 
 Los resultados obtenidos se encuentran a continuación.
 
