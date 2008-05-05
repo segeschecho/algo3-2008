@@ -12,12 +12,13 @@
 	\STATE guardamos en eje anterior el ejeActual
 	\STATE guardamos en ejeActual el eje que estamos mirando ahora 
 	\STATE nodoActual \textcolor{orange}{$\leftarrow$} nodo apuntado por el eje
-	\STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabraArmada \textcolor{orange}{++} cadena del eje
+	\STATE palabraArmada \textcolor{orange}{+=} cadena del eje
 	\STATE sacar a s la parte del eje que le es prefijo
 	\STATE puedoBajar \textcolor{orange}{$\leftarrow$} el eje entero era prefijo de s
 	\STATE eje \textcolor{orange}{$\leftarrow$} eje del nodo actual que empieza con la primer letra de s
 \ENDWHILE
 \RETURN ejeAnterior
+\label{alg:bajar}
 \end{algorithmic}
 \end{algorithm}	
 
@@ -29,7 +30,7 @@
 \STATE palabraArmada \textcolor{orange}{$\leftarrow$} palabra armada durante el recorrido
 \STATE acutal \textcolor{orange}{$\leftarrow$} nodo hasta donde baje
 \STATE ejeActual \textcolor{orange}{$\leftarrow$} eje que apunta al nodo actual
-\IF{si la palabra ya esta definida}
+\IF{ la palabra ya esta definida}
 	\STATE no hacer nada
 \ELSE
 	\STATE elminar prefijos comunes de s y de palabraArmada
