@@ -6,7 +6,6 @@
 \STATE bajar por las ramas hasta no encontrar mas prefijo
 \STATE ejeAnterior \textcolor{orange}{$\leftarrow$} ultimo eje que pase
 \STATE actual \textcolor{orange}{$\leftarrow$} nodo en el que quede parado
-\IF{la palabra esta definida}
 	\IF{ el nodo actual es una hoja}
 		\STATE elminar nodo y eje
 		\IF{el padre de la hoja ahora solo tiene un hijo, y el no esta definido} \STATE \COMMENT{si el nodo esta definido, es porque el conjunto no era libre de prefijos}
@@ -26,6 +25,5 @@
 		\ENDIF
 	\ENDIF
 	\STATE palabras definidas \textcolor{orange}{--}
-\ENDIF
 \end{algorithmic}
 \end{algorithm}		

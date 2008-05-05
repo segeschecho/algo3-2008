@@ -384,34 +384,42 @@ Para el manejo de las cadenas, usamos string de ls stl. Para las mismas necesita
 \input{pseudo3}
 \input{pseudo3b}
 
-%FIXME: Esta mal
+%TODO: que alguien me revise, por el amor de Dios!!!!!!!!!!!!!!!!!
 \section{Cálculo de complejidad}
 Para realizar el analisis de la complejidad vamos a considerar el modelo uniforme ya que las principales operaciones se realizan a nivel de caracteres, por lo cual podemos considerar que tienen un costo acotado. Ahora bien, con respecto al tamaño de la entrada, en este caso consideramos que es la cantidad de caracteres que componen a la cadena sobre la que se va a operar, ya sea para agregarla, borrarla o saber si esta definida. Llamos s a la cadena de entrada, y $long_s$ a el largo (cantidad de caracteres) de la misma y $long_{max}$ a la longitud de la cadena mas larga ya agregada.
 
 A continuación analizaremos las cuatro funciones que debíamos implementar, para determinar el orden de complejidad logrado en cada una.
+\subsection{Bajar}
+Primero inicializamos algunas variables que son punteros. Incializamos también eje, para hacerlo, buscamos el eje que sale del nodo y comienza con la misma letra que s. En los arreglos lo hacemos en O(1).
+ 
+Por otro lado, con las listas ocurre lo mismo, ya que a lo sumo hay 26 caracteres, es decir 26 ejes de salida para el nodo. Por lo tanto, como es una cantidad acotada por una constante, recorrer esa lista también es O(1). 
 
+Luego viene un ciclo (l'inea 7), que itera mientras el eje exista y pueda bajar. Poder bajar, salvo en la primer iteración en la cual tiene el mismo significado que existe el eje; significa que el eje entero sea prefijo de s. Ambas condiciones se pueden dar como maximo $long_{max}$ veces, ya que no puede haber mas ejes con prefijo en s que la cantidad de ejes para guardar a la palabra mas larga, que tiene dicha longitud.
+
+Dentro del ciclo, lo que hacemos es asignar ciertos punteros en O(1), buscar el eje por donde seguir, también en O(1), concatenar a la cadenaActual la cadena del eje que acabamos de pasar y sacar de s el prefijo del eje. Hay que notar que si en una iteracion concatenamos a palabraArmada una cadena de largo k, el maximo numero de ejes es $long_{max}$ - k, ya que como mucho podemos tener $long_{max}$ ejes de un caracter.
+
+Entonces si el ciclo hace n iteraciones, y tenemos que en la cantidad de caracteres del iesimo eje que visitamos es $k_i$, vale que:
+$$\sum_{i=1}^{n}{k_i} \leq long_{max}$$
+
+Es por esta raz´n que la complejidad del algoritmo es O($long_{max}$).
+  
 \subsection{Agregar}
-Lo primero que hacemos es bajar por las ramas mientras entonctremos prefijo para s (cada vez que pasamos por un eje que es prefijo, le quitamos esa parte a s). En cada eje comparamos una porción de s, que al pasar al siguiente eje no se toca. Por esta razón cada caracter de s se va a tocar a lo sumo una vez. Cuando estamos en un nodo, debemos encontrar el eje hacia donde nos vamos a mover. Si el nodo cuenta con un arreglo de ejes, esto se hace en O(1).
+Lo primero que hacemos es bajar por las ramas mientras entonctremos prefijo para s, como vimos en el apartado anterior, el costo de esto es O($long_{max}$).
 
-Por otro lado, con las listas ocurre lo mismo, ya que a lo sumo hay 26 caracteres, es decir 26 ejes de salida para el nodo. Por lo tanto, como es una cantidad acotada por una constante, recorrer esa lista también es O(1). Luego llegar hasta la posición donde debemos agregar a s, nos costo hacer a lo sumo $long_{max}$ busquedas de ejes, porque aunque s sea mas larga, una vez que hicimos $long_{max}$ comparaciones, ya no podemos bajar mas; con un costo O(1), por lo tanto tenemos un costo $O(long_{max})$. 
 
-Notemos que en general hacemos menos busquedas de nodos, ya que en un eje suele haber varios caracteres. Sin embargo, hay que comparar el string del eje con s, por lo que en definitivda se terminan haciendo menos busquedas pero en ellas se hacen comparaciones de varios caracteres.
+Si la palabra ya estaba en el conjunto(línea 5), no hacemos nada y terminamos. El costo fue en total $O(long_{max})$.
 
-A medida que bajamos, vamos guardando la cadena que se va formando. Armar dicha cadena consiste en ir juntando los strings de cada eje, nuevamente el costo es $O(long_{max})$. 
+Si en cambio la palabra no estaba, lo proximo que hacemos es eliminar los prefijos comunes entre s y la palabra armada durante el descenso (línea 8) , nuevamente para hacer esto, recorremos a lo sumo $long_{max}$ caracteres, ya que lal cadenas de los ejes de una rama no pueden tener mas caracteres que $long_{max}$.
 
-Si la palabra ya estaba en el conjunto, no hacemos nada y terminamos. El costo fue en total $O(long_{max})$.
+Si hay que partir el nodo, lo que se hace es partir la cadena del ultimo eje visitado en la parte que es igual a s y la parte que difiere (línea 12). Para partir esta cadena, se recorren tantos caracteres como prefijo de s halla en el PATRICIA, y esta cantidad esta acotada por $long_{max}$ caracteres.
 
-Si en cambio la palabra no estaba, lo proximo que hacemos es eliminar los prefijos comunes entre s y la palabra armada durante el descenso, nuevamente para hacer esto, recorremos a lo sumo $long_{max}$ caracteres, ya que lal cadenas de los ejes de una rama no pueden tener mas caracteres que $long_{max}$.
-
-Si hay que partir el nodo, lo que se hace es partir la cadena del ultimo eje visitado en la parte que es igual a s y la parte que difiere. Para partir esta cadena, se recorren tantos caracteres como prefijo de s halla en el PATRICIA, y esta cantidad esta acotada por $long_{max}$ caracteres.
-
-Una vez que partimos esta cadena creamos un eje nuevo, que se hace en O($long_{max}$), porque si armamos un eje nuevo hay que copiar la parte de la cadena del eje, que no era prefijo en s. Tambien creamos un nuevo nodo, que se hace en O(1).
+Una vez que partimos esta cadena creamos un eje nuevo, que se hace en O($long_{max}$), porque si armamos un eje nuevo hay que copiar la parte de la cadena del eje, que no era prefijo en s(línea 14). Tambien creamos un nuevo nodo, que se hace en O(1).
 
 Luego de esto, linkeamos los nodos mediante el eje antes creado. Y seteamos el valor de existencia del nodo. Estas acciones se hacen en O(1), lo primero es setear un puntero y lo segundo es asignar un bool.
 
-Despu'es de esto, si hay que agregar un nuevo eje para s, se hace, pero esta vez el costo es O($long_s$), puesto que s podria ser en principio mayor que la palabra de longitud maxima entre las definidas. Se crea un nuevo nodo y se linkea con el nodo hasta donde habia bajado en O(1).
+Despu'es de esto, si hay que agregar un nuevo eje para s, se hace, pero esta vez el costo es O($long_s$), puesto que s podria ser en principio mayor que la palabra de longitud maxima entre las definidas(línea 25). Se crea un nuevo nodo y se linkea con el nodo hasta donde habia bajado en O(1).
 
-Si no habia que partir nodo, ni agregar un nodo nuevo, solo se setea el bit de existe en el ultimo nodo que visite.
+Si no habia que partir nodo, ni agregar un nodo nuevo, solo se setea el bit de existe en el ultimo nodo que visite (línea 28) .
 
 Por ultimo si la palabra no estaba ya en el conjunto, incrementamos en uno el cardinal del conjunto
 
@@ -421,11 +429,11 @@ Luego tenemos una cantidad acotada de operaciones de costo O($long_s$) y O($long
 
 Primero bajamos mientras en los ejes encontremos prefijo de s. Esto se hace en $O(long_{max})$. Notemos que como para poder sacar una palabra, pedimos como precondición que s halla sido agregada, sabemos que $long_s$ $\leq$ $long_{max}$. Entonces en verdad esta bajada tiene costo $O(long_s)$.
  
-Si el nodo a borrar es una hoja, eliminamos el nodo y al eje correspondiente. Borrar el eje, tiene $O(long_s)$ porque dicho eje, era subcadena de s.  
+Si el nodo a borrar es una hoja, eliminamos el nodo y al eje correspondiente(línea 5). Borrar el eje, tiene $O(long_s)$ porque dicho eje, era subcadena de s.  
 
-Una vez hecho esto, podria ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_{max}$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del `hermano` de s.
+Una vez hecho esto, podria ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_{max}$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del ``hermano'' de s (líneas 8 a 11).
 
-Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de él con su padre y de él con su unico hijo. Nuevamente el costo de esto es O($long_{max}$).
+Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de él con su padre y de él con su unico hijo. Nuevamente el costo de esto es O($long_{max}$) (líneas 16 y 17).
 
 Si no era hoja y no tenia solo un hijo, lo que hacemos es setear su flag de existe en false, que se hace en O(1). 
 
