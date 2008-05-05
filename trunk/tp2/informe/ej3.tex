@@ -456,6 +456,8 @@ Para este ejercicio decidimos no solo realizar un analisis para contrastar con e
 
 Primero, lo que hicimos fue contar operaciones al agregar, buscar y borrar elementos en ambas implementaciones del PATRICIA para contrastar los resultados con el calculo de complejidad anterior. Para esto generamos conjuntos de palabras y las agregamos en orden creciente con respecto a la cantidad de caracteres. Luego las buscamos, y finalmente las borramos. 
 
+En la experiencia anterior, cada vez que agregamos una palabra, vale que la longitud de la palabra que estoy agregando es mayor que la maxima definida, entonces lo que planteamos también es agregar primero una palabra larga y luego palabras mas chicas para que valga que el máximo sea una palabra ya agregada. Lo que esperamos ver en este caso es que la cantidad de operaciones tienda a quedar debajo que la cantidad de operaciones de la cadena mas larga.
+
 Ademas medimos los tiempos para agregar conjuntos de palabras en cada una de ellas, de esta forma buscamos comparar cual de las dos implementaciones era mas veloz.
 
 Finalmente consideramos que otro factor que debia ser tenido en cuenta era el espacio que ocupaban ambas estructuras, por esa razon decidimos medir la memoria que consumia cada uno al agregar varios conjuntos de palabras. Uno espera que con respecto al tiempo se comporte mejor el trie sobre arreglos, sin embargo también es de esperarse que ocupe mucha mas memoria que las listas, por esa razon nos parecion interesante ver cuanta era esta diferencia.
@@ -484,14 +486,21 @@ Los puntos rojos, corresponden a la implementaci'on con listas, los azules con a
 \label{fig:ej3exp3}
 \end{figure}
 
-\subsubsection{Experiencia 4: Tiempo requerido para agregar diferentes conjuntos de palabras}
+\subsubsection{Experiencia 4: Cantidad de operaciones al agregar palabras menores que la mas larga ya agregada}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./figuras/graficos/ej3/primeroMax.png} 
+\label{fig:ej3exp4}
+\end{figure}
+
+\subsubsection{Experiencia 5: Tiempo requerido para agregar diferentes conjuntos de palabras}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{./figuras/graficos/ej3/comparacionArreglosListas.png} 
 \label{fig:ej3exp4}
 \end{figure}
 
-\subsubsection{Experiencia 5: Cantidad de memoria utilizada para agregar diferentes conjuntos de palabras}
+\subsubsection{Experiencia 6: Cantidad de memoria utilizada para agregar diferentes conjuntos de palabras}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./figuras/graficos/ej3/memoria.png} 
@@ -503,8 +512,10 @@ En las experiencias 1, 2 y 3 observamos como la cantidad de operaciones es consi
 
 Independientemente de la implementación se noto como la cantidad de operaciones se incrementa linealmente a medida que se agregan palabras mas largas, esto es de esperarse ya que la complejidad nos dio O($long_{max}$).
 
-La experiencia 4 vuelve a poner de minifiesto lo que observamos anteriormente, es decir que la implementación con arreglos es mas veloz que la implementación con listas.
+En la figura 4, lo que vemos es que en general la cantidad de operaciones es menor que la cantidad de operaciones del máximo, no obstante hay algunos casos donde se obtiene un número de operaciones mayor. Esto creemos que no se contradice con lo que esperabamos, sino que lo podemos explicar considerando que si bien la primer palabra es la mas larga, agregarla es facil, ya que no hay otros nodos, entonces el costo principal esta en copiar la cadena, en cambio en otros casos, hay que copiar la cadena, partir nodos y recorrer ejes, por esta razón puede dar mas operaciones que el caso máximo.
 
-Finalmente la experiencia 5 nos muestra como la implementación con arreglos, que se mostro claramente mas rapida, consume una gran cantidad de memoria mas que la implementación con listas. Esta es una buena razón por la cual podria considerarse pese a que es mas lenta, la implementación sobre listas antes que sobre arreglos. 
+La experiencia 5 vuelve a poner de minifiesto lo que observamos anteriormente, es decir que la implementación con arreglos es mas veloz que la implementación con listas.
+
+Finalmente la experiencia 6 nos muestra como la implementación con arreglos, que se mostro claramente mas rapida, consume una gran cantidad de memoria mas que la implementación con listas. Esta es una buena razón por la cual podria considerarse pese a que es mas lenta, la implementación sobre listas antes que sobre arreglos. 
 
 A modo de conclusión podemos decir en primer lugar que el las experiencias coincidieron con lo calculado teoricamente. Y por otro lado observamos como cada implementación de los nodos presenta sus ventajas y desventajas, razon por la cual para utilizar una u otra implementación debe considerarse el contexto donde se va a usar, es decir, a la hora de utilizar una u otra, es importante plantearse que es mas critico: si el tiempo de respuesta (nodos con arreglos) o la utilización de la memoria (nodos con listas).
