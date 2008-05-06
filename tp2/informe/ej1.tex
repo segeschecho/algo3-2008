@@ -1,4 +1,4 @@
-\part{Ejercicio 1}
+\chapter{Ejercicio 1}
 \section{Enunciado}
 Un torneo de Tenis de eliminaci'on simple consiste en varios partidos donde el perdedor de
 cada partido es eliminado del torneo y no vuelve a jugar un partido en ese torneo. El fixture
@@ -329,15 +329,23 @@ En el caso de que el grafo sea completo, sabemos que m = $\frac{n*(n-1)}{2}$ por
 Si bien el algoritmo no tiene un peor caso a priori, podemos notar que si no hay ganador no hacemos el tercer dfs, ni tampoco hacemos el bucketSort, por lo cual si bien a nivel de orde la situación es la misma, uno esperar'ia que esos casos se resuelvan mas r'apidamente.
 
 Con respecto al tamaño de la entrada, si consideramos que ni n ni m estan acotados, podemos considerar que el tamaño de la entrada es el siguiente:
-$$t = log(n) + log(m) + log(n)*m$$ puesto que como n y m no estan acotados y son valores que recibo en el input, tengo que considerar que su tamaño es logaritmico; luego recibo los m partidos arreglados, y los jugadores que conforman esos partidos son del orden de n, por lo que su tamaño tambi'en es logaritmico.
+$$t = \lfloor log_2(n) \rfloor + 1 + \lfloor log_2(m) \rfloor + 1 + \sum_{i=1}^{m}{\lfloor log_2(v_i(0)) \rfloor + 1 + \lfloor log_2(v_i(1)) \rfloor + 1}$$ 
+donde $v_i$ es el iesimo par de dos jugadores para los que se puede arreglar el partido.
 
-Veamos entonces que complejidad obtenemos en función del tamaño de la entrada. Para el caso donde m $<$ n - 1, sabemos que lo resolvemos en O(1), eso se mantiene en funcion del tamaño de la entrada. Ahora para el caso donde m $\geq$ n - 1, podemos considerar que:
+Puesto que n y m no estan acotados y son valores que recibo en el input, tengo que considerar que su tamaño es logaritmico; luego recibo los m partidos arreglados, y los jugadores que conforman esos partidos son del orden de n, por lo que su tamaño tambi'en es logaritmico.
+
+Busquemos alguna cota inferior para t:
+	$$t = \lfloor log_2(n) \rfloor + 1 + \lfloor log_2(m) \rfloor + 1 + \sum_{i=1}^{m}{(\lfloor log_2(v_i(0)) \rfloor + 1 + \lfloor log_2(v_i(1)) \rfloor + 1)}$$
+	Entonces:
+	$$t \geq \lfloor log_2(n) \rfloor + \lfloor log_2(m) \rfloor  + m$$
+
+Veamos entonces que complejidad obtenemos en función del tamaño de la entrada. Para el caso donde m $<$ n - 1, sabemos que lo resolvemos en O(1), no obstante la entrada tiene que ser leida por lo que es mas apropiado considerar que es O(t). Ahora para el caso donde m $\geq$ n - 1, podemos considerar que:
 
 Si m = n - 1:
 
-	$$t = log(n) + log(n - 1) + log(n)*(n-1)$$
+	$$t \geq \lfloor log_2(n) \rfloor + \lfloor log_2(m) \rfloor  + n - 1$$
 	
-	Luego n $<$ t, entonces $m < n < t$. Entonces n + m $\leq$ t + t, por lo tanto, O(n + m) $\subset$ O(t)
+	Luego n $\leq$ t, entonces $m < n \leq t$. Entonces n + m $\leq$ t + t, por lo tanto, O(n + m) $\subset$ O(t)
 	
 Si m $\geq$ n:
 	

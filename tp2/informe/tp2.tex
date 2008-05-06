@@ -1,6 +1,6 @@
 %%	SECCION documentclass																									 %%	
 %%---------------------------------------------------------------------------%%
-\documentclass{article}
+\documentclass{report}
 
 %%---------------------------------------------------------------------------%%
 %%	SECCION usepackage																											 %%	
@@ -45,12 +45,14 @@
 \fancyhead[C]{}
 \fancyhead[RO]{P\'agina \thepage\ de \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0.4pt}
+
 \fancyfoot{}
 
 %%---------------------------------------------------------------------------%%
 %%	SECCION document	 %%	
 %%---------------------------------------------------------------------------%%
 \begin{document}
+\renewcommand{\chaptername}{Parte }
 \input{trans_algorithmic.tex}
 %%---- Caratula -------------------------------------------------------------%%
 \includegraphics{logo}
