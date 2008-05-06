@@ -47,14 +47,49 @@ def ordenar(t):
 
 def generarInstancia(ciudades=10, acuerdos=None):
     if acuerdos is None:
-        acuerdos = random.randint(1, ciudades**2)
+        acuerdos = random.randint(1, ciudades**2/2)
     
     acs = Set()
     cds = range(ciudades)
-    for i in range(acuerdos):
+    for i in xrange(acuerdos):
         acs.add(ordenar(tuple(random.sample(cds,2))))
 
     return GrafoCircular(ciudades, list(acs))
+
+def generarInstanciaConSolucion(ciudades=10, acuerdos=None):
+    if acuerdos is None:
+        acuerdos = random.randint(ciudades, ciudades**2/2)
+
+    acs = Set()
+    cds = range(ciudades)
+    
+    # agrego una solucion trivial
+    for i in xrange(ciudades-1):
+        acs.add((i, i+1))
+
+    for i in xrange(acuerdos-ciudades+1):
+        acs.add(ordenar(tuple(random.sample(cds,2))))
+
+    return GrafoCircular(ciudades, list(acs))
+
+def generarInstanciaSinSolucion(ciudades=10, acuerdos=None):
+    if acuerdos is None:
+        acuerdos = random.randint(1, ciudades**2/2)
+
+    acs = Set()
+    cds = range(ciudades)
+
+    # saco una ciudad al azar, asi el grafo no queda conexo
+    # y fuerzo que no haya ninguna solucion valida
+    random.shuffle(cds)
+    cds.pop()
+    cds.sort()
+    
+    for i in xrange(acuerdos):
+        acs.add(ordenar(tuple(random.sample(cds,2))))
+
+    return GrafoCircular(ciudades, list(acs))
+
 
 def imprimirInstancia(ciudades=10, acuerdos=None):
     g = generarInstancia(ciudades, acuerdos)
@@ -89,24 +124,21 @@ def datos_m(max_m=10000):
     fm.close()
     print
 
-def datos_conosinsolucion(n=200,puntos=5000):
+def datos_conosinsolucion(n=200,puntos=1000):
     print "Generando datos para el grafico que compara casos con o sin solución..."
     print
     consol = []
     sinsol = []
     for i in xrange(puntos):
-        if i % 100 == 0:
+        if i % 10 == 0:
             print "%s/%s" % (i, puntos)
 
-        g = generarInstancia(ciudades=n)
+        g = generarInstanciaConSolucion(ciudades=n)
         t = medirTiempo(g)
-        fres = open(outfile)
-        res = fres.read()
-        fres.close()
-        if res[:2] == '-1':
-            sinsol.append((g.m,t))
-        else:
-            consol.append((g.m,t))
+        consol.append((g.m,t))
+        g = generarInstanciaSinSolucion(ciudades=n)
+        t = medirTiempo(g)
+        sinsol.append((g.m,t))
 
     fd = open('datos_conosinsol.m','w')
     fd.write('m_consol = [')
@@ -126,4 +158,5 @@ def datos_conosinsolucion(n=200,puntos=5000):
 if __name__ == '__main__':
     datos_n()
     datos_m()
-    datos_conosinsolucion();
+    datos_conosinsolucion()
+
