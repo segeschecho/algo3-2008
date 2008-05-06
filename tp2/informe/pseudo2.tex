@@ -10,7 +10,7 @@
 \COMMENT {Carga los casos base (nodos adyacentes)}
 \FOR {$i$ $\in$ $0,...,n-1$}
     \STATE a $\textcolor{orange}{\leftarrow}$ $i$
-    \STATE b $\textcolor{orange}{\leftarrow}$ $i+1$ mod $n$
+    \STATE b $\textcolor{orange}{\leftarrow}$ siguiente(i)
     \IF {estanConectados(a,b)}
         \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ 1
         \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ 1
@@ -22,16 +22,14 @@
     \FOR {$j$ $\in$ $0,...,n-1$}
         \STATE a $\textcolor{orange}{\leftarrow}$ j
         \STATE b $\textcolor{orange}{\leftarrow}$ $j+i$ mod $n$
-        \STATE amas1 $\textcolor{orange}{\leftarrow}$ $a+1$ mod $n$
-        \STATE bmenos1 $\textcolor{orange}{\leftarrow}$ $b-1$ mod $n$
 
-        \STATE aux\_a1 $\textcolor{orange}{\leftarrow}$ estanConectados(a,amas1) y matA[amas1][b]
-        \STATE aux\_a2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) y matB[amas1,b]
-        \STATE aux\_b1 $\textcolor{orange}{\leftarrow}$ estanConectados(b,bmenos1) y matB[a][bmenos1]
-        \STATE aux\_b2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) y matA[a][bmenos1]
+        \STATE aux\_a1 $\textcolor{orange}{\leftarrow}$ estanConectados(a,siguiente(a)) $\wedge$ matA[siguiente(a)][b]
+        \STATE aux\_a2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) $\wedge$ matB[siguiente(a),b]
+        \STATE aux\_b1 $\textcolor{orange}{\leftarrow}$ estanConectados(b,anterior(b)) $\wedge$ matB[a][anterior(b)]
+        \STATE aux\_b2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) $\wedge$ matA[a][anterior(b)]
 
-        \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ aux\_a1 o aux\_a2
-        \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ aux\_b1 o aux\_b2
+        \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ aux\_a1 $\vee$ aux\_a2
+        \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ aux\_b1 $\vee$ aux\_b2
     \ENDFOR
 \ENDFOR
 \end{algorithmic}
@@ -43,23 +41,25 @@ Se utilizan las funciones auxiliares:
       completamente con ceros.
 \item \textbf{estanConectados(a,b)}, que determina si dos ciudades $a$ y $b$ tienen un acuerdo comercial
       entre sí.
+\item \textbf{siguiente(i)} = $i+1$ mod $n$, que corresponde a la ciudad siguiente a $i$ en orden circular
+\item \textbf{anterior(i)} = $i-1$ mod $n$, que corresponde a la ciudad anterior a $i$ en orden circular
 \end{itemize}
 
 \newpage
 \subsection{Algoritmo auxiliar de construcci'on de caminos entre dos nodos}
 \begin{algorithm}
-\caption{Halla un camino que recorre los nodos entre a y b y termina en A}
+\caption{Halla un camino que recorre los nodos entre a y b y termina en a}
 \begin{algorithmic}[1]
 \REQUIRE que estén cargados los valores correctos en $matA$ y $matB$
 \REQUIRE que exista el camino que se intentará generar
-\IF { $b-a$ == $1$ o ($b$ == $0$ y $a$ == $n-1$) }
+\IF { $b-a$ == $1$ $\vee$ ($b$ == $0$ $\wedge$ $a$ == $n-1$) }
     \RETURN [b,a]
 \ENDIF
-\STATE amas1 $\textcolor{orange}{\leftarrow}$ $a+1$ mod $n$
-\IF {estanConectados(a,amas1) y matA[amas1][b]}
+\STATE amas1 $\textcolor{orange}{\leftarrow}$ siguiente(a)
+\IF {estanConectados(a,amas1) $\wedge$ matA[amas1][b]}
     \RETURN caminoQueTerminaEnA(amas1,b) + [a]
 \ENDIF
-\IF {estanConectados(a,b) y matB[amas1][b]}
+\IF {estanConectados(a,b) $\wedge$ matB[amas1][b]}
     \RETURN caminoQueTerminaEnB(amas1,b) + [a]
 \ENDIF
 \end{algorithmic}
@@ -69,7 +69,8 @@ Se utilizan las funciones auxiliares:
 \item \textbf{caminoQueTerminaEnA}, llamada recursiva a este mismo procedimiento.
 \item \textbf{caminoQueTerminaEnB}, función análoga a la aquí ­descripta que genera
       caminos que terminan en B en lugar de hacerlo en A.
-\item \textbf{estanConectados(a,b)}, idem que para el algoritmo anterior.
+\item \textbf{estanConectados(a,b)}, \textbf{siguiente(i)}, \textbf{anterior(i)}: idem 
+      que para el algoritmo anterior.
 \end{itemize}
 
 
@@ -78,13 +79,14 @@ Se utilizan las funciones auxiliares:
 \caption{Construye un camino apropiado a partir de las tablas precalculadas}
 \begin{algorithmic}[1]
 \IF { $m < n-1$ }
+%\COMMENT{Si no hay ejes suficientes para que el grafo sea conexo, no hay soluci'on}
 \RETURN [ ]
 \ENDIF
 \STATE completarTablas()
 \COMMENT{Completo las tablas $matA$ y $matB$}
 \FOR {$i$ $\in$ $0,...,n-1$}
     \STATE a $\textcolor{orange}{\leftarrow}$ i
-    \STATE b $\textcolor{orange}{\leftarrow}$ $i-1$ mod $n$
+    \STATE b $\textcolor{orange}{\leftarrow}$ anterior(i)
     \IF {matA[a][b]}
         \RETURN caminoQueTerminaEnA(a,b)
     \ENDIF

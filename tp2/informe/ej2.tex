@@ -368,7 +368,28 @@ algoritmo en función del tamaño de la entrada que recibe.
 
 \subsection{Costo en función del tamaño de la entrada}
 
-%TODO: completar esto
+La entrada del programa consiste en un archivo que contiene al número $n$, al número $m$,
+y a los $m$ ejes correspondientes a los acuerdos comerciales en forma de tupla. El archivo
+terminar con un doble cero. Por tanto el tamaño $T$ de la entrada es:
+$$ T = log(n) + log(m) + (\sum_{i=1}^{m} log(a_i) + log(b_i) + k_2) + k_1 $$
+con $a_i$, $b_i$ los nodos conectados por el $i$-ésimo eje, y  $k_1$, $k_2$ constantes 
+convenientes acordes a la cantidad de espacio ocupada por espacios en blanco, fines de línea 
+y otros caracteres de formato.
+
+Nuestro algoritmo tiene 2 complejidades independientes, una para el caso de $m < n-1$ y otra
+para el resto de los casos. En el primer caso, la complejidad temporal del algoritmo es $O(1)$,
+que es independiente de todo parámetro y por lo tanto también del tamaño de la entrada. El otro
+caso requiere de más atención. Asumiremos entonces que $m \geq n-1$. Además es cierto que
+$log(a_i) + log(b_i) + k_2 \geq 1$ puesto que $a_i$, $b_i$ son positivos y $k_2$ también.
+Por lo tanto vale que:
+$$ T \geq log(n) + (n-1)$$
+Además con $n > n_0$, vale que $log(n) > 1$, y por lo tanto:
+$$ T \geq 1 + n - 1 = n $$
+Tenemos entonces $T \geq n$, y como ambos son positivos vale que $T^2 \geq n^2 $ $\forall n > n_0$.
+Luego $O(n^2) \subset O(T^2)$ y como la complejidad de nuestro algoritmo está en $O(n^2)$, resulta
+que está en $O(T^2)$. Así, podemos concluir que el algoritmo propuesto es de orden cuadrático
+en función del tamaño de la entrada.
+
 
 \section{Análisis experimental}
 
