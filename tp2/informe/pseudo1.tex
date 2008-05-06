@@ -1,4 +1,4 @@
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{Devuelve la lista de aquellos jugadores, tal que se puede arreglar el torneo}
 \label{alg:algoritmo1}
 \begin{algorithmic}[1]
@@ -19,7 +19,7 @@
 \end{algorithmic}
 \end{algorithm}
 	
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{numera nodos, guarda quien el que tiene el valor mas alto (cantidad de nodos -1)}
 \label{alg:algoritmo1b}
 \begin{algorithmic}[1]
@@ -37,14 +37,3 @@
 \end{algorithmic}
 \end{algorithm}
 
-Esta funcion debe llamarse con el contador inicializado en cero
-y todos los visitados en false. Cada vez que termina, si no se visitaron todos
-debe ser llamada de nuevo, manteniendo el contador y los visitados.
-
-Los otros algoritmos que hacen dsf no se detallan en esta sección ya que el pseudocodigo de los mismos es muy similar
-al anterior.
-El algoritmo que realiza dfs para ver a cuantos llego, es muy similar a este ultimo
-solo que no se numeran nodos, sino que se cuenta a cuantos toco desde el nodo donde empiezo
-De forma similar el algoritmo que realiza dfs en reverso, hace los mismo pero en vez de numerar
-guarda cada nodo que visita en una lista, y en vez de usar los otros nodos tal que nodo $\leadsto$otro nodo
-se mueve hacia los otros nodos tal que otor nodo $\leadsto$nodo 
