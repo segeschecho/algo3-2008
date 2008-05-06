@@ -1,4 +1,4 @@
-\part{Ejercicio 2}
+\chapter{Ejercicio 2}
 
 
 
@@ -387,8 +387,9 @@ Además con $n > n_0$, vale que $log(n) > 1$, y por lo tanto:
 $$ T \geq 1 + n - 1 = n $$
 Tenemos entonces $T \geq n$, y como ambos son positivos vale que $T^2 \geq n^2 $ $\forall n > n_0$.
 Luego $O(n^2) \subset O(T^2)$ y como la complejidad de nuestro algoritmo está en $O(n^2)$, resulta
-que está en $O(T^2)$. Así, podemos concluir que el algoritmo propuesto es de orden cuadrático
-en función del tamaño de la entrada.
+que está en $O(T^2)$. Tenemos entonces el caso $m<n-1$ por un lado, con complejidad $O(1)$, y este
+segundo (peor) caso con complejidad $O(T^2)$. Tomamos entonces el orden mayor de los dos, y podemos
+así concluir que el algoritmo propuesto es de orden cuadrático en función del tamaño de la entrada.
 
 
 \section{Análisis experimental}
@@ -400,7 +401,9 @@ tiempo en función del tamaño de las instancias. Siendo que la complejidad del al
 está acotada por una función de $n$, decidimos en primer lugar verificar que el tiempo de
 ejecución del algoritmo es independiente del valor de $m$, y en segundo lugar contrastar
 la predicción de tiempo teórica en función de $n$ con las mediciones reales del tiempo 
-insumido por las corridas.
+insumido por las corridas. Por último y como dato adicional, se comparó el tiempo insumido
+en resolver instancias cuya solución existe, contra el tiempo insumido para determinar 
+que una instancia no tiene solución válida.
 
 Para $n$ constante y $m$ variable se tomó un valor de $n=200$ cuyo tiempo de corrida
 es apreciable (del orden de 10ms en el Pentium 4 2.8 donde se realizaron las pruebas),
@@ -418,19 +421,27 @@ del contador (que si se tratara de un único archivo, consistiría en incrementar 
 global).
 
 \subsection{Resultados}
-\subsubsection{Experiencia 1: Tiempo para N fijo y M variable}
+\subsubsection{Experiencia 1: Tiempo para $n$ fijo y $m$ variable}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.7]{./figuras/graficos/ej2/datos_m.png}
     \caption{Tiempo de ejecución para $n=200$ y $m$ variable}
     \label{fig:grafico_m}
 \end{figure}
-\subsubsection{Experiencia 2: Tiempo para N variable y M aleatorio}
+\subsubsection{Experiencia 2: Tiempo para $n$ variable y $m$ aleatorio}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.45]{./figuras/graficos/ej2/datos_n.png}
     \caption{Tiempo de ejecución para $n$ variable y $m$ aleatorio}
     \label{fig:grafico_n}
+\end{figure}
+
+\subsubsection{Experiencia 3: Tiempo para $m$ variable, con o sin solución}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.45]{./figuras/graficos/ej2/datos_conosinsol.png}
+    \caption{Tiempo de ejecución para $n=200$, $m$ variable, instancias con o sin solución}
+    \label{fig:grafico_conosinsol}
 \end{figure}
 
 \subsection{Discusión}
@@ -457,5 +468,12 @@ de resolución. La mayor dispersión para los valores más grandes se corresponde p
 a una cuestión de escala, el error de medición es proporcional al tiempo de corrida del
 algoritmo y en valores más grandes estos errores se amplifican y son por tanto más visibles
 en el gráfico. Aún a pesar de esto, la tendencia se observa claramente en el gráfico.
+
+La tercera y última experiencia muestra que si bien el tiempo que demanda hallar una solución
+o determinar que no existe es muy similar, este último caso parece insumir levemente más
+tiempo que el primero. Esto puede deberse a que al intentar generar un camino, de existir
+uno se procede inmediatamente a construirlo en lugar de seguir buscando si existen otros.
+En cualquier caso no queda muy claro el porqué de esta tendencia, pero siendo tan leve es
+difícil observarla con más detalle.
 
 En resumen, ambos gráficos corroboran las predicciones del cálculo de complejidad.
