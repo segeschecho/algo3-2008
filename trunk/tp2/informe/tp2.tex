@@ -27,7 +27,7 @@
 %%---------------------------------------------------------------------------%%
 %%	SECCION opciones																												 %%	
 %%---------------------------------------------------------------------------%%
-\parskip		= 11 pt
+\parskip    = 11 pt
 \headheight	= 13.1pt
 \pagestyle	{fancy}
 \definecolor{orange}{rgb}{1,0.5,0}
@@ -38,15 +38,6 @@
 \addtolength{\textwidth}{1.0in}
 \addtolength{\topmargin}{-0.8in}
 \addtolength{\textheight}{0.7in}
-
-
-\pagestyle{fancy}
-\fancyhead[LO]{González, González, Martínez, Sainz Trápaga}
-\fancyhead[C]{}
-\fancyhead[RO]{P\'agina \thepage\ de \pageref{LastPage}}
-\renewcommand{\headrulewidth}{0.4pt}
-
-\fancyfoot{}
 
 %%---------------------------------------------------------------------------%%
 %%	SECCION document	 %%	
@@ -70,19 +61,42 @@
 En el siguiente trabajo se presentan las soluciones a los ejercicios propuestos como segundo trabajo pr'actico de la materia Algoritmos y Estructuras de Datos III. En el mismo se presenta el planteo de cada problema, el desarrollo de un algoritmo para resolverlo, as'i como tambi'en el c'alculo de la complejidad del mismo. Por otro lado, se realiza una experimentaci'on para observar el comportamiento de los algoritmos, con el objetivo de contrastar los resultados experimentales con el an'alisis te'orico.
 }
 
+% TOC, usa estilos locos
 \maketitle
+\pagestyle{empty}
+{
+\fancypagestyle{plain}
+    {
+    \fancyhead{}
+    \fancyfoot{}
+    \renewcommand{\headrulewidth}{0.0pt}
+    } % clear header and footer of plain page because of ToC
 \tableofcontents
+}
+
+
 \newpage
+% arreglos los estilos para el resto del documento, y
+% reseteo los numeros de pagina para que queden bien
+\pagenumbering{arabic}
+\fancypagestyle{plain} {
+    \fancyhead[LO]{González, González, Martínez, Sainz Trápaga}
+    \fancyhead[C]{}
+    \fancyhead[RO]{P\'agina \thepage\ de \pageref{LastPage}}
+    \fancyfoot{}
+    \renewcommand{\headrulewidth}{0.4pt}
+}
+\pagestyle{plain}
 \input{ej1}
 \newpage
 \input{ej2}
 \newpage
 \input{ej3}
 \newpage
-\part{Conclusión}
-Consideramos que la realizaci'on del trabajo nos result'o provechosa en la medida que nos permiti'o aplicar tecnicas vistas en clase como programación dinamica, o teoria de grafos en la resolución de problemas concretos. En particular nos resultó muy gratificante la resolución del ejercicio 1.
+\chapter{Conclusión}
+Consideramos que la realizaci'on del trabajo nos result'o provechosa en la medida que nos permiti'o aplicar t'ecnicas vistas en clase como programación dinamica, o teor'ia de grafos en la resolución de problemas concretos. En particular nos resultó muy gratificante la resolución del Ejercicio 1.
 
-Por otro lado, nos gustar'ia comentar posibles extensiones al trabajo, a saber, en el ejercicio 1 buscar alguna manera de reducir el número de veces que se realiza DFS, en el ejercicio 2 intentar reducir la complejidad espacial y$/$o temporal mediante alguna modificación al algoritmo, y en el ejercicio 3 realizar una implementación de los nodos sobre diccionarios sobre hash y sobre AVL, las cuales parecerian ser una solución intermedia entre los arreglos y las listas, en el sentido de que proveen un tiempo de busqueda menor que las listas ocupando menos memoria que los arreglos.
+Por otro lado, nos gustar'ia comentar posibles extensiones al trabajo, a saber, en el Ejercicio 1 buscar alguna manera de reducir el número de veces que se realiza DFS, en el Ejercicio 2 intentar reducir la complejidad espacial y$/$o temporal mediante alguna modificación al algoritmo, y en el Ejercicio 3 realizar una implementación de los nodos utilizando diccionarios sobre hash y sobre AVL, que parecerían ser una solución intermedia entre los arreglos y las listas encadenadas, siendo que proveen un tiempo de b'usqueda menor que las listas, y ocupando menos memoria que los arreglos.
 
 Finalmente y a modo de conclusi'on, nos gustar'ia decir que pudimos observar como el comportamiento de los algoritmos se correspondi'o con lo que dedujimos durante el an'alisis.
 
