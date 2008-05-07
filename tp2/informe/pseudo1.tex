@@ -6,13 +6,13 @@
 \IF{hay menos partidos arreglados que jugadores \textcolor{orange}{$-$} 1}
 	\RETURN \textcolor{orange}{[ ]}
 \ENDIF
-\STATE DFS numerando todos los nodos por fin de llamada recursiva
-\STATE hacer DFS solo para el nodo de mayor numeración
-\STATE aCuantosLlega $\textcolor{orange}{\leftarrow}$ cantidad de nodos tocados en el DFS anterior
+\STATE \textcolor{MidnightBlue}{DFS} numerando todos los nodos por fin de llamada recursiva
+\STATE hacer \textcolor{MidnightBlue}{DFS} solo para el nodo de mayor numeración
+\STATE aCuantosLlega $\textcolor{orange}{\leftarrow}$ cantidad de nodos tocados en el \textcolor{MidnightBlue}{DFS} anterior
 \IF{aCuantosLlega $\textcolor{orange}{==}$ todos los nodos del grafo}
-	\STATE hacer DFS desde el nodo pero con las aristas de salida
-	\STATE ganadores $\textcolor{orange}{\leftarrow}$ todos los nodos tocados por el dfs anterior
-	\STATE ordenar(ganadores) \COMMENT{ lo hago con bucketSort porque los ganadores estan entre 1 y cantidad de nodos}
+	\STATE hacer \textcolor{MidnightBlue}{DFS} desde el nodo pero con las aristas de salida
+	\STATE ganadores $\textcolor{orange}{\leftarrow}$ todos los nodos tocados por el \textcolor{MidnightBlue}{DFS} anterior
+	\STATE ordenar\textcolor{SkyBlue}{(}ganadores\textcolor{SkyBlue}{)} \COMMENT{ lo hago con bucketSort porque los ganadores estan entre 1 y cantidad de nodos}
 \ELSE
 	\RETURN \textcolor{orange}{[ ]}
 \ENDIF
@@ -25,9 +25,9 @@
 \begin{algorithmic}[1]
 \PARAMS{un grafo, un nodo del grafo, un contador que se modifica, un marcador de nodos visitados}
 \PARAMS{una variable que se modifica y guarda el nodo de max valor}
-\FOR{cada nodoAdyacente tal que nodo $\leadsto$ nodoAdyacente}
+\FOR{cada nodoAdyacente tal que nodo \textcolor{orange}{$\leadsto$} nodoAdyacente}
 	\IF{ no lo visite}
-		\STATE dfs(grafo,nodoAdyacente,contador,visitados,masValioso)
+		\STATE dfs\textcolor{SkyBlue}{(}grafo,nodoAdyacente,contador,visitados,masValioso\textcolor{SkyBlue}{)}
 	\ENDIF
 \ENDFOR
 \IF{a este nodo le toca el valor mas alto}
