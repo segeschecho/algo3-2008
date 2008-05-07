@@ -1,0 +1,3 @@
+por favor poner los tests utilizados para hacer graficos,
+o en su defecto el script para armarlo, con una descripcion de como usarlo
+en la carpeta test

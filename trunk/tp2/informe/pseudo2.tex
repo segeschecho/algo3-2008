@@ -52,7 +52,7 @@ Se utilizan las funciones auxiliares:
 \begin{algorithmic}[1]
 \REQUIRE que estén cargados los valores correctos en $matA$ y $matB$
 \REQUIRE que exista el camino que se intentará generar
-\IF { $b\textcolor{orange}{-}a$ \textcolor{orange}{==} $1$ $\textcolor{orange}{\vee}$ \textcolor{SkyBlue}{(}$b$ \textcolor{orange}{==} $0$ $\textcolor{orange}{\wedge}$ $a$ \textcolor{orange}{==} $n\textcolor{orange}{-}1$\textcolor{SkyBlue}{)} } %TODO: se puede reemplazar por son ciudades adyacentes?
+\IF { son vecinas a y b } %TODO: se puede reemplazar por son ciudades adyacentes?
     \RETURN \textcolor{orange}{[}b,a\textcolor{orange}{]}
 \ENDIF
 \STATE amas1 $\textcolor{orange}{\leftarrow}$ siguiente\textcolor{SkyBlue}{(}a\textcolor{SkyBlue}{)}
