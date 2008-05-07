@@ -4,32 +4,32 @@
 \caption{Construye la tabla de valores precalculados para hallar el camino}
 \begin{algorithmic}[1]
 
-\STATE matA $\textcolor{orange}{\leftarrow}$ matrizCuadradaDeCeros(n)
-\STATE matB $\textcolor{orange}{\leftarrow}$ matrizCuadradaDeCeros(n)
+\STATE matA $\textcolor{orange}{\leftarrow}$ matrizCuadradaDeCeros\textcolor{SkyBlue}{(}n\textcolor{SkyBlue}{)}
+\STATE matB $\textcolor{orange}{\leftarrow}$ matrizCuadradaDeCeros\textcolor{SkyBlue}{(}n\textcolor{SkyBlue}{)}
 
 \COMMENT {Carga los casos base (nodos adyacentes)}
-\FOR {$i$ $\in$ $0,...,n-1$}
+\FOR {$i$ $\textcolor{orange}{\in}$ $0,...,n\textcolor{orange}{-}1$}
     \STATE a $\textcolor{orange}{\leftarrow}$ $i$
-    \STATE b $\textcolor{orange}{\leftarrow}$ siguiente(i)
-    \IF {estanConectados(a,b)}
-        \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ 1
-        \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ 1
+    \STATE b $\textcolor{orange}{\leftarrow}$ siguiente\textcolor{SkyBlue}{(}i\textcolor{SkyBlue}{)}
+    \IF {estanConectados\textcolor{SkyBlue}{(}a,b\textcolor{SkyBlue}{)}}
+        \STATE matA\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ 1
+        \STATE matB\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ 1
     \ENDIF
 \ENDFOR
 
 \COMMENT {Carga los casos recursivos (nodos no adyacentes)}
-\FOR {$i$ $\in$ $2,...,n-1$}
-    \FOR {$j$ $\in$ $0,...,n-1$}
+\FOR {$i$ $\textcolor{orange}{\in}$ $2,...,n\textcolor{orange}{-}1$}
+    \FOR {$j$ $\textcolor{orange}{\in}$ $0,...,n\textcolor{orange}{-}1$}
         \STATE a $\textcolor{orange}{\leftarrow}$ j
-        \STATE b $\textcolor{orange}{\leftarrow}$ $j+i$ mod $n$
+        \STATE b $\textcolor{orange}{\leftarrow}$ $j\textcolor{orange}{+}i$ mod $n$
 
-        \STATE aux\_a1 $\textcolor{orange}{\leftarrow}$ estanConectados(a,siguiente(a)) $\wedge$ matA[siguiente(a)][b]
-        \STATE aux\_a2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) $\wedge$ matB[siguiente(a),b]
-        \STATE aux\_b1 $\textcolor{orange}{\leftarrow}$ estanConectados(b,anterior(b)) $\wedge$ matB[a][anterior(b)]
-        \STATE aux\_b2 $\textcolor{orange}{\leftarrow}$ estanConectados(a,b) $\wedge$ matA[a][anterior(b)]
+        \STATE aux\_a1 $\textcolor{orange}{\leftarrow}$ estanConectados\textcolor{SkyBlue}{(}a,siguiente\textcolor{SkyBlue}{(}a\textcolor{SkyBlue}{)}\textcolor{SkyBlue}{)} $\textcolor{orange}{\wedge}$ matA\textcolor{orange}{[}siguiente\textcolor{SkyBlue}{(}a\textcolor{SkyBlue}{)}\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]}
+        \STATE aux\_a2 $\textcolor{orange}{\leftarrow}$ estanConectados\textcolor{SkyBlue}{(}a,b\textcolor{SkyBlue}{)} $\textcolor{orange}{\wedge}$ matB\textcolor{orange}{[}siguiente\textcolor{SkyBlue}{(}a\textcolor{SkyBlue}{)},b\textcolor{orange}{]}
+        \STATE aux\_b1 $\textcolor{orange}{\leftarrow}$ estanConectados\textcolor{SkyBlue}{(}b,anterior\textcolor{SkyBlue}{(}b\textcolor{SkyBlue}{)}\textcolor{SkyBlue}{)} $\textcolor{orange}{\wedge}$ matB\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}anterior\textcolor{SkyBlue}{(}b\textcolor{SkyBlue}{)}\textcolor{orange}{]}
+        \STATE aux\_b2 $\textcolor{orange}{\leftarrow}$ estanConectados\textcolor{SkyBlue}{(}a,b\textcolor{SkyBlue}{)} $\textcolor{orange}{\wedge}$ matA\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}anterior\textcolor{SkyBlue}{(}b\textcolor{SkyBlue}{)}\textcolor{orange}{]}
 
-        \STATE matA[a][b] $\textcolor{orange}{\leftarrow}$ aux\_a1 $\vee$ aux\_a2
-        \STATE matB[a][b] $\textcolor{orange}{\leftarrow}$ aux\_b1 $\vee$ aux\_b2
+        \STATE matA\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ aux\_a1 $\textcolor{orange}{\vee}$ aux\_a2
+        \STATE matB\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]} $\textcolor{orange}{\leftarrow}$ aux\_b1 $\textcolor{orange}{\vee}$ aux\_b2
     \ENDFOR
 \ENDFOR
 \end{algorithmic}
@@ -52,15 +52,15 @@ Se utilizan las funciones auxiliares:
 \begin{algorithmic}[1]
 \REQUIRE que estén cargados los valores correctos en $matA$ y $matB$
 \REQUIRE que exista el camino que se intentará generar
-\IF { $b-a$ == $1$ $\vee$ ($b$ == $0$ $\wedge$ $a$ == $n-1$) }
-    \RETURN [b,a]
+\IF { $b\textcolor{orange}{-}a$ \textcolor{orange}{==} $1$ $\textcolor{orange}{\vee}$ \textcolor{SkyBlue}{(}$b$ \textcolor{orange}{==} $0$ $\textcolor{orange}{\wedge}$ $a$ \textcolor{orange}{==} $n\textcolor{orange}{-}1$\textcolor{SkyBlue}{)} } %TODO: se puede reemplazar por son ciudades adyacentes?
+    \RETURN \textcolor{orange}{[}b,a\textcolor{orange}{]}
 \ENDIF
-\STATE amas1 $\textcolor{orange}{\leftarrow}$ siguiente(a)
-\IF {estanConectados(a,amas1) $\wedge$ matA[amas1][b]}
-    \RETURN caminoQueTerminaEnA(amas1,b) + [a]
+\STATE amas1 $\textcolor{orange}{\leftarrow}$ siguiente\textcolor{SkyBlue}{(}a\textcolor{SkyBlue}{)}
+\IF {estanConectados\textcolor{SkyBlue}{(}a,amas1\textcolor{SkyBlue}{)} $\textcolor{orange}{\wedge}$ matA\textcolor{orange}{[}amas1\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]}}
+    \RETURN caminoQueTerminaEnA\textcolor{SkyBlue}{(}amas1,b\textcolor{SkyBlue}{)} \textcolor{orange}{+} \textcolor{orange}{[}a\textcolor{orange}{]}
 \ENDIF
-\IF {estanConectados(a,b) $\wedge$ matB[amas1][b]}
-    \RETURN caminoQueTerminaEnB(amas1,b) + [a]
+\IF {estanConectados\textcolor{SkyBlue}{(}a,b\textcolor{SkyBlue}{)} $\textcolor{orange}{\wedge}$ matB\textcolor{orange}{[}amas1\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]}}
+    \RETURN caminoQueTerminaEnB\textcolor{SkyBlue}{(}amas1,b\textcolor{SkyBlue}{)} \textcolor{orange}{+} \textcolor{orange}{[}a\textcolor{orange}{]}
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
@@ -78,23 +78,23 @@ Se utilizan las funciones auxiliares:
 \begin{algorithm}
 \caption{Construye un camino apropiado a partir de las tablas precalculadas}
 \begin{algorithmic}[1]
-\IF { $m < n-1$ }
+\IF { $m \textcolor{orange}{<} n\textcolor{orange}{-}1$ }
 %\COMMENT{Si no hay ejes suficientes para que el grafo sea conexo, no hay soluci'on}
-\RETURN [ ]
+\RETURN \textcolor{orange}{[} \textcolor{orange}{]}
 \ENDIF
-\STATE completarTablas()
+\STATE completarTablas\textcolor{SkyBlue}{(}\textcolor{SkyBlue}{)}
 \COMMENT{Completo las tablas $matA$ y $matB$}
-\FOR {$i$ $\in$ $0,...,n-1$}
+\FOR {$i$ $\textcolor{orange}{\in}$ $0,...,n\textcolor{orange}{-}1$}
     \STATE a $\textcolor{orange}{\leftarrow}$ i
-    \STATE b $\textcolor{orange}{\leftarrow}$ anterior(i)
-    \IF {matA[a][b]}
-        \RETURN caminoQueTerminaEnA(a,b)
+    \STATE b $\textcolor{orange}{\leftarrow}$ anterior\textcolor{SkyBlue}{(}i\textcolor{SkyBlue}{)}
+    \IF {matA\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]}}
+        \RETURN caminoQueTerminaEnA\textcolor{SkyBlue}{(}a,b\textcolor{SkyBlue}{)}
     \ENDIF
-    \IF {matB[a][b]}
-        \RETURN caminoQueTerminaEnB(a,b)
+    \IF {matB\textcolor{orange}{[}a\textcolor{orange}{]}\textcolor{orange}{[}b\textcolor{orange}{]}}
+        \RETURN caminoQueTerminaEnB\textcolor{SkyBlue}{(}a,b\textcolor{SkyBlue}{)}
     \ENDIF
 \ENDFOR
-\RETURN [ ]
+\RETURN \textcolor{orange}{[} \textcolor{orange}{]}
 \end{algorithmic}
 \end{algorithm}
 Se utilizan las funciones auxiliares:

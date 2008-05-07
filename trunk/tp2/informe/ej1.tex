@@ -25,7 +25,7 @@ El mejor algoritmo que conocemos es de O(n + m).
 \subsection{Sobre el modelo}
 Para resolver el problema, planteamos un dígrafo donde cada nodo es un jugador y a$\leadsto$b si  a le gana a b. 
 
-Lo primero que observamos es que la relación de ganar, por como esta planteada, es transitiva. Decimos que es transitiva en el sentido de que si a$\leadsto$b y b$\leadsto$c, se puede hacer que a le gane a c, haciendo que b le gane a c y luego a le gane a b. Es decir, si bien no vale que a$\leadsto$c, se puede organizar los partidos para que a pueda ganar.
+Lo primero que observamos es que la relación de ganar, por como esta planteada, es transitiva. Decimos que es transitiva en el sentido de que si a$\leadsto$b y b$\leadsto$c, se puede hacer que a le gane a c, haciendo que b le gane a c y luego a le gane a b. Es decir, si bien no vale que a$\leadsto$c, se puede organizar los partidos para que a pueda ganar. En general, durante el desarrollo, usaremos que a gana, o puede ganar como sinonimos de se puede armar un torneo.
 
 Entonces según este modelo, un jugador, jugador A, puede ganar si para cada uno de los otros jugadores, jugador B, existe un 
 camino dirigido que comunica a A con B. Sea C el camino que comunica A y B, C=A, $V_1$, $V_2$, ...$V_{k-1}$,$V_k$, B. Podemos entonces armar el fixture de la siguiente manera: primero juegan $V_k$ y B, como hay camino sabemos que $V_k$ $\leadsto$ B, entonces $V_k$ le gana a B. Luego hacemos que $V_{k-1}$ le gane a $V_k$, y asi seguimos hasta que A juegue con $V_1$ y le gane.
