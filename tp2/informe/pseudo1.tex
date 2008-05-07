@@ -20,11 +20,12 @@
 \end{algorithm}
 	
 \begin{algorithm}[H]
-\caption{numera nodos, guarda quien el que tiene el valor mas alto (cantidad de nodos -1)}
+\caption{numera nodos, guarda quien el que tiene el valor mas alto cantidad de nodos. Esta función debe llamarse por primera vez con el contador inicializado en cero y todos los visitados en \textit{false}. Cada vez que termina, si no se visitaron todos debe ser llamada de nuevo, manteniendo el contador y los visitados.}
 \label{alg:algoritmo1b}
 \begin{algorithmic}[1]
 \PARAMS{un grafo, un nodo del grafo, un contador que se modifica, un marcador de nodos visitados}
 \PARAMS{una variable que se modifica y guarda el nodo de max valor}
+\STATE marcar al nodo como visitado
 \FOR{cada nodoAdyacente tal que nodo \textcolor{orange}{$\leadsto$} nodoAdyacente}
 	\IF{ no lo visite}
 		\STATE dfs\textcolor{SkyBlue}{(}grafo,nodoAdyacente,contador,visitados,masValioso\textcolor{SkyBlue}{)}
@@ -37,3 +38,34 @@
 \end{algorithmic}
 \end{algorithm}
 
+\begin{algorithm}[H]
+\caption{Cuenta a cuantos nodos visite, partiendo desde un nodo dado. La usamos para determinar si partiendo del de mayor número (cálculado por el algoritmo anterior) podemos llegar a todos}
+\label{alg:algoritmo1c}
+\begin{algorithmic}[1]
+\PARAMS{un grafo, un nodo del grafo, un marcador de nodos visitados}
+\STATE marcar al nodo como visitado
+\STATE cuantos \textcolor{orange}{$\leftarrow$} 0
+\FOR{cada nodoAdyacente tal que nodo \textcolor{orange}{$\leadsto$} nodoAdyacente}
+	\IF{ no lo visite}
+		\STATE cuantos \textcolor{orange}{$\leftarrow$} cuantos + dfs\textcolor{SkyBlue}{(}grafo,nodoAdyacente,visitados\textcolor{SkyBlue}{)}
+	\ENDIF
+\ENDFOR
+\RETURN cuantos
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Lista los nodos visitados haciendo dfs desde un nodo dado, pero usando las aristas que llegan a el. Si se usa partiendo desde el nodo de mayor numeración, se obtiene su componente fuertemente conexa}
+\label{alg:algoritmo1b}
+\begin{algorithmic}[1]
+\PARAMS{un grafo, un nodo del grafo, un contador que se modifica, una lista donde ir guardando los nodos}
+\STATE marcar al nodo como visitado
+\STATE \COMMENT{notar que a diferencia con los DFS anteriores, usamos las aristas de llegada}
+\FOR{cada nodoAdyacente tal que nodoAdyacente \textcolor{orange}{$\leadsto$} nodo} 
+	\IF{ no lo visite}
+		\STATE agergar nodo a la lista
+		\STATE dfs\textcolor{SkyBlue}{(}grafo,nodoAdyacente,visitados\textcolor{SkyBlue}{)}
+	\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
