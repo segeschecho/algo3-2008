@@ -147,7 +147,15 @@ no esté en el ciclo $(a)$ y que le gane a alguien del mismo $(b)$, podemos ver q
 a todos: primero hacemos que $b$ le gane a todos los otros del ciclo, y luego hacemos que $a$ le 
 gane a $b$. Análogamente se puede ver que si alguien del ciclo le gana a alguien que no está en él,
 cualquier otro del ciclo le puede ganar.
-Por ejemplo veamos en la figura \ref{fig:reduccion}, la parte a. Una componente fuertemente conexa es 6,7,11. Por otro lado el 4 le gana al 6. Entonces podemos hacer que 7 le gane a 11, 6 haga lo propio con 7 y luego que 4 le gane 6, por lo cual 4 pudo vencer (no en sentido estricto, sino en que todos quedaron elminados). Si en vez de que $4\leadsto 6$, hubiesemos tenido que  $4\leadsto 7$, podemos hacer que 11 le gane a 6, 7 a 11 y por ultimo 4 a 7. Es por esta razon que decimos que si alguien le gana a un jugador de una componente fuertemente conexa, se pude armar el torneo para que le gane a todos ellos. Una vez que el cuatro elimino a la componente rosa, es facil ver que podemos armar un fixture para que cualqueria de su componente gane, por ejemplo armemoslo para el 2:
+
+Por ejemplo veamos en la figura \ref{fig:reduccion}, la parte a: una componente fuertemente conexa 
+es 6, 7, 11. Por otro lado el 4 le gana al 6. Entonces podemos hacer que 7 le gane a 11, 6 haga lo 
+propio con 7 y luego que 4 le gane 6, por lo cual 4 pudo vencer (no en sentido estricto, sino en 
+que todos quedaron eliminados). Si en vez de que $4 \leadsto 6$, hubiesemos tenido que  $4 \leadsto 7$, 
+podemos hacer que 11 le gane a 6, 7 a 11 y por último 4 a 7. Es por esta razón que decimos que si 
+alguien le gana a un jugador de una componente fuertemente conexa, se puede armar el torneo para 
+que le gane a todos ellos. Una vez que el 4 eliminó a la componente rosa, es fácil ver que podemos 
+armar un fixture para que cualquiera de su componente gane. Por ejemplo, armémoslo para el 2:
 \begin{enumerate}
 \item De forma similar a como hicimos con la componente rosa, hacemos que 5 elimine a la componente roja
 \item Hacemos que 1 elimine al 3
@@ -155,8 +163,9 @@ Por ejemplo veamos en la figura \ref{fig:reduccion}, la parte a. Una componente 
 \item 4 le gana al 5
 \item 2 le gana al 4
 \end{enumerate}
-Entonces si bien 2 no le ganaba a ningún jugador de la componente rosa, ni de ninguna otra componente, como habia jugadores en su propia componente que les ganaban, pudimos arreglar un torneo, para que el puede ganarles.
-%TODO: amplie la explicacion, ver si se entiende.
+Entonces si bien 2 no le ganaba a ningún jugador de la componente rosa, ni de ninguna otra componente, 
+como había jugadores en su propia componente que les ganaban, pudimos arreglar el torneo para que el 2
+salga victorioso.
 
 Esto nos hace pensar que podemos considerar a cada ciclo como una unidad, como un jugador único, 
 que les gana a todos aquellos que son derrotados por algún individuo del ciclo y que pierde 
@@ -635,8 +644,6 @@ los casos donde no se puede decidir a priori y tenemos que hacer todo el proceso
 En la cuarta gráfica notamos que en digrafos completos la cantidad de operaciones crece cuadráticamente 
 con respecto a $n$. Nosotros esper'abamos que eso ocurra, ya que esta forma parab'olica se explica 
 en que como tomamos $m=\frac{(n-1)*n}{2}$ resulta que $m$ es $\Theta(n^2)$, entonces $O(n + m)$ $\subset$ O($n^2$).
-
-% FIXME: en la linea anterior, "es" deberia decir \subset ¿?
 
 Finalmente, la experiencia 5 nos permitió reforzar la idea de que si no hay ganadores el algoritmo 
 termina mucho más r'apido que en aquellos casos donde si hay ganadores, lo cual hab'iamos predicho.
