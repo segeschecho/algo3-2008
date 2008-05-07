@@ -40,7 +40,8 @@ Un \textit{Radix Tree} o \textit{PATRICIA (Practical Algorithm To Retrieve Infor
 basada en los \textit{Tries} que suele cumplir el rol de diccionario. Sus claves son cadenas, y su significado es de tipo variado, 
 d'andole uso para diferentes prop'ositos. La diferencia entre un PATRICIA y un Trie ya fue mencionada en el enunciado: 
 un Trie tiene un nodo por cada caracter de una cadena, en cambio las ramas de un Radix Tree pueden estar etiquetadas con m'as de 
-un caracter, y si adem'as el conjunto de claves es libre de prefijos, cada nodo del Radix tendr'a almenos dos hijos.
+un caracter, y si adem'as el conjunto de claves es libre de prefijos, cada nodo interno del Radix tendr'a al menos dos hijos. 
+
 
 \subsection{Sobre el dise\~{n}o de la estructura}
 Por sus caracter'isticas, el PATRICIA presenta un amplio abanico de posibles implementaciones. Nosotros basicamente pensamos en cuatro formas:
@@ -56,7 +57,7 @@ Durante este trabajo pr'actico definimos eje como una tupla de puntero a un nodo
 Optamos por implementar los nodos con dos variantes de las ya nombradas: nodos formados por un arreglo de 26 posiciones con un bit de existencia y nodos formados por una lista con un bit de existencia. Como luego veremos, ambos dise\~{n}os de estructura cumplir'an las complejidades pedidas. 
 El bit de existencia permite que podamos usar el PATRICIA aun en casos donde el conjunto de entrada no este libre de prefijos, 
 por ejemplo consideremos la figura \ref{fig:bitExistencia} en este caso si bien la forma del PATRICIA es la misma, 
-mediante el bit de existencia podemos diferenciar si la palabra `emi' esta o no definida.
+mediante el bit de existencia podemos diferenciar si la palabra ``emi'' esta o no definida.
 
 \begin{figure}[H]
 \centering
