@@ -352,7 +352,10 @@ Para determinar la pertenencia, nos paramos en la raíz del PATRICIA.
 
 Entonces comenzamos a iterar mientras no recorramos toda s o lleguemos a una hoja.
 
-Notar que si s es mas larga que la palabra mas larga definida, vamos a parar por llegar a una hoja. Si en cambio s era mas corta, vamos a parar porque se nos acaba s (podriamos llegar a una hoja al mismo timepo), pero en ambos casos, vamos a parar en O(long_{max}) iteraciones.
+Notar que si s es m'as larga que la palabra m'as larga definida, vamos a parar por
+llegar a una hoja. Si en cambio s era m'as corta, vamos a parar porque se nos
+acaba s (podr'iamos llegar a una hoja al mismo timepo), pero en ambos casos, 
+vamos a parar en O($long_{max}$) iteraciones.
 
 Siendo mas especificos, mientras bajamos miramos cada caracter del eje, al igual que lo que ocurria en bajar, la cantidad de caracteres que puede tener una rama es O($long_{max}$), es decir que desde la raíz hasta una hoja, no podemos comparar mas que O($long_{max}$) caracteres. Luego si el ciclo hace n iteraciones, y tenemos que en la cantidad de caracteres del i-'esimo eje que visitamos es $k_i$, vale que:
 $$\sum_{i=1}^{n}{k_i} \leq long_{max}$$
