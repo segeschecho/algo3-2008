@@ -611,13 +611,12 @@ es m'as veloz que la implementaci'on con listas.
 
 Finalmente las experiencias 5 y 6 nos muestran como la implementaci'on con arreglos, que se mostr'o claramente m'as r'apida, consume 
 una gran cantidad de memoria m'as que la implementaci'on con listas para todo caso. Llamamos peores casos (para la memoria) a 
-aquellos que todos los nodos del PATRICIA tienen 26 hijos, para que de esta forma se utilice la mayor cantidad de memoria 
-posible. Esta experiencia puede resultar algo confusa al saber que una lista doblemente enlazada de 26 elementos deber'ia 
-ocupar mas que un arreglo de 26 punteros. Inmediatamente tendemos a concluir que un PATRICIA completo (26 hijos cada nodo) 
-deber'ia ocupar m'as memoria sobre listas que sobre arreglos, pero no ser'a as'i, pues debemos recordar que las hojas del 
+aquellos en los que todos los nodos del PATRICIA tienen 26 hijos, ya que de esta forma se utiliza la mayor cantidad de memoria por nodo. Dado que una lista doblemente enlazada de 26 elementos deber'ia 
+ocupar mas que un arreglo de 26 punteros, inmediatamente tendemos a concluir que un PATRICIA completo (26 hijos cada nodo)
+deber'ia ocupar m'as memoria sobre listas que sobre arreglos, pero no es as'i, pues debemos recordar que las hojas del 
 PATRICIA  implementado sobre listas contienen listas vacías dentro, y las hojas del PATRICIA sobre arreglos tienen 26 punteros. 
 Todo esto confirma nuestra comparaci'on anterior entre ambas implementaciones, y es una buena raz'on por la cual podr'ia 
-considerarse, pese a que es m'as lenta, la implementaci'on sobre listas por sobre la de arreglos.
+considerarse, pese a que es m'as lenta, la implementaci'on con listas por sobre la de arreglos.
 
 A modo de conclusi'on podemos decir en primer lugar que las experiencias coincidieron con lo calculado te'oricamente. Por
 otro lado observamos como cada implementaci'on de los nodos presenta sus ventajas y desventajas. Para utilizar una u

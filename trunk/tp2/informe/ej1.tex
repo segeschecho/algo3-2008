@@ -60,7 +60,7 @@ Entonces podemos arreglar el torneo para que gane el jugador 1, jugando los sigu
 
 Luego, si usamos este razonamiento podemos obtener una primera forma de resolver el problema: Para 
 cada nodo, tratamos de recorrer todo el digrafo. Si lo logramos, sabemos que se puede armar un torneo 
-para que gane. Como esto se hace para cada nodo, el orden resulta ser $O(n*m)$.
+para que gane. Como esto se hace para cada nodo, el orden resulta ser $O(n*(n+m))$.
 
 Por otro lado, podemos ver que para que exista un ganador en un torneo de $n$ jugadores, es necesario 
 que la cantidad de partidos ``arreglados'' sea como mínimo $n - 1$, ya que con menos partidos es 
