@@ -1,0 +1,27 @@
+----------------------------------------------------------------
+| Archivos de test para el Ejercicio 2                         |
+----------------------------------------------------------------
+
+* grafo.py - clase Grafo
+* generador_barcos.py - generadores de instancias
+
+Para generar una instancia pueden usarse las funciones definidas
+en generador_barcos.py. Al final del archivo se encuentran
+ejemplos de su utilización. Esencialmente hay 3 funciones, que
+hacen lo que su nombre indica:
+
+* generarInstancia()
+* generarInstanciaConSolucion()
+* generarInstanciaSinSolucion()
+
+Las 3 versiones toman 2 parámetros opcionales (ciudades y acuerdos)
+que corresponden a la cantidad de ciudades y acuerdos que se desea
+generar.
+
+Para ejecutarlo, simplemente se hace:
+$ python generador_barcos.py
+
+Una cuarta función imprime por consola la instancia que se le
+pasa por parámetro, en el formato requerido por el programa
+implementado en C++ (se puede redireccionar su salida usando 
+"> archivo.out" en la línea de comandos).
