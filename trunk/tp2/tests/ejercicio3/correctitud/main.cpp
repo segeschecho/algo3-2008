@@ -11,32 +11,37 @@ void generarEntrada(void)
     ifstream entrada2("palabras.txt", ios_base::in);
     ofstream salida("Tp2Ej3.in", ios_base::out);
 
-    int cantidadPalabras;
-    entrada >> cantidadPalabras;
-    entrada2 >> cantidadPalabras;
-
-    salida << cantidadPalabras*6 << endl;   //agregar pertenece sacar pertenece cardinal
-
-    for(int i = 0; i < cantidadPalabras; i++) {
-        string palabra;
-        entrada >> palabra;
-        salida << "agregar " << palabra << endl;
-        salida << "cardinal" << endl;
+    if(!entrada.is_open()){
+        cout << "no se encontro el archivo palabras.txt" << endl;
     }
+    else {
+        int cantidadPalabras;
+        entrada >> cantidadPalabras;
+        entrada2 >> cantidadPalabras;
 
-    for(int i = 0; i < cantidadPalabras; i++) {
-        string palabra;
-        entrada2 >> palabra;
-        salida << "pertenece " << palabra << endl;
-        salida << "sacar " << palabra << endl;
-        salida << "pertenece " << palabra << endl;
-        salida << "cardinal" << endl;
+        salida << cantidadPalabras*6 << endl;   //agregar pertenece sacar pertenece cardinal
+
+        for(int i = 0; i < cantidadPalabras; i++) {
+            string palabra;
+            entrada >> palabra;
+            salida << "agregar " << palabra << endl;
+            salida << "cardinal" << endl;
+        }
+
+        for(int i = 0; i < cantidadPalabras; i++) {
+            string palabra;
+            entrada2 >> palabra;
+            salida << "pertenece " << palabra << endl;
+            salida << "sacar " << palabra << endl;
+            salida << "pertenece " << palabra << endl;
+            salida << "cardinal" << endl;
+        }
+
+        salida << 0;
+        salida.close();
+        entrada.close();
+        entrada2.close();
     }
-
-    salida << 0;
-    salida.close();
-    entrada.close();
-    entrada2.close();
 }
 
 int main(int argc, char* argv[]) {
@@ -54,6 +59,12 @@ int main(int argc, char* argv[]) {
     in >> cant;	
     bool res = true;
     bool perte = true;
+    //idea de la variable perte: esta variable me verifica que la pertenencia este funcionando bien.
+    //En este testeo yo agrego todas las palabras y luego llamo: pertenece sacar pertenece cardinal
+    //este pertenece sacar pertenece deberia dar true para el primer pertenece y false para el segundo
+    //y asi con todas las palabras agregadas, por lo tanto deberia dar true false true false true .... true false
+    //entonces hago que esta variable oscile entre true y false cada vez que se llama a pertenece
+
     int contador = 0;
 
     cout << "Ejecutando testeo... ";
