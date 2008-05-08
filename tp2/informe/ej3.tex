@@ -85,7 +85,7 @@ solamente en las hojas. Un conjunto libre de prefijos es aquel en el cual ningun
 es prefijo de otro.
 \end{itemize}
 Este invariante deber'a conservarse durante todas las funciones.
-PATRICIA nos sugiere un 'arbol formado de un conjunto de palabras dispersas en su estructura, como muestra el siguiente gr'afico.
+PATRICIA nos sugiere un 'arbol formado de un conjunto de palabras dispersas en su estructura, como muestra la siguiente figura:
 
 \begin{figure}[H]
     \centering
@@ -130,8 +130,7 @@ letras del abecedario ingl'es, y no puede tener mas de un eje que su cadena adju
 haber, por ejemplo, ejes con cadenas casa y cosa en el mismo nodo.
 
 Una vez que bajamos por las ramas lo m'aximo posible, si la palabra formada es prefijo de la palabra a agregar, quiere decir que 
-caimos en el primer caso. Este caso es simple y solo resta agregar el nodo y el eje correspondiente, con la palabra sin prefijo, 
-como se muestra en la figura \ref{fig:caso1agregar}.
+caimos en el primer caso. Este caso es simple y solo resta crear un nodo y un eje con la cadena sin prefijo adjunta, el eje lo agregamos al nodo en el cual terminamos y el nodo lo colgamos del nuevo eje, como se muestra en la figura \ref{fig:caso1agregar}.
 
 Si la palabra formada no es prefijo de la clave a definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que no lo son. En este las partes involucradas ser'an: el padre del nodo actual (lo llamaremos $p$), el 'ultimo eje por el cual bajamos, que apunta al nodo actual (llamemoslo $j$), y el nodo actual(lo llamaremos $n$). Entonces haremos lo siguiente: "`partimos"' $j$ en las partes $j_1$ y $j_2$. La primera se corresponde con la 'ultima parte del prefijo de s, y la segunda son las letras que no coincidieron con s. Creamos un nuevo padre (desde ahora $p'$), de manera que $j_1$ quedar'a apuntando desde $p$ a $p'$, y $j_2$ apunta desde $p'$ a $n$. Finalmente, para reestablecer el invariante, agregamos un nuevo nodo y un nuevo eje, apuntando desde $p'$ al nuevo nodo, que tenga adjunto la parte restante de la clave (ver figura \ref{fig:caso2agregar}).
 
@@ -157,10 +156,10 @@ prefijos. Esto nos agregar'a dos casos m'as:
 \end{figure}
 
 Estos dos nuevos casos en realidad podemos resolverlos como derivados de los dos anteriores. Si al bajar por las ramas, la 
-palabra formada es prefijo de la clave, y la clave es prefijo de la palabra formada, o sea que la clave y la palabra formada son iguales, caemos en el primer caso. En este caso simplemente se setea el bit de existe al nodo en el cual caimos, como lo muestra la figura \ref{fig:caso3agregar}.
+palabra formada es prefijo de la clave, y la clave es prefijo de la palabra formada, o sea que la clave y la palabra formada son iguales, caemos en el primer caso. En este simplemente se setea el bit de existe al nodo en el cual caimos, como lo muestra la figura \ref{fig:caso3agregar}.
 
 Si al bajar por las ramas, la clave es prefijo de la palabra formada y la palabra formada es m'as larga que la clave, caemos en el 
-segundo caso. Este problema se resuelve partiendo el eje y creando un nuevo nodo en medio del eje a partir. Ahora la primer parte del eje partido apuntar'a al nuevo nodo, y la parte restante apuntar'a desde el nuevo nodo hacia el nodo en el cual caimos al bajar, como lo muestra la figura \ref{fig:caso4agregar}.
+segundo caso. En este las partes involucradas son: el 'ultimo eje visitado (ll'amese $j$), el nodo actual en el cual terminamos de bajar (ll'amese $n$) y el padre del actual (ll'amese $p$). Este problema se resuelve partiendo $j$ en $j_1$ y $j_2$, siendo $j_1$ la 'ultima parte de la clave a definir que es prefijo del 'ultimo eje visitado, y $j_2$ la parte restante del eje. Creamos un nuevo nodo, y hacemos que $j_1$ apunte desde $p$ al nuevo nodo, y $j_2$ desde el nuevo nodo hacia $n$, y seteamos el bit existe del nuevo nodo, como lo muestra la figura \ref{fig:caso4agregar}.
 Claramente los dos primeros casos correspondientes al enunciado son excluyentes con estos dos 'ultimos casos, pues los primeros agregan solo nodos hojas, los segundos agregan solo nodos internos. Esto me asegura que el producto pedido no ser'a cambiado.
 
 \subsection{Eliminando un elemento}
@@ -182,11 +181,10 @@ Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
     \caption{ }
     \label{fig:caso2sacar}
 \end{figure}
-Para solucionar estos casos comenzamos situ'andonos sobre la ra'iz, y bajando, al igual que agregar. El valor asociado a la clave se encuentra en la hoja, pues el Radix es libre de prefijos, por lo que solo eliminaremos hojas.
+Para solucionar estos casos comenzamos situ'andonos sobre la ra'iz, y bajando, al igual que la primer parte de agregar. El valor asociado a la clave se encuentra en la hoja, pues el Radix es libre de prefijos, por lo que solo eliminaremos hojas.
 Al borrar una hoja, debemos verificar cuantos hermanos ten'ia. Si ten'ia m'as de un hermano, caeremos en el primer caso, 
 el cual se resuelve simplemente eliminando la hoja y su eje, como lo muestra el gr'afico \ref{fig:caso1sacar}.
-Si, por el contrario, ten'ia solo un hermano, al borrar este nodo al padre le restar'a un solo hijo. Para reestablecer el invariante, como la rama hasta el nodo padre no conforma una clave definida, podemos unir el padre con su 'unico hijo. Lo hacemos simplemente borrando el nodo hijo y concatenando el eje que apunta del nodo abuelo al nodo padre con el eje que apunte del nodo padre al
- nodo hijo, como lo muestra el grafico \ref{fig:caso2sacar}.
+Si, por el contrario, ten'ia solo un hermano, al borrar este nodo al padre le restar'a un solo hijo. Para reestablecer el invariante, como la rama hasta el nodo padre no conforma una clave definida (pues los datos se guardan en las hojas), podemos unir el padre con su 'unico hijo. Lo hacemos simplemente borrando el nodo hijo y unir el eje que apunta del nodo abuelo al nodo padre con el eje que apunta del nodo padre al nodo hermano, como lo muestra la figura \ref{fig:caso2sacar}. Unir es tomar la cadena adjunta de un eje $j$, concatenarla a la cadenas del otro eje $j'$ y guardarla en $j$, copiar el puntero del eje $j'$ en $j$ y borrar $j'$.
 
 Excediendo el l'imite del enunciado, nuestro algoritmo sacar podr'a tener en cuenta conjuntos de entrada que no sean libre de 
 prefijos. Esto nos agregar'a dos casos m'as: 
@@ -214,7 +212,7 @@ Luego de bajar por las ramas del 'arbol verificamos que la palabra armada es igu
  aseguramos que la clave a borrar haya sido definida. Si el nodo a borrar es un nodo interno (no es una hoja), caemos en alguno
  de estos dos casos. Si el nodo a borrar tiene m'as de un hijo, caemos en el primer caso. Este se soluciona seteando el bit de 
  existencia del nodo a falso, como muestra la figura \ref{fig:caso3sacar}. Si el nodo a borrar tiene solo un hijo, este es
- el segundo caso. Se resuelve borrando el nodo padre y concatenando el eje que apuntaba del nodo padre al nodo actual, y el eje
+ el segundo caso. Se resuelve borrando el nodo actual y concatenando el eje que apuntaba del nodo padre al nodo actual, y el eje
  del nodo actual al nodo siguiente, como lo muestra la figura \ref{fig:caso4sacar}.
  
 Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues en ellos se borran solo hojas, mientras que estos ultimos se borran nodos internos.
@@ -421,7 +419,7 @@ Los puntos rojos, corresponden a la implementaci'on con listas, los azules con a
 \end{figure}
 En rojo con listas, azul con arreglos.
 
-\subsubsection{Experiencia 6: Cantidad de memoria utilizada para diferentes conjuntos de palabras de caso promedio}
+\subsubsection{Experiencia 6: Cantidad de memoria utilizada para el conjunto de palabras del diccionario espa\~{n}ol}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{./figuras/graficos/ej3/memoria.png} 
