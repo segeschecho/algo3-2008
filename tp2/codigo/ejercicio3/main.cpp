@@ -40,8 +40,6 @@ int main(int argc, char* argv[]) {
 
             string inst;
 	    in >> inst;
-	    cout<<i<<endl;
-	    cout<<inst<<endl;
             if(inst == "agregar"){
                 //tomo la palabra
                 in >> inst;

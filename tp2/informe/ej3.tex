@@ -105,16 +105,16 @@ Cuando agregamos un elemento nos enfrentamos ante los siguientes casos:
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{./figuras/ej3/caso1agregar.png}
-    \caption{ }
+    \caption{Se puede agregar el elemento sin tener que partir un eje}
     \label{fig:caso1agregar}
 \end{figure}
 
-\item Para agregar un elemento, hay que partir un eje y agregar un nodo
+\item Para agregar un elemento, hay que partir un eje, agregar otro eje y dos nodos
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{./figuras/ej3/caso2agregar.png}
-    \caption{ }
+    \caption{Agrear un elemento partiendo un eje, agregando otro y dos nodos}
     \label{fig:caso2agregar}
 \end{figure}
 
@@ -130,9 +130,9 @@ letras del abecedario ingl'es, y no puede tener mas de un eje que su cadena adju
 haber, por ejemplo, ejes con cadenas casa y cosa en el mismo nodo.
 
 Una vez que bajamos por las ramas lo m'aximo posible, si la palabra formada es prefijo de la palabra a agregar, quiere decir que 
-caimos en el primer caso. Este caso es simple y solo resta crear un nodo y un eje con la cadena sin prefijo adjunta, el eje lo agregamos al nodo en el cual terminamos y el nodo lo colgamos del nuevo eje, como se muestra en la figura \ref{fig:caso1agregar}.
+ca'imos en el primer caso. Este caso es simple y solo resta crear un nodo y un eje con la cadena sin prefijo adjunta, el eje lo agregamos al nodo en el cual terminamos y el nodo lo colgamos del nuevo eje, como se muestra en la figura \ref{fig:caso1agregar}.
 
-Si la palabra formada no es prefijo de la clave a definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que no lo son. En este las partes involucradas ser'an: el padre del nodo actual (lo llamaremos $p$), el 'ultimo eje por el cual bajamos, que apunta al nodo actual (llamemoslo $j$), y el nodo actual(lo llamaremos $n$). Entonces haremos lo siguiente: "`partimos"' $j$ en las partes $j_1$ y $j_2$. La primera se corresponde con la 'ultima parte del prefijo de s, y la segunda son las letras que no coincidieron con s. Creamos un nuevo padre (desde ahora $p'$), de manera que $j_1$ quedar'a apuntando desde $p$ a $p'$, y $j_2$ apunta desde $p'$ a $n$. Finalmente, para reestablecer el invariante, agregamos un nuevo nodo y un nuevo eje, apuntando desde $p'$ al nuevo nodo, que tenga adjunto la parte restante de la clave (ver figura \ref{fig:caso2agregar}).
+Si la palabra formada no es prefijo de la clave a definir, este es el segundo caso, pues esto querr'a decir que el 'ultimo eje tiene letras que son parte de la clave y otras que no lo son. En este caso, las partes involucradas ser'an: el padre del nodo actual (lo llamaremos $p$), el 'ultimo eje por el cual bajamos, que apunta al nodo actual (llam'emoslo $j$), y el nodo actual(lo llamaremos $n$). Entonces haremos lo siguiente:``partimos'' $j$ en las partes $j_1$ y $j_2$. La primera se corresponde con la 'ultima parte del prefijo de s, y la segunda son las letras que no coincidieron con s. Creamos un nuevo padre (desde ahora $p'$), de manera que $j_1$ quedar'a apuntando desde $p$ a $p'$, y $j_2$ apunta desde $p'$ a $n$. Finalmente, para reestablecer el invariante, agregamos un nuevo nodo y un nuevo eje, apuntando desde $p'$ al nuevo nodo, que tenga adjunto la parte restante de la clave (ver figura \ref{fig:caso2agregar}).
 
 Excediendo el l'imite del enunciado, nuestro algoritmo agregar podr'a tener en cuenta conjuntos de entrada que no sean libre de 
 prefijos. Esto nos agregar'a dos casos m'as: 
@@ -142,25 +142,26 @@ prefijos. Esto nos agregar'a dos casos m'as:
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{./figuras/ej3/caso3agregar.png}
-    \caption{ }
+    \caption{Agregar un elemento seteando el bit de existe}
     \label{fig:caso3agregar}
 \end{figure}
 
-\item Para agregar un elemento hay que partir un eje y setear el bit de existe
+\item Para agregar un elemento hay que partir un eje, agregar un nodo y setear el bit de existe
 \end{itemize}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{./figuras/ej3/caso4agregar.png} 
-    \caption{ }
+    \caption{Agregar un elemento partiendo un eje, agregando un nodo y seteando el bit de existe }
     \label{fig:caso4agregar}
 \end{figure}
 
-Estos dos nuevos casos en realidad podemos resolverlos como derivados de los dos anteriores. Si al bajar por las ramas, la 
-palabra formada es prefijo de la clave, y la clave es prefijo de la palabra formada, o sea que la clave y la palabra formada son iguales, caemos en el primer caso. En este simplemente se setea el bit de existe al nodo en el cual caimos, como lo muestra la figura \ref{fig:caso3agregar}.
+Estos dos nuevos casos en realidad podemos resolverlos como derivados de los dos anteriores. Si al bajar por las ramas, la clave y la palabra formada son iguales, caemos en el primer caso. En este simplemente se setea el bit de existe al nodo en el cual ca'imos, como lo muestra la figura \ref{fig:caso3agregar}.
 
 Si al bajar por las ramas, la clave es prefijo de la palabra formada y la palabra formada es m'as larga que la clave, caemos en el 
 segundo caso. En este las partes involucradas son: el 'ultimo eje visitado (ll'amese $j$), el nodo actual en el cual terminamos de bajar (ll'amese $n$) y el padre del actual (ll'amese $p$). Este problema se resuelve partiendo $j$ en $j_1$ y $j_2$, siendo $j_1$ la 'ultima parte de la clave a definir que es prefijo del 'ultimo eje visitado, y $j_2$ la parte restante del eje. Creamos un nuevo nodo, y hacemos que $j_1$ apunte desde $p$ al nuevo nodo, y $j_2$ desde el nuevo nodo hacia $n$, y seteamos el bit existe del nuevo nodo, como lo muestra la figura \ref{fig:caso4agregar}.
-Claramente los dos primeros casos correspondientes al enunciado son excluyentes con estos dos 'ultimos casos, pues los primeros agregan solo nodos hojas, los segundos agregan solo nodos internos. Esto me asegura que el producto pedido no ser'a cambiado.
+%FIXME: no entiendo, porq en el ultimo caso de agregar estoy agregando una hoja con la letra s.
+%FIXME: producto no sera cambiado? suena a este libro no sera vendido :-P
+Claramente los dos primeros casos correspondientes al enunciado son excluyentes con estos dos 'ultimos casos, pues los primeros agregan solo nodos hojas, los segundos agregan solo nodos internos. Esto nos asegura que el producto pedido no ser'a cambiado.
 
 \subsection{Eliminando un elemento}
 Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
@@ -169,7 +170,7 @@ Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{./figuras/ej3/caso1sacar.png}
-    \caption{ }
+    \caption{Sacar un elemento eliminando un nodo y un eje }
     \label{fig:caso1sacar}
 \end{figure}
 
@@ -218,13 +219,13 @@ Luego de bajar por las ramas del 'arbol verificamos que la palabra armada es igu
 Claramente estos dos casos son excluyentes con los dos primeros correspondientes al enunciado, pues en ellos se borran solo hojas, mientras que estos ultimos se borran nodos internos.
 
 \subsection{Pertenencia de una cadena al conjunto}
-La idea es bajar por los ejes que son prefijos de s, hasta que o bien completamos s o bien no tenemos ejes que sean prefijo de s. Si completamos s, revisamos que el nodo exista y si esa asi se devuelve verdadero; en otro caso devolvemos false.
+La idea es bajar por los ejes que son prefijos de s. Si llegamos a un nodo desde donde no salen ejes que coincidan con el prefijo de s, sabemos que no pertenece. Si terminamos de mirar s a la mitad de un eje también sabemos que no pertence. 
 
 \subsection{Cardinal}
 Dado que se nos ped'ia devolver el cardinal en orden constante, no nos qued'o otra alternativa que tenerlo calculado cuando se llame a la funci'on. Por eso, tenemos el valor calculado, increment'andolo y decrement'andolo cuando se agrega o saca una palabra, respectivamente.
 
 \section{Cuestiones de implementaci'on de los nodos y del PATRICIA}
-Con respecto a las listas (para los nodos que las usan) usamos las provistas por la Standard Template Library (STL). Un nodo guarda la cantidad de hijos que tiene y si 'el existe. Si bien aislando el nodo como estructura independiente, el booleano `` existe' puede carecer de sentido, lo adquiere al implementar el PATRICIA, ya que sin ella no podriamos diferenciar los elementos definidos de los no definidos. La cantidad de hijos es 'util para saber cuantos hijos contiene un nodo implementado sobre arreglos.
+Con respecto a las listas (para los nodos que las usan) usamos las provistas por la Standard Template Library (STL). Un nodo guarda la cantidad de hijos que tiene y si 'el existe. Si bien aislando el nodo como estructura independiente, el booleano `` existe'' puede carecer de sentido, lo adquiere al implementar el PATRICIA, ya que sin ella no podriamos diferenciar los elementos definidos de los no definidos. La cantidad de hijos es 'util para saber cuantos hijos contiene un nodo implementado sobre arreglos.
 
 La implementaci'on de nodos sobre arreglos cuenta con un arreglo de apuntadores a eje, an'alogamente la implementaci'on con listas cuenta con una lista con apuntadores a ejes. Un eje, es una cadena asociada y un puntero a otro nodos.
 
@@ -282,6 +283,7 @@ Para el manejo de las cadenas, usamos string de la STL. Para las mismas necesita
 %\end{itemize}
 
 \section{Pseudoc'odigo}
+%TODO: revisar, escrito a las 3:38 de la matina
 \input{pseudo3}
 \input{pseudo3b}
 
@@ -289,7 +291,8 @@ Para el manejo de las cadenas, usamos string de la STL. Para las mismas necesita
 \section{Cálculo de complejidad}
 Para realizar el an'alisis de la complejidad vamos a considerar el modelo uniforme ya que las principales operaciones se realizan a nivel de caracteres, por lo cual podemos considerar que tienen un costo acotado. Ahora bien, con respecto al tamaño de la entrada, en este caso consideramos que es la cantidad de caracteres que componen a la cadena sobre la que se va a operar, ya sea para agregarla, borrarla o saber si est'a definida. Llamo $s$ a la cadena de entrada, y $long_s$ al largo (cantidad de caracteres) de la misma y $long_{max}$ a la longitud de la cadena m'as larga ya agregada.
 
-A continuaci'on analizaremos las cuatro funciones que deb'iamos implementar, para determinar el orden de complejidad logrado en cada una.
+A continuaci'on analizaremos las cuatro funciones que deb'iamos implementar, para determinar el orden de complejidad logrado en cada una; pero previamente analizaremos la complejidad del algoritmo de bajada por los ejes del PATRICIA.
+
 \subsection{Bajar}
 Primero inicializamos algunas variables que son punteros. Incializamos tambi'en eje, para hacerlo, buscamos el eje que sale del nodo y comienza con la misma letra que s. En los arreglos lo hacemos en O(1).
  
@@ -297,7 +300,7 @@ Por otro lado, con las listas ocurre lo mismo, ya que a lo sumo hay 26 caractere
 
 Luego viene un ciclo (l'inea 7), que itera mientras el eje exista y pueda bajar. Poder bajar, salvo en la primer iteraci'on en la cual tiene el mismo significado que existe el eje, significa que el eje entero sea prefijo de s. Ambas condiciones se pueden dar como m'aximo $long_{max}$ veces, ya que no puede haber m'as ejes con prefijo en s que la cantidad de ejes para guardar a la palabra m'as larga, que tiene dicha longitud.
 
-Dentro del ciclo, lo que hacemos es asignar ciertos punteros en O(1), buscar el eje por donde seguir, también en O(1), concatenar a la cadenaActual la cadena del eje que acabamos de pasar y sacar de s el prefijo del eje. Hay que notar que si en una iteracion concatenamos a palabraArmada una cadena de largo k, el m'aximo n'umero de ejes es $long_{max}$ - k, ya que como mucho podemos tener $long_{max}$ ejes de un caracter.
+Dentro del ciclo, lo que hacemos es asignar ciertos punteros en O(1), buscar el eje por donde seguir, también en O(1), concatenar a la cadenaActual la cadena del eje que acabamos de pasar y sacar de s el prefijo del eje. La concatenacion se hace en O($long_{eje}$). Hay que notar que si en una iteracion concatenamos a palabraArmada una cadena de largo k, el m'aximo n'umero de ejes es $long_{max}$ - k, ya que como mucho podemos tener $long_{max}$ ejes de un caracter.
 
 Entonces si el ciclo hace n iteraciones, y tenemos que en la cantidad de caracteres del i-'esimo eje que visitamos es $k_i$, vale que:
 $$\sum_{i=1}^{n}{k_i} \leq long_{max}$$
@@ -305,9 +308,9 @@ $$\sum_{i=1}^{n}{k_i} \leq long_{max}$$
 Es por esta raz'on que la complejidad del algoritmo es O($long_{max}$).
   
 \subsection{Agregar}
-Lo primero que hacemos es bajar por las ramas mientras encontremos prefijo para s, como vimos en el apartado anterior, el costo de esto es O($long_{max}$).
+Lo primero que hacemos es copiar s (O($long_s$)) y bajamos por las ramas mientras encontremos prefijo para s, como vimos en el apartado anterior, el costo de esto es O($long_{max}$).
 
-Si la palabra ya estaba en el conjunto(l'inea 5), no hacemos nada y terminamos. El costo fue en total $O(long_{max})$.
+Si la palabra ya estaba en el conjunto(l'inea 5), no hacemos nada y terminamos. El costo fue en total $O(long_{max} + long_s)$.
 
 Si en cambio la palabra no estaba, lo pr'oximo que hacemos es eliminar los prefijos comunes entre s y la palabra armada durante el descenso (l'inea 8) , nuevamente para hacer esto, recorremos a lo sumo $long_{max}$ caracteres, ya que lal cadenas de los ejes de una rama no pueden tener mas caracteres que $long_{max}$.
 
@@ -327,13 +330,15 @@ Luego tenemos una cantidad acotada de operaciones de costo O($long_s$) y O($long
 
 \subsection{Sacar}
 
-Primero bajamos mientras en los ejes encontremos prefijo de s. Esto se hace en $O(long_{max})$. Notemos que como para poder sacar una palabra, pedimos como precondici'on que s haya sido agregada, sabemos que $long_s$ $\leq$ $long_{max}$. Entonces en verdad esta bajada tiene costo $O(long_s)$.
+Chequeamos si la palabra pertenece al conjunto, si no es así, terminanmos y no hacemos nada. Esto tiene un costo (como se vera  a continuación) $O(long_{max})$.
+
+Si efectivamente estaba, primero bajamos mientras en los ejes encontremos prefijo de s. Esto se hace en $O(long_{max})$. Notemos que como sabemos que s esta en el conjunto vale que $long_s$ $\leq$ $long_{max}$. 
  
-Si el nodo a borrar es una hoja, eliminamos el nodo y al eje correspondiente(línea 5). Borrar el eje, tiene $O(long_s)$ porque dicho eje, era subcadena de s.  
+Si el nodo a borrar es una hoja, eliminamos el nodo y al eje correspondiente(línea 7). Borrar el eje, tiene $O(long_s)$ porque dicho eje, era subcadena de s.  
 
-Una vez hecho esto, podr'ia ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_{max}$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del ``hermano'' de s (líneas 8 a 11).
+Una vez hecho esto, podr'ia ser necesario, si el padre tiene ahora solo un hijo, combinar el string del eje que llega al padre con el de su hijo. Esto se hace en O($long_{max}$) ya que no sabemos a priori que tan largo puede ser la cadena del eje del ``hermano'' de s (líneas 11 a 14).
 
-Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de 'el con su padre y de 'el con su 'unico hijo. Nuevamente el costo de esto es O($long_{max}$) (líneas 16 y 17).
+Si no era una hoja y tiene solo un hijo lo que hacemos es borrar el nodo, y combinar los ejes de 'el con su padre y de 'el con su 'unico hijo. Nuevamente el costo de esto es O($long_{max}$) (líneas 19 y 20).
 
 Si no era hoja y no tenia solo un hijo, lo que hacemos es setear su flag de existe en false, que se hace en O(1). 
 
@@ -341,11 +346,24 @@ Lo ultimo que hacemos es decrementar en uno el cardinal del conjunto en O(1).
 
 Luego el orden de esta operacion es  O($long_s$+$long_{max}$), pero como $long_s \leq long_{max}$, O($long_s$+$long_{max}$) es O(max($long_s$,$long_{max}$)), que es O($long_{max}$)
 
+%TODO: revisar, escrita a las 4 de la matina
 \subsection{Pertenece}
-Al igual que con las dos operaciones anteriores, lo que hacemos es bajar mientras encontremos en los ejes, prefijos de s. Esto, como dijimos anteriormente tiene costo $O(long_{max})$. Una vez que bajamos, comparamos la cadena obtenida durante la bajada, con s. La comparación se realiza en $O(min(long_{max},long_s)) \subset O(long_{max})$
-Por otro lado se pregunta si el nodo existe, pero esta operaci'on la realizamos en O(1).
+Para determinar la pertenencia, nos paramos en la raíz del PATRICIA. 
 
-En conclusi'on, el algoritmo tiene complejidad O($long_{max}$)
+Entonces comenzamos a iterar mientras no recorramos toda s o lleguemos a una hoja.
+
+Notar que si s es mas larga que la palabra mas larga definida, vamos a parar por llegar a una hoja. Si en cambio s era mas corta, vamos a parar porque se nos acaba s (podriamos llegar a una hoja al mismo timepo), pero en ambos casos, vamos a parar en O(long_{max}) iteraciones.
+
+Siendo mas especificos, mientras bajamos miramos cada caracter del eje, al igual que lo que ocurria en bajar, la cantidad de caracteres que puede tener una rama es O($long_{max}$), es decir que desde la raíz hasta una hoja, no podemos comparar mas que O($long_{max}$) caracteres. Luego si el ciclo hace n iteraciones, y tenemos que en la cantidad de caracteres del i-'esimo eje que visitamos es $k_i$, vale que:
+$$\sum_{i=1}^{n}{k_i} \leq long_{max}$$
+
+Es por esta razón que si bien tenemos que en el anidado al ciclo de la línea 2, tenemos el ciclo de la l'inea 7, la complejidad no es O($long_{max}^2$), sino O($long_{max}$).
+
+Una vez que salimos del ciclo de la línea 7, vemos si salimos porque s se termino y nos quedaron letras del eje por recorrer entonces devolvemos falso. Si en cambio, el que se termino es el eje, nos paramos en el proximo nodo desde el cual partir. Todo esto se realiza en O(1).
+
+Cuando salimos del ciclo principal, devolvemos si efectivamente termine de mirar s y el nodo donde quede parado existe. Nuevamente esto se hace en O(1).
+
+En conclusion, Dado que el ciclo principal tiene O($long_{max}$) y que el resto de las operaciones se realizan en O(1), podemos ver que el algoritmo tiene O($long_{max}$).
 
 \subsection{Cantidad de elementos}
 Como cada vez que guardamos o sacamos una palabra actualizamos el cardinal del conjunto, en caso de que se solicite la cantidad de palabras del conjunto, se devuelve este contador, sin tener que hacer mas operaciones, por lo tanto la operacion es O(1).
@@ -370,14 +388,14 @@ Finalmente consideramos que otro factor que deb'ia ser tenido en cuenta era el e
     \hline
     \textbf{Inicialización}  & 26 elementos & 0 elementos (agrega a medida que necesita) \\ [2ex]
     \textbf{cantElem} & implementado sobre nodo & implementado sobre lista \\ [2ex]
-    \textbf{Punteros} & 26 punteros a eje & punteros al siguiente elemento de la lista (a lo sumo 26) \\ [2ex]
+    \textbf{Punteros} & 26 punteros a eje & punteros al siguiente elemento y al anterios de la lista (a lo sumo 52) \\ [2ex]
     \textbf{Indexado} & directo & secuencial \\ [2ex]
     \hline
 \end{tabular}
 
 Como se dice en el cuadro comparativo, uno de los motivos es la inicializaci'on: el nodo sobre arreglo tendr'a consumido ya 26 elementos apenas se lo inicializa mientras que el nodo sobre lista comenzar'a vac'io y agregar'a hijos a medida que sea necesario. En cuanto a la contabilizaci'on de la cantidad de hijos, el nodo sobre arreglo debe contar con cantElem para poder saber cuantos hijos tiene tal nodo (as'i no tendremos que recorrer el arreglo cada vez que necesitemos saberlo), mientras que el nodo sobre listas no lo tiene, pero viene impl'icito con la lista, pues suponemos que la lista tiene dentro un mecanismo similar para evitar un recorrido innecesario. Hasta aqu'i podr'ia pensarse que la lista ocupar'a m'as lugar que los arreglos, pues cada nodo de la lista debe mantener un puntero al siguiente, pero no es as'i, pues el arreglo tambi'en tiene punteros, y los tiene en cada elemento, pues estamos comparando una lista de ejes con un arreglo punteros a eje.
 
-El espacio utilizado lo medimos con una librer'ia que contiene cuatro headers: heap.h, heapfactory.h, memorymgr.h, memorypool.h. Esta librer'ia se encuentra adjunta en el cd. Simplemente agregando \textit{HeapFactory::GetDefaultHeap()->getPeak();} en una l'inea del c'odigo podremos obtener la mayor cantidad de memoria (en bytes) utilizada por el programa hasta el momento (el pico de memoria), o sea todo bloque de memoria que haya sido pedido por el c'odigo. Esto lo utilizamos haciendo una lista de palabras a agregar, y cada vez que agregamos una palabra, pedimos el pico.
+El espacio utilizado lo medimos con una librer'ia que contiene cuatro headers: heap.h, heapfactory.h, memorymgr.h, memorypool.h. Esta librer'ia se encuentra adjunta en el cd. Simplemente agregando \textit{HeapFactory::GetDefaultHeap()$->$getPeak();} en una l'inea del c'odigo podremos obtener la mayor cantidad de memoria (en bytes) utilizada por el programa hasta el momento (el pico de memoria), o sea todo bloque de memoria que haya sido pedido por el c'odigo. Esto lo utilizamos haciendo una lista de palabras a agregar, y cada vez que agregamos una palabra, pedimos el pico.
 
 \subsection{Resultados}
 
@@ -433,16 +451,28 @@ En rojo con listas, azul con arreglos.
     \label{fig:ej3exp5}
 \end{figure}
 
+%TODO: ver si se puede completar la discusion en cuanto a lo que es complejidad
 \subsection{Discusión}
 En las experiencias 1, 2 y 3 observamos como la cantidad de operaciones es considerablemente mayor en la implementaci'on con listas, esto es de esperarse ya que encontrar el eje por el cual bajar es mucho m'as r'apido en los arreglos, si bien en ambos es O(1), las listas presentan una constante mucho mas alta, ya que si un nodo tiene 26 hijos la b'usqueda es lineal y se recorren en peor caso los 26 ejes.
 
 Independientemente de la implementaci'on se not'o como la cantidad de operaciones se incrementa linealmente a medida que se agregan palabras m'as largas, esto es de esperarse ya que la complejidad nos dio O($long_{max} + long_s$), o sea O($max(long_{max}, long_s)$), pero como voy agregando cada vez palabras m'as largas, nos queda O($long_s$).
+
+En los demas algoritmos, también se ve como palabras mas largas requieren mas opereaciones, esto es de esperarse ya que si bien la cantidad esta acotada por $O(long_{max})$, una cadena mas corta requiere muchas menos operaciones que una larga, tanto para ser agregada (de por si la copia ya es bastante mas cara) como para ser borrada o saber si pertenece (ya que si la cadena es mas corta que la mas larga de las definidas, ella misma actua como un tope para terminar la bajada por los ejes).
 
 %FIXME: esto me parece que vuela porq no sabemos si esta bien fundamentado
 %En la figura 4, lo que vemos es que en general la cantidad de operaciones es menor que la cantidad de operaciones del m'aximo, no obstante hay algunos casos donde se obtiene un n'umero de operaciones mayor. Esto creemos que no se contradice con lo que esperabamos, sino que lo podemos explicar considerando que si bien la primer palabra es la mas larga, agregarla es facil, ya que no hay otros nodos, entonces el costo principal esta en copiar la cadena, en cambio en otros casos, hay que copiar la cadena, partir nodos y recorrer ejes, por esta razón puede dar mas operaciones que el caso m'aximo.
 
 La experiencia 5 vuelve a poner de minifiesto lo que observamos anteriormente, es decir que la implementaci'on con arreglos es m'as veloz que la implementaci'on con listas.
 
-Finalmente la experiencia 6 nos muestra como la implementaci'on con arreglos, que se mostr'o claramente m'as r'apida, consume una gran cantidad de memoria m'as que la implementaci'on con listas para todo caso. Llamamos peores casos (para la memoria) a aquellos que todos los nodos del PATRICIA tienen 26 hijos, para que de esta forma se utilice la mayor cantidad de memoria posible, y el caso promedio a todo caso tal que los nodos tienen una cantidad de hijos promedio. Esta experiencia confirma nuestra previa comparacion entre ambas implementaciones, y es una buena raz'on por la cual podr'ia considerarse, pese a que es m'as lenta, la implementaci'on sobre listas antes que sobre arreglos.
+Finalmente la experiencia 6 nos muestra como la implementaci'on con arreglos, que se mostr'o claramente m'as r'apida, consume 
+una gran cantidad de memoria m'as que la implementaci'on con listas para todo caso. Llamamos peores casos (para la memoria) a 
+aquellos que todos los nodos del PATRICIA tienen 26 hijos, para que de esta forma se utilice la mayor cantidad de memoria 
+posible. Esta experiencia puede resultar algo confusa al saber que una lista doblemente enlazada de 26 elementos deber'ia 
+ocupar mas que un arreglo de 26 punteros. Inmediatamente tendemos a concluir que un patricia completo (26 hijos cada nodo) 
+deber'ia ocupar m'as memoria sobre listas que sobre arreglos, pero no ser'a as'i, pues debemos recordar que las hojas del 
+patricia, cuando lo implementamos sobre listas, contienen listas vacias dentro, y las hojas del patricia cuando lo 
+implementamos sobre arreglos, tienen 26 punteros. Todo esto confirma nuestra previa comparaci'on entre ambas implementaciones, 
+y es una buena raz'on por la cual podr'ia considerarse, pese a que es m'as lenta, la implementaci'on sobre listas antes que 
+sobre arreglos.
 
 A modo de conclusi'on podemos decir en primer lugar que el las experiencias coincidieron con lo calculado te'oricamente. Y por otro lado observamos como cada implementaci'on de los nodos presenta sus ventajas y desventajas, raz'on por la cual para utilizar una u otra implementaci'on debe considerarse el contexto donde se va a usar, es decir, a la hora de utilizar una u otra, es importante plantearse que es mas cr'itico: si el tiempo de respuesta (nodos con arreglos) o la utilizaci'on de la memoria (nodos con listas).

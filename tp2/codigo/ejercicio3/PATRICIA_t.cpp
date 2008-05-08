@@ -30,7 +30,6 @@ void PATRICIA :: agregar(const string& s){
         //si palabraArmada no queda vacia luego de quitarle el prefijo,
         //quiere decir que tengo que partir el eje actual
         if(!palabraArmada.empty()) {
-            bool existia = actual->getExiste();
             size_t longitud = (ejeActual->cadena).length() - palabraArmada.length();
             (ejeActual->cadena).erase(longitud, (ejeActual->cadena).length());
             //ahora ejeActual->cadena tiene la parte final de la palabraArmada
@@ -53,11 +52,10 @@ void PATRICIA :: sacar(const string& s){
     string palabraArmada;
     nodo* actual = raiz;
 
-    //primero bajo por las ramas hasta no econtrar mas prefijo
-    ejeAnterior = bajar(actual, ejeActual, s, palabraArmada);
+    if(pertenece(s)) {
+        //primero bajo por las ramas hasta no econtrar mas prefijo
+        ejeAnterior = bajar(actual, ejeActual, s, palabraArmada);
 
-    //me aseguro de haber encontrado la clave a borrar
-    if(!s.empty() && s == palabraArmada && actual->getExiste()) {
         nodo* anterior = raiz;
         if (ejeAnterior != NULL)
             anterior = ejeAnterior->puntero;
@@ -67,7 +65,7 @@ void PATRICIA :: sacar(const string& s){
             anterior->sacar(ejeActual->cadena);
             delete actual;
 
-            //hago merge del anterior con el actual en caso de haber borrado una hoja 
+            //hago merge del anterior con el actual en caso de haber borrado una hoja
             if ((anterior != NULL) && (anterior->cantHijos() == 1) && (!anterior->getExiste())) {
                 nodo::eje* aux = anterior->primerEje();
 
@@ -95,12 +93,33 @@ void PATRICIA :: sacar(const string& s){
 }
 
 bool PATRICIA :: pertenece(const string& s) const{
+    string::const_iterator it_cadena = s.begin();
     nodo* actual = raiz;
-    nodo::eje* ejeActual;
-    string palabraArmada;
 
-    bajar(actual, ejeActual, s, palabraArmada);
-    return ((s == palabraArmada) && (actual->getExiste()));
+    while(it_cadena != s.end() && !actual->esHoja()) {
+        nodo::eje* ejeActual = actual->ejeQueEmpiezaCon(*it_cadena);
+        if(ejeActual == NULL ){
+            return it_cadena == s.end();
+        }
+        string::const_iterator it_eje = (ejeActual->cadena).begin();
+        while(it_cadena != s.end() &&  it_eje != (ejeActual->cadena).end()) {
+            if(*it_cadena != *it_eje) {
+                return false;
+            }
+            it_cadena++;
+            it_eje++;
+        }
+
+        if(it_eje != (ejeActual->cadena).end()) {
+            return false;
+        }
+
+        actual = ejeActual->puntero;
+    }
+
+    //Si la cadena fue recorrida completamente, termine de recorrer el ultimo eje y el nodo existe,
+    //entonces puedo decir que la cadena pertenece al conjunto
+    return (it_cadena == s.end() && actual->_existe);
 }
 
 unsigned int PATRICIA :: cardinal(void) const{
