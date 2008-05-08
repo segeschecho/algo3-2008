@@ -4,7 +4,7 @@
 Grafo :: Grafo(unsigned nodos, list<pair<unsigned,unsigned> >& relaciones) {
     n = nodos;
     m = 0;
-
+    
     // pido memoria para la matriz de relaciones
     ejes = new bool*[n];
     for(unsigned i = 0; i < n; i++) {

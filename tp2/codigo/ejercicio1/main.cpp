@@ -3,10 +3,17 @@
 #include <string>
 #include <fstream>
 #include <assert.h>
-#define print cout<<
+#define print(a) cout<<a<<endl;
 #include "Grafo.h"
 using namespace std;
 bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned& cantGanadores);
+
+void help() {
+    cout << "Uso ./torneo <infile> <outfile>" << endl;
+    cout << "  o ./torneo (sin parametros)" << endl;
+    cout << "En el caso de la llamada sin parametros se toman los archivos" << endl;
+    cout << "Tp2Ej1.in y Tp2Ej1.out como valores por defecto." << endl;
+}
 
 /* parseo de la entrada, grabacion de la salida */
 int main(int argc, char* argv[])
@@ -18,8 +25,7 @@ int main(int argc, char* argv[])
         ruta="Tp2Ej1.in";
     }
     fstream f (ruta.c_str());
-    // FIXME: hay que poner un chequeo no-abortante aca
-    // y poner un mensaje de error.
+
     assert(f.is_open());
 
     // preparo el archivo de salida
@@ -58,8 +64,8 @@ int main(int argc, char* argv[])
 	    cantGanadores = 0;
 	}
 	else {
-	g = new Grafo(nodos,l);
-    sol =ejercicio1(g,rels,cantGanadores);
+		g = new Grafo(nodos,l);
+    		sol =ejercicio1(g,rels,cantGanadores);
 	}
     	o<<cantGanadores;
     	if( sol != NULL){
@@ -138,11 +144,6 @@ void dfsReverso(Grafo* grafo, unsigned nodo, bool* visitado,list<unsigned>* list
 }
 /* resuelve el ejercicio 1 */
 bool* ejercicio1(Grafo* grafo,unsigned rels, unsigned & cantGanadores){
-    //caso facil: el grafo subyacente no puede ser conexo
-     /*if(rels < grafo->nodos - 1){
-        cantGanadores = 0;
-        return NULL;
-    }*/
     bool* visitado = new bool[grafo->nodos];
 	for(unsigned i = 0; i < grafo->nodos; i++){
 			visitado[i] = false;

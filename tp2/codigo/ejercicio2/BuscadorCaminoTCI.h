@@ -8,7 +8,7 @@
 #include "Grafo.h"
 
 using namespace std;
-
+//TCI: tabulado completo al inicio
 class BuscadorCaminoTCI {
     public:
         BuscadorCaminoTCI(Grafo& grafo);
