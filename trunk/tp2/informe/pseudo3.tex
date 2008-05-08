@@ -53,9 +53,9 @@
 \ENDIF
 	\IF{ si s \textcolor{orange}{$\neq$} `` ''}
 		\STATE agregar un eje con s al nodo actual
-		\STATE poner un nodo al final de ese eje, con el existe en true
+		\STATE poner un nodo al final de ese eje, con el existe en \textcolor{NavyBlue}{Verdadero}
 	\ELSE
-		\STATE setear el existe del nodo actual en true
+		\STATE setear el existe del nodo actual en \textcolor{NavyBlue}{Verdadero}
 	\ENDIF
 \STATE una palabra mas definida
 \end{algorithmic}
@@ -69,17 +69,17 @@
 		\WHILE{no termine de recorrer s, y no llegue a una hoja}
 			\STATE ejeActual \textcolor{orange}{$\leftarrow$}	eje del nodo actual que empieza con la letra de s que estoy mirando
 			\IF{no existe ese eje}
-				\RETURN false
+				\RETURN \textcolor{WildStrawberry}{Falso}
 				\ENDIF
 			\WHILE{no terminamos de ver toda s \textcolor{orange}{$\wedge$} no termine de ver toda la cadena del eje}
 			\IF{difieren en un caracter}
-				\RETURN false
+				\RETURN \textcolor{WildStrawberry}{Falso}
 				\ENDIF
 				\STATE mirar el proximo caracter de s y de la cadena del eje	
 		\ENDWHILE
 		\IF{terminamos de ver s pero me quedaron letras en el eje}
 		\STATE\COMMENT{quiere decir que s muere en la mitad de un eje}
-		\RETURN false
+		\RETURN \textcolor{WildStrawberry}{Falso}
 		\ENDIF
 		\STATE nodoActual \textcolor{orange}{$\leftarrow$} nodo apuntado por el eje actual
 		\ENDWHILE
