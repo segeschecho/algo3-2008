@@ -104,8 +104,13 @@ int main(int argc, char* argv[]) {
             f >> b; b--;
             l.push_back(make_pair(a,b));
         }
-        Grafo g(n, l);
-        BuscadorCaminoTCI b(g);
-        b.guardarCamino(o);
+	if(m >= n -1){
+            Grafo g(n, l);
+            BuscadorCaminoTCI b(g);
+            b.guardarCamino(o);
+	}
+	else{
+	    o << "-1" << endl;
+	} 
     }
 }
