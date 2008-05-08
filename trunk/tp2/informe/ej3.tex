@@ -60,15 +60,16 @@ por ejemplo consideremos la figura \ref{fig:bitExistencia} en este caso si bien 
 mediante el bit de existencia podemos diferenciar si la palabra ``emi'' esta o no definida.
 
 \begin{figure}[H]
-\centering
-\subfigure[La palabra emi no esta definida]{
-\includegraphics[scale=0.5]{./figuras/ej3/bit_existencia.png} }\hspace{1in} 
-\centering
-\subfigure[La palabra emi si esta definida]{
-\includegraphics[scale=0.5]{./figuras/ej3/bit_existencia1.png} }
-\setcounter{subfigure}{0}
-\caption{Utilizaci'on del bit de existencia}
-\label{fig:bitExistencia}
+    \centering
+    \subfigure[La palabra emi no esta definida]{
+        \includegraphics[scale=0.5]{./figuras/ej3/bit_existencia.png} }
+    \hspace{1in} 
+    \centering
+    \subfigure[La palabra emi si esta definida]{
+        \includegraphics[scale=0.5]{./figuras/ej3/bit_existencia1.png} }
+    \setcounter{subfigure}{0}
+    \caption{Utilizaci'on del bit de existencia}
+    \label{fig:bitExistencia}
 \end{figure}
 
 En cuanto al PATRICIA, se decidi'o que el mismo contendr'a nodos y no los definir'a dentro. O sea, separamos la estructura de datos 'arbol PATRICIA de la estructura nodo. Esto es as'i pues de este modo se implementa la modularidad que resulta de gran utilidad para implementar el PATRICIA para los diferentes tipos de nodo elegidos.
@@ -87,10 +88,10 @@ Este invariante deber'a conservarse durante todas las funciones.
 PATRICIA nos sugiere un 'arbol formado de un conjunto de palabras dispersas en su estructura, como muestra el siguiente gr'afico.
 
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{./figuras/ej3/ejemplo_patricia.png}
-\caption{Ejemplo de árbol patricia}
-\label{fig:ejemploPatri}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/ejemplo_patricia.png}
+    \caption{Ejemplo de árbol patricia}
+    \label{fig:ejemploPatri}
 \end{figure}
 
 Los nodos rellenos representan a las claves que pertenecen al conjunto. Este 'arbol se va formando a medida que agregamos y sacamos 
@@ -102,21 +103,19 @@ Cuando agregamos un elemento nos enfrentamos ante los siguientes casos:
 \item Se puede agregar el elemento sin tener que partir un eje
 
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso1agregar.png} }
-\caption{ }
-\label{fig:caso1agregar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso1agregar.png}
+    \caption{ }
+    \label{fig:caso1agregar}
 \end{figure}
 
 \item Para agregar un elemento, hay que partir un eje y agregar un nodo
 
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso2agregar.png} }
-\caption{ }
-\label{fig:caso2agregar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso2agregar.png}
+    \caption{ }
+    \label{fig:caso2agregar}
 \end{figure}
 
 \end{itemize}
@@ -142,21 +141,19 @@ prefijos. Esto nos agregar'a dos casos m'as:
 \item Para agregar un elemento hay que simplemente setear el bit de existe
 
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso3agregar.png} }
-\caption{ }
-\label{fig:caso3agregar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso3agregar.png}
+    \caption{ }
+    \label{fig:caso3agregar}
 \end{figure}
 
 \item Para agregar un elemento hay que partir un eje y setear el bit de existe
 \end{itemize}
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso4agregar.png} }
-\caption{ }
-\label{fig:caso4agregar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso4agregar.png} 
+    \caption{ }
+    \label{fig:caso4agregar}
 \end{figure}
 
 Estos dos nuevos casos en realidad podemos resolverlos como derivados de los dos anteriores. Si al bajar por las ramas, la 
@@ -171,21 +168,19 @@ Cuando eliminamos un elemento nos enfrentamos ante los siguientes casos:
 \begin{itemize}
 \item Para sacar un elemento hay que eliminar un nodo y un eje
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso1sacar.png} }
-\caption{ }
-\label{fig:caso1sacar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso1sacar.png}
+    \caption{ }
+    \label{fig:caso1sacar}
 \end{figure}
 
 \item Para sacar un elemento hay que eliminar el nodo con su eje, borrar el padre y concatenar dos ejes
 \end{itemize}
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso2sacar.png} }
-\caption{ }
-\label{fig:caso2sacar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso2sacar.png}
+    \caption{ }
+    \label{fig:caso2sacar}
 \end{figure}
 Para solucionar estos casos comenzamos situ'andonos sobre la ra'iz, y bajando, al igual que agregar. El valor asociado a la clave se encuentra en la hoja, pues el Radix es libre de prefijos, por lo que solo eliminaremos hojas.
 Al borrar una hoja, debemos verificar cuantos hermanos ten'ia. Si ten'ia m'as de un hermano, caeremos en el primer caso, 
@@ -198,21 +193,19 @@ prefijos. Esto nos agregar'a dos casos m'as:
 \begin{itemize}
 \item Para sacar un elemento hay que setear FALSE el bit de existe
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso3sacar.png} }
-\caption{ }
-\label{fig:caso3sacar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso3sacar.png}
+    \caption{ }
+    \label{fig:caso3sacar}
 \end{figure}
 
 \item Para sacar un elemento hay que concatenar dos ejes y borrar un nodo
 
 \begin{figure}[H]
-\centering
-\subfigure[ ]{
-\includegraphics[scale=0.5]{./figuras/ej3/caso4sacar.png} }
-\caption{ }
-\label{fig:caso4sacar}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/ej3/caso4sacar.png}
+    \caption{ }
+    \label{fig:caso4sacar}
 \end{figure}
 
 \end{itemize}
@@ -370,14 +363,19 @@ Primero, lo que hicimos fue contar operaciones al agregar, buscar y borrar eleme
 
 Adem'as medimos los tiempos para agregar conjuntos de palabras en cada una de ellas, de esta forma buscamos comparar cual de las dos implementaciones era mas veloz.
 
-Finalmente consideramos que otro factor que deb'ia ser tenido en cuenta era el espacio que ocupaban ambas estructuras, por esa razon decidimos medir la memoria que consum'ia cada uno al agregar varios conjuntos de palabras. Uno espera que con respecto al tiempo se comporte mejor el trie sobre arreglos, sin embargo tambi'en es de esperarse que ocupe mucha m'as memoria que las listas. Esto sucede por varios motivos:
+Finalmente consideramos que otro factor que deb'ia ser tenido en cuenta era el espacio que ocupaban ambas estructuras, por esa razon decidimos medir la memoria que consum'ia cada uno al agregar varios conjuntos de palabras. Uno espera que con respecto al tiempo se comporte mejor el trie sobre arreglos, sin embargo tambi'en es de esperarse que ocupe mucha m'as memoria que las listas. Esto sucede por varios motivos.
 
 \subsubsection{Cuadro comparativo entre nodo sobre arreglo y nodo sobre listas}
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.6]{./figuras/graficos/ej3/cuadrito.png} 
-\label{fig:cuadrito}
-\end{figure}
+\begin{tabular}{|c|p{6cm}|p{6cm}|}
+    \hline
+             &   \textbf{Arreglos}  & \textbf{Listas}  \\ [2ex]
+    \hline
+    \textbf{Inicialización}  & 26 elementos & 0 elementos (agrega a medida que necesita) \\ [2ex]
+    \textbf{cantElem} & implementado sobre nodo & implementado sobre lista \\ [2ex]
+    \textbf{Punteros} & 26 punteros a eje & punteros al siguiente elemento de la lista (a lo sumo 26) \\ [2ex]
+    \textbf{Indexado} & directo & secuencial \\ [2ex]
+    \hline
+\end{tabular}
 
 Como se dice en el cuadro comparativo, uno de los motivos es la inicializaci'on: el nodo sobre arreglo tendr'a consumido ya 26 elementos apenas se lo inicializa mientras que el nodo sobre lista comenzar'a vac'io y agregar'a hijos a medida que sea necesario. En cuanto a la contabilizaci'on de la cantidad de hijos, el nodo sobre arreglo debe contar con cantElem para poder saber cuantos hijos tiene tal nodo (as'i no tendremos que recorrer el arreglo cada vez que necesitemos saberlo), mientras que el nodo sobre listas no lo tiene, pero viene impl'icito con la lista, pues suponemos que la lista tiene dentro un mecanismo similar para evitar un recorrido innecesario. Hasta aqu'i podr'ia pensarse que la lista ocupar'a m'as lugar que los arreglos, pues cada nodo de la lista debe mantener un puntero al siguiente, pero no es as'i, pues el arreglo tambi'en tiene punteros, y los tiene en cada elemento, pues estamos comparando una lista de ejes con un arreglo punteros a eje.
 
@@ -387,24 +385,24 @@ El espacio utilizado lo medimos con una librer'ia que contiene cuatro headers: h
 
 \subsubsection{Experiencia 1: Cantidad de operaciones al agregar palabras de largo creciente}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{./figuras/graficos/ej3/operacionesAgregar.png} 
-\label{fig:ej3exp1}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/graficos/ej3/operacionesAgregar.png} 
+    \label{fig:ej3exp1}
 \end{figure}
 Los puntos rojos, corresponden a la implementaci'on con listas, los azules con arreglos.
 
 \subsubsection{Experiencia 2: Cantidad de operaciones al buscar palabras de largo creciente}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{./figuras/graficos/ej3/operacionesPertenece.png} 
-\label{fig:ej3exp2}
+    \centering
+    \includegraphics[scale=0.7]{./figuras/graficos/ej3/operacionesPertenece.png} 
+    \label{fig:ej3exp2}
 \end{figure}
 
 \subsubsection{Experiencia 3: Cantidad de operaciones al quitar palabras de largo creciente}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{./figuras/graficos/ej3/operacionesSacar.png} 
-\label{fig:ej3exp3}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/graficos/ej3/operacionesSacar.png} 
+    \label{fig:ej3exp3}
 \end{figure}
 
 %\subsubsection{Experiencia 4: Cantidad de operaciones al agregar palabras menores que alguna ya agregada}
@@ -417,24 +415,24 @@ Los puntos rojos, corresponden a la implementaci'on con listas, los azules con a
 
 \subsubsection{Experiencia 5: Tiempo requerido para agregar diferentes conjuntos de palabras}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{./figuras/graficos/ej3/comparacionArreglosListas.png} 
-\label{fig:ej3exp4}
+    \centering
+    \includegraphics[scale=0.7]{./figuras/graficos/ej3/comparacionArreglosListas.png} 
+    \label{fig:ej3exp4}
 \end{figure}
 En rojo con listas, azul con arreglos.
 
 \subsubsection{Experiencia 6: Cantidad de memoria utilizada para diferentes conjuntos de palabras de caso promedio}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{./figuras/graficos/ej3/memoria.png} 
-\label{fig:ej3exp5}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/graficos/ej3/memoria.png} 
+    \label{fig:ej3exp5}
 \end{figure}
 
 \subsubsection{Experiencia 6: Cantidad de memoria utilizada para diferentes conjuntos de palabras de peor caso}
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.5]{./figuras/graficos/ej3/memoriaPeorCaso.png} 
-\label{fig:ej3exp5}
+    \centering
+    \includegraphics[scale=0.5]{./figuras/graficos/ej3/memoriaPeorCaso.png} 
+    \label{fig:ej3exp5}
 \end{figure}
 
 \subsection{Discusión}
