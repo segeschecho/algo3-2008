@@ -5,7 +5,7 @@ all: ej1
 
 # ejecutables
 ej1: main.cpp Grafo.o 
-	$(CC) $(FLAGS) main.cpp Grafo.o -o torneo
+	$(CC) $(FLAGS) main.cpp Grafo.o -o torneo
 
 # objetos
 Grafo.o: Grafo.cpp Grafo.h
