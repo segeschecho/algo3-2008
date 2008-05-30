@@ -146,7 +146,10 @@ class Dibujo:
             for e in ady[n]:
                 # busco la posicion del nodo adyacente
                 # en la segunda mitad del dibujo
-                p = self.l2.index(e)
+                try:
+                    p = self.l2.index(e)
+                except ValueError:
+                    continue
                 
                 # calculo los cruces que crea este eje
                 if p  != len(self.l2)-1:
