@@ -3,6 +3,11 @@
 
 from sets import Set
 
+
+###########################################
+# Clase GrafoBipartito                    #
+###########################################
+
 class GrafoBipartito:
     def __init__(self, p1, p2, ejes):
         self.ejes = ejes
@@ -62,6 +67,11 @@ class GrafoBipartito:
         return '\n'.join(buf)
 
 
+
+###########################################
+# Clase Dibujo                            #
+###########################################
+
 class Dibujo:
     def __init__(self, g, l1, l2):
         self.g = g
@@ -93,11 +103,11 @@ class Dibujo:
         if self.g != d.g:
             return False
 
-        l1c = [x for x in self.l1 if not x in d.l1]
+        l1c = [x for x in self.l1 if x in d.l1]
         if l1c != d.l1:
             return False
-
-        l2c = [x for x in self.l2 if not x in d.l2]
+        
+        l2c = [x for x in self.l2 if x in d.l2]
         if l2c != d.l2:
             return False
         
@@ -175,6 +185,7 @@ class Dibujo:
         
         return cruces
  
+    
     def __eq__(self, otro):
         return self.l1 == otro.l1 and \
                self.l2 == otro.l2 and \
@@ -198,6 +209,11 @@ class Dibujo:
         return '\n'.join(buf)
 
 
+
+###########################################
+# Clase base para resolvedores            #
+###########################################
+
 class ResolvedorConstructivo:
     def __init__(self, dib):
         self.dibujo = dib
@@ -205,6 +221,11 @@ class ResolvedorConstructivo:
     def resolver(self):
         raise NotImplementedError
 
+
+
+###########################################
+# Tests                                   #
+###########################################
 
 def test_contarCruces():
     g = GrafoBipartito(Set([1,2,3]),
@@ -219,6 +240,26 @@ def test_contarCruces():
     d = Dibujo(g,[1,2,3,4],[5,6,7,8,9])
     assert d.contarCruces() == 16
 
+    g = GrafoBipartito(Set([1,3]),
+                       Set([2,4]),
+                       Set([(3,2)]))
+    d = Dibujo(g,[1,3],[2,4])
+    assert d.contarCruces() == 0
+
+
+def test_esIncrementalDe():
+    g = GrafoBipartito(Set([1,2,3]),
+                       Set([4,5,6]),
+                       Set([(1,4),(2,5),(2,6),(1,5),(3,4),(3,5),(1,6)]))
+    d1 = Dibujo(g,[1,3],[4,5])
+    d2 = Dibujo(g,[1,2,3],[4,5,6])
+    d3 = Dibujo(g,[3,1],[4,5])
+    d4 = Dibujo(g,[1],[4,5])
+    assert d2.esIncrementalDe(d1)
+    assert not d3.esIncrementalDe(d1)
+    assert not d4.esIncrementalDe(d1)
+
 
 if __name__ == '__main__':
     test_contarCruces()
+    test_esIncrementalDe()
