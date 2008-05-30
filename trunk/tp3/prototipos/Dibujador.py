@@ -45,15 +45,16 @@ class DibujadorGrafoBipartito:
                                     (c2, m_sup + l2.index(b) * 2 * self.rn)))
         
         # dibujo los nodos
-        for a,b in ejes:
-            centro = (c1, m_sup + l1.index(a) * 2 * self.rn)
+        for n in l1:
+            centro = (c1, m_sup + l1.index(n) * 2 * self.rn)
             self.scene.add(svg.Circle(centro,self.rn / 2,colorCirculo))
             centro = (centro[0] - self.rn / 7, centro[1] + self.rn / 6)
-            self.scene.add(svg.Text(centro, a))
-            centro = (c2, m_sup + l2.index(b) * 2 * self.rn)
+            self.scene.add(svg.Text(centro, n))
+        for n in l2:
+            centro = (c2, m_sup + l2.index(n) * 2 * self.rn)
             self.scene.add(svg.Circle(centro,self.rn / 2,colorCirculo))
             centro = (centro[0] - self.rn / 7, centro[1] + self.rn / 6)
-            self.scene.add(svg.Text(centro, b))
+            self.scene.add(svg.Text(centro, n))
 
     def grabar(self):
         self.scene.write_svg()
