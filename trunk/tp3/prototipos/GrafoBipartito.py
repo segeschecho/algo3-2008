@@ -137,21 +137,30 @@ class Dibujo:
         # desde el indice i en adelante.
         ejesDesde = [0 for x in self.l2]
 
+        # Buffer para los ejes que agrego con este nodo
+        # (no los puedo poner directamente en ejesDesde porque
+        # estoy asumiendo que no estan al hacer la cuenta de cruces)
+        ejesDesdeTmp = [0 for x in self.l2]
+
+        # Precalculo en un diccionario las posiciones de los
+        # elementos de l2 en la lista l2 (para evitar buscarlos 
+        # siempre cuando necesite saber su posicion)
+        pos = {}
+        for each in range(len(self.l2)):
+            pos[self.l2[each]] = each
+
         for n in self.l1:
-            # buffer para los ejes que agrego con este nodo
-            # (no los puedo poner directamente en ejesDesde porque
-            # estoy asumiendo que no estan al hacer la cuenta de cruces)
-            ejesDesdeTmp = [0 for x in self.l2]
-            
             for e in ady[n]:
-                # busco la posicion del nodo adyacente
-                # en la segunda mitad del dibujo
+                # tomo la posicion del nodo adyacente en l2
                 try:
-                    p = self.l2.index(e)
-                except ValueError:
+                    p = pos[e]
+                except KeyError:
                     continue
                 
                 # calculo los cruces que crea este eje
+                # (el calculo no tiene sentido en caso de que p
+                # sea la ultima posicion de l2, pero en este caso
+                # tampoco agrego cruces ya que no puede haberlos)
                 if p  != len(self.l2)-1:
                     cruces += ejesDesde[p+1]
 
@@ -159,9 +168,10 @@ class Dibujo:
                 for i in range(p+1):
                     ejesDesdeTmp[i] += 1
 
-            # agrego los ejes agregados con el ultimo nodo
+            # agrego los ejes agregados con el ultimo nodo y reseteo
             for i in range(len(self.l2)):
                 ejesDesde[i] += ejesDesdeTmp[i]
+                ejesDesdeTmp[i] = 0
         
         return cruces
  
