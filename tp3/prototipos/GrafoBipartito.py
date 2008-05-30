@@ -22,6 +22,8 @@ class GrafoBipartito:
             raise AssertionError, "Error: p1, p2 y ejes deben ser conjuntos."
         
         # particion valida
+        assert len(p1) > 0, "Error: p1 no puede ser vacío."
+        assert len(p2) > 0, "Error: p2 no puede ser vacío."
         assert len(p1.intersection(p2)) == 0, "Error: la particion no es valida."
 
         # bipartito
@@ -105,11 +107,60 @@ class Dibujo:
     def contarCruces(self):
         if not self.cruces is None:
             return self.cruces
-        else:
-            self.cruces = self._contarCruces()
+        
+        self.cruces = self._contarCruces()
+        return self.cruces
 
     def _contarCruces(self):
-        raise NotImplementedError
+
+        # Armo las listas de adyacencia del grafo
+        ady = {}
+        for n in self.g.p1:
+            ady[n] = []
+        for n in self.g.p2:
+            ady[n] = []
+        for a,b in self.g.ejes:
+            ady[a].append(b)
+            ady[b].append(a)        
+        
+        # Para contar los ejes hago el siguiente algoritmo:
+        # Supongo que tengo ya dispuestos los nodos de l2, y voy
+        # agregando de 1 a len(l1) los nodos que estan en l1.
+
+        # Para cada uno de ellos, agrego sus ejes uno por uno,
+        # contando la cantidad de cruces que se crean al agregarlos
+        # e incrementando asi el valor del contador cruces. 
+        cruces = 0
+
+        # Esta variable auxiliar almacena la cantidad
+        # de ejes (ya elegidos) que inciden en la lista l2
+        # desde el indice i en adelante.
+        ejesDesde = [0 for x in self.l2]
+
+        for n in self.l1:
+            # buffer para los ejes que agrego con este nodo
+            # (no los puedo poner directamente en ejesDesde porque
+            # estoy asumiendo que no estan al hacer la cuenta de cruces)
+            ejesDesdeTmp = [0 for x in self.l2]
+            
+            for e in ady[n]:
+                # busco la posicion del nodo adyacente
+                # en la segunda mitad del dibujo
+                p = self.l2.index(e)
+                
+                # calculo los cruces que crea este eje
+                if p  != len(self.l2)-1:
+                    cruces += ejesDesde[p+1]
+
+                # incremento ejesDesdeLoc desde 0 hasta p
+                for i in range(p+1):
+                    ejesDesdeTmp[i] += 1
+
+            # agrego los ejes agregados con el ultimo nodo
+            for i in range(len(self.l2)):
+                ejesDesde[i] += ejesDesdeTmp[i]
+        
+        return cruces
  
     def __eq__(self, otro):
         return self.l1 == otro.l1 and \
@@ -129,8 +180,7 @@ class Dibujo:
         buf.append("------------------------")
         buf.append("L1: %s" % self.l1)
         buf.append("L2: %s" % self.l2)
-        buf.append("Cruces: no se todavía!")
-        #buf.append("Cruces: %s" % self.contarCruces())
+        buf.append("Cruces: %s" % self.contarCruces())
         buf.append("------------------------")
         return '\n'.join(buf)
 
@@ -141,3 +191,21 @@ class ResolvedorConstructivo:
 
     def resolver(self):
         raise NotImplementedError
+
+
+def test_contarCruces():
+    g = GrafoBipartito(Set([1,2,3]),
+                       Set([4,5,6]),
+                       Set([(1,4),(2,5),(2,6),(1,5),(3,4),(3,5),(1,6)]))
+    d = Dibujo(g, [1,2,3],[4,5,6])
+    assert d.contarCruces() == 7
+
+    g = GrafoBipartito(Set([1,2,3,4]),
+                       Set([5,6,7,8,9]),
+                       Set([(4,6),(4,5),(3,5),(3,7),(2,6),(1,7),(3,8),(2,9),(4,8)]))
+    d = Dibujo(g,[1,2,3,4],[5,6,7,8,9])
+    assert d.contarCruces() == 16
+
+
+if __name__ == '__main__':
+    test_contarCruces()
