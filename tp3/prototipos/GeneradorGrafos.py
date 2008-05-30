@@ -6,6 +6,8 @@ from GrafoBipartito import GrafoBipartito, Dibujo
 from sets import Set
 import random
 
+
+
 def generarGrafoBipartitoAleatorio(n1=10,n2=10,m=25):
     p1 = range(n1)
     p2 = range(n1,n1+n2)
@@ -22,8 +24,8 @@ def generarGrafoBipartitoAleatorio(n1=10,n2=10,m=25):
     return GrafoBipartito(Set(p1),Set(p2),Set(ejes))
 
 def generarDibujoAleatorio(g, n1=5, n2=5):
-    assert n1 <= len(g.p1)
-    assert n2 <= len(g.p2)
+    assert n1 <= len(g.p1), "Error: El dibujo no puede tener más nodos que la particion p1."
+    assert n2 <= len(g.p2), "Error: El dibujo no puede tener más nodos que la particion p2."
 
     p1 = list(g.p1)
     p2 = list(g.p2)
@@ -32,7 +34,15 @@ def generarDibujoAleatorio(g, n1=5, n2=5):
 
     return Dibujo(g, l1, l2)
 
-g = generarGrafoBipartitoAleatorio()
-d = generarDibujoAleatorio(g)
-print g
-print d
+
+
+
+def test_generadores():
+    g = generarGrafoBipartitoAleatorio(n1=10, n2=10, m=25)
+    d = generarDibujoAleatorio(g, n1=5, n2=5)
+    print g
+    print
+    print d
+
+if __name__ == '__main__':
+    test_generadores()
