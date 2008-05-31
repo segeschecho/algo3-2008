@@ -64,7 +64,7 @@ class DibujadorGrafoBipartito:
         self.scene.display(prog="display")
 
 
-def test():
+def test_Dibujador():
     g = GrafoBipartito(Set([1,2,3,4]),
                        Set([5,6,7,8,9]),
                        Set([(4,6),(4,5),(3,5),(3,7),(2,6),(1,7),(3,8),(2,9),(4,8)]))
@@ -73,4 +73,4 @@ def test():
     dib.grabarYMostrar()
 
 if __name__ == '__main__':
-    test()
+    test_Dibujador()
