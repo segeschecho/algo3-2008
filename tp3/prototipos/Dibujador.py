@@ -56,8 +56,8 @@ class DibujadorGrafoBipartito:
             centro = (centro[0] - self.rn / 7, centro[1] + self.rn / 6)
             self.scene.add(svg.Text(centro, n))
 
-    def grabar(self):
-        self.scene.write_svg()
+    def grabar(self, filename=None):
+        self.scene.write_svg(filename=filename)
 
     def grabarYMostrar(self):
         self.scene.write_svg()
@@ -71,6 +71,7 @@ def test_Dibujador():
     d = Dibujo(g,[1,2,3,4],[5,6,7,8,9])
     dib = DibujadorGrafoBipartito(d)
     dib.grabarYMostrar()
+    dib.grabar('test.svg')
 
 if __name__ == '__main__':
     test_Dibujador()
