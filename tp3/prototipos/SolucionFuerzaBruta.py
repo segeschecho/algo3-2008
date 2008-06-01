@@ -1,29 +1,27 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from GrafoBipartito import Dibujo
+from GrafoBipartito import Dibujo, ResolvedorConstructivo
 
 import sys
 
 #import psyco
 #psyco.full()
 
-class ResolvedorFuerzaBruta:
-    def __init__(self, dib):
-        self.dibujo = dib
-
+class ResolvedorFuerzaBruta(ResolvedorConstructivo):
     def resolver(self):
         # busco los nodos que quedan por posicionar
         q1 = [x for x in self.dibujo.g.p1 if not x in self.dibujo.l1]
         q2 = [x for x in self.dibujo.g.p2 if not x in self.dibujo.l2]
-
+        
 
         # genero todos los posibles dibujos
         print "Generando soluciones posibles...     ",
         sys.stdout.flush()
         combs = combinaciones(self.dibujo.l1, self.dibujo.l2, q1, q2)
-        print "Listo! (total: %s)" % len(combs)
-        
+        print "Listo! (total: %s)" % len(combs) 
+
+
         # elijo el mejor
         print "Eligiendo solución óptima...         ",
         sys.stdout.flush()
@@ -42,6 +40,7 @@ class ResolvedorFuerzaBruta:
 
 
 def combinaciones(fijo1, fijo2, movil1, movil2):
+    '''Construye todos los dibujos incrementales sobre fijo1, fijo2'''
     if movil1 == [] and movil2 == []:
         return [(fijo1, fijo2)]
 
@@ -72,6 +71,18 @@ def combinaciones(fijo1, fijo2, movil1, movil2):
             nuevo_fijo1.insert(i, cab)
             ops += combinaciones(nuevo_fijo1, fijo2, cola, movil2)
         return ops
+
+
+def cuantasCombinaciones(fijo1, fijo2, movil1, movil2):
+    '''Calcula el cardinal del universo de soluciones posibles de esta instancia'''
+    f1, f2, m1, m2 = map(len, [fijo1, fijo2, movil1, movil2])
+    
+    c = 1
+    for i in range(m1):
+        c *= f1 + i + 1 
+    for i in range(m2):
+        c *= f2 + i + 1
+    return c
 
 
 def test_resolvedorFuerzaBruta():
