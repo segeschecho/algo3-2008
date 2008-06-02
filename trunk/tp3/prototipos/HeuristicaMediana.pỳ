@@ -1,7 +1,7 @@
 from GrafoBipartito import *
 from GeneradorGrafos import *
 from Dibujador import *
-from heuristicaSplitting import *
+from HeuristicaSplitting import *
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
 class heuristicaMediana (ResolvedorConstructivo):
