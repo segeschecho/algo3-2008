@@ -141,42 +141,42 @@ class heuristicaMediana (ResolvedorConstructivo):
             if crucesAux < cruces:
                 p2=p2Aux
                 cruces=crucesAux
-        for i in range(len(p1)-1):
-            if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
-                comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
-                swapeado=self.crucesEntre(p1[i+1],p1[i],p1,p2,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p1[i]
-                    p1[i]=p1[i+1]
-                    p1[i+1]=aux
-        for i in range(len(p2)-1):
-            if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
-                comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
-                swapeado=self.crucesEntre(p2[i+1],p2[i],p2,p1,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p2[i]
-                    p2[i]=p2[i+1]
-                    p2[i+1]=aux
-        listita = range(1,len(p1))
-        listita.reverse()
-        for i in listita:
-            if p1[i] not in marcadosl1 or p1[i-1] not in marcadosl1:
-                comoEsta=self.crucesEntre(p1[i-1],p1[i],p1,p2,losEjesDe)
-                swapeado=self.crucesEntre(p1[i],p1[i-1],p1,p2,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p1[i]
-                    p1[i]=p1[i-1]
-                    p1[i-1]=aux
-        listita = range(1,len(p2))
-        listita.reverse()
-        for i in listita:
-            if p2[i] not in marcadosl2 or p2[i-1] not in marcadosl2:
-                comoEsta=self.crucesEntre(p2[i-1],p2[i],p2,p1,losEjesDe)
-                swapeado=self.crucesEntre(p2[i],p2[i-1],p2,p1,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p2[i]
-                    p2[i]=p2[i-1]
-                    p2[i-1]=aux
+            for i in range(len(p1)-1):
+                if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
+                    swapeado=self.crucesEntre(p1[i+1],p1[i],p1,p2,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1[i]
+                        p1[i]=p1[i+1]
+                        p1[i+1]=aux
+            for i in range(len(p2)-1):
+                if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
+                    swapeado=self.crucesEntre(p2[i+1],p2[i],p2,p1,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2[i]
+                        p2[i]=p2[i+1]
+                        p2[i+1]=aux
+            listita = range(1,len(p1))
+            listita.reverse()
+            for i in listita:
+                if p1[i] not in marcadosl1 or p1[i-1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1[i-1],p1[i],p1,p2,losEjesDe)
+                    swapeado=self.crucesEntre(p1[i],p1[i-1],p1,p2,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1[i]
+                        p1[i]=p1[i-1]
+                        p1[i-1]=aux
+            listita = range(1,len(p2))
+            listita.reverse()
+            for i in listita:
+                if p2[i] not in marcadosl2 or p2[i-1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2[i-1],p2[i],p2,p1,losEjesDe)
+                    swapeado=self.crucesEntre(p2[i],p2[i-1],p2,p1,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2[i]
+                        p2[i]=p2[i-1]
+                        p2[i-1]=aux
         print "cruces ahora", self.contarCrucesAcumTree(p1,p2,ejes)
         return Dibujo(self.dibujo.g,p1,p2)
     
@@ -189,8 +189,12 @@ class heuristicaMediana (ResolvedorConstructivo):
     def qsort(self,p1,p2,marcados,losEjesDe,mediana):
         if len(p1) < 2:
             return p1
-        indPivot = random.randint(0,len(p1)-1)
-        pivot = p1[indPivot]            
+        marcadosEnP1=[x for x in p1 if x in marcados]
+        if marcadosEnP1 == []:
+           indPivot = random.randint(0,len(p1)-1)
+           pivot = p1[indPivot]
+        else:
+           pivot = marcadosEnP1[random.randint(0,len(marcadosEnP1)-1)] 
         izq=[x for x in p1 if self.compararNodos(pivot,x,p1,p2,marcados,losEjesDe,mediana)]
         der=[y for y in p1 if y != pivot and not (self.compararNodos(pivot,y,p1,p2,marcados,losEjesDe,mediana))]
         return self.qsort(izq,p2,marcados,losEjesDe,mediana) + [pivot] + self.qsort(der,p2,marcados,losEjesDe, mediana)
@@ -219,7 +223,7 @@ class heuristicaMediana (ResolvedorConstructivo):
 ##dib=Dibujo(a,[1,2,3],[6])
 ##f = heuristicaMediana(dib)
 ##dibujo = f.resolver()
-g = generarGrafoBipartitoAleatorio(4,10,30)
+g = generarGrafoBipartitoAleatorio(10,10,50)
 d = generarDibujoAleatorio(g,2,4)
 f = heuristicaMediana(d)
 dibujo=f.resolver()
@@ -232,5 +236,5 @@ print  "cruces heurMed", dibujo.contarCruces()
 print  "cruces heurSplit", dibujo1.contarCruces()
 print  "cruces heurFede", dibujo2.contarCruces()
 print  "cruces heurDenso", dibujo3.contarCruces()
-dibu = DibujadorGrafoBipartito( dibujo1)
+dibu = DibujadorGrafoBipartito( dibujo)
 dibu.grabarYMostrar()
