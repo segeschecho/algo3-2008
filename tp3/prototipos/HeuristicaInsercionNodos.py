@@ -3,37 +3,70 @@ from GrafoBipartito import ResolvedorConstructivo, Dibujo
 from Dibujador import DibujadorGrafoBipartito
 from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
 
-class HeuristicaEmilio(ResolvedorConstructivo):
+class HeuristicaInsercionNodos(ResolvedorConstructivo):
 
     def resolver(self):
         d = self.dibujo
         g = self.dibujo.g
-        res1 = d.l1
-        res2 = d.l2
+
+        res1 = d.l1[:]
+        res2 = d.l2[:]
         movilesEnV1 = [x for x in g.p1 if not x in d.l1] # los moviles de V1
         movilesEnV2 = [x for x in g.p2 if not x in d.l2] # los moviles de V2
-        print 'noMovilesV1 =', res1
-        print 'noMovilesV2 =', res2
-        print 'movilesEnV1 =', movilesEnV1
-        print 'movilesEnV2 =', movilesEnV2
+        print 'no marcados V1', movilesEnV1
+        print 'no marcados V2', movilesEnV2
+        print 'marcados V1', res1
+        print 'marcados V2', res2
 
-        for v in movilesEnV1:
-            dibujo = self._insertarNodo(v, res1, True)
-        print 'res1 =', res1
+        dibujo = Dibujo(g,res1,res2)
 
-        for v in movilesEnV2:
-            dibujo = self._insertarNodo(v, res2, False)
-        print 'res2 =', res2
-        
+        while(movilesEnV1 != [] or movilesEnV2 != []):
+            if movilesEnV1 != [] :
+                v = movilesEnV1.pop(self._indiceMenorGrado(movilesEnV1, dibujo))
+                dibujo = self._insertarNodo(v, res1, True, dibujo)
+            if movilesEnV2 != [] :
+                v = movilesEnV2.pop(self._indiceMenorGrado(movilesEnV2, dibujo))
+                dibujo = self._insertarNodo(v, res2, False, dibujo)
+            #print dibujo
+        # ahora intento mejorar el resultado con un sort loco por cruces entre pares de nodos
+        for i in range(len(res1)-1):
+            ejesDe = {}
+            v1 = res1[i]
+            v2 = res1[i+1]
+            if v1 not in d.l1 or v2 not in d.l1:
+                ejesDe[v1] = [x[1] for x in dibujo.g.ejes if x[0] == v1]
+                ejesDe[v2] = [x[1] for x in dibujo.g.ejes if x[0] == v2]
+                #print (v1,v2), self._crucesEntre(v1, v2, res1, res2, ejesDe)
+                #print (v2,v1), self._crucesEntre(v2, v1, res1, res2, ejesDe)
+                if self._crucesEntre(v1, v2, res1, res2, ejesDe) > self._crucesEntre(v2, v1, res1, res2, ejesDe):
+                    #print res1
+                    res1=self._swap(res1.index(v1),res1.index(v2),res1)
+                    #print res1
+                    dibujo = Dibujo(g, res1, res2)
+        #print "res2",res2  
+
+        print dibujo
         return dibujo
 
-    def _insertarNodo(self, v, Vi, agregoEnV1):
-        Vi.insert(0, v)
-        aux = Vi
-        if(agregoEnV1):
-            mejorDibujo = Dibujo(g, Vi, d.l2)
+    def _indiceMenorGrado(self, movilesEnVi, dibujo):
+        indiceMenor = 0
+        ejesMenor = [x for x in dibujo.g.ejes if x[0] == 0 or x[1] == 0]
+        for i in range(len(movilesEnVi)):
+            ejesIesimo = [x for x in dibujo.g.ejes if x[0] == movilesEnVi[i] or x[1] == movilesEnVi[i]]
+            if len(ejesIesimo) < len(ejesMenor):
+                indiceMayor = i
+                ejesMenor = ejesIesimo
+
+        return indiceMenor
+
+    def _insertarNodo(self, v, Vi, agregoEnV1, dibujo):
+        g = self.dibujo.g
+        aux = Vi[:]
+        aux.insert(0, v)
+        if agregoEnV1:
+            mejorDibujo = Dibujo(g, aux, dibujo.l2[:])
         else:
-            mejorDibujo = Dibujo(g, d.l1, Vi)
+            mejorDibujo = Dibujo(g, dibujo.l1[:], aux)
 
         crucesMejorDibujo = mejorDibujo.contarCruces()
 
@@ -41,42 +74,47 @@ class HeuristicaEmilio(ResolvedorConstructivo):
             aux.remove(v)
             aux.insert(i + 1, v)
             if(agregoEnV1):
-                dibujoCandidato = Dibujo(g, aux, d.l2)
+                dibujoCandidato = Dibujo(g, aux, dibujo.l2[:])
             else:
-                dibujoCandidato = Dibujo(g, d.l1, aux)
+                dibujoCandidato = Dibujo(g, dibujo.l1[:], aux)
 
             crucesCandidato = dibujoCandidato.contarCruces()
+            #print 'crucesCandidato', crucesCandidato
+            #print 'crucesMejorDibujo', crucesMejorDibujo
             if crucesCandidato < crucesMejorDibujo :
-                Vi = aux
                 mejorDibujo = dibujoCandidato
                 crucesMejorDibujo = crucesCandidato
-
+        #print 'mejorDibujo', mejorDibujo
+        #print 'cruces posta', mejorDibujo._contarCruces()
+        print res1
+        if agregoEnV1:
+            Vi = mejorDibujo.l1[:]
+        else:
+            Vi = mejorDibujo.l2[:]
         return mejorDibujo
-#        crucesMejorPos = self._contarCruces(v, Vi, 0)
-        
-#        for i in range(len(Vi) + 1):
-#            crucesActual = self._contarCruces(v, Vi, i)
-#            print 'Cruces de', v, 'en la posicion', i, '=', crucesActual
-#            if crucesActual < crucesMejorPos:
-#                crucesMejorPos = crucesActual
-#                mejorPos = i
 
-#    def _contarCruces(self,v, Vi, pos): 
-#        ejes = self.dibujo.g.ejes
+    def _crucesEntre(self,x,y,p1,p2,losEjesDe):
+         indiceX = p1.index(x)
+         indiceY = p1.index(y)
+         acum = 0
+         for each in losEjesDe[x]:
+             indiceEach = p2.index(each)
+             for each2 in losEjesDe[y]:
+                  if indiceEach > p2.index(each2):
+                     acum += 1
+         return acum
 
-#        ejesDeV = [x for x in ejes if (x[0] == v or  x[1] == v)]
-#        res = 0
-#        for e in [x for x in ejes if not x in ejesDeV]:
-#            for ev in ejesDeV:
-#                if (e[0] > ev[0] and e[1] < ev[1]) or (e[0] < ev[0] and e[1] > ev[1]):
-#                    res = res + 1
-#        return res
+    def _swap(self,i, j, lista):
+        aux = lista[i] 
+        lista[i] = lista[j]
+        lista[j] = aux
+        return lista
 
 if __name__ == '__main__':
-    g = generarGrafoBipartitoAleatorio(2,2,3)
+    g = generarGrafoBipartitoAleatorio(5,5,7)
     print 'nodos =', g.p1
     print 'nodos =', g.p2
     print 'ejes =', g.ejes
-    d = generarDibujoAleatorio(g,1,1)
-    resultado = HeuristicaEmilio(d).resolver()
+    dib = generarDibujoAleatorio(g,2,4)
+    resultado = HeuristicaInsercionNodos(dib).resolver()
     DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')
