@@ -13,37 +13,38 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
         res2 = d.l2[:]
         movilesEnV1 = [x for x in g.p1 if not x in d.l1] # los moviles de V1
         movilesEnV2 = [x for x in g.p2 if not x in d.l2] # los moviles de V2
-        print 'no marcados V1', movilesEnV1
-        print 'no marcados V2', movilesEnV2
-        print 'marcados V1', res1
-        print 'marcados V2', res2
+        print 'movibles V1', movilesEnV1
+        print 'movibles V2', movilesEnV2
+        print 'no movibles V1', res1
+        print 'no movibles V2', res2
 
-        dibujo = Dibujo(g,res1,res2)
+        dibujo = Dibujo(g,res1[:],res2[:])
 
         while(movilesEnV1 != [] or movilesEnV2 != []):
             if movilesEnV1 != [] :
                 v = movilesEnV1.pop(self._indiceMenorGrado(movilesEnV1, dibujo))
                 dibujo = self._insertarNodo(v, res1, True, dibujo)
+                res1 = dibujo.l1[:]
             if movilesEnV2 != [] :
                 v = movilesEnV2.pop(self._indiceMenorGrado(movilesEnV2, dibujo))
                 dibujo = self._insertarNodo(v, res2, False, dibujo)
-            #print dibujo
+                res2 = dibujo.l2[:]
+
+        print dibujo
         # ahora intento mejorar el resultado con un sort loco por cruces entre pares de nodos
         for i in range(len(res1)-1):
             ejesDe = {}
             v1 = res1[i]
             v2 = res1[i+1]
-            if v1 not in d.l1 or v2 not in d.l1:
+            if v1 not in d.l1 or v2 not in d.l1:    # verifico que v1 y v2 se puedan mover
                 ejesDe[v1] = [x[1] for x in dibujo.g.ejes if x[0] == v1]
                 ejesDe[v2] = [x[1] for x in dibujo.g.ejes if x[0] == v2]
-                #print (v1,v2), self._crucesEntre(v1, v2, res1, res2, ejesDe)
-                #print (v2,v1), self._crucesEntre(v2, v1, res1, res2, ejesDe)
+                print (v1,v2), self._crucesEntre(v1, v2, res1, res2, ejesDe)
+                print (v2,v1), self._crucesEntre(v2, v1, res1, res2, ejesDe)
                 if self._crucesEntre(v1, v2, res1, res2, ejesDe) > self._crucesEntre(v2, v1, res1, res2, ejesDe):
-                    #print res1
-                    res1=self._swap(res1.index(v1),res1.index(v2),res1)
-                    #print res1
+                    res1[i] = v2
+                    res1[i+1] = v1
                     dibujo = Dibujo(g, res1, res2)
-        #print "res2",res2  
 
         print dibujo
         return dibujo
@@ -64,9 +65,9 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
         aux = Vi[:]
         aux.insert(0, v)
         if agregoEnV1:
-            mejorDibujo = Dibujo(g, aux, dibujo.l2[:])
+            mejorDibujo = Dibujo(g, aux[:], dibujo.l2)
         else:
-            mejorDibujo = Dibujo(g, dibujo.l1[:], aux)
+            mejorDibujo = Dibujo(g, dibujo.l1, aux[:])
 
         crucesMejorDibujo = mejorDibujo.contarCruces()
 
@@ -74,9 +75,9 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
             aux.remove(v)
             aux.insert(i + 1, v)
             if(agregoEnV1):
-                dibujoCandidato = Dibujo(g, aux, dibujo.l2[:])
+                dibujoCandidato = Dibujo(g, aux[:], dibujo.l2)
             else:
-                dibujoCandidato = Dibujo(g, dibujo.l1[:], aux)
+                dibujoCandidato = Dibujo(g, dibujo.l1, aux[:])
 
             crucesCandidato = dibujoCandidato.contarCruces()
             #print 'crucesCandidato', crucesCandidato
@@ -86,11 +87,6 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
                 crucesMejorDibujo = crucesCandidato
         #print 'mejorDibujo', mejorDibujo
         #print 'cruces posta', mejorDibujo._contarCruces()
-        print res1
-        if agregoEnV1:
-            Vi = mejorDibujo.l1[:]
-        else:
-            Vi = mejorDibujo.l2[:]
         return mejorDibujo
 
     def _crucesEntre(self,x,y,p1,p2,losEjesDe):
@@ -104,14 +100,8 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
                      acum += 1
          return acum
 
-    def _swap(self,i, j, lista):
-        aux = lista[i] 
-        lista[i] = lista[j]
-        lista[j] = aux
-        return lista
-
 if __name__ == '__main__':
-    g = generarGrafoBipartitoAleatorio(5,5,7)
+    g = generarGrafoBipartitoAleatorio(10,10,30)
     print 'nodos =', g.p1
     print 'nodos =', g.p2
     print 'ejes =', g.ejes
