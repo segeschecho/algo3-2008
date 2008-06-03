@@ -4,7 +4,7 @@ from Dibujador import *
 from HeuristicaSplitting import *
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
-class heuristicaMediana (ResolvedorConstructivo):
+class HeuristicaMediana (ResolvedorConstructivo):
     def contarCrucesAcumTree(self,p1,p2,ejes):
         if len(p1) < len(p2):
             return self.contarCrucesAcumTree(p2,p1,[(y,x) for (x,y) in ejes])
@@ -219,22 +219,4 @@ class heuristicaMediana (ResolvedorConstructivo):
             return (ordenado[len(ordenado)/2] + ordenado[(len(ordenado)-1)/2]) / 2
                 
         
-##a = GrafoBipartito(Set([1,2,3,4,5]),Set([6,7,8]),Set([(1,8),(2,6),(3,7),(4,7),(4,6),(5,8)]))
-##dib=Dibujo(a,[1,2,3],[6])
-##f = heuristicaMediana(dib)
-##dibujo = f.resolver()
-g = generarGrafoBipartitoAleatorio(10,10,50)
-d = generarDibujoAleatorio(g,2,4)
-f = heuristicaMediana(d)
-dibujo=f.resolver()
-f1= heuristicaSplitting(d)
-f2=heuristicaFede(d)
-dibujo1=f1.resolver()
-dibujo2=f2.resolver()
-dibujo3=f2.grafoDenso()
-print  "cruces heurMed", dibujo.contarCruces()
-print  "cruces heurSplit", dibujo1.contarCruces()
-print  "cruces heurFede", dibujo2.contarCruces()
-print  "cruces heurDenso", dibujo3.contarCruces()
-dibu = DibujadorGrafoBipartito( dibujo)
-dibu.grabarYMostrar()
+
