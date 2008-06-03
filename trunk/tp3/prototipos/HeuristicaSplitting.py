@@ -1,13 +1,12 @@
 from GrafoBipartito import *
 from GeneradorGrafos import *
 from Dibujador import *
-from heuristicaFede import *
 import random
 import psyco
 psyco.full()
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
-class heuristicaSplitting (ResolvedorConstructivo):
+class HeuristicaSplitting (ResolvedorConstructivo):
     def contarCrucesAcumTree(self,p1,p2,ejes):
         if len(p1) < len(p2):
             return self.contarCrucesAcumTree(p2,p1,[(y,x) for (x,y) in ejes])
@@ -87,40 +86,22 @@ class heuristicaSplitting (ResolvedorConstructivo):
     def compararNodos(self,x,y,p1,p2,marcados,losEjesDe):
         if x in marcados and y in marcados:
             return marcados.index(y) < marcados.index(x)
-        elif y in marcados:
-            k = marcados.index(y)
-            if k != 0:
-                caca=None
-                if self.crucesEntre(marcados[k-1],x,p1,p2,losEjesDe) < self.crucesEntre(x,marcados[k-1],p1,p2,losEjesDe):
-                    return self.crucesEntre(y,x,p1,p2,losEjesDe) < self.crucesEntre(x,y,p1,p2,losEjesDe)
-                else:
-                    return True
-            else:
-                 return self.crucesEntre(y,x,p1,p2,losEjesDe) < self.crucesEntre(x,y,p1,p2,losEjesDe)
         else:
-            return self.crucesEntre(y,x,p1,p2,losEjesDe) < self.crucesEntre(x,y,p1,p2,losEjesDe)
-    
-    def qsort(self,p1,p2,marcados,losEjesDe,gradosNoNulos,grados):
+            return self.crucesEntre(x,y,p1,p2,losEjesDe) > self.crucesEntre(y,x,p1,p2,losEjesDe)
+
+    def qsort(self,p1,p2,marcados,losEjesDe):
         if len(p1) < 2:
             return p1
-        indPivot = random.randint(0,len(p1)-1)
-        pivot = p1[indPivot]
-        if pivot not in gradosNoNulos:
-            i = 0
-            pivot=None
-            while i < len(gradosNoNulos):
-                if gradosNoNulos[i] in p1 :
-                    pivot = gradosNoNulos[i]
-                    break
-                i+=1
-            if pivot == None:
-                return p1
-            
+        marcadosEnP1=[x for x in p1 if x in marcados]
+        if marcadosEnP1 == []:
+           indPivot = random.randint(0,len(p1)-1)
+           pivot = p1[indPivot]
+        else:
+           pivot = marcadosEnP1[random.randint(0,len(marcadosEnP1)-1)] 
         izq=[x for x in p1 if self.compararNodos(pivot,x,p1,p2,marcados,losEjesDe)]
         der=[y for y in p1 if y != pivot and not (self.compararNodos(pivot,y,p1,p2,marcados,losEjesDe))]
-        return self.qsort(izq,p2,marcados,losEjesDe, gradosNoNulos,grados) + [pivot] + self.qsort(der,p2,marcados,losEjesDe, gradosNoNulos,grados)
-    
-        
+        return self.qsort(izq,p2,marcados,losEjesDe) + [pivot] + self.qsort(der,p2,marcados,losEjesDe)
+            
     def resolver(self):
         p1 = list(self.dibujo.g.p1)
         p2 = list(self.dibujo.g.p2)
@@ -162,12 +143,12 @@ class heuristicaSplitting (ResolvedorConstructivo):
         p2=marcadosl2+v2
         print cruces
         for i in range(len(p1)*len(p2)-2*abs(len(p1)*len(p2)/2 - len(ejes))):
-            p1Aux=self.qsort(p1,p2,marcadosl1,losEjesDe,gradosNoNulosP1,grados)
+            p1Aux=self.qsort(p1,p2,marcadosl1,losEjesDe)
             crucesAux=self.contarCrucesAcumTree(p1Aux,p2,ejes)
             if crucesAux < cruces:
                 p1=p1Aux
                 cruces=crucesAux
-            p2Aux=self.qsort(p2,p1,marcadosl2,losEjesDe,gradosNoNulosP2,grados)
+            p2Aux=self.qsort(p2,p1,marcadosl2,losEjesDe)
             crucesAux = self.contarCrucesAcumTree(p1,p2Aux,ejes)
             if crucesAux < cruces:
                 p2=p2Aux
@@ -212,22 +193,4 @@ class heuristicaSplitting (ResolvedorConstructivo):
         print self.contarCrucesAcumTree(p1,p2,ejes)
         return Dibujo(grafo,p1,p2)
 
-##a = GrafoBipartito(Set([1,2,3,4,5]),Set([6,7,8]),Set([(1,6),(2,6),(2,7),(3,7),(4,8),(1,8)]))
-##dib=Dibujo(a,[1,2,3],[6])
-##f = heuristicaSplitting(dib)
-##dibujo = f.resolver()
-g = generarGrafoBipartitoAleatorio(5,5,14)
-d = generarDibujoAleatorio(g,3,2)
-f = heuristicaSplitting(d)
-f1 = heuristicaFede(d)
-dibujo=f.resolver()
-print "terminooooooooooooooo split"
-dibujo2=f1.grafoDenso()
-dibujo1=f1.resolver()
-print  "cruces heursplit", dibujo.contarCruces()
-print "cruces heurfed", dibujo1.contarCruces()
-print "cruces grafoDenso", dibujo2.contarCruces()
-dibu = DibujadorGrafoBipartito( dibujo)
-dibu.grabarYMostrar()
-        
         
