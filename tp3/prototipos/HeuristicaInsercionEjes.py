@@ -3,7 +3,7 @@ from GeneradorGrafos import *
 from Dibujador import *
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
-class HeuristicaInsercionEjes2 (ResolvedorConstructivo):
+class HeuristicaInsercionEjes (ResolvedorConstructivo):
     
     def contarCrucesAcumTree2(self,p1,p2,losEjes):
         if len(p1) < len(p2):
@@ -317,7 +317,7 @@ if __name__ == '__main__':
    print 'nodos =', g.p2
    print 'ejes =', g.ejes
    dib = generarDibujoAleatorio(g,2,4)
-   resultado = HeuristicaInsercionEjes2(dib).resolver()
+   resultado = HeuristicaInsercionEjes(dib).resolver()
    DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')
 
 
