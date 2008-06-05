@@ -75,7 +75,13 @@ def combinaciones(fijo1, fijo2, movil1, movil2):
 
 def cuantasCombinaciones(fijo1, fijo2, movil1, movil2):
     '''Calcula el cardinal del universo de soluciones posibles de esta instancia'''
-    f1, f2, m1, m2 = map(len, [fijo1, fijo2, movil1, movil2])
+    if isinstance(fijo1, list) and \
+       isinstance(fijo2, list) and \
+       isinstance(movil1, list) and \
+       isinstance(movil2, list):
+        f1, f2, m1, m2 = map(len, [fijo1, fijo2, movil1, movil2])
+    else:
+        f1, f2, m1, m2 = fijo1, fijo2, movil1, movil2
     
     c = 1
     for i in range(m1):
