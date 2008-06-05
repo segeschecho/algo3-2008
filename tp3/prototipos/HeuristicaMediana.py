@@ -5,8 +5,9 @@ from Dibujador import *
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
 class HeuristicaMediana (ResolvedorConstructivo):
-    
+
     def crucesEntre(self,x,y,p1,p2,losEjesDe):
+
          indiceX = p1.index(x)
          indiceY = p1.index(y)
     ##     if indiceX < indiceY:
@@ -24,45 +25,42 @@ class HeuristicaMediana (ResolvedorConstructivo):
                  #    acum += 1
          return acum
 
-    
     def resolver(self):
-    # Mariconadas
-        p1 = list(self.dibujo.g.p1)
-        p2 = list(self.dibujo.g.p2)
         grafo = self.dibujo.g
         dibujo=self.dibujo
-        #separo a los q ya estan en el dibujo (son los q tengo q manteer ordenados)
-        marcadosl1 = list(self.dibujo.l1)
-        print marcadosl1
-        marcadosl2 = list(self.dibujo.l2)
-        print marcadosl2
-        #obtengo los que tengo que poner (los q me dieron para agregar)
-        v1 = [x for x in p1 if x not in marcadosl1]
-        v2 = [y for y in p2 if y not in marcadosl2]
-        #meto a todos los nodos en un "dibujo"
-        p1Parcial = marcadosl1 + v1
-        p2Parcial = marcadosl2 + v2
-        #agarro los ejes del grafo
+        # separo a los q ya estan en el dibujo (son los q tengo q mantener ordenados)
+        noMovilesV1 = list(self.dibujo.l1)
+        noMovilesV2 = list(self.dibujo.l2)
+        # obtengo los que tengo que poner (los q me dieron para agregar)
+        movilesV1 = [x for x in self.dibujo.g.p1 if x not in noMovilesV1]
+        movilesV2 = [y for y in self.dibujo.g.p2 if y not in noMovilesV2]
+
+        # meto a todos los nodos en un "dibujo"
+        p1Parcial = noMovilesV1 + movilesV1
+        p2Parcial = noMovilesV2 + movilesV2
+
+        # me construyo un diccionario de nodo a nodo que indica el eje
         ejes = list(grafo.ejes)
-        losEjesDe ={}
+        losEjesDe = {}
         for each in (p1Parcial+p2Parcial):
-            losEjesDe[each]=[]
+            losEjesDe[each] = []
         for (x,y) in ejes:
-            losEjesDe[x]+=[y]
-            losEjesDe[y]+=[x]
-        indice={}
+            losEjesDe[x] += [y]
+            losEjesDe[y] += [x]
+
+        # armo un diccionario de indices, me va a servir para el bucket sort
+        indice = {}
         for i in range(len(p2Parcial)):
-            indice[p2Parcial[i]]=i
+            indice[p2Parcial[i]] = i
         for i in range(len(p1Parcial)):
-            indice[p1Parcial[i]]=i
-        medianasp1={}
-        medianasp2={}
-        p1=p1Parcial
-        p2=p2Parcial
-        cruces =  contarCrucesAcumTree(p1,p2,ejes)
-        
-        movilesV1 = [x for x in self.dibujo.g.p1 if not x in self.dibujo.l1] # los moviles de V1
-        movilesV2 = [x for x in self.dibujo.g.p2 if not x in self.dibujo.l2] # los moviles de V2
+            indice[p1Parcial[i]] = i
+
+        medianasp1 = {}
+        medianasp2 = {}
+        p1 = p1Parcial
+        p2 = p2Parcial
+        cruces = contarCrucesAcumTree(p1,p2,ejes)
+
         for each in range(5):
             for each in p1:
                 medianasp1[each]=self.calcularMediana(each,losEjesDe,indice,p2)
@@ -70,7 +68,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
                 indice[p2[i]]=i
             for i in range(len(p1Parcial)):
                 indice[p1[i]]=i
-            p1Aux=self.qsort2(p1,p2,movilesV1, marcadosl1,losEjesDe,medianasp1)
+            p1Aux=self.qsort2(p1,p2,movilesV1, noMovilesV1,losEjesDe,medianasp1)
             crucesAux=contarCrucesAcumTree(p1Aux,p2,ejes)
             p1=p1Aux
             cruces=crucesAux
@@ -78,12 +76,12 @@ class HeuristicaMediana (ResolvedorConstructivo):
                 medianasp2[each]=self.calcularMediana(each,losEjesDe,indice,p1)
             print p2
             print medianasp2
-            p2Aux=self.qsort2(p2,p1,movilesV2, marcadosl2,losEjesDe,medianasp2)
+            p2Aux=self.qsort2(p2,p1,movilesV2, noMovilesV2,losEjesDe,medianasp2)
             crucesAux = contarCrucesAcumTree(p1,p2Aux,ejes)
             p2=p2Aux
             cruces=crucesAux
         for i in range(len(p1)-1):
-            if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
+            if p1[i] not in noMovilesV1 or p1[i+1] not in noMovilesV1:
                 comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
                 swapeado=self.crucesEntre(p1[i+1],p1[i],p1,p2,losEjesDe)
                 if swapeado < comoEsta:
@@ -92,7 +90,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
                     p1[i+1]=aux
                     cambio=True
         for i in range(len(p2)-1):
-            if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
+            if p2[i] not in noMovilesV2 or p2[i+1] not in noMovilesV2:
                 comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
                 swapeado=self.crucesEntre(p2[i+1],p2[i],p2,p1,losEjesDe)
                 if swapeado < comoEsta:
@@ -103,7 +101,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
         listita = range(1,len(p1))
         listita.reverse()
         for i in listita:
-            if p1[i] not in marcadosl1 or p1[i-1] not in marcadosl1:
+            if p1[i] not in noMovilesV1 or p1[i-1] not in noMovilesV1:
                 comoEsta=self.crucesEntre(p1[i-1],p1[i],p1,p2,losEjesDe)
                 swapeado=self.crucesEntre(p1[i],p1[i-1],p1,p2,losEjesDe)
                 if swapeado < comoEsta:
@@ -114,7 +112,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
         listita = range(1,len(p2))
         listita.reverse()
         for i in listita:
-            if p2[i] not in marcadosl2 or p2[i-1] not in marcadosl2:
+            if p2[i] not in noMovilesV2 or p2[i-1] not in noMovilesV2:
                 comoEsta=self.crucesEntre(p2[i-1],p2[i],p2,p1,losEjesDe)
                 swapeado=self.crucesEntre(p2[i],p2[i-1],p2,p1,losEjesDe)
                 if swapeado < comoEsta:
@@ -123,19 +121,6 @@ class HeuristicaMediana (ResolvedorConstructivo):
                     p2[i-1]=aux
                     cambio=True
         return Dibujo(self.dibujo.g,p1,p2)
-
-    def qsort(self,p1,p2,marcados,losEjesDe,mediana):
-        if len(p1) < 2:
-            return p1
-        marcadosEnP1=[x for x in p1 if x in marcados]
-        if marcadosEnP1 == []:
-           indPivot = random.randint(0,len(p1)-1)
-           pivot = p1[indPivot]
-        else:
-           pivot = marcadosEnP1[random.randint(0,len(marcadosEnP1)-1)] 
-        izq=[x for x in p1 if self.compararNodos(pivot,x,p1,p2,marcados,losEjesDe,mediana)]
-        der=[y for y in p1 if y != pivot and not (self.compararNodos(pivot,y,p1,p2,marcados,losEjesDe,mediana))]
-        return self.qsort(izq,p2,marcados,losEjesDe,mediana) + [pivot] + self.qsort(der,p2,marcados,losEjesDe, mediana)
 
     def compararNodos(self,x,y,marcados,mediana):
         if x in marcados and y in marcados:
@@ -169,7 +154,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
 
         return self.qsort2(p1,p2, izq, noMoviles[0:indPivNoMov],losEjesDe,mediana) + [pivot] + self.qsort2(p1,p2,der, noMoviles[indPivNoMov:],losEjesDe, mediana)
 
-    def calcularMediana(self,x,losEjesDe,indice,otros):
+    def calcularMediana(self,x,losEjesDe,indice,otros):  
         lista=[0]*len(otros)
         for each in losEjesDe[x]:
             #print indice[each]
@@ -185,6 +170,87 @@ class HeuristicaMediana (ResolvedorConstructivo):
         else:
             #print ordenado
             return (ordenado[len(ordenado)/2] + ordenado[(len(ordenado)-1)/2]) / 2
+
+    #def resolver(self):
+        #p1 = list(self.dibujo.g.p1)
+        #p2 = list(self.dibujo.g.p2)
+        #grafo = self.dibujo.g
+        #dibujo=self.dibujo
+        ##separo a los q ya estan en el dibujo (son los q tengo q manteer ordenados)
+        #noMovilesV1 = list(self.dibujo.l1)
+        #noMovilesV2 = list(self.dibujo.l2)
+        ##obtengo los que tengo que poner (los q me dieron para agregar)
+        #movilesV1 = [x for x in p1 if x not in noMovilesV1]
+        #movilesV2 = [y for y in p2 if y not in noMovilesV2]
+
+        ## me armo el diccionario de los ejes
+        #losEjesDe = {}
+        #for v in p1 :
+            #losEjesDe[v] = [x[1] for x in grafo.ejes if x[0] == v]
+        #for v in p2 :
+            #losEjesDe[v] = [x[0] for x in grafo.ejes if x[1] == v]
+
+        ## calculo medianas
+        #mediana = {}
+        #for v in p1 :
+            #mediana[v] = self.calcularMediana(v, losEjesDe, p2)
+        #for v in p2 :
+            #mediana[v] = self.calcularMediana(v, losEjesDe, p1)
+
+        ## quicksorteo el lado de V1 y V2
+        #resV1 = qsort(p1, p2, movilesV1, noMovilesV1, losEjesDe, mediana)
+        #resV2 = qsort(p1, p2, movilesV2, noMovilesV2, losEjesDe, mediana)
+
+        #return Dibujo(grafo, resV1, resV2)
+
+    ##def compararNodos(self,x,y,marcados,mediana):
+        ##if x in marcados and y in marcados:
+            ##return marcados.index(y) < marcados.index(x)
+        ##else:
+            ##return mediana[y] < mediana[x]
+
+    #def qsort(self, p1, p2, moviles, noMoviles, losEjesDe, mediana):
+        #if len(moviles) == 0:           # caso base
+            #return noMoviles
+
+        ## elijo el PIVOT
+        #pivot = moviles[0]
+        #for v in moviles :
+            #if len(losEjesDe[pivot]) > len(losEjesDe[v]):
+               #pivot = v
+
+        ## divido los moviles para llamar recursivamente
+        #izq=[x for x in moviles if mediana[x] < mediana[pivot]]
+        #der=[x for x in moviles if x != pivot and mediana[x] >= mediana[pivot]]
+
+        ## ubico el PIVOT entre los no moviles
+        #indPivNoMov = 0
+        #crucesActual = contarCrucesAcumTree2(moviles,p2,losEjesDe)
+        #crucesMejor = crucesActual
+        #for i in range(len(noMoviles)) :
+            #crucesActual = crucesActual + contarCrucesAcumTree2(p2, [noMoviles[i], pivot],losEjesDe) -  contarCrucesAcumTree2(p2, [pivot,noMoviles[i]],losEjesDe)
+            #if crucesActual < crucesMejor :
+                #crucesMejor = crucesActual
+                #indPivNoMov = i + 1
+
+        #return self.qsort2(p1,p2, izq, noMoviles[0:indPivNoMov],losEjesDe,mediana) + [pivot] + self.qsort2(p1,p2,der, noMoviles[indPivNoMov:],losEjesDe, mediana)
+
+    #def calcularMediana(self, v, losEjesDe, pi):
+        #indices = [0]*len(pi)
+
+        #for w in losEjesDe[v]:
+            #indices[self.dibujo.g.p2.index(w)] = 1
+
+        #ordenado = []
+        #for i in range(len(indices)):
+            #if indices[i]==1:
+                #ordenado.append(i)
+        #if ordenado == []:
+            #return 0
+        #if len(ordenado) % 2 == 1:
+            #return ordenado[len(ordenado)/2]
+        #else:
+            #return (ordenado[len(ordenado)/2] + ordenado[(len(ordenado)-1)/2]) / 2
 
 if __name__ == '__main__':
     g = generarGrafoBipartitoAleatorio(6,6,10)
