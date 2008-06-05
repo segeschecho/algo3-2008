@@ -2,7 +2,6 @@ from GrafoBipartito import ResolvedorConstructivo, Dibujo
 from Dibujador import DibujadorGrafoBipartito
 from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
 from HeuristicaInsercionNodos import *
-
 from HeuristicaInsercionEjes import *
 from HeuristicaRemocion import *
 from HeuristicaMediana import *
