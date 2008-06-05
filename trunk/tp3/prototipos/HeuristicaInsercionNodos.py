@@ -13,10 +13,6 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
         res2 = d.l2[:]
         movilesEnV1 = [x for x in g.p1 if not x in d.l1] # los moviles de V1
         movilesEnV2 = [x for x in g.p2 if not x in d.l2] # los moviles de V2
-        print 'movibles V1', movilesEnV1
-        print 'movibles V2', movilesEnV2
-        print 'no movibles V1', res1
-        print 'no movibles V2', res2
 
         dibujo = Dibujo(g,res1[:],res2[:])
 
@@ -30,7 +26,7 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
                 dibujo = self._insertarNodo(v, res2, False, dibujo)
                 res2 = dibujo.l2[:]
 
-        print dibujo
+
         # ahora intento mejorar el resultado con un sort loco por cruces entre pares de nodos
         for i in range(len(res1)-1):
             ejesDe = {}
@@ -39,14 +35,13 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
             if v1 not in d.l1 or v2 not in d.l1:    # verifico que v1 y v2 se puedan mover
                 ejesDe[v1] = [x[1] for x in dibujo.g.ejes if x[0] == v1]
                 ejesDe[v2] = [x[1] for x in dibujo.g.ejes if x[0] == v2]
-                print (v1,v2), self._crucesEntre(v1, v2, res1, res2, ejesDe)
-                print (v2,v1), self._crucesEntre(v2, v1, res1, res2, ejesDe)
+                
                 if self._crucesEntre(v1, v2, res1, res2, ejesDe) > self._crucesEntre(v2, v1, res1, res2, ejesDe):
                     res1[i] = v2
                     res1[i+1] = v1
                     dibujo = Dibujo(g, res1, res2)
 
-        print dibujo
+        
         return dibujo
 
     def _indiceMenorGrado(self, movilesEnVi, dibujo):

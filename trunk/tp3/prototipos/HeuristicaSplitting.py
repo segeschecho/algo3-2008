@@ -7,6 +7,62 @@ psyco.full()
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
 class HeuristicaSplitting (ResolvedorConstructivo):
+    def contarCrucesAcumTree2(self,p1,p2,losEjes):
+        if len(p1) < len(p2):
+            return self.contarCrucesAcumTree2(p2,p1,losEjes)
+        lista=[]
+        indice1={}
+        indice2={}
+        for i in range(len(p1)):
+            indice1[p1[i]]=i
+        for i in range(len(p2)):
+            indice2[p2[i]]=i
+        #radixsort de los ejes
+        for each in p2:
+            for each2 in losEjes[each]:
+                lista.append((indice1[each2],indice2[each]))
+        b1=[[] for each in range(len(p2))]
+        b2=[[] for each in range(len(p1))]
+        for each in lista:
+            b1[each[1]].append(each)
+        lista2=[]
+        for i in range(len(b1)):
+            lista2.extend(b1[i])
+        for each in lista2:
+            b2[each[0]].append(each)
+        lista2=[]
+        for i in range(len(b2)):
+            lista2.extend(b2[i])
+        sur=[]
+        for each in lista2:
+            sur.append(each[1])
+        primerIndice=1
+        while primerIndice <= len(p2):
+            primerIndice *= 2
+        arbol = [0]*(2*primerIndice - 1)
+        primerIndice -=1
+        cruces=0
+        for i in range(len(sur)):
+            indice=sur[i]+primerIndice
+            try:
+                arbol[indice]+=1
+            except:
+                print "arbol",arbol
+                print "indice",indice
+                print "sur",sur
+                print "i",i
+                print "p1", p1
+                print "p2",p2
+                print "b1", b1
+                print "b2", b2
+            while(indice > 0):
+                if (indice % 2 == 1):
+                    cruces += arbol[indice+1]
+                indice=(indice -1)/2
+                arbol[indice]+=1
+        return cruces
+
+    
     def contarCrucesAcumTree(self,p1,p2,ejes):
         if len(p1) < len(p2):
             return self.contarCrucesAcumTree(p2,p1,[(y,x) for (x,y) in ejes])
@@ -87,7 +143,7 @@ class HeuristicaSplitting (ResolvedorConstructivo):
         if x in marcados and y in marcados:
             return marcados.index(y) < marcados.index(x)
         else:
-            return self.crucesEntre(x,y,p1,p2,losEjesDe) > self.crucesEntre(y,x,p1,p2,losEjesDe)
+            return self.contarCrucesAcumTree2(p2,[x,y],losEjesDe) > self.contarCrucesAcumTree2(p2,[y,x],losEjesDe)
 
     def qsort(self,p1,p2,marcados,losEjesDe):
         if len(p1) < 2:
@@ -142,7 +198,8 @@ class HeuristicaSplitting (ResolvedorConstructivo):
         p1=marcadosl1+v1
         p2=marcadosl2+v2
         print cruces
-        for i in range(len(p1)*len(p2)-2*abs(len(p1)*len(p2)/2 - len(ejes))):
+        cambio=True
+        for i in xrange(len(p1)*len(p2)-2*abs(len(p1)*len(p2)/2 - len(ejes))):
             p1Aux=self.qsort(p1,p2,marcadosl1,losEjesDe)
             crucesAux=self.contarCrucesAcumTree(p1Aux,p2,ejes)
             if crucesAux < cruces:
@@ -153,44 +210,98 @@ class HeuristicaSplitting (ResolvedorConstructivo):
             if crucesAux < cruces:
                 p2=p2Aux
                 cruces=crucesAux
-            
-        for i in range(len(p1)-1):
-            if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
-                comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
-                swapeado=self.crucesEntre(p1[i+1],p1[i],p1,p2,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p1[i]
-                    p1[i]=p1[i+1]
-                    p1[i+1]=aux
-        for i in range(len(p2)-1):
-            if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
-                comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
-                swapeado=self.crucesEntre(p2[i+1],p2[i],p2,p1,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p2[i]
-                    p2[i]=p2[i+1]
-                    p2[i+1]=aux
-        listita = range(1,len(p1))
-        listita.reverse()
-        for i in listita:
-            if p1[i] not in marcadosl1 or p1[i-1] not in marcadosl1:
-                comoEsta=self.crucesEntre(p1[i-1],p1[i],p1,p2,losEjesDe)
-                swapeado=self.crucesEntre(p1[i],p1[i-1],p1,p2,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p1[i]
-                    p1[i]=p1[i-1]
-                    p1[i-1]=aux
-        listita = range(1,len(p2))
-        listita.reverse()
-        for i in listita:
-            if p2[i] not in marcadosl2 or p2[i-1] not in marcadosl2:
-                comoEsta=self.crucesEntre(p2[i-1],p2[i],p2,p1,losEjesDe)
-                swapeado=self.crucesEntre(p2[i],p2[i-1],p2,p1,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p2[i]
-                    p2[i]=p2[i-1]
-                    p2[i-1]=aux
+        cambio = True
+        while cambio:
+            cambio=False
+            for i in range(len(p1)-1):
+                if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
+                    swapeado=self.crucesEntre(p1[i+1],p1[i],p1,p2,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1[i]
+                        p1[i]=p1[i+1]
+                        p1[i+1]=aux
+                        cambio = True
+            for i in range(len(p2)-1):
+                if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
+                    swapeado=self.crucesEntre(p2[i+1],p2[i],p2,p1,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2[i]
+                        p2[i]=p2[i+1]
+                        p2[i+1]=aux
+                        cambio = True
+            listita = range(1,len(p1))
+            listita.reverse()
+            for i in listita:
+                if p1[i] not in marcadosl1 or p1[i-1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1[i-1],p1[i],p1,p2,losEjesDe)
+                    swapeado=self.crucesEntre(p1[i],p1[i-1],p1,p2,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1[i]
+                        p1[i]=p1[i-1]
+                        p1[i-1]=aux
+                        cambio = True
+            listita = range(1,len(p2))
+            listita.reverse()
+            for i in listita:
+                if p2[i] not in marcadosl2 or p2[i-1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2[i-1],p2[i],p2,p1,losEjesDe)
+                    swapeado=self.crucesEntre(p2[i],p2[i-1],p2,p1,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2[i]
+                        p2[i]=p2[i-1]
+                        p2[i-1]=aux
+                        cambio = True
+            for i in range(len(p1)-1):
+                if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
+                    swapeado=self.crucesEntre(p1[i+1],p1[i],p1,p2,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1[i]
+                        p1[i]=p1[i+1]
+                        p1[i+1]=aux
+                        cambio = True
+            for i in range(len(p2)-1):
+                if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
+                    swapeado=self.crucesEntre(p2[i+1],p2[i],p2,p1,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2[i]
+                        p2[i]=p2[i+1]
+                        cambio = True
+                        p2[i+1]=aux
+            listita = range(1,len(p1))
+            listita.reverse()
+            for i in listita:
+                if p1[i] not in marcadosl1 or p1[i-1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1[i-1],p1[i],p1,p2,losEjesDe)
+                    swapeado=self.crucesEntre(p1[i],p1[i-1],p1,p2,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1[i]
+                        p1[i]=p1[i-1]
+                        p1[i-1]=aux
+                        cambio = True
+            listita = range(1,len(p2))
+            listita.reverse()
+            for i in listita:
+                if p2[i] not in marcadosl2 or p2[i-1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2[i-1],p2[i],p2,p1,losEjesDe)
+                    swapeado=self.crucesEntre(p2[i],p2[i-1],p2,p1,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2[i]
+                        p2[i]=p2[i-1]
+                        p2[i-1]=aux
+                        cambio = True
         print self.contarCrucesAcumTree(p1,p2,ejes)
         return Dibujo(grafo,p1,p2)
 
         
+if __name__ == '__main__':
+   g = generarGrafoBipartitoAleatorio(10,10,70)
+   print 'nodos =', g.p1
+   print 'nodos =', g.p2
+   print 'ejes =', g.ejes
+   dib = generarDibujoAleatorio(g,6,7)
+   resultado = HeuristicaSplitting(dib).resolver()
+   DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')

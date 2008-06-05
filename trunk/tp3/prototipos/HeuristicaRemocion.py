@@ -55,6 +55,7 @@ class HeuristicaRemocion (ResolvedorConstructivo):
                 print "p2",p2
                 print "b1", b1
                 print "b2", b2
+                abort
             while(indice > 0):
                 if (indice % 2 == 1):
                     cruces += arbol[indice+1]
@@ -112,15 +113,11 @@ class HeuristicaRemocion (ResolvedorConstructivo):
          # Mariconadas
         p1 = list(self.dibujo.g.p1)
         p2 = list(self.dibujo.g.p2)
-        print p1
-        print p2
         grafo = self.dibujo.g
         dibujo=self.dibujo
         #separo a los q ya estan en el dibujo (son los q tengo q manteer ordenados)
         marcadosl1 = list(self.dibujo.l1)
-        print "marcados",marcadosl1
         marcadosl2 = list(self.dibujo.l2)
-        print "marcados2",marcadosl2
         #obtengo los que tengo que poner (los q me dieron para agregar)
         v1 = [x for x in p1 if x not in marcadosl1]
         v2 = [y for y in p2 if y not in marcadosl2]
@@ -135,7 +132,6 @@ class HeuristicaRemocion (ResolvedorConstructivo):
                 todosLosEjes.append((each,each1))
         ejesASacar=[x for x in todosLosEjes if x not in ejes]
         cruces=self.contarCrucesAcumTree(p1Parcial,p2Parcial,todosLosEjes)
-        print "al incicio " ,cruces
         for each in ejesASacar:
             (x,y) = each
             cantCruces = None
@@ -159,7 +155,7 @@ class HeuristicaRemocion (ResolvedorConstructivo):
             p1Parcial.insert(pos[0],x)
             p2Parcial.insert(pos[1],y)
         cruces=self.contarCrucesAcumTree(p1Parcial,p2Parcial,todosLosEjes)
-        print "el denso logro",cruces
+        
         losEjesDe={}
         for each in p1Parcial:
             losEjesDe[each]=[]
@@ -168,44 +164,50 @@ class HeuristicaRemocion (ResolvedorConstructivo):
         for each in ejes:
             losEjesDe[each[0]].append(each[1])
             losEjesDe[each[1]].append(each[0])
-    
-        for i in range(len(p1Parcial)-1):
-            if p1Parcial[i] not in marcadosl1 or p1Parcial[i+1] not in marcadosl1:
-                comoEsta=self.crucesEntre(p1Parcial[i],p1Parcial[i+1],p1Parcial,p2Parcial,losEjesDe)
-                swapeado=self.crucesEntre(p1Parcial[i+1],p1Parcial[i],p1Parcial,p2Parcial,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p1Parcial[i]
-                    p1Parcial[i]=p1Parcial[i+1]
-                    p1Parcial[i+1]=aux
-        for i in range(len(p2Parcial)-1):
-            if p2Parcial[i] not in marcadosl2 or p2Parcial[i+1] not in marcadosl2:
-                comoEsta=self.crucesEntre(p2Parcial[i],p2Parcial[i+1],p2Parcial,p1Parcial,losEjesDe)
-                swapeado=self.crucesEntre(p2Parcial[i+1],p2Parcial[i],p2Parcial,p1Parcial,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p2Parcial[i]
-                    p2Parcial[i]=p2Parcial[i+1]
-                    p2Parcial[i+1]=aux
-        listita = range(1,len(p1Parcial))
-        listita.reverse()
-        for i in listita:
-            if p1Parcial[i] not in marcadosl1 or p1Parcial[i-1] not in marcadosl1:
-                comoEsta=self.crucesEntre(p1Parcial[i-1],p1Parcial[i],p1Parcial,p2Parcial,losEjesDe)
-                swapeado=self.crucesEntre(p1Parcial[i],p1Parcial[i-1],p1Parcial,p2Parcial,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p1Parcial[i]
-                    p1Parcial[i]=p1Parcial[i-1]
-                    p1Parcial[i-1]=aux
-        listita = range(1,len(p2Parcial))
-        listita.reverse()
-        for i in listita:
-            if p2Parcial[i] not in marcadosl2 or p2Parcial[i-1] not in marcadosl2:
-                comoEsta=self.crucesEntre(p2Parcial[i-1],p2Parcial[i],p2Parcial,p1Parcial,losEjesDe)
-                swapeado=self.crucesEntre(p2Parcial[i],p2Parcial[i-1],p2Parcial,p1Parcial,losEjesDe)
-                if swapeado < comoEsta:
-                    aux=p2Parcial[i]
-                    p2Parcial[i]=p2Parcial[i-1]
-                    p2Parcial[i-1]=aux
-        print "se mejoro a :", self.contarCrucesAcumTree(p1Parcial,p2Parcial,todosLosEjes)
+        cambio =True
+        while(cambio):
+            cambio = False
+            for i in range(len(p1Parcial)-1):
+                if p1Parcial[i] not in marcadosl1 or p1Parcial[i+1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1Parcial[i],p1Parcial[i+1],p1Parcial,p2Parcial,losEjesDe)
+                    swapeado=self.crucesEntre(p1Parcial[i+1],p1Parcial[i],p1Parcial,p2Parcial,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1Parcial[i]
+                        p1Parcial[i]=p1Parcial[i+1]
+                        p1Parcial[i+1]=aux
+                        cambio =True
+            for i in range(len(p2Parcial)-1):
+                if p2Parcial[i] not in marcadosl2 or p2Parcial[i+1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2Parcial[i],p2Parcial[i+1],p2Parcial,p1Parcial,losEjesDe)
+                    swapeado=self.crucesEntre(p2Parcial[i+1],p2Parcial[i],p2Parcial,p1Parcial,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2Parcial[i]
+                        p2Parcial[i]=p2Parcial[i+1]
+                        p2Parcial[i+1]=aux
+                        cambio =True
+            listita = range(1,len(p1Parcial))
+            listita.reverse()
+            for i in listita:
+                if p1Parcial[i] not in marcadosl1 or p1Parcial[i-1] not in marcadosl1:
+                    comoEsta=self.crucesEntre(p1Parcial[i-1],p1Parcial[i],p1Parcial,p2Parcial,losEjesDe)
+                    swapeado=self.crucesEntre(p1Parcial[i],p1Parcial[i-1],p1Parcial,p2Parcial,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p1Parcial[i]
+                        p1Parcial[i]=p1Parcial[i-1]
+                        p1Parcial[i-1]=aux
+                        cambio =True
+            listita = range(1,len(p2Parcial))
+            listita.reverse()
+            for i in listita:
+                if p2Parcial[i] not in marcadosl2 or p2Parcial[i-1] not in marcadosl2:
+                    comoEsta=self.crucesEntre(p2Parcial[i-1],p2Parcial[i],p2Parcial,p1Parcial,losEjesDe)
+                    swapeado=self.crucesEntre(p2Parcial[i],p2Parcial[i-1],p2Parcial,p1Parcial,losEjesDe)
+                    if swapeado < comoEsta:
+                        aux=p2Parcial[i]
+                        p2Parcial[i]=p2Parcial[i-1]
+                        p2Parcial[i-1]=aux
+                        cambio =True
+        
         return Dibujo(grafo,p1Parcial,p2Parcial)
     
 if __name__ == '__main__':
