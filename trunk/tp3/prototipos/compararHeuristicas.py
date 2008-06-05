@@ -6,7 +6,8 @@ from HeuristicaInsercionEjes import *
 from HeuristicaRemocion import *
 from HeuristicaMediana import *
 from HeuristicaSplitting import *
-
+import psyco 
+psyco.full()
 
 def testear(n1,n2,n3,n4,m,k=1):
     
@@ -25,12 +26,12 @@ def testear(n1,n2,n3,n4,m,k=1):
 ##    DibujadorGrafoBipartito(resultado5).grabar('splitting.svg')
 ##    DibujadorGrafoBipartito(resultado6).grabar('swap.svg')
 ##    DibujadorGrafoBipartito(resultado7).grabar('insercionEjes2.svg')
-##    print "resultado inserccionNodos: ", resultado1.contarCruces(), "cruces"
-##    print "resultado inserccionEjes:  ", resultado2.contarCruces(), "cruces"
-##    print "resultado remocion:        ", resultado3.contarCruces(), "cruces"
-##    print "resultado mediana:         ", resultado4.contarCruces(), "cruces"
-##    print "resultado splitting:       ", resultado5.contarCruces(), "cruces"
-##    print "resultado swap:            ", resultado6.contarCruces(), "cruces"
+    print "resultado inserccionNodos: ", resultado1.contarCruces(), "cruces"
+    print "resultado inserccionEjes:  ", resultado2.contarCruces(), "cruces"
+      #print "resultado remocion:        ", resultado3.contarCruces(), "cruces"
+    print "resultado mediana:         ", resultado4.contarCruces(), "cruces"
+    print "resultado splitting:       ", resultado5.contarCruces(), "cruces"
+##      print "resultado swap:            ", resultado6.contarCruces(), "cruces"
 ##    print "resultado inserccionEjes2: ", resultado7.contarCruces(), "cruces"
     
     return (resultado1.contarCruces(),resultado2.contarCruces(),resultado3.contarCruces(),resultado4.contarCruces(),resultado5.contarCruces())

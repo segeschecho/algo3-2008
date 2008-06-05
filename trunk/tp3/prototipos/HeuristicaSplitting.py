@@ -24,24 +24,70 @@ class HeuristicaSplitting (ResolvedorConstructivo):
                  #    acum += 1
          return acum
 
-    def compararNodos(self,x,y,p1,p2,marcados,losEjesDe):
-        if x in marcados and y in marcados:
-            return marcados.index(y) < marcados.index(x)
-        else:
+    def compararNodos(self,x,y,p2,losEjesDe):
             return contarCrucesAcumTree2(p2,[x,y],losEjesDe) > contarCrucesAcumTree2(p2,[y,x],losEjesDe)
+    
+    def vMayorGrado(self,v1,losEjesDe):
+        mejorVi = v1[0]
+        mayorGrado = len(losEjesDe[mejorVi])
+        for each in v1:
+            grado = len(losEjesDe[each])
+            if mayorGrado < grado:
+                mayorGrado = grado
+                mejorVi = each
+        return mejorVi
+            
+    def qsort(self,v1,p2,marcados,losEjesDe):
+        if v1 == []:
+            return marcados
+        
+        if len(v1) < 2:
+            pivote = v1[0]
+            marcadosAux = [pivote]+marcados
 
-    def qsort(self,p1,p2,marcados,losEjesDe):
-        if len(p1) < 2:
-            return p1
-        marcadosEnP1=[x for x in p1 if x in marcados]
-        if marcadosEnP1 == []:
-           indPivot = random.randint(0,len(p1)-1)
-           pivot = p1[indPivot]
-        else:
-           pivot = marcadosEnP1[random.randint(0,len(marcadosEnP1)-1)] 
-        izq=[x for x in p1 if self.compararNodos(pivot,x,p1,p2,marcados,losEjesDe)]
-        der=[y for y in p1 if y != pivot and not (self.compararNodos(pivot,y,p1,p2,marcados,losEjesDe))]
-        return self.qsort(izq,p2,marcados,losEjesDe) + [pivot] + self.qsort(der,p2,marcados,losEjesDe)
+            minCruces = contarCrucesAcumTree2(p2,marcadosAux,losEjesDe)
+            crucesActual = minCruces
+            mejorIndice = 0
+            
+            for i in range(len(marcadosAux)-1):
+                
+                crucesPreSwap = contarCrucesAcumTree2(p2,[marcadosAux[i],marcadosAux[i+1]],losEjesDe)
+                aux = marcadosAux[i+1]
+                marcadosAux[i+1]=marcadosAux[i]
+                marcadosAux[i]=aux
+                crucesPostSwap =  contarCrucesAcumTree2(p2,[marcadosAux[i],marcadosAux[i+1]],losEjesDe)
+                crucesActual =  crucesActual - crucesPreSwap + crucesPostSwap
+                if crucesActual < minCruces:
+                    minCruces = crucesActual
+                    mejorIndice = i + 1
+
+            marcadosAux.remove(pivote)
+            marcadosAux.insert(mejorIndice,pivote)
+            return marcadosAux
+                
+        pivote = self.vMayorGrado(v1,losEjesDe)
+
+        izq = [x for x in v1 if self.compararNodos(pivote,x,p2,losEjesDe)]
+        der = [y for y in v1 if y != pivote and y not in izq]
+        marcadosAux = [pivote]+marcados[:]
+        minCruces = contarCrucesAcumTree2(p2,marcadosAux,losEjesDe)
+        crucesActual = minCruces
+        mejorIndice = 0
+        for i in range(len(marcadosAux)-1):
+
+            crucesPreSwap = contarCrucesAcumTree2(p2,[marcadosAux[i],marcadosAux[i+1]],losEjesDe)
+            aux = marcadosAux[i+1]
+            marcadosAux[i+1]=marcadosAux[i]
+            marcadosAux[i]=aux
+            crucesPostSwap =  contarCrucesAcumTree2(p2,[marcadosAux[i],marcadosAux[i+1]],losEjesDe)
+
+            crucesActual =  crucesActual - crucesPreSwap + crucesPostSwap
+            if crucesActual < minCruces:
+                minCruces = crucesActual
+                mejorIndice = i+1
+        marcadosIzq = [marcados[k] for k in range(mejorIndice)]
+        marcadosDer = [marcados[k] for k in range(mejorIndice,len(marcados))]
+        return  self.qsort(izq,p2,marcadosIzq,losEjesDe) + [pivote] + self.qsort(der,p2,marcadosDer,losEjesDe)
             
     def resolver(self):
         p1 = list(self.dibujo.g.p1)
@@ -65,36 +111,26 @@ class HeuristicaSplitting (ResolvedorConstructivo):
         for (x,y) in ejes:
             losEjesDe[x]+=[y]
             losEjesDe[y]+=[x]
-        gradosNoNulosP1=[]
-        gradosNoNulosP2=[]
-        grados=[0]*(len(p1)+len(p2))
-        for each in p1:
-            if losEjesDe[each] != []:
-                gradosNoNulosP1+=[each]
-            grados[each] =len(losEjesDe[each])
-        for each in p2:
-            if losEjesDe[each] != []:
-                gradosNoNulosP2+=[each]
-            grados[each] =len(losEjesDe[each])
-            
-        if gradosNoNulosP1==[]:
-            return dibujo
+        p1 = v1+marcadosl1
+        p2 = v2+marcadosl2
         cruces = contarCrucesAcumTree(p1,p2,ejes)
         print cruces
+        
         #hago qsort 2 veces para cada pi
         for i in range(2):
-            p1Aux=self.qsort(p1,p2,marcadosl1,losEjesDe)
+            p1Aux=self.qsort(v1,p2,marcadosl1,losEjesDe)
             crucesAux=contarCrucesAcumTree(p1Aux,p2,ejes)
             if crucesAux < cruces:
-                p1=p1Aux
                 cruces=crucesAux
-            p2Aux=self.qsort(p2,p1,marcadosl2,losEjesDe)
+                p1=p1Aux
+            
+            p2Aux=self.qsort(v2,p1,marcadosl2,losEjesDe)
             crucesAux = contarCrucesAcumTree(p1,p2Aux,ejes)
             if crucesAux < cruces:
-                p2=p2Aux
-                cruces=crucesAux
+               p2=p2Aux
+               cruces=crucesAux
 
-
+        print contarCrucesAcumTree(p1,p2,ejes)
         for i in range(len(p1)-1):
             if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
                 comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
