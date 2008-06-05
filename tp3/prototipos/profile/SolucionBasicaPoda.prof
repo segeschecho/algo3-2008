@@ -1,0 +1,79 @@
+
+Profiling de SolucionBasicaPoda.py (r274)
+
+
+Corrida:
+  g = generarGrafoBipartitoAleatorio(n1=8, n2=8, m=15)
+  d = generarDibujoAleatorio(g, n1=5, n2=5)
+  r = ResolvedorBasicoConPoda(d)
+  s = r.resolver()
+
+--------------------------------------------------------------------------------
+
+Observaciones (a partir de cumtime):
+ - 10 segundos en append() y 13 en len(), probablemente inevitables
+ - 65 segundos en contarCruces(), mejorable
+ - 9 segundos en range(), se puede reemplazar por xrange()
+ - 9 segundos en issubset() que solo se usa para chequeos de integridad
+   en el constructor de Dibujo, se puede eliminar.
+
+--------------------------------------------------------------------------------
+
+
+Explorando conjunto de soluciones...  Listo! (cruces: 16, podas: 59.4%)
+
+         7066786 function calls (6744211 primitive calls) in 91.080 CPU seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+  1578720   10.240    0.000   10.240    0.000 :0(append)
+        1    0.000    0.000    0.000    0.000 :0(close)
+        1    0.000    0.000    0.000    0.000 :0(exp)
+        1    0.000    0.000    0.000    0.000 :0(flush)
+        1    0.000    0.000    0.000    0.000 :0(hexlify)
+    52611    0.360    0.000    0.360    0.000 :0(insert)
+   446321    1.900    0.000    1.900    0.000 :0(isinstance)
+   105253    0.520    0.000    0.520    0.000 :0(iter)
+   263128    0.770    0.000    0.770    0.000 :0(iterkeys)
+(ver final) 10.980    0.000   13.120    0.000 :0(len)   (1978523/1662763)
+        2    0.000    0.000    0.000    0.000 :0(log)
+    45797    0.430    0.000    0.430    0.000 :0(map)
+        1    0.000    0.000    0.000    0.000 :0(open)
+       25    0.000    0.000    0.000    0.000 :0(random)
+  1326537    9.010    0.000    9.010    0.000 :0(range)
+        1    0.000    0.000    0.000    0.000 :0(read)
+        1    0.000    0.000    0.000    0.000 :0(seed)
+        1    0.000    0.000    0.000    0.000 :0(setprofile)
+        1    0.000    0.000    0.000    0.000 :0(sqrt)
+        1    0.000    0.000   91.080   91.080 <string>:1(?)
+        1    0.000    0.000    0.000    0.000 GeneradorGrafos.py:11(generarGrafoBipartitoAleatorio)
+        1    0.000    0.000    0.000    0.000 GeneradorGrafos.py:26(generarDibujoAleatorio)
+        1    0.000    0.000    0.010    0.010 GeneradorGrafos.py:4(?)
+   112050    1.230    0.000   65.000    0.001 GrafoBipartito.py:117(contarCruces)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:12(__init__)
+    52624   36.930    0.001   63.770    0.001 GrafoBipartito.py:124(_contarCruces)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:326(__init__)
+    52625    2.830    0.000   19.780    0.000 GrafoBipartito.py:76(__init__)
+        1    0.000    0.000   91.070   91.070 SolucionBasicaPoda.py:13(resolver)
+   6816/1    2.160    0.000   91.070   91.070 SolucionBasicaPoda.py:38(_mejor)
+        1    0.000    0.000   91.080   91.080 SolucionBasicaPoda.py:77(test_resolvedorBasicoConPoda)
+    45797    1.940    0.000    3.670    0.000 SolucionFuerzaBruta.py:76(cuantasCombinaciones)
+        1    0.000    0.000    0.000    0.000 os.py:711(urandom)
+        0    0.000             0.000          profile:0(profiler)
+        1    0.000    0.000   91.080   91.080 profile:0(test_resolvedorBasicoConPoda())
+        3    0.000    0.000    0.000    0.000 random.py:264(sample)
+        1    0.010    0.010    0.010    0.010 random.py:39(?)
+        1    0.000    0.000    0.000    0.000 random.py:605(WichmannHill)
+        1    0.000    0.000    0.000    0.000 random.py:69(Random)
+        1    0.000    0.000    0.000    0.000 random.py:755(SystemRandom)
+        1    0.000    0.000    0.000    0.000 random.py:88(__init__)
+        1    0.000    0.000    0.000    0.000 random.py:97(seed)
+   263128    1.740    0.000    2.510    0.000 sets.py:119(__iter__)
+        1    0.000    0.000    0.000    0.000 sets.py:223(intersection)
+       30    0.000    0.000    0.000    0.000 sets.py:292(__contains__)
+   105250    3.080    0.000    8.910    0.000 sets.py:307(issubset)
+   105250    0.780    0.000    1.130    0.000 sets.py:339(_binary_sanity_check)
+   105254    2.670    0.000    3.780    0.000 sets.py:356(_update)
+   105254    1.360    0.000    5.140    0.000 sets.py:425(__init__)
+   315762    2.140    0.000    3.150    0.000 sets.py:99(__len__)
