@@ -4,133 +4,7 @@ from Dibujador import *
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
 class HeuristicaInsercionEjes (ResolvedorConstructivo):
-    
-    def contarCrucesAcumTree2(self,p1,p2,losEjes):
-        if len(p1) < len(p2):
-            return self.contarCrucesAcumTree2(p2,p1,losEjes)
-        lista=[]
-        indice1={}
-        indice2={}
-        for i in range(len(p1)):
-            indice1[p1[i]]=i
-        for i in range(len(p2)):
-            indice2[p2[i]]=i
-        #radixsort de los ejes
-        for each in p2:
-            for each2 in losEjes[each]:
-                lista.append((indice1[each2],indice2[each]))
-        b1=[[] for each in range(len(p2))]
-        b2=[[] for each in range(len(p1))]
-        for each in lista:
-            b1[each[1]].append(each)
-        lista2=[]
-        for i in range(len(b1)):
-            lista2.extend(b1[i])
-        for each in lista2:
-            b2[each[0]].append(each)
-        lista2=[]
-        for i in range(len(b2)):
-            lista2.extend(b2[i])
-        sur=[]
-        for each in lista2:
-            sur.append(each[1])
-        primerIndice=1
-        while primerIndice <= len(p2):
-            primerIndice *= 2
-        arbol = [0]*(2*primerIndice - 1)
-        primerIndice -=1
-        cruces=0
-        for i in range(len(sur)):
-            indice=sur[i]+primerIndice
-            try:
-                arbol[indice]+=1
-            except:
-                print "arbol",arbol
-                print "indice",indice
-                print "sur",sur
-                print "i",i
-                print "p1", p1
-                print "p2",p2
-                print "b1", b1
-                print "b2", b2
-                abort
-            while(indice > 0):
-                if (indice % 2 == 1):
-                    cruces += arbol[indice+1]
-                indice=(indice -1)/2
-                arbol[indice]+=1
-        return cruces
-
-    #contador de cruces mediante radix sort y un accumulator tree
-    #magia
-    def contarCrucesAcumTree(self,p1,p2,ejes):
-        if len(p1) < len(p2):
-            return self.contarCrucesAcumTree(p2,p1,[(y,x) for (x,y) in ejes])
-        lista=[]
-        indice1={}
-        indice2={}
-        for i in range(len(p1)):
-            indice1[p1[i]]=i
-        for i in range(len(p2)):
-            indice2[p2[i]]=i
-        #radixsort de los ejes
-        for each in ejes:
-            lista.append((indice1[each[0]],indice2[each[1]]))
-        b1=[[] for each in range(len(p2))]
-        b2=[[] for each in range(len(p1))]
-        for each in lista:
-            b1[each[1]].append(each)
-        lista2=[]
-        for i in range(len(b1)):
-            lista2.extend(b1[i])
-        for each in lista2:
-            b2[each[0]].append(each)
-        lista2=[]
-        for i in range(len(b2)):
-            lista2.extend(b2[i])
-        sur=[]
-        for each in lista2:
-            sur.append(each[1])
-        primerIndice=1
-        while primerIndice <= len(p2):
-            primerIndice *= 2
-        arbol = [0]*(2*primerIndice - 1)
-        primerIndice -=1
-        cruces=0
-        for i in range(len(sur)):
-            indice=sur[i]+primerIndice
-            try:
-                arbol[indice]+=1
-            except:
-                print "arbol",arbol
-                print "indice",indice
-                print "sur",sur
-                print "i",i
-                print "p1", p1
-                print "p2",p2
-                print "b1", b1
-                print "b2", b2
-                abort
-            while(indice > 0):
-                if (indice % 2 == 1):
-                    cruces += arbol[indice+1]
-                indice=(indice -1)/2
-                arbol[indice]+=1
-        return cruces
-
-
-    def contarCruces(self,p1,p2,losEjesDe):
-        cruces=0
-        for each in p1:
-            indice=p1.index(each)
-            for i in range(indice):
-                for nodo in losEjesDe[each]:
-                    indice2=p2.index(nodo)
-                    for tipito in losEjesDe[p1[i]]:
-                            if p2.index(tipito) > indice2:
-                                cruces+=1
-        return cruces
-        
+            
     # establece el rango en el cual se puede insertar un nodo
     # basicamente me fijo que si el tipo esta marcado, no lo trate de poner
     # antes de su anterior y despues de su posterior
@@ -223,7 +97,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            # voy a actualizar la posicion de los nodos del ejes
            p1Parcial.remove(x)
            p2Parcial.remove(y)
-           #cruces = self.contarCrucesAcumTree(p1Parcial,p2Parcial,ejesPuestos)
+           #cruces = contarCrucesAcumTree(p1Parcial,p2Parcial,ejesPuestos)
            ejesPuestos.append((x,y))
            losEjesDe[x]+=[y]
            losEjesDe[y]+=[x]
@@ -236,7 +110,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            p1Parcial.insert(i1,x)
            pos = (i1,j1)
            p2Parcial.insert(j1,y)
-           crucesFede = self.contarCrucesAcumTree(p1Parcial,p2Parcial,ejesPuestos)
+           crucesFede = contarCrucesAcumTree(p1Parcial,p2Parcial,ejesPuestos)
            cruces=crucesFede
            iteracionesi = 0
            #recorro todas las posiciones de p1
@@ -246,8 +120,8 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                 for j in rangoj:
                        actual = cruces
                        if iteracionesj != len(rangoj) -1:
-                           crucesj = self.contarCrucesAcumTree2(p1Parcial,[y,p2Parcial[j+1]],losEjesDe)
-                           crucesj1 = self.contarCrucesAcumTree2(p1Parcial,[p2Parcial[j+1],y],losEjesDe)
+                           crucesj = contarCrucesAcumTree2(p1Parcial,[y,p2Parcial[j+1]],losEjesDe)
+                           crucesj1 = contarCrucesAcumTree2(p1Parcial,[p2Parcial[j+1],y],losEjesDe)
                            cruces = cruces - crucesj + crucesj1
                            auxj=p2Parcial[j]
                            p2Parcial[j] = p2Parcial[j+1]
@@ -261,8 +135,8 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                 p2Parcial.remove(y)
                 if iteracionesi != len(rangoi) - 1:
                     p2Parcial.insert(j1,y)
-                    crucesi = self.contarCrucesAcumTree2([x,p1Parcial[i+1]],p2Parcial,losEjesDe)
-                    crucesi1 = self.contarCrucesAcumTree2([p1Parcial[i+1],x],p2Parcial,losEjesDe)
+                    crucesi = contarCrucesAcumTree2([x,p1Parcial[i+1]],p2Parcial,losEjesDe)
+                    crucesi1 = contarCrucesAcumTree2([p1Parcial[i+1],x],p2Parcial,losEjesDe)
                     cruces = crucesFede - crucesi + crucesi1
                     crucesFede = cruces
                     p1Parcial[i] = p1Parcial[i+1]

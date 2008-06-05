@@ -6,9 +6,7 @@ from HeuristicaInsercionEjes import *
 from HeuristicaRemocion import *
 from HeuristicaMediana import *
 from HeuristicaSplitting import *
-from HeuristicaSwap import *
-from psyco import *
-psyco.full()
+
 
 def testear(n1,n2,n3,n4,m,k=1):
     
@@ -20,7 +18,6 @@ def testear(n1,n2,n3,n4,m,k=1):
     resultado3 = HeuristicaRemocion(dib).resolver()
     resultado4 = HeuristicaMediana(dib).resolver()
     resultado5 = HeuristicaSplitting(dib).resolver()
-    resultado6 = HeuristicaSwap(dib).resolver()
 ##    DibujadorGrafoBipartito(resultado1).grabar('insercionNodos.svg')
 ##    DibujadorGrafoBipartito(resultado2).grabar('insercionEjes.svg')
 ##    DibujadorGrafoBipartito(resultado3).grabar('remocion.svg')
@@ -36,7 +33,7 @@ def testear(n1,n2,n3,n4,m,k=1):
 ##    print "resultado swap:            ", resultado6.contarCruces(), "cruces"
 ##    print "resultado inserccionEjes2: ", resultado7.contarCruces(), "cruces"
     
-    return (resultado1.contarCruces(),resultado2.contarCruces(),resultado3.contarCruces(),resultado4.contarCruces(),resultado5.contarCruces(),resultado6.contarCruces())
+    return (resultado1.contarCruces(),resultado2.contarCruces(),resultado3.contarCruces(),resultado4.contarCruces(),resultado5.contarCruces())
    
 nodos = open("testNodos.m","w")
 ejes = open("testEjes.m","w")
@@ -50,10 +47,10 @@ ejes.write("ejes=[")
 remocion.write("remocion=[")
 mediana.write("mediana=[")
 split.write("split=[")
-swap.write("swap=[")
 n.write("n=[")
 for i in range(20,70):
       j=i
+      print "termine con i =",i
       if i != 69 or j != 69: 
           res=testear(i,j,2*i/3,2*j/3,i*j/2)
           nodos.write(str(res[0])+',')
@@ -61,7 +58,6 @@ for i in range(20,70):
           remocion.write(str(res[1])+',')
           mediana.write(str(res[1])+',')
           split.write(str(res[1])+',')
-          swap.write(str(res[1])+',')
           n.write(str(i+j)+',')
       else:
           res=testear(i,j,2*i/3,2*j/3,i*j/2)
@@ -70,13 +66,12 @@ for i in range(20,70):
           remocion.write(str(res[2]))
           mediana.write(str(res[3]))
           split.write(str(res[4]))
-          swap.write(str(res[5]))
+
           n.write(str(i+j))
 nodos.write("];")
 ejes.write("];")
 remocion.write("];")
 mediana.write("];")
 split.write("];")
-swap.write("];")
 n.write("];")      
             
