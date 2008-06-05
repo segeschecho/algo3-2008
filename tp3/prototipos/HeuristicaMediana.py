@@ -56,6 +56,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
                 #print "lista2",lista2
                 print "b1", b1
                 print "b2", b2
+                abort
             while(indice > 0):
                 if (indice % 2 == 1):
                     cruces += arbol[indice+1]
@@ -86,15 +87,11 @@ class HeuristicaMediana (ResolvedorConstructivo):
     # Mariconadas
         p1 = list(self.dibujo.g.p1)
         p2 = list(self.dibujo.g.p2)
-        print p1
-        print p2
         grafo = self.dibujo.g
         dibujo=self.dibujo
         #separo a los q ya estan en el dibujo (son los q tengo q manteer ordenados)
         marcadosl1 = list(self.dibujo.l1)
-        print "marcados",marcadosl1
         marcadosl2 = list(self.dibujo.l2)
-        print "marcados2",marcadosl2
         #obtengo los que tengo que poner (los q me dieron para agregar)
         v1 = [x for x in p1 if x not in marcadosl1]
         v2 = [y for y in p2 if y not in marcadosl2]
@@ -119,9 +116,6 @@ class HeuristicaMediana (ResolvedorConstructivo):
         p1=p1Parcial
         p2=p2Parcial
         cruces =  self.contarCrucesAcumTree(p1,p2,ejes)
-        print "cruces antes", cruces
-        
-            
         for i in range(len(p1)*len(p2)-2*abs(len(p1)*len(p2)/2 - len(ejes))):
             for i in range(len(p2Parcial)):
                 indice[p2[i]]=i
@@ -141,6 +135,9 @@ class HeuristicaMediana (ResolvedorConstructivo):
             if crucesAux < cruces:
                 p2=p2Aux
                 cruces=crucesAux
+        cambio=True
+        while cambio:
+            cambio=False
             for i in range(len(p1)-1):
                 if p1[i] not in marcadosl1 or p1[i+1] not in marcadosl1:
                     comoEsta=self.crucesEntre(p1[i],p1[i+1],p1,p2,losEjesDe)
@@ -149,6 +146,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
                         aux=p1[i]
                         p1[i]=p1[i+1]
                         p1[i+1]=aux
+                        cambio=True
             for i in range(len(p2)-1):
                 if p2[i] not in marcadosl2 or p2[i+1] not in marcadosl2:
                     comoEsta=self.crucesEntre(p2[i],p2[i+1],p2,p1,losEjesDe)
@@ -157,6 +155,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
                         aux=p2[i]
                         p2[i]=p2[i+1]
                         p2[i+1]=aux
+                        cambio=True
             listita = range(1,len(p1))
             listita.reverse()
             for i in listita:
@@ -167,6 +166,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
                         aux=p1[i]
                         p1[i]=p1[i-1]
                         p1[i-1]=aux
+                        cambio=True
             listita = range(1,len(p2))
             listita.reverse()
             for i in listita:
@@ -177,8 +177,8 @@ class HeuristicaMediana (ResolvedorConstructivo):
                         aux=p2[i]
                         p2[i]=p2[i-1]
                         p2[i-1]=aux
-        print "cruces ahora", self.contarCrucesAcumTree(p1,p2,ejes)
-        return Dibujo(self.dibujo.g,p1,p2)
+                        cambio=True
+            return Dibujo(self.dibujo.g,p1,p2)
     
     def compararNodos(self,x,y,p1,p2,marcados,losEjesDe,mediana):
         if x in marcados and y in marcados:
