@@ -10,9 +10,6 @@ from GrafoBipartito import Dibujo, ResolvedorConstructivo
 from SolucionFuerzaBruta import cuantasCombinaciones
 
 class ResolvedorBasicoConPoda(ResolvedorConstructivo):
-    def __init__(self, dib):
-        self.dibujo = dib
-
     def resolver(self):
         g = self.dibujo.g
         d = self.dibujo
