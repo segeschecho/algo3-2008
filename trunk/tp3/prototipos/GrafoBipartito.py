@@ -189,7 +189,7 @@ class Dibujo:
     def __eq__(self, otro):
         return self.l1 == otro.l1 and \
                self.l2 == otro.l2 and \
-               self.g1 == otro.g1
+               self.g == otro.g
 
     def __ne__(self, otro):
         return not (self == otro)
