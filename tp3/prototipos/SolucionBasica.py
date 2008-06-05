@@ -9,9 +9,6 @@ import sys
 from GrafoBipartito import Dibujo, ResolvedorConstructivo
 
 class ResolvedorBasico(ResolvedorConstructivo):
-    def __init__(self, dib):
-        self.dibujo = dib
-
     def resolver(self):
         g = self.dibujo.g
         d = self.dibujo
