@@ -1,0 +1,74 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+#import psyco
+#psyco.full()
+
+from GrafoBipartito import Dibujo, ResolvedorConstructivo
+
+class ResolvedorBasico(ResolvedorConstructivo):
+    def __init__(self, dib):
+        self.dibujo = dib
+
+    def resolver(self):
+        g = self.dibujo.g
+        d = self.dibujo
+
+        # busco los nodos que quedan por posicionar
+        q1 = [x for x in g.p1 if not x in self.dibujo.l1]
+        q2 = [x for x in g.p2 if not x in self.dibujo.l2]
+
+        # cargo un candidato inicial
+        self.mejorDibujo = Dibujo(g, d.l1 + q1, d.l2 + q2)
+
+        # busco el mejor candidato
+        self._mejor(d.l1, d.l2, q1, q2)
+        return self.mejorDibujo
+
+    def _mejor(self, fijo1, fijo2, movil1, movil2):
+        if movil1 == [] and movil2 == []:
+            d = Dibujo(self.dibujo.g, fijo1, fijo2)
+            if d.contarCruces() < self.mejorDibujo.contarCruces():
+                self.mejorDibujo = d
+            return
+
+        # valores misc
+        nf1 = len(fijo1)
+        nf2 = len(fijo2)
+
+        if movil1 == []:
+            cab = movil2[0]
+            cola = movil2[1:]
+
+            for i in range(nf2+1):
+                nuevo_fijo2 = fijo2[:]
+                nuevo_fijo2.insert(i, cab)
+                self._mejor(fijo1, nuevo_fijo2, movil1, cola)
+            return
+
+        else:
+            cab = movil1[0]
+            cola = movil1[1:]
+
+            for i in range(nf1+1):
+                nuevo_fijo1 = fijo1[:]
+                nuevo_fijo1.insert(i, cab)
+                self._mejor(nuevo_fijo1, fijo2, cola, movil2)
+            return
+
+def test_resolvedorBasico():
+    from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
+    from SolucionFuerzaBruta import ResolvedorFuerzaBruta
+
+    g = generarGrafoBipartitoAleatorio(n1=7, n2=7, m=15)
+    d = generarDibujoAleatorio(g, n1=5, n2=5)
+
+    r1 = ResolvedorFuerzaBruta(d)
+    s1 = r1.resolver()
+    r2 = ResolvedorBasico(d)
+    s2 = r2.resolver()
+
+    print s1.contarCruces() == s2.contarCruces()
+
+if __name__ == '__main__':
+    test_resolvedorBasico()
