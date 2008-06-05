@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
+
 #import psyco
 #psyco.full()
 
@@ -20,9 +22,12 @@ class ResolvedorBasico(ResolvedorConstructivo):
 
         # cargo un candidato inicial
         self.mejorDibujo = Dibujo(g, d.l1 + q1, d.l2 + q2)
-
+        
         # busco el mejor candidato
+        print "Explorando conjunto de soluciones... ",
+        sys.stdout.flush()
         self._mejor(d.l1, d.l2, q1, q2)
+        print "Listo! (cruces: %s)" % self.mejorDibujo.contarCruces()
         return self.mejorDibujo
 
     def _mejor(self, fijo1, fijo2, movil1, movil2):
@@ -68,7 +73,7 @@ def test_resolvedorBasico():
     r2 = ResolvedorBasico(d)
     s2 = r2.resolver()
 
-    print s1.contarCruces() == s2.contarCruces()
+    assert s1.contarCruces() == s2.contarCruces()
 
 if __name__ == '__main__':
     test_resolvedorBasico()
