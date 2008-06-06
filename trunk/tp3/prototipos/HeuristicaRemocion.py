@@ -4,7 +4,7 @@ from Dibujador import *
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
 class HeuristicaRemocion (ResolvedorConstructivo):
-    ef contarCrucesAcumTree(p1,p2,ejes):
+    def contarCrucesAcumTree(p1,p2,ejes):
         if len(p1) < len(p2):
             return contarCrucesAcumTree(p2,p1,[(y,x) for (x,y) in ejes])
         lista=[]
