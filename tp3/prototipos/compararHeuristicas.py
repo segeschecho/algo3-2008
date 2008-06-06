@@ -7,7 +7,7 @@ from HeuristicaRemocion import *
 from HeuristicaMediana import *
 from HeuristicaSplitting import *
 from SolucionBasicaPoda import *
-from medianaReloadad import *
+from HeuristicaMedianaReloaded import *
 import psyco 
 psyco.full()
 
