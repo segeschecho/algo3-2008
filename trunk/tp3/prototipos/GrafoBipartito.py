@@ -211,77 +211,23 @@ class Dibujo:
 ###########################################
 # Funciones para el conteo de cruces      #
 ###########################################
-def contarCrucesAcumTree(p1,p2,ejes):
-        if len(p1) < len(p2):
-            return contarCrucesAcumTree(p2,p1,[(y,x) for (x,y) in ejes])
-        lista=[]
-        indice1={}
-        indice2={}
-        for i in range(len(p1)):
-            indice1[p1[i]]=i
-        for i in range(len(p2)):
-            indice2[p2[i]]=i
-            
-        for each in ejes:
-            lista.append((indice1[each[0]],indice2[each[1]]))
-        b1=[[] for each in range(len(p2))]
-        b2=[[] for each in range(len(p1))]
-        for each in lista:
-            b1[each[1]].append(each)
-        lista2=[]
-        for i in range(len(b1)):
-            lista2.extend(b1[i])
-        for each in lista2:
-            b2[each[0]].append(each)
-        lista2=[]
-        for i in range(len(b2)):
-            lista2.extend(b2[i])
-        #print lista2
-
-        sur=[]
-        for each in lista2:
-            sur.append(each[1])
-        primerIndice=1
-        while primerIndice <= len(p2):
-            primerIndice *= 2
-        arbol = [0]*(2*primerIndice - 1)
-        primerIndice -=1
-
-        cruces=0
-        for i in range(len(sur)):
-            indice=sur[i]+primerIndice
-            try:
-                arbol[indice]+=1
-            except:
-                print "arbol",arbol
-                print "indice",indice
-                print "sur",sur
-                print "i",i
-                print "p1", p1
-                print "p2",p2
-                #print "lista2",lista2
-                print "b1", b1
-                print "b2", b2
-               
-            while(indice > 0):
-                if (indice % 2 == 1):
-                    cruces += arbol[indice+1]
-                indice=(indice -1)/2
-                arbol[indice]+=1
-        return cruces
-    #utiliza un acum tree para contar los cruces entre los nodos de
-    #la lista p1 y la lista p2, tomando las listas de adyacencia losEjes
-def contarCrucesAcumTree2(p1,p2,losEjes):
+#utiliza un acum tree para contar los cruces entre los nodos de
+#la lista p1 y la lista p2, tomando las listas de adyacencia losEjes
+#indice1 e indice 2 son parametros opcionales, si se conocen los indices de los
+#elementos se puede apurar el calculo no re armando los indices cada vez
+def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
 	
         if len(p1) < len(p2):
-            return contarCrucesAcumTree2(p2,p1,losEjes)
+            return contadorDeCruces(p2,p1,losEjes,indice1,indice2)
         lista=[]
-        indice1={}
-        indice2={}
-        for i in range(len(p1)):
-            indice1[p1[i]]=i
-        for i in range(len(p2)):
-            indice2[p2[i]]=i
+        if indice1 == None:
+            indice1={}
+            for i in range(len(p1)):
+                indice1[p1[i]]=i
+        if indice2 == None:
+            indice2={}
+            for i in range(len(p2)):
+                indice2[p2[i]]=i
         #radixsort de los ejes
         for each in p2:
             for each2 in losEjes[each]:
