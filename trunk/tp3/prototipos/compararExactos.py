@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import psyco
+psyco.full()
+
 from time import time
 
 from GrafoBipartito import Dibujo, ResolvedorConstructivo
@@ -9,6 +12,8 @@ from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleator
 from SolucionFuerzaBruta import ResolvedorFuerzaBruta
 from SolucionBasica import ResolvedorBasico
 from SolucionBasicaPoda import ResolvedorBasicoConPoda
+from SolucionSwapper import ResolvedorSwapper
+from SolucionSwapperPoda import ResolvedorSwapperConPoda
 
 class Timer:
     def __init__(self):
@@ -30,34 +35,29 @@ class Timer:
 
 def comparar(): 
     t = Timer()
-    g = generarGrafoBipartitoAleatorio(n1=8, n2=7, m=15)
+    g = generarGrafoBipartitoAleatorio(n1=8, n2=8, m=25)
     d = generarDibujoAleatorio(g, n1=5, n2=5)
 
-    r1 = ResolvedorFuerzaBruta(d)
-    print "Fuerza Bruta:"
-    t.empezar()
-    s1 = r1.resolver()
-    t.terminar()
-    assert s1.esIncrementalDe(d)
-    print
+    sols = ResolvedorFuerzaBruta, \
+           ResolvedorBasico, \
+           ResolvedorBasicoConPoda, \
+           ResolvedorSwapper, \
+           ResolvedorSwapperConPoda
+    
+    cruces = []
 
-    r2 = ResolvedorBasico(d)
-    print "Básico:"
-    t.empezar()
-    s2 = r2.resolver()
-    t.terminar()
-    assert s2.esIncrementalDe(d)
-    print
+    for s in sols:
+        r = s(d)
+        print "%s:" % s.__name__
+        t.empezar()
+        res = r.resolver()
+        t.terminar()
+        assert(res.esIncrementalDe(d))
+        cruces.append(res.contarCruces())
+        print
 
-    r3 = ResolvedorBasicoConPoda(d)
-    print "Básico con poda:"
-    t.empezar()
-    s3 = r3.resolver()
-    t.terminar()
-    assert s3.esIncrementalDe(d)
-    print
-
-    assert s3.contarCruces() == s2.contarCruces() == s1.contarCruces()
+    for i in range(1,len(cruces)):
+        assert cruces[0] == cruces[i]
 
 if __name__ == '__main__':
     comparar()
