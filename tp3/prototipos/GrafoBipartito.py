@@ -218,7 +218,7 @@ class Dibujo:
 def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
 	
         if len(p1) < len(p2):
-            return contadorDeCruces(p2,p1,losEjes,indice1,indice2)
+            return contadorDeCruces(p2,p1,losEjes,indice2,indice1)
         lista=[]
         if indice1 == None:
             indice1={}

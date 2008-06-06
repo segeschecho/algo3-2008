@@ -16,7 +16,7 @@ class busquedaLocalIntercambio:
                    indAnterior = l.index(marcados[k-1])
                 if k != len(marcados)-1:
                    indSiguiente = l.index(marcados[k+1])
-                return indAnterior < j and j < indSiguiente
+                return indAnterior < k and k < indSiguiente
         elif j not in marcados:
             return True
         else:
@@ -32,6 +32,8 @@ class busquedaLocalIntercambio:
             for j in range(i,len(dibujo.l1)):
                 each2=dibujo.l1[j]
                 if self.swapValido(each,each2,dibujo.l1,marcados1):
+                    if each in marcados1 or each2 in marcados1:
+                        print (each,each2)
                     vecindad.append((each,each2))
         for i in range(len(dibujo.l2)):
             each = dibujo.l2[i]
@@ -39,7 +41,7 @@ class busquedaLocalIntercambio:
                 each2=dibujo.l2[j]
                 if self.swapValido(each,each2,dibujo.l2,marcados2):
                     vecindad.append((each,each2))
-        cruces = self.contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
+        cruces = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
         pos = None
         for each in vecindad:
             #esto se puede saber por el valor de each[0]
@@ -57,7 +59,7 @@ class busquedaLocalIntercambio:
                 dibujo.l2[i]=each[1]
                 dibujo.l2[j] = each[0]
             #me fijo la cantidad de cruces actual, luego de swapear
-            actual = self.contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
+            actual = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
             #si mejora me la guardo 
             if actual < cruces:
                 cruces = actual
@@ -78,11 +80,11 @@ class busquedaLocalIntercambio:
                 dibujo.l2[pos[0]] = pos[3]
                 dibujo.l2[pos[1]] = pos[2]
             #se hace return del nuevo dibujo y True si es que hubo cambios
-            return (Dibujo(g,dibujo.l1,dibujo.l2),True)
+            return (Dibujo(dibujo.g,dibujo.l1,dibujo.l2),True)
         return (dibujo,False)
 
 if __name__ == '__main__':
-   g = generarGrafoBipartitoAleatorio(130,130,470)
+   g = generarGrafoBipartitoAleatorio(13,13,47)
    print 'nodos =', g.p1
    print 'nodos =', g.p2
    print 'ejes =', g.ejes
@@ -93,22 +95,23 @@ if __name__ == '__main__':
    resultado = HeuristicaInsercionEjes(dib).resolver()
    print resultado.contarCruces()
    DibujadorGrafoBipartito(resultado).grabar('sinLocal.svg')
-   caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2)
-   i=0
    losEjesDe = {}
-   for each in dib.l1+self.dib.l2:
-       losEjesDe[each] = {}
+   for each in dib.l1+dib.l2:
+       losEjesDe[each] = []
    for each in ejes:
         losEjesDe[each[0]].append(each[1])
         losEjesDe[each[1]].append(each[0])
+   caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
+   i=0
+   
    while(caca[1]):
-       print "mejora",busquedaLocalIntercambio().contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
+       print "mejora",contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
        resultado = caca[0]
-       caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2)
+       caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
        if caca[1]:
            i=0
        else:
            i+=1
    resultado=caca[0]
-   print busquedaLocalIntercambio().contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
+   print contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
    DibujadorGrafoBipartito(resultado).grabar('Local.svg')
