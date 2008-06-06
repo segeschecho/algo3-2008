@@ -59,7 +59,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
         medianasp2 = {}
         p1 = p1Parcial
         p2 = p2Parcial
-        cruces = contarCrucesAcumTree(p1,p2,ejes)
+        cruces = contadorDeCruces(p1,p2,losEjesDe)
 
         for each in range(5):
             for each in p1:
@@ -69,7 +69,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
             for i in range(len(p1Parcial)):
                 indice[p1[i]]=i
             p1Aux=self.qsort2(p1,p2,movilesV1, noMovilesV1,losEjesDe,medianasp1)
-            crucesAux=contarCrucesAcumTree(p1Aux,p2,ejes)
+            crucesAux=contadorDeCruces(p1Aux,p2,losEjesDe)
             p1=p1Aux
             cruces=crucesAux
             for each in p2:
@@ -77,7 +77,7 @@ class HeuristicaMediana (ResolvedorConstructivo):
             print p2
             print medianasp2
             p2Aux=self.qsort2(p2,p1,movilesV2, noMovilesV2,losEjesDe,medianasp2)
-            crucesAux = contarCrucesAcumTree(p1,p2Aux,ejes)
+            crucesAux = contadorDeCruces(p1,p2Aux,losEjesDe)
             p2=p2Aux
             cruces=crucesAux
         for i in range(len(p1)-1):
@@ -144,10 +144,10 @@ class HeuristicaMediana (ResolvedorConstructivo):
 
         # ubico el PIVOT entre los no moviles
         indPivNoMov = 0
-        crucesActual = contarCrucesAcumTree2(moviles,p2,losEjesDe)
+        crucesActual = contadorDeCruces(moviles,p2,losEjesDe)
         crucesMejor = crucesActual
         for i in range(len(noMoviles)) :
-            crucesActual = crucesActual + contarCrucesAcumTree2(p2, [noMoviles[i], pivot],losEjesDe) -  contarCrucesAcumTree2(p2, [pivot,noMoviles[i]],losEjesDe)
+            crucesActual = crucesActual + contadorDeCruces(p2, [noMoviles[i], pivot],losEjesDe) -  contadorDeCruces(p2, [pivot,noMoviles[i]],losEjesDe)
             if crucesActual < crucesMejor :
                 crucesMejor = crucesActual
                 indPivNoMov = i + 1
@@ -225,10 +225,10 @@ class HeuristicaMediana (ResolvedorConstructivo):
 
         ## ubico el PIVOT entre los no moviles
         #indPivNoMov = 0
-        #crucesActual = contarCrucesAcumTree2(moviles,p2,losEjesDe)
+        #crucesActual = contadorDeCruces(moviles,p2,losEjesDe)
         #crucesMejor = crucesActual
         #for i in range(len(noMoviles)) :
-            #crucesActual = crucesActual + contarCrucesAcumTree2(p2, [noMoviles[i], pivot],losEjesDe) -  contarCrucesAcumTree2(p2, [pivot,noMoviles[i]],losEjesDe)
+            #crucesActual = crucesActual + contadorDeCruces(p2, [noMoviles[i], pivot],losEjesDe) -  contadorDeCruces(p2, [pivot,noMoviles[i]],losEjesDe)
             #if crucesActual < crucesMejor :
                 #crucesMejor = crucesActual
                 #indPivNoMov = i + 1

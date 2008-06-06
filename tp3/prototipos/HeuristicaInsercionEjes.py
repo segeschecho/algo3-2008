@@ -55,6 +55,8 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            marcadosl2 = list(self.dibujo.l2)
        else:
            marcadosl2 = marcados2
+       print "marcados1",marcadosl1
+       print "marcados2",marcadosl2
        #obtengo los que tengo que poner (los q me dieron para agregar)
        if nodosAponer1 == None:
           v1 = [x for x in p1 if x not in marcadosl1]
@@ -97,35 +99,43 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            # voy a actualizar la posicion de los nodos del ejes
            p1Parcial.remove(x)
            p2Parcial.remove(y)
-           #cruces = contarCrucesAcumTree(p1Parcial,p2Parcial,ejesPuestos)
+
            ejesPuestos.append((x,y))
            losEjesDe[x]+=[y]
            losEjesDe[y]+=[x]
+           #obtengo entre que nodos puedo meter a x y a y
            rangoi = self._rango(x,p1Parcial,marcadosl1)
            rangoj = self._rango(y,p2Parcial,marcadosl2)
            i1 = rangoi[0]
            j1 = rangoj[0]
-           #lo meto en el lugar i
-           
+           #lo meto en el primer lugar posible
            p1Parcial.insert(i1,x)
            pos = (i1,j1)
            p2Parcial.insert(j1,y)
-           crucesFede = contarCrucesAcumTree(p1Parcial,p2Parcial,ejesPuestos)
-           cruces=crucesFede
+           crucesInicial= contadorDeCruces(p1Parcial,p2Parcial,losEjesDe)
+           cruces=crucesInicial
            iteracionesi = 0
+           #construyo los indices de los elementos de p1 para acelerar el calculo de cruces
+           indice1 = {}
+           for i in range(len(p1Parcial)):
+               indice1[p1Parcial[i]] = i
            #recorro todas las posiciones de p1
            for i in rangoi:
                 iteracionesj = 0
-                # lo dejo en la pos i y miro todas las posiciones de p1
+                # lo dejo en la pos i y miro todas las posiciones de p2 posibles para el nodo y
                 for j in rangoj:
                        actual = cruces
                        if iteracionesj != len(rangoj) -1:
-                           crucesj = contarCrucesAcumTree2(p1Parcial,[y,p2Parcial[j+1]],losEjesDe)
-                           crucesj1 = contarCrucesAcumTree2(p1Parcial,[p2Parcial[j+1],y],losEjesDe)
+                           #lo que hacemos es contar los cruces asi como estan y swapeados para saber como
+                           #cambia la cantidad de cruces
+                           crucesj = contadorDeCruces(p1Parcial,[y,p2Parcial[j+1]],losEjesDe,indice1,None)
+                           crucesj1 = contadorDeCruces(p1Parcial,[p2Parcial[j+1],y],losEjesDe,indice1,None)
                            cruces = cruces - crucesj + crucesj1
+                           #swapeo de verdad los nodos
                            auxj=p2Parcial[j]
                            p2Parcial[j] = p2Parcial[j+1]
                            p2Parcial[j+1] = auxj
+                           
                        # si ponerlos en i,j me baja los cruces, actualizo
                        if cantCruces == None or actual < cantCruces:
                                cantCruces=actual
@@ -133,12 +143,15 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                        iteracionesj += 1
                 aux = p1Parcial[i]
                 p2Parcial.remove(y)
+                #ahora paso al nodo x a su proxima posicion
                 if iteracionesi != len(rangoi) - 1:
                     p2Parcial.insert(j1,y)
-                    crucesi = contarCrucesAcumTree2([x,p1Parcial[i+1]],p2Parcial,losEjesDe)
-                    crucesi1 = contarCrucesAcumTree2([p1Parcial[i+1],x],p2Parcial,losEjesDe)
-                    cruces = crucesFede - crucesi + crucesi1
-                    crucesFede = cruces
+                    crucesi = contadorDeCruces([x,p1Parcial[i+1]],p2Parcial,losEjesDe)
+                    crucesi1 = contadorDeCruces([p1Parcial[i+1],x],p2Parcial,losEjesDe)
+                    cruces = crucesInicial - crucesi + crucesi1
+                    crucesInicial = cruces
+                    indice1[p1Parcial[i]] = i+1
+                    indice1[p1Parcial[i+1]] = i
                     p1Parcial[i] = p1Parcial[i+1]
                     p1Parcial[i+1] = aux
                 iteracionesi += 1
@@ -151,7 +164,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            if p1Parcial[i] not in marcadosl1 or p1Parcial[i+1] not in marcadosl1:
                comoEsta=self.crucesEntre(p1Parcial[i],p1Parcial[i+1],p1Parcial,p2Parcial,losEjesDe)
                swapeado=self.crucesEntre(p1Parcial[i+1],p1Parcial[i],p1Parcial,p2Parcial,losEjesDe)
-               if swapeado < comoEsta:
+               if swapeado <= comoEsta:
                    aux=p1Parcial[i]
                    p1Parcial[i]=p1Parcial[i+1]
                    p1Parcial[i+1]=aux
@@ -159,7 +172,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            if p2Parcial[i] not in marcadosl2 or p2Parcial[i+1] not in marcadosl2:
                comoEsta=self.crucesEntre(p2Parcial[i],p2Parcial[i+1],p2Parcial,p1Parcial,losEjesDe)
                swapeado=self.crucesEntre(p2Parcial[i+1],p2Parcial[i],p2Parcial,p1Parcial,losEjesDe)
-               if swapeado < comoEsta:
+               if swapeado <= comoEsta:
                    aux=p2Parcial[i]
                    p2Parcial[i]=p2Parcial[i+1]
                    p2Parcial[i+1]=aux
@@ -186,7 +199,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
        return Dibujo(grafo,p1Parcial,p2Parcial)
 
 if __name__ == '__main__':
-   g = generarGrafoBipartitoAleatorio(10,10,57)
+   g = generarGrafoBipartitoAleatorio(5,5,10)
    print 'nodos =', g.p1
    print 'nodos =', g.p2
    print 'ejes =', g.ejes
