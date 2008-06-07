@@ -1,6 +1,4 @@
 import random
-from medianaLaTerceraEsLaVencidad import *
-from BusquedaLocalIntercambioAzar import *
 from HeuristicaInsercionEjes import *
 import psyco
 psyco.full()
@@ -48,11 +46,21 @@ class BusquedaLocalMediana:
             if k != len(marcadosi)-1:
                 siguiente = pi.index(marcadosi[k+1])
             return anterior < med and med < siguiente
-        
+   
+    def hallarMinimoLocal(self,dibujo,marcados1,marcados2,losEjesDe):
+        crucesInicial = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
+        cambio = True
+        while cambio:
+            cambio = False
+            self.mejorar(dibujo,marcados1,marcados2,losEjesDe)
+            crucesActual = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
+            if crucesActual < crucesInicial:
+                crucesInicial = crucesActual
+                cambio = True
+          
     def mejorar(self,dibujo,marcados1,marcados2,losEjesDe):
         p1 = dibujo.l1
         p2 = dibujo.l2
-        print p1
         indices2 = {}
         for i in range(len(p2)):
             indices2[p2[i]] = i
@@ -119,5 +127,29 @@ class BusquedaLocalMediana:
             if crucesMejor < crucesActual:
                 crucesActual = crucesMejor
                 cambio = True
-        return Dibujo(dibujo.g,p1,p2)
+
+if __name__ == '__main__':
+    g =  generarGrafoBipartitoAleatorio(12, 12, 60)
+    d = generarDibujoAleatorio(g,3, 3)
+    marcados1 = d.l1[:]
+    print marcados1
+    marcados2 = d.l2[:]
+    print marcados2
+    losEjesDe = {}
+    for each in g.p1 :
+        losEjesDe[each] = []
+    for each in g.p2 :
+        losEjesDe[each] = []
+    for each in g.ejes:
+        losEjesDe[each[0]].append(each[1])
+        losEjesDe[each[1]].append(each[0])
+        
+    res=HeuristicaInsercionEjes(d).resolver()
+    blIG=BusquedaLocalMediana()
+    print "antes de la busqueda",res.contarCruces()
+    blIG.hallarMinimoLocal(res,marcados1,marcados2,losEjesDe)
+    print "despues de la misma", contadorDeCruces(res.l1,res.l2,losEjesDe)
+    DibujadorGrafoBipartito(res,marcados1=marcados1,marcados2=marcados2).grabar('localMediana.svg')        
+    
+
 

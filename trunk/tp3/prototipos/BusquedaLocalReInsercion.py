@@ -1,12 +1,9 @@
 import random
 from HeuristicaInsercionEjes import *
-from SolucionBasicaPoda import *
-from BusquedaLocalIntercambioAzar import *
-from medianaReloadad import *
 import psyco
 from psyco import *
 
-class busquedaLocalReInsercion:
+class BusquedaLocalReInsercion:
     def _rango(self,x,pi,marcados):
         if x not in marcados:
            return range(len(pi)+1)
@@ -23,6 +20,17 @@ class busquedaLocalReInsercion:
                    print "error", z,pi,marcados
                assert z != []
                return z
+
+    def hallarMinimoLocal(self,dibujo,marcados1,marcados2,losEjesDe):
+        crucesInicial = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
+        cambio = True
+        while cambio:
+            cambio = False
+            self.mejorar(dibujo,marcados1,marcados2,losEjesDe)
+            crucesActual = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
+            if crucesActual < crucesInicial:
+                crucesInicial = crucesActual
+                cambio = True
             
     def mejorar(self,dibujo,marcados1,marcados2,losEjesDe):
         
@@ -89,57 +97,25 @@ class busquedaLocalReInsercion:
         return resultado
 
 if __name__ == '__main__':
-   g = generarGrafoBipartitoAleatorio(8,7,26)
-   print 'nodos =', g.p1
-   print 'nodos =', g.p2
-   print 'ejes =', g.ejes
-   ejes = g.ejes
-   dib = generarDibujoAleatorio(g,3,3)
-   marcadosl1 = dib.l1[:]
-   marcadosl2 = dib.l2[:]
-   print "marcadosl1",marcadosl1
-   print "marcadosl2",marcadosl2
-   resultado = HeuristicaMediana2(dib).resolver()
-   
-   #posta = ResolvedorBasicoConPoda(dib).resolver()
-   DibujadorGrafoBipartito(resultado).grabar('sinLocal.svg')
-   losEjesDe = {}
-   for each in resultado.l1+resultado.l2:
-       losEjesDe[each] = []
-   for each in ejes:
+    g =  generarGrafoBipartitoAleatorio(12, 12, 60)
+    d = generarDibujoAleatorio(g,3, 3)
+    marcados1 = d.l1[:]
+    print marcados1
+    marcados2 = d.l2[:]
+    print marcados2
+    losEjesDe = {}
+    for each in g.p1 :
+        losEjesDe[each] = []
+    for each in g.p2 :
+        losEjesDe[each] = []
+    for each in g.ejes:
         losEjesDe[each[0]].append(each[1])
         losEjesDe[each[1]].append(each[0])
-   bl = busquedaLocalReInsercion()
-   cruces = resultado.contarCruces()
-   print cruces
-   while(True):
-       resultado = bl.mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
-       print "ahora", contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-       if contadorDeCruces(resultado.l1,resultado.l2,losEjesDe) == cruces:
-            break
-       if contadorDeCruces(resultado.l1,resultado.l2,losEjesDe) > cruces:
-            raise Exception("no mejora una goma")
-       cruces = contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-   print "logre",contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-   
-   resultado = HeuristicaMediana2(dib).resolver()
-   DibujadorGrafoBipartito(resultado).grabar('PostLocal.svg')
-   cruces = resultado.contarCruces()
-   print cruces
-   caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
-   i=0
-   while(caca[1]):
-       print "mejora",contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-       resultado = caca[0]
-       caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
-       if caca[1]:
-           i=0
-       else:
-           i+=1
-   resultado=caca[0]
-   print contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-   DibujadorGrafoBipartito(resultado).grabar('Local.svg')
-   #print "la posta", posta.contarCruces()
-           
         
+    res=HeuristicaInsercionEjes(d).resolver()
+    blIG=BusquedaLocalReInsercion()
+    print "antes de la busqueda",res.contarCruces()
+    blIG.hallarMinimoLocal(res,marcados1,marcados2,losEjesDe)
+    print "despues de la misma", contadorDeCruces(res.l1,res.l2,losEjesDe)
+    DibujadorGrafoBipartito(res,marcados1=marcados1,marcados2=marcados2).grabar('localMediana.svg')        
     
