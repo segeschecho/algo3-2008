@@ -265,7 +265,7 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
         return cruces
 
 ###########################################
-# Clase base para resolvedores            #
+# Clases base para resolvedores           #
 ###########################################
 
 class ResolvedorConstructivo:
@@ -275,6 +275,13 @@ class ResolvedorConstructivo:
     def resolver(self):
         raise NotImplementedError
 
+
+class ResolvedorMejora:
+    def __init__(self, dib):
+        self.dibujo = dib
+
+    def resolver(self, dibujoCandidato):
+        raise NotImplementedError
 
 ###########################################
 # Tests                                   #
