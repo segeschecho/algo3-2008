@@ -2,7 +2,7 @@ import random
 from HeuristicaInsercionEjes import *
 import psyco
 psyco.full()
-class busquedaLocalIntercambio:
+class busquedaLocalIntercambioGreedy:
     
     def swapValido(self,i,j,l,marcados):
         if i in marcados:
@@ -16,11 +16,13 @@ class busquedaLocalIntercambio:
                    indAnterior = l.index(marcados[k-1])
                 if k != len(marcados)-1:
                    indSiguiente = l.index(marcados[k+1])
-                return indAnterior < k and k < indSiguiente
+                return indAnterior < l.index(j) and l.index(j) < indSiguiente
         elif j not in marcados:
             return True
         else:
             return self.swapValido(j,i,l,marcados)
+    
+    
             
     def mejorar(self,dibujo,marcados1,marcados2,losEjesDe):
         #buscamos la vecindad
@@ -32,8 +34,6 @@ class busquedaLocalIntercambio:
             for j in range(i,len(dibujo.l1)):
                 each2=dibujo.l1[j]
                 if self.swapValido(each,each2,dibujo.l1,marcados1):
-                    if each in marcados1 or each2 in marcados1:
-                        print (each,each2)
                     vecindad.append((each,each2))
         for i in range(len(dibujo.l2)):
             each = dibujo.l2[i]
@@ -80,38 +80,7 @@ class busquedaLocalIntercambio:
                 dibujo.l2[pos[0]] = pos[3]
                 dibujo.l2[pos[1]] = pos[2]
             #se hace return del nuevo dibujo y True si es que hubo cambios
-            return (Dibujo(dibujo.g,dibujo.l1,dibujo.l2),True)
-        return (dibujo,False)
+            return Dibujo(dibujo.g,dibujo.l1,dibujo.l2)
+        return dibujo
 
-if __name__ == '__main__':
-   g = generarGrafoBipartitoAleatorio(13,13,47)
-   print 'nodos =', g.p1
-   print 'nodos =', g.p2
-   print 'ejes =', g.ejes
-   ejes = g.ejes
-   dib = generarDibujoAleatorio(g,20,40)
-   marcadosl1 = dib.l1[:]
-   marcadosl2 = dib.l2[:]
-   resultado = HeuristicaInsercionEjes(dib).resolver()
-   print resultado.contarCruces()
-   DibujadorGrafoBipartito(resultado).grabar('sinLocal.svg')
-   losEjesDe = {}
-   for each in dib.l1+dib.l2:
-       losEjesDe[each] = []
-   for each in ejes:
-        losEjesDe[each[0]].append(each[1])
-        losEjesDe[each[1]].append(each[0])
-   caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
-   i=0
-   
-   while(caca[1]):
-       print "mejora",contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-       resultado = caca[0]
-       caca = busquedaLocalIntercambio().mejorar(resultado,marcadosl1,marcadosl2,losEjesDe)
-       if caca[1]:
-           i=0
-       else:
-           i+=1
-   resultado=caca[0]
-   print contadorDeCruces(resultado.l1,resultado.l2,losEjesDe)
-   DibujadorGrafoBipartito(resultado).grabar('Local.svg')
+

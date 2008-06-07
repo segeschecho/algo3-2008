@@ -4,7 +4,7 @@ from Dibujador import DibujadorGrafoBipartito
 from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
 
 class HeuristicaInsercionNodos(ResolvedorConstructivo):
-
+    #TODO: agregar valor alfa para la seleccion randomizada de los nodos
     def resolver(self):
         d = self.dibujo
         g = self.dibujo.g
