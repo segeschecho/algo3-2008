@@ -1,14 +1,29 @@
 from HeuristicaDeLaMediana import *
 from HeuristicaInsercionEjes import *
-from HeuristicaInsercionNodos import *
-import psyco
-psyco.full()
+from HeuristicaInsercionNodosMayorGrado import *
+from HeuristicaInsercionNodosMenorGrado import *
+from HeuristicaInsercionNodosPrimero import *
+from HeuristicaInsercionNodosRandom import *
+#import psyco
+#psyco.full()
 
+def testHeuristicasAgregarNodos(p1,p2,v1,v2,m):
+    g =  generarGrafoBipartitoAleatorio(p1+v1, p2+v2, m)
+    d = generarDibujoAleatorio(g, v1, v2)
+    resMayorGrado = HeuristicaInsercionNodosMayorGrado(d).resolver(0)
+    print 'Cruces insercion nodo mayor grado:', resMayorGrado.contarCruces()
+    resMenorGrado = HeuristicaInsercionNodosMenorGrado(d).resolver(0)
+    print 'Cruces insercion nodo menor grado:', resMenorGrado.contarCruces()
+    resPrimero = HeuristicaInsercionNodosPrimero(d).resolver()
+    print 'Cruces insercion nodo primero:', resPrimero.contarCruces()
+    resRandom = HeuristicaInsercionNodosRandom(d).resolver()
+    print 'Cruces insercion nodo random:', resRandom.contarCruces()
+    
 def testHeuristicas(p1,p2,v1,v2,m):
     g =  generarGrafoBipartitoAleatorio(p1+v1, p2+v2, m)
     d = generarDibujoAleatorio(g, v1, v2)
     resMed = HeuristicaDeLaMediana(d).resolver()
-    resInsN = HeuristicaInsercionNodos(d).resolver()
+    resInsN = HeuristicaInsercionNodosMayorGrado(d).resolver()
     resInsE = HeuristicaInsercionEjes(d).resolver()
     return (resMed.contarCruces(),resInsN.contarCruces(),resInsE.contarCruces())
 
@@ -66,4 +81,5 @@ def testDenso(p1Max):
     p1 = open("testDenso.m","w")
     p1.write("n="+str(range(3,p1Max+1))+";")
     
-testDenso(100)
+#testDenso(100)
+testHeuristicasAgregarNodos(10,10,5,5,30)

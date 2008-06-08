@@ -2,8 +2,9 @@
 from GrafoBipartito import ResolvedorConstructivo, Dibujo
 from Dibujador import DibujadorGrafoBipartito
 from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
+import random
 
-class HeuristicaInsercionNodos(ResolvedorConstructivo):
+class HeuristicaInsercionNodosRandom(ResolvedorConstructivo):
     #TODO: agregar valor alfa para la seleccion randomizada de los nodos
     def resolver(self):
         d = self.dibujo
@@ -18,11 +19,11 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
 
         while(movilesEnV1 != [] or movilesEnV2 != []):
             if movilesEnV1 != [] :
-                v = movilesEnV1.pop(self._indiceMenorGrado(movilesEnV1, dibujo))
+                v = movilesEnV1.pop(random.randint(0, len(movilesEnV1) - 1))
                 dibujo = self._insertarNodo(v, res1, True, dibujo)
                 res1 = dibujo.l1[:]
             if movilesEnV2 != [] :
-                v = movilesEnV2.pop(self._indiceMenorGrado(movilesEnV2, dibujo))
+                v = movilesEnV2.pop(random.randint(0, len(movilesEnV2) - 1))
                 dibujo = self._insertarNodo(v, res2, False, dibujo)
                 res2 = dibujo.l2[:]
 
@@ -43,17 +44,6 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
 
         
         return dibujo
-
-    def _indiceMenorGrado(self, movilesEnVi, dibujo):
-        indiceMenor = 0
-        ejesMenor = [x for x in dibujo.g.ejes if x[0] == 0 or x[1] == 0]
-        for i in range(len(movilesEnVi)):
-            ejesIesimo = [x for x in dibujo.g.ejes if x[0] == movilesEnVi[i] or x[1] == movilesEnVi[i]]
-            if len(ejesIesimo) < len(ejesMenor):
-                indiceMayor = i
-                ejesMenor = ejesIesimo
-
-        return indiceMenor
 
     def _insertarNodo(self, v, Vi, agregoEnV1, dibujo):
         g = self.dibujo.g
@@ -101,5 +91,5 @@ if __name__ == '__main__':
     print 'nodos =', g.p2
     print 'ejes =', g.ejes
     dib = generarDibujoAleatorio(g,2,4)
-    resultado = HeuristicaInsercionNodos(dib).resolver()
+    resultado = HeuristicaInsercionNodosRandom(dib).resolver()
     DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')
