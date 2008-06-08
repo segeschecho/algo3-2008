@@ -47,5 +47,23 @@ def testMitadDeEjes(p1Max):
     insE.write("];")
     p1 = open("testMitad.m","w")
     p1.write("n="+str(range(3,p1Max+1))+";")
+
+def testDenso(p1Max):
+    med = open("testDensoMed.m","w")
+    insE = open("testDensoInsE.m","w")
+    insN = open("testDensoInsN.m","w")
+    med.write("med=[")
+    insN.write("insN=[")
+    insE.write("insE=[")
+    for each in range(3,p1Max+1):
+        res = testHeuristicas(each,each,each/2,each/2,(each*each)-each)
+        med.write(str(res[0])+" ")
+        insN.write(str(res[1])+" ")
+        insE.write(str(res[2])+" ")
+    med.write("];")
+    insN.write("];")
+    insE.write("];")
+    p1 = open("testDenso.m","w")
+    p1.write("n="+str(range(3,p1Max+1))+";")
     
-testMitadDeEjes(100)
+testDenso(100)

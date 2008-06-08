@@ -248,7 +248,7 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
         for each in lista2:
             sur.append(each[1])
         primerIndice=1
-        while primerIndice <= len(p2):
+        while primerIndice < len(p2):
             primerIndice *= 2
         arbol = [0]*(2*primerIndice - 1)
         primerIndice -=1
@@ -263,7 +263,6 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
                 indice=(indice -1)/2
                 arbol[indice]+=1
         return cruces
-
 ###########################################
 # Clases base para resolvedores           #
 ###########################################
@@ -281,6 +280,11 @@ class ResolvedorMejora:
         self.dibujo = dib
 
     def resolver(self, dibujoCandidato):
+        raise NotImplementedError
+
+class Grasp:
+ 
+    def resolver(dib):
         raise NotImplementedError
 
 ###########################################
