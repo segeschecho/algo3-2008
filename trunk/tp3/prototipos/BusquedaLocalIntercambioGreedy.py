@@ -55,7 +55,7 @@ class BusquedaLocalIntercambioGreedy:
         pos = None
         for each in vecindad:
             #esto se puede saber por el valor de each[0]
-            #determino en q li eesta y hago swap
+            #determino en q li eesta y hago switch
             if each[0] in dibujo.l1:
                 donde = 0
                 i = dibujo.l1.index(each[0])
@@ -68,7 +68,7 @@ class BusquedaLocalIntercambioGreedy:
                 j = dibujo.l2.index(each[1])
                 dibujo.l2[i]=each[1]
                 dibujo.l2[j] = each[0]
-            #me fijo la cantidad de cruces actual, luego de swapear
+            #me fijo la cantidad de cruces actual, luego de switchear
             actual = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
             #si mejora me la guardo 
             if actual < cruces:
@@ -93,8 +93,8 @@ class BusquedaLocalIntercambioGreedy:
 
 
 if __name__ == '__main__':
-    g =  generarGrafoBipartitoAleatorio(12, 12, 60)
-    d = generarDibujoAleatorio(g,3, 3)
+    g =  generarGrafoBipartitoAleatorio(10, 10, 60)
+    d = generarDibujoAleatorio(g,8, 8)
     marcados1 = d.l1[:]
     print marcados1
     marcados2 = d.l2[:]

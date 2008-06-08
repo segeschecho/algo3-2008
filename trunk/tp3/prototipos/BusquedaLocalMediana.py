@@ -129,8 +129,8 @@ class BusquedaLocalMediana:
                 cambio = True
 
 if __name__ == '__main__':
-    g =  generarGrafoBipartitoAleatorio(12, 12, 60)
-    d = generarDibujoAleatorio(g,3, 3)
+    g =  generarGrafoBipartitoAleatorio(100, 100, 200)
+    d = generarDibujoAleatorio(g,50, 50)
     marcados1 = d.l1[:]
     print marcados1
     marcados2 = d.l2[:]

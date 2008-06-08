@@ -7,7 +7,7 @@ import svg
 from GrafoBipartito import GrafoBipartito, Dibujo
 
 class DibujadorGrafoBipartito:
-    def __init__(self, dibujo, nombre="GrafoBipartito", height=600,marcados1=None,marcados2=None):
+    def __init__(self, dibujo, nombre="GrafoBipartito", height=800,marcados1=None,marcados2=None):
         self.dibujo = dibujo
 
         # calculo las dimensiones
