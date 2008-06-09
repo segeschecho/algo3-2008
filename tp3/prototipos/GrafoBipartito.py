@@ -410,8 +410,18 @@ class ResolvedorMejora:
     def __init__(self, dib):
         self.dibujo = dib
 
-    def resolver(self, dibujoCandidato):
+    def resolver(self):
         raise NotImplementedError
+
+# FIXME: arreglar la signatura de esta clase
+#        para que sea igual que las anteriores
+
+#class Grasp:
+#    def __init__(self, dib):
+#        self.dibujo = dib
+#
+#    def resolver(self):
+#        raise NotImplementedError
 
 class Grasp:
  
