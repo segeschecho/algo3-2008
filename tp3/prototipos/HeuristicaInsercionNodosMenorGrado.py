@@ -4,7 +4,7 @@ from Dibujador import DibujadorGrafoBipartito
 from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
 from sets import *
 class HeuristicaInsercionNodosMenorGrado(ResolvedorConstructivo):
-    def resolver(self, alfa):
+    def resolver(self, alfa=1):
         d = self.dibujo
         g = self.dibujo.g
 

@@ -3,7 +3,7 @@ from HeuristicaInsercionEjes import *
 import psyco
 from psyco import *
 
-class BusquedaLocalReInsercion:
+class BusquedaLocalReInsercion(BusquedaLocal):
     def _rango(self,x,pi,marcados):
         if x not in marcados:
            return range(len(pi)+1)

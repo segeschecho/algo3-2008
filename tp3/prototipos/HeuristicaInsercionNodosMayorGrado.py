@@ -5,7 +5,7 @@ from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleator
 from sets import *
 
 class HeuristicaInsercionNodosMayorGrado(ResolvedorConstructivo):
-    def resolver(self, alfa):
+    def resolver(self, alfa=1):
         d = self.dibujo
         g = self.dibujo.g
 
@@ -19,12 +19,12 @@ class HeuristicaInsercionNodosMayorGrado(ResolvedorConstructivo):
         while(movilesEnV1 != [] or movilesEnV2 != []):
             if movilesEnV1 != [] :
                 v = movilesEnV1.pop(self._indiceMayorGrado(movilesEnV1, movilesEnV2, dibujo, alfa))
-                print 'v en v1', v
+                #print 'v en v1', v
                 dibujo = self._insertarNodo(v, res1, True, dibujo)
                 res1 = dibujo.l1[:]
             if movilesEnV2 != [] :
                 v = movilesEnV2.pop(self._indiceMayorGrado(movilesEnV2, movilesEnV1, dibujo, alfa))
-                print 'v en v2', v
+                #print 'v en v2', v
                 dibujo = self._insertarNodo(v, res2, False, dibujo)
                 res2 = dibujo.l2[:]
 

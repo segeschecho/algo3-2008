@@ -1,8 +1,9 @@
 import random
+
 from HeuristicaInsercionEjes import *
 import psyco
 psyco.full()
-class BusquedaLocalIntercambioGreedy:
+class BusquedaLocalIntercambioGreedy(BusquedaLocal):
     
     def swapValido(self,i,j,l,marcados):
         if i in marcados:
