@@ -406,11 +406,17 @@ class ResolvedorConstructivo:
         raise NotImplementedError
 
 
-class ResolvedorMejora:
-    def __init__(self, dib):
-        self.dibujo = dib
+class BusquedaLocal:
 
-    def resolver(self):
+
+    #dibujo: dibujo a mejorar
+    #marcadosi: lista de nodos marcados y la posicion a respetar
+    #losEjesDe: diccionario nodo, lista de nodos adyacentes
+    #idealmente hallarMinimoLocal deberia ser un ciclo que llame a mejorar hasta
+    #estancarse
+    def hallarMinimoLocal(self,dibujo,marcados1,marcados2,losEjesDe):
+        raise NotImplementedError
+    def mejorar(self,dibujo,marcados1,marcados2,losEjesDe):
         raise NotImplementedError
 
 # FIXME: arreglar la signatura de esta clase

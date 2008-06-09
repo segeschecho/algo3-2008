@@ -19,6 +19,8 @@ class HeuristicaDeLaMediana (ResolvedorConstructivo):
         marcados2 = self.dibujo.l2
         marcadosl1=marcados1
         marcadosl2=marcados2
+        print marcados1
+        print marcados2
         #nodos totales
         v1 = sinMarcar1
         v2 = sinMarcar2 
@@ -30,7 +32,7 @@ class HeuristicaDeLaMediana (ResolvedorConstructivo):
         losEjesEntreLosPuestos = {}
         medianas={}
         #lo inicializo
-        for each in v1 + v2:
+        for each in v1 + v2+marcados1+marcados2:
             losEjesEntreLosPuestos[each] = []
         for each in v1+v2+marcados1+marcados2:
             ejesDe[each] = []
@@ -39,9 +41,9 @@ class HeuristicaDeLaMediana (ResolvedorConstructivo):
         for each in self.dibujo.g.ejes:
             ejesDe[each[0]].append(each[1])
             ejesDe[each[1]].append(each[0])
-            if each[0] in v1 and each[1] in p2:
+            if each[1] in p2:
                 losEjesEntreLosPuestos[each[0]].append(each[1])
-            if each[1] in v2 and each[0] in p1:
+            if each[0] in p1:
                 losEjesEntreLosPuestos[each[1]].append(each[0])
         
         while (v1 != [] or v2 != []):
@@ -54,20 +56,66 @@ class HeuristicaDeLaMediana (ResolvedorConstructivo):
                     medianas[x] = med
                     if med > len(p1):
                         med = len(p1)
-                    p1.insert(med,x)
                     for each in ejesDe[x]:
-                        if each not in p2:
-                            losEjesEntreLosPuestos[each].append(x)
+                        losEjesEntreLosPuestos[each].append(x)
+                    medMenos1 = med - 1
+                    medMas1 = med + 1
+                    p1.insert(med,x)
+                    crucesInicial = contadorDeCruces(p1,p2,losEjesEntreLosPuestos)
+                    crucesMejor = crucesInicial
+                    indiceMejor = med
+                    if medMenos1 >= 0:
+                        crucesPreSwap = crucesEntre(p1[med-1],p1[med],p2,losEjesEntreLosPuestos)
+                        crucesPostSwap = crucesEntre(p1[med],p1[med-1],p2,losEjesEntreLosPuestos)
+                        if crucesPostSwap > crucesPreSwap:
+                            indiceMejor = med - 1
+                            crucesMejor = crucesInicial - crucesPreSwap + crucesPostSwap
+                    if medMas1 < len(p1):
+                        crucesPreSwap = crucesEntre(p1[med],p1[med+1],p2,losEjesEntreLosPuestos)
+                        crucesPostSwap = crucesEntre(p1[med+1],p1[med],p2,losEjesEntreLosPuestos)
+                        if crucesMejor > (crucesInicial - crucesPreSwap + crucesPostSwap):
+                            indiceMejor = med + 1
+                    if indiceMejor == medMenos1:
+                        aux = p1[med]
+                        p1[med] = p1[med - 1]
+                        p1[med - 1] = aux
+                    if indiceMejor == medMas1:
+                        aux = p1[med]
+                        p1[med] = p1[med + 1]
+                        p1[med + 1] = aux
                         
             else:
                     med=self.calcularMediana(x,p1,losEjesEntreLosPuestos)
                     medianas[x] = med
                     if med > len(p2):
                         med = len(p2)
-                    p2.insert(med,x)
                     for each in ejesDe[x]:
-                        if each not in p1:
-                            losEjesEntreLosPuestos[each].append(x)
+                        losEjesEntreLosPuestos[each].append(x)
+                    medMenos1 = med - 1
+                    medMas1 = med + 1
+                    p2.insert(med,x)
+                    crucesInicial = contadorDeCruces(p2,p1,losEjesEntreLosPuestos)
+                    crucesMejor = crucesInicial
+                    indiceMejor = med
+                    if medMenos1 >= 0:
+                        crucesPreSwap = crucesEntre(p2[med-1],p2[med],p1,losEjesEntreLosPuestos)
+                        crucesPostSwap = crucesEntre(p2[med],p2[med-1],p1,losEjesEntreLosPuestos)
+                        if crucesPostSwap > crucesPreSwap:
+                            indiceMejor = med - 1
+                            crucesMejor = crucesInicial - crucesPreSwap + crucesPostSwap
+                    if medMas1 < len(p2):
+                        crucesPreSwap = crucesEntre(p2[med],p2[med+1],p1,losEjesEntreLosPuestos)
+                        crucesPostSwap = crucesEntre(p2[med+1],p2[med],p1,losEjesEntreLosPuestos)
+                        if crucesMejor > (crucesInicial - crucesPreSwap + crucesPostSwap):
+                            indiceMejor = med + 1
+                    if indiceMejor == medMenos1:
+                        aux = p2[med]
+                        p2[med] = p2[med - 1]
+                        p2[med - 1] = aux
+                    if indiceMejor == medMas1:
+                        aux = p2[med]
+                        p2[med] = p2[med + 1]
+                        p2[med + 1] = aux
         #tratamos de arreglar los corrimientos por empate, hacemos para eso unos swaps                    
         p1 = self.corregirDesvios(p1,p2,marcadosl1,ejesDe)
         p2 = self.corregirDesvios(p2,p1,marcadosl2,ejesDe)
@@ -142,20 +190,11 @@ class HeuristicaDeLaMediana (ResolvedorConstructivo):
         
 
 if __name__ == '__main__':
-    g = generarGrafoBipartitoAleatorio(150,150,802)
-    print 'nodos =', g.p1
-    print 'nodos =', g.p2
-    print 'ejes =', g.ejes
-    dib = generarDibujoAleatorio(g,40,30)
-    resultado3 = HeuristicaInsercionEjes(dib).resolver()
-    #resultado2 = ResolvedorBasicoConPoda(dib).resolver()
-    #resultado4 = HeuristicaInsercionNodos(dib).resolver()
-    resultado = HeuristicaMediana2(dib).resolver()
-    
-    
-    print "mediana", resultado.contarCruces()
-    print "insercion",resultado3.contarCruces()
-    #print "nodos", resultado4.contarCruces()
-
-    DibujadorGrafoBipartito(resultado3).grabar('dibuj2o.svg') 
-    DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')        
+   g = generarGrafoBipartitoAleatorio(5,5,11)
+   print 'nodos =', g.p1
+   print 'nodos =', g.p2
+   print 'ejes =', g.ejes
+   dib = generarDibujoAleatorio(g,2,2)
+   resultado = HeuristicaDeLaMediana(dib).resolver()
+   print "ahora dio", resultado.contarCruces()
+   DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')

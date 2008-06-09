@@ -57,8 +57,8 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            marcadosl2 = list(self.dibujo.l2)
        else:
            marcadosl2 = marcados2
-       print marcadosl1
-       print marcadosl2
+       #print marcadosl1
+       #print marcadosl2
        #obtengo los que tengo que poner (los q me dieron para agregar)
        if nodosAponer1 == None:
           v1 = [x for x in p1 if x not in marcadosl1]
@@ -192,9 +192,9 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            p1Parcial.remove(x)
            p1Parcial.insert(pos[0],x)
            p2Parcial.insert(pos[1],y)
-           print (x,y)
-           print p1Parcial
-           print p2Parcial
+           #print (x,y)
+           #print p1Parcial
+           #print p2Parcial
 ##           print "al eje ",(x,y),"lo inserte en",pos
 ##           print "al hacerlo el grafo tiene", cantCruces, "cruces"
 ##           print "p1:",p1Parcial

@@ -38,9 +38,9 @@ class DibujadorGrafoBipartito:
         # filtro los ejes que me interesan
         ejes = []
         for a,b in self.dibujo.g.ejes:
-            if ((a in l1 and b in l2) or (b in l1 and a in l2)):
-                if a in l2:
-                    a,b = b,a
+           # if ((a in l1 and b in l2) or (b in l1 and a in l2)):
+            #    if a in l2:
+             #       a,b = b,a
                 ejes.append((a,b))
         
         # dibujo los ejes

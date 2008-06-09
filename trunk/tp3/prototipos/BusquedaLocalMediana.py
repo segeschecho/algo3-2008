@@ -1,9 +1,9 @@
 import random
-from HeuristicaInsercionEjes import *
+from HeuristicaDeLaMediana import *
 import psyco
 psyco.full()
 
-class BusquedaLocalMediana:
+class BusquedaLocalMediana(BusquedaLocal):
     def calcularMediana(self,each,indicesi,losEjesDe):
         med = []
         for each1 in losEjesDe[each]:
@@ -129,8 +129,8 @@ class BusquedaLocalMediana:
                 cambio = True
 
 if __name__ == '__main__':
-    g =  generarGrafoBipartitoAleatorio(100, 100, 200)
-    d = generarDibujoAleatorio(g,50, 50)
+    g =  generarGrafoBipartitoAleatorio(20, 20, 200)
+    d = generarDibujoAleatorio(g,10, 10)
     marcados1 = d.l1[:]
     print marcados1
     marcados2 = d.l2[:]
@@ -144,7 +144,7 @@ if __name__ == '__main__':
         losEjesDe[each[0]].append(each[1])
         losEjesDe[each[1]].append(each[0])
         
-    res=HeuristicaInsercionEjes(d).resolver()
+    res=HeuristicaDeLaMediana(d).resolver()
     blIG=BusquedaLocalMediana()
     print "antes de la busqueda",res.contarCruces()
     blIG.hallarMinimoLocal(res,marcados1,marcados2,losEjesDe)

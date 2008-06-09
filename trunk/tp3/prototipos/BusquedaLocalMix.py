@@ -2,7 +2,7 @@ from BusquedaLocalIntercambioGreedy import *
 from BusquedaLocalReInsercion import *
 from HeuristicaInsercionEjes import *
 
-class BusquedaLocalMix:
+class BusquedaLocalMix(BusquedaLocal):
     def hallarMinimoLocal(self,dibujo,marcados1,marcados2,losEjesDe):
         crucesInicial = contadorDeCruces(dibujo.l1,dibujo.l2,losEjesDe)
         cambio = True
