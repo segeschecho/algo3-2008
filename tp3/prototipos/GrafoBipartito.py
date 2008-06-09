@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from sets import Set
-
+import math
 
 ###########################################
 # Clase GrafoBipartito                    #
@@ -27,9 +27,9 @@ class GrafoBipartito:
             raise AssertionError, "Error: p1, p2 y ejes deben ser conjuntos."
         
         # particion valida
-        assert len(p1) > 0, "Error: p1 no puede ser vacío."
-        assert len(p2) > 0, "Error: p2 no puede ser vacío."
-        assert len(p1.intersection(p2)) == 0, "Error: la particion no es valida."
+        #assert len(p1) > 0, "Error: p1 no puede ser vacío."
+        #assert len(p2) > 0, "Error: p2 no puede ser vacío."
+        #assert len(p1.intersection(p2)) == 0, "Error: la particion no es valida."
 
         # bipartito
         for a,b in ejes:
@@ -216,10 +216,12 @@ class Dibujo:
 #indice1 e indice 2 son parametros opcionales, si se conocen los indices de los
 #elementos se puede apurar el calculo no re armando los indices cada vez
 def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
-	
+	#quiero tener a la de menor tamaño como segundo parametro
+        #para lograr O(m*log(min(p1,p2))
         if len(p1) < len(p2):
             return contadorDeCruces(p2,p1,losEjes,indice2,indice1)
         lista=[]
+        #armo los indices si no me los dieron
         if indice1 == None:
             indice1={}
             for i in range(len(p1)):
@@ -228,12 +230,142 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
             indice2={}
             for i in range(len(p2)):
                 indice2[p2[i]]=i
+                
         #radixsort de los ejes
         for each in p2:
             for each2 in losEjes[each]:
                 lista.append((indice1[each2],indice2[each]))
+        #b1 y b2 van a ser las urnas
         b1=[[] for each in range(len(p2))]
         b2=[[] for each in range(len(p1))]
+        #ordeno por segunda componente
+        for each in lista:
+            b1[each[1]].append(each)
+        lista2=[]
+        for i in range(len(b1)):
+            lista2.extend(b1[i])
+        #ahora por primera
+        for each in lista2:
+            b2[each[0]].append(each)
+        lista2=[]
+        for i in range(len(b2)):
+            lista2.extend(b2[i])
+        # sur va a tener las segundas componentes
+        # de los ejes, sur viene de q si hay 2 particiones
+        #la de arriba es la del norte :p y la de abajo la del sur :D
+        sur=[]
+        
+        for each in lista2:
+            sur.append(each[1])
+
+        #averiguo el tamanio del arbol
+        primerIndice = int(math.pow(2,math.ceil(math.log(len(p2),2))))
+        #creo el arbol acumulador inicializado en 0
+        arbol = [0]*(2*primerIndice - 1)
+        #me paro en la hoja izquierda
+        primerIndice -=1
+        
+        cruces=0
+        #inserto los ejes
+        for i in range(len(sur)):
+            #indice = a que hoja pertenece el eje
+            indice=sur[i]+primerIndice
+            #hay un eje mas en esta hoja
+            arbol[indice]+=1
+            #recorro hacia arriba
+            while(indice > 0):
+                #si estoy parado en un nodo izquierdo, miro al hermano
+                #para saber cuantos cruces agrego
+                if (indice % 2 == 1):
+                    cruces += arbol[indice+1]
+                #subo un nivel
+                indice=(indice -1)/2
+                #aumento el acumulador del nodo
+                arbol[indice]+=1
+        return cruces
+
+# version optimizada para calcular los cruces entre x e y
+# con pos(x) = i y pos(y) = i + 1
+#indice2 es un parametro opcional para no tener que recalcular los indices
+#de la otra particion
+def crucesEntre(x,y,p2,losEjes, indice2 = None):
+        lista=[]
+        if indice2 == None:
+            indice2={}
+            for i in range(len(p2)):
+                indice2[p2[i]]=i
+        #radixsort de los ejes
+        for each in losEjes[x]:
+                lista.append((indice2[each],0))
+        for each in losEjes[y]:
+                lista.append((indice2[each],1))
+
+        b2=[[] for each in range(len(p2))]
+        b1=[[],[]]
+        for each in lista:
+            b1[each[1]].append(each)
+        lista2=[]
+        for i in range(2):
+            lista2.extend(b1[i])
+        for each in lista2:
+            b2[each[0]].append(each)
+        lista2=[]
+        for i in range(len(b2)):
+            lista2.extend(b2[i])
+        
+        sur=[]
+
+        for each in lista2:
+            sur.append(each[1])
+        primerIndice = 1
+        arbol = [0,0,0]
+        cruces = 0
+
+        for i in range(len(sur)):
+
+            indice=sur[i]+primerIndice
+            arbol[indice]+=1
+            while(indice > 0):
+                if (indice == 1):
+                    cruces += arbol[indice+1]
+                indice=(indice -1)/2
+                arbol[indice]+=1
+        return cruces
+
+#funcion especializada en el conteo de cruces que genera el primer elemento
+#de p1, es util cuando ya se sabia cuantos cruces habia y se agrego un nuevo
+#elemento al principio
+#x es el elemento que se quiere agregar, si no se pasa se utiliza el primero
+#de p1
+def crucesPorAgregar(p1,p2,losEjes,x=None, indice2 = None):
+	
+        if x == None:
+            candidato = p1[0]
+        else:
+            candidato = x
+            
+        lista=[]
+        if indice2 == None:
+            indice2={}
+            for i in range(len(p2)):
+                indice2[p2[i]]=i
+        #radixsort de los ejes
+        if x != None:
+            for each in p1+[x]:
+                for each2 in losEjes[each]:
+                    if each == candidato:
+                        lista.append((indice2[each2],0))
+                    else:
+                        lista.append((indice2[each2],1))
+        else:
+            for each in p1:
+                for each2 in losEjes[each]:
+                    if each == candidato:
+                        lista.append((indice2[each2],0))
+                    else:
+                        lista.append((indice2[each2],1))
+        b2=[[] for each in range(len(p2))]
+        b1=[[],[]]
         for each in lista:
             b1[each[1]].append(each)
         lista2=[]
@@ -244,14 +376,12 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
         lista2=[]
         for i in range(len(b2)):
             lista2.extend(b2[i])
+        
         sur=[]
         for each in lista2:
             sur.append(each[1])
-        primerIndice=1
-        while primerIndice < len(p2):
-            primerIndice *= 2
-        arbol = [0]*(2*primerIndice - 1)
-        primerIndice -=1
+        primerIndice = 1
+        arbol = [0,0,0]
         cruces=0
         for i in range(len(sur)):
             indice=sur[i]+primerIndice
@@ -263,6 +393,7 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
                 indice=(indice -1)/2
                 arbol[indice]+=1
         return cruces
+
 ###########################################
 # Clases base para resolvedores           #
 ###########################################
