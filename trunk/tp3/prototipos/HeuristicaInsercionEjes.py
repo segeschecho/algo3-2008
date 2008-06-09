@@ -57,6 +57,8 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            marcadosl2 = list(self.dibujo.l2)
        else:
            marcadosl2 = marcados2
+       print marcadosl1
+       print marcadosl2
        #obtengo los que tengo que poner (los q me dieron para agregar)
        if nodosAponer1 == None:
           v1 = [x for x in p1 if x not in marcadosl1]
@@ -85,30 +87,36 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
        ejesSinPoner += [(x,y) for (x,y) in ejes if (x in v1 and y in v2)]
        #cruces=self.contarCruces(p1Parcial,p2Parcial,ejesPuestos)
        losEjesDe ={}
-       #lista de adyacencia del grafo (solo los ejes puestos)
+       #lista de adyacencia del grafo
        for each in (p1Parcial+p2Parcial+v1+v2):
            losEjesDe[each]=[]
+       #solo pongo los ejes de los nodos fijos
        for (x,y) in ejesPuestos:
            losEjesDe[x]+=[y]
            losEjesDe[y]+=[x]
-       #voy poniendo de a uno los ejes
+       #puesto me va a permitir saber si el nodo ya lo puse
+       #por lo cual tengo q sacarlo y reinsertar
+       #o es la primera vez que lo pongo
        puesto = {}
        for each in v1+v2:
            puesto[each] = False
        for each in p2Parcial + p1Parcial:
            puesto[each] = True
-
-           
+       #indices de los nodos en su pi correspondiente
+       indice1 = {}
+       indice2 = {}
        for par in range(len(ejesSinPoner)):
+           #caso en el que no hay q elegir al azar
            if alfa == 1:
                each = ejesSinPoner[par]
            else:
-                each = (random.sample(ejesSinPoner,1))[0]
+                each = random.choice(ejesSinPoner)
                 ejesSinPoner.remove(each)
            (x,y) = each
            cantCruces = None
            Pos = (None, None)
-           # voy a actualizar la posicion de los nodos del ejes
+           #si estaba puesto lo saco, sino lo marco como q apartir de ahora
+           #ya esta puesto
            if puesto[x]:
                p1Parcial.remove(x)
            else:
@@ -117,7 +125,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                p2Parcial.remove(y)
            else:
                puesto[y] = True
-               
+           #pongo el nuevo eje   
            ejesPuestos.append((x,y))
            losEjesDe[x].append(y)
            losEjesDe[y].append(x)
@@ -130,24 +138,29 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            p1Parcial.insert(i1,x)
            pos = (i1,j1)
            p2Parcial.insert(j1,y)
-           crucesInicial = contadorDeCruces(p1Parcial,p2Parcial,losEjesDe)
-           cruces=crucesInicial
-           iteracionesi = 0
-           #construyo los indices de los elementos de p1 para acelerar el calculo de cruces
-           indice1 = {}
+           
            for i in range(len(p1Parcial)):
                indice1[p1Parcial[i]] = i
-           #recorro todas las posiciones de p1
+           for i in range(len(p2Parcial)):
+               indice2[p2Parcial[i]] = i
+           crucesInicial = contadorDeCruces(p1Parcial,p2Parcial,losEjesDe,indice1=indice1,indice2=indice2)
+           cruces=crucesInicial
+           iteracionesi = 0
+
            for i in rangoi:
                 iteracionesj = 0
+
                 # lo dejo en la pos i y miro todas las posiciones de p2 posibles para el nodo y
                 for j in rangoj:
                        actual = cruces
+##                       print "al ubicarlos asi tengo:",actual
+##                       print "p1",p1Parcial
+##                       print "p2",p2Parcial
                        if iteracionesj != len(rangoj) -1:
                            #lo que hacemos es contar los cruces asi como estan y swapeados para saber como
                            #cambia la cantidad de cruces
-                           crucesj = contadorDeCruces(p1Parcial,[y,p2Parcial[j+1]],losEjesDe,indice1,None)
-                           crucesj1 = contadorDeCruces(p1Parcial,[p2Parcial[j+1],y],losEjesDe,indice1,None)
+                           crucesj = crucesEntre(y,p2Parcial[j+1],p1Parcial,losEjesDe, indice2 = indice1)
+                           crucesj1 = crucesEntre(p2Parcial[j+1],y,p1Parcial,losEjesDe, indice2 = indice1)
                            cruces = cruces - crucesj + crucesj1
                            #swapeo de verdad los nodos
                            auxj=p2Parcial[j]
@@ -158,34 +171,35 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                        if cantCruces == None or actual < cantCruces:
                                cantCruces=actual
                                pos=(i,j)
-                       iteracionesj += 1
-                aux = p1Parcial[i]
+                               
+                       iteracionesj +=1
+                       
                 p2Parcial.remove(y)
+
                 #ahora paso al nodo x a su proxima posicion
                 if iteracionesi != len(rangoi) - 1:
                     p2Parcial.insert(j1,y)
-                    try:
-                        crucesi = contadorDeCruces(p2Parcial,[x,p1Parcial[i+1]],losEjesDe,None,None)
-                    except:
-                        print "x",x
-                        print "p1Parcial",p1Parcial
-                        print "p2Parcial",p2Parcial
-                        print "i",i
-                        print "losEjesDe",losEjesDe
-                        raise 
-                    crucesi1 = contadorDeCruces(p2Parcial,[p1Parcial[i+1],x],losEjesDe,None,None)
+                    crucesi = crucesEntre(x,p1Parcial[i+1],p2Parcial,losEjesDe,indice2=indice2)
+                    crucesi1 = crucesEntre(p1Parcial[i+1],x,p2Parcial,losEjesDe,indice2=indice2)
                     cruces = crucesInicial - crucesi + crucesi1
                     crucesInicial = cruces
                     indice1[p1Parcial[i]] = i+1
                     indice1[p1Parcial[i+1]] = i
+                    aux = p1Parcial[i]
                     p1Parcial[i] = p1Parcial[i+1]
                     p1Parcial[i+1] = aux
                 iteracionesi += 1
            p1Parcial.remove(x)
            p1Parcial.insert(pos[0],x)
            p2Parcial.insert(pos[1],y)
-           
-       #aplico una mejora a la solucion dada: si crucesEntre(x,y) >= crucesEntre(y,x), es mejor intercambiarlo (solo vale para posicioes adyacentes)
+           print (x,y)
+           print p1Parcial
+           print p2Parcial
+##           print "al eje ",(x,y),"lo inserte en",pos
+##           print "al hacerlo el grafo tiene", cantCruces, "cruces"
+##           print "p1:",p1Parcial
+##           print "p2:",p2Parcial
+           #aplico una mejora a la solucion dada: si crucesEntre(x,y) >= crucesEntre(y,x), es mejor intercambiarlo (solo vale para posicioes adyacentes)
        for each in v1:
             if not puesto[each]:
                 p1Parcial.append(each)
@@ -196,7 +210,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
        return Dibujo(grafo,p1Parcial,p2Parcial)
 
 if __name__ == '__main__':
-   g = generarGrafoBipartitoAleatorio(4,4,4)
+   g = generarGrafoBipartitoAleatorio(5,5,11)
    print 'nodos =', g.p1
    print 'nodos =', g.p2
    print 'ejes =', g.ejes
