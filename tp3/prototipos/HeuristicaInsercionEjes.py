@@ -107,7 +107,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
        indice2 = {}
        for par in range(len(ejesSinPoner)):
            #caso en el que no hay q elegir al azar
-           if alfa == 1:
+           if alfa == 10:
                each = ejesSinPoner[par]
            else:
                 each = random.choice(ejesSinPoner)
@@ -146,7 +146,7 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
            crucesInicial = contadorDeCruces(p1Parcial,p2Parcial,losEjesDe,indice1=indice1,indice2=indice2)
            cruces=crucesInicial
            iteracionesi = 0
-
+           posiblesPosiciones=[]
            for i in rangoi:
                 iteracionesj = 0
 
@@ -168,7 +168,11 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                            p2Parcial[j+1] = auxj
                            
                        # si ponerlos en i,j me baja los cruces, actualizo
-                       if cantCruces == None or actual < cantCruces:
+                       if cantCruces == None or actual <= cantCruces:
+			       if cantCruces == actual:
+				       posiblesPosiciones.append((i,j))
+			       else:
+				       posiblesPosiciones=[(i,j)]
                                cantCruces=actual
                                pos=(i,j)
                                
@@ -190,8 +194,11 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
                     p1Parcial[i+1] = aux
                 iteracionesi += 1
            p1Parcial.remove(x)
+	   if alfa != 0:
+	       pos = random.choice(posiblesPosiciones)    
            p1Parcial.insert(pos[0],x)
            p2Parcial.insert(pos[1],y)
+	   
            #print (x,y)
            #print p1Parcial
            #print p2Parcial
@@ -210,12 +217,14 @@ class HeuristicaInsercionEjes (ResolvedorConstructivo):
        return Dibujo(grafo,p1Parcial,p2Parcial)
 
 if __name__ == '__main__':
-   g = generarGrafoBipartitoAleatorio(5,5,11)
-   print 'nodos =', g.p1
-   print 'nodos =', g.p2
-   print 'ejes =', g.ejes
-   dib = generarDibujoAleatorio(g,2,2)
-   resultado = HeuristicaInsercionEjes(dib).resolver()
+   #g = generarGrafoBipartitoAleatorio(5,5,11)
+   #print 'nodos =', g.p1
+   #print 'nodos =', g.p2
+   #print 'ejes =', g.ejes
+   #dib = generarDibujoAleatorio(g,2,2)
+   g=GrafoBipartito(Set([1,2,3,4,5,6]),Set([7,8,9,10,11,12]),Set( [(x+1,y) for x in range(6) for y in range(7,13) if (x + y) %  2 == 0]))
+   dib = Dibujo(g,[1,2,3],[7,8,9])
+   resultado = HeuristicaInsercionEjes(dib).resolver(alfa=0)
    print "ahora dio", resultado.contarCruces()
    DibujadorGrafoBipartito(resultado).grabar('dibujo.svg')
 
