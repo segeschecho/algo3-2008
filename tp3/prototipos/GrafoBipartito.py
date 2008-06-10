@@ -332,12 +332,11 @@ def crucesEntre(x,y,p2,losEjes, indice2 = None):
                 arbol[indice]+=1
         return cruces
 
-#funcion especializada en el conteo de cruces que genera el primer elemento
-#de p1, es util cuando ya se sabia cuantos cruces habia y se agrego un nuevo
-#elemento al principio
-#x es el elemento que se quiere agregar, si no se pasa se utiliza el primero
-#de p1
-def crucesPorAgregar(p1,p2,losEjes,x=None, indice2 = None):
+# Esta funcion calcula los cruces que genera agregar un elemento
+# adelante de la particion p1. Si x es None, se asume que el elemento
+# a contabilizar ya fue agregado en p1 (al principio), en caso contrario
+# se agrega el elemento x a p1.
+def crucesPorAgregarAdelante(p1,p2,losEjes,x=None, indice2 = None):
 	
         if x == None:
             candidato = p1[0]
@@ -364,6 +363,67 @@ def crucesPorAgregar(p1,p2,losEjes,x=None, indice2 = None):
                         lista.append((indice2[each2],0))
                     else:
                         lista.append((indice2[each2],1))
+        b2=[[] for each in range(len(p2))]
+        b1=[[],[]]
+        for each in lista:
+            b1[each[1]].append(each)
+        lista2=[]
+        for i in range(len(b1)):
+            lista2.extend(b1[i])
+        for each in lista2:
+            b2[each[0]].append(each)
+        lista2=[]
+        for i in range(len(b2)):
+            lista2.extend(b2[i])
+        
+        sur=[]
+        for each in lista2:
+            sur.append(each[1])
+        primerIndice = 1
+        arbol = [0,0,0]
+        cruces=0
+        for i in range(len(sur)):
+            indice=sur[i]+primerIndice
+            arbol[indice]+=1
+
+            while(indice > 0):
+                if (indice % 2 == 1):
+                    cruces += arbol[indice+1]
+                indice=(indice -1)/2
+                arbol[indice]+=1
+        return cruces
+
+# Esta funcion calcula los cruces que genera agregar un elemento
+# al final de la particion p1. Si x es None, se asume que el elemento
+# a contabilizar ya fue agregado en p1 (al final), en caso contrario
+# se agrega el elemento x a p1.
+def crucesPorAgregarAtras(p1,p2,losEjes,x=None, indice2 = None):
+	
+        if x == None:
+            candidato = p1[len(p1)-1]
+        else:
+            candidato = x
+            
+        lista=[]
+        if indice2 == None:
+            indice2={}
+            for i in range(len(p2)):
+                indice2[p2[i]]=i
+        #radixsort de los ejes
+        if x != None:
+            for each in p1+[x]:
+                for each2 in losEjes[each]:
+                    if each == candidato:
+                        lista.append((indice2[each2],1))
+                    else:
+                        lista.append((indice2[each2],0))
+        else:
+            for each in p1:
+                for each2 in losEjes[each]:
+                    if each == candidato:
+                        lista.append((indice2[each2],1))
+                    else:
+                        lista.append((indice2[each2],0))
         b2=[[] for each in range(len(p2))]
         b1=[[],[]]
         for each in lista:

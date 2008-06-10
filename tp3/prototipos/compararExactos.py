@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-#import psyco
-#psyco.full()
+import psyco
+psyco.full()
 
 from time import time
 
@@ -14,6 +14,7 @@ from SolucionBasica import ResolvedorBasico
 from SolucionBasicaPoda import ResolvedorBasicoConPoda
 from SolucionSwapper import ResolvedorSwapper
 from SolucionSwapperPoda import ResolvedorSwapperConPoda
+from SolucionSwapperTabla import ResolvedorSwapperTabla
 
 class Timer:
     def __init__(self):
@@ -42,8 +43,9 @@ def comparar():
            ResolvedorBasico, \
            ResolvedorBasicoConPoda, \
            ResolvedorSwapper, \
-           ResolvedorSwapperConPoda
-    
+           ResolvedorSwapperConPoda, \
+           ResolvedorSwapperTabla
+
     cruces = []
 
     for s in sols:
