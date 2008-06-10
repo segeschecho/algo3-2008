@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 from time import time
 
