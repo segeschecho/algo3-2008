@@ -142,6 +142,7 @@ Sin embargo, podemos evitar los casos donde se tengan pocos ejes. Para hacerlo, 
 De esta manera, el algoritmo 3 se muestra como la mejor opción.
 
 \section{Reutilización de los cálculos}
+\label{reUso}
 Si bien hay situaciones donde el orden relativo de los nodos en las particiones se modifica sustancialmente, por lo cual es necesario recalcular los cruces nuevamente, lo cual, como vimos en la sección anterior, tiene un costo bastante alto; hay otros casos donde se hace una modificación mas pequeña al orden de los mismos y es posible no recalcular todos los cruces.
 
 En particular si tenemos un orden de los nodos $\pi=\left\langle v_1,v_2,...v_i,v_{i+1},...,v_n \right\rangle$ y realizamos un ``swap'' entre dos posiciones consecutivas $i$, $i + 1$, podemos observar que si $\pi_1=C(\left\langle v_1,v_2,...,v_{i+1},v_{i},...v_n \right\rangle$ y definimos C($\pi$,$\rho$) como la cantidad de cruces entre los ejes del grafo, dado que los nodos de la primer partición estan ordenados seg'un $\pi$ y los de la segunda segunda según $\rho$, vale que:
@@ -150,7 +151,7 @@ En particular si tenemos un orden de los nodos $\pi=\left\langle v_1,v_2,...v_i,
 
 Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes de $b$ si $a$ esta en una posicion relativa menor que la de $b$ y dado que los nodos de la otra partición estan en el orden $\rho$. Esto se debe a que como dijimos anteriormente, los cruces dependen solo del orden relativo. Entonces si intercambiamos dos posiciones consecutivas, el orden relativo de los demas nodos se mantiene, es decir, los que estaban ``abajo'' de ellos siguen estando allí, y los que estaban ``arriba'' también, de modo que solo cambian los cruces que hay entre los dos nodos movidos.
 
-Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$. En este caso, como la partición tiene 2 nodos, y si ademas tenemos en cuenta que filtramos los nodos aislados y que por lo tanto vale que $m>\sharp v1\wedge m > \sharp v2$, resulta que el algoritmo puede calcular los cruces en $O(m_{a,b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$. 
+Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), , resulta que el algoritmo puede calcular los cruces en $O(\sharp v_2 + m_{a,b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_2$ es la otra partición. 
 
 En general si se intercambian dos nodos de posiciones consecutivas, $i$, $j$, la nueva cantidad de cruces se puede calcular solo teniendo en cuenta el fragmento de la particion entre las posiciones $i$ y $j$ (o $j$ e $i$ si $j<i$). Es decir si  $\pi=\left\langle v_1,v_2,...v_i,...,v_{j},...,v_n \right\rangle$ y $\pi_1=\left\langle  v_1,v_2,...v_j,...,v_i,...,v_n \right\rangle$, vale que
 
@@ -161,7 +162,9 @@ $$+CrucesEntre(v_j,v_i,\rho)$$
 
 Por lo tanto en estos casos se puede hacer algo un poco mejor que recalcular todo de nuevo. 
 
-Para averiguar $\sum_{k=i+1}^{j-1}{(CrucesEntre(v_i,v_k,\rho))}$, se puede considerar un $\pi_3 = <v_i,w>$ donde w consiste en ``juntar'' todos los nodos $v_k$ con $k = i +1 ... j-1$, dandole todos sus ejes (podríamos obtener un multigrafo bipartito). Hecho esto, aplicar el algoritmo de conteo de cruces para $\pi_3$ y como $pi_3$ tiene 2 nodos, el algoritmo es $O(m)$ (nuevamente, bajo hipotesis de que no hay nodos aislados).  
+Para averiguar $\sum_{k=i+1}^{j-1}{(CrucesEntre(v_i,v_k,\rho))}$, se puede considerar un $\pi_3 = <v_i,w>$ donde w consiste en ``juntar'' todos los nodos $v_k$ con $k = i +1 ... j-1$, dandole todos sus ejes (podríamos obtener un multigrafo bipartito). 
+%FIXME: calcular orden
+Hecho esto, aplicar el algoritmo de conteo de cruces para $\pi_3$ y como $pi_3$ tiene 2 nodos, el algoritmo es $Calcular Bien$ (nuevamente, bajo hipotesis de que no hay nodos aislados).  
 %TODO: completar explicando como. 
 %TODO: agregar dibujos
 
