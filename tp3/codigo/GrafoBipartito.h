@@ -1,17 +1,20 @@
 #ifndef _GRAFOBIPARTITO_H_
 #define _GRAFOBIPARTITO_H_
 #include <list>
+#include <vector>
 
 using namespace std;
 
 #define nodo unsigned int
+
+struct eje{
+    nodo primero;
+    nodo segundo;
+};
+
 class GrafoBipartito {
   public:
-      struct eje{
-          nodo primero;
-          nodo segundo;
-      };
-      GrafoBipartito(unsigned int cardinalV1, unsigned int cardinalV2, const list< eje > & ejes);
+      GrafoBipartito(const list<nodo>& Part1, const list<nodo>& Part2, const list<eje> & ejes);
       GrafoBipartito(const GrafoBipartito& g);
       ~GrafoBipartito();
 
@@ -19,9 +22,9 @@ class GrafoBipartito {
       void operator = (const GrafoBipartito& g);
 
   private:
-      unsigned int cantNodosV1, cantNodosV2;
-      unsigned int cantEjes;
-      list<nodo>* diccEjes;
+      vector<nodo> P1, P2;
+      unsigned int m, n;
+      vector< vector<nodo> > diccEjes;
 };
 
 #endif
