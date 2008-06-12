@@ -289,48 +289,56 @@ def contadorDeCruces(p1,p2,losEjes,indice1 = None, indice2 = None):
 #indice2 es un parametro opcional para no tener que recalcular los indices
 #de la otra particion
 def crucesEntre(x,y,p2,losEjes, indice2 = None):
-        lista=[]
-        if indice2 == None:
-            indice2={}
-            for i in range(len(p2)):
-                indice2[p2[i]]=i
-        #radixsort de los ejes
-        for each in losEjes[x]:
-                lista.append((indice2[each],0))
-        for each in losEjes[y]:
-                lista.append((indice2[each],1))
-
-        b2=[[] for each in range(len(p2))]
-        b1=[[],[]]
-        for each in lista:
-            b1[each[1]].append(each)
-        lista2=[]
-        for i in range(2):
-            lista2.extend(b1[i])
-        for each in lista2:
-            b2[each[0]].append(each)
-        lista2=[]
-        for i in range(len(b2)):
-            lista2.extend(b2[i])
-        
-        sur=[]
-
-        for each in lista2:
-            sur.append(each[1])
-        primerIndice = 1
-        arbol = [0,0,0]
-        cruces = 0
-
-        for i in range(len(sur)):
-
-            indice=sur[i]+primerIndice
-            arbol[indice]+=1
-            while(indice > 0):
-                if (indice == 1):
-                    cruces += arbol[indice+1]
-                indice=(indice -1)/2
+        if len(losEjes[x])*len(losEjes[y]) < len(p2) and indice2 != None:
+            cruces = 0
+            for each in losEjes[x]:
+                for each2 in losEjes[y]:
+                    if indice2[each] > indice2[each2]:
+                        cruces+=1
+            return cruces
+        else:            
+            lista=[]
+            if indice2 == None:
+                indice2={}
+                for i in range(len(p2)):
+                    indice2[p2[i]]=i
+            #radixsort de los ejes
+            for each in losEjes[x]:
+                    lista.append((indice2[each],0))
+            for each in losEjes[y]:
+                    lista.append((indice2[each],1))
+    
+            b2=[[] for each in range(len(p2))]
+            b1=[[],[]]
+            for each in lista:
+                b1[each[1]].append(each)
+            lista2=[]
+            for i in range(2):
+                lista2.extend(b1[i])
+            for each in lista2:
+                b2[each[0]].append(each)
+            lista2=[]
+            for i in range(len(b2)):
+                lista2.extend(b2[i])
+            
+            sur=[]
+    
+            for each in lista2:
+                sur.append(each[1])
+            primerIndice = 1
+            arbol = [0,0,0]
+            cruces = 0
+    
+            for i in range(len(sur)):
+    
+                indice=sur[i]+primerIndice
                 arbol[indice]+=1
-        return cruces
+                while(indice > 0):
+                    if (indice == 1):
+                        cruces += arbol[indice+1]
+                    indice=(indice -1)/2
+                    arbol[indice]+=1
+            return cruces
 
 # Esta funcion calcula los cruces que genera agregar un elemento
 # adelante de la particion p1. Si x es None, se asume que el elemento

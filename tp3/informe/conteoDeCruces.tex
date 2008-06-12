@@ -10,16 +10,17 @@ Lo primero que se puede observar es que los cruces en el dibujo depende solament
 Podemos entonces caracterizar en que casos se producen cruces:\\
 \textit{Dado un orden de los nodos $p_1=<v_1,v_2,...,v_n>$ en una partición y un orden $p_2=<w_1,w_2,...,w_q>$ en la otra partición , se produce un cruce si existen ejes $(v_i,w_j)$, $(v_k,w_p)$ tal que $i<k \wedge p<j$.}
 
-De esta manera un primer algoritmo para contar los cruces, consiste en tomar cada par de ejes y comparar las posiciones relativas de sus nodos. Hacer esto tiene un costo $\theta(m^2)$, siendo $m$ la cantidad de ejes, ya que la cantidad de posibles pares de ejes es $\binom{m}{2} = \frac{m*(m-1)}{2}$. Este costo puede ser excesivo, principalmente en grafos densos, donde m puede ser del orden de $n_1*n_2$, siendo $n_i$ la cantidad de nodos en las particion i.
+De esta manera un primer algoritmo para contar los cruces, consiste en tomar cada par de ejes y comparar las posiciones relativas de sus nodos.
+Hacer esto tiene un costo $\theta(m^2)$, siendo $m$ la cantidad de ejes, ya que la cantidad de posibles pares de ejes es $\binom{m}{2} = \frac{m*(m-1)}{2}$. Este costo puede ser excesivo, principalmente en grafos densos, donde m puede ser del orden de $n_1*n_2$, siendo $n_i$ la cantidad de nodos en las particion i.
 
-Buscamos entonces algún algoritmo que nos de un orden mejor que $O(m^2)$. 
+Buscamos entonces algún algoritmo que nos de un orden mejor que $O(m^2)$\footnote{cuando hablamos de complejidad en el ámbito del conteo de cruces, nos referimos a complejidad en el modelo uniforme}. 
 
 Si se ordenan los ejes del grafo primero por su componente en la particion $p_1$ y luego por su componente $p_2$, es decir si $e_i=(i_1,i_2)$ y $e_j=(j_1,j_2)$ son ejes del grafo, consideramos que $e_i < e_j \Leftrightarrow i_1 < j_1 \vee (i_1 == j_1 \wedge i_2 < j_2)$ y consideramos luego el orden en el que quedan las segundas componentes, podemos ver que cada inversi'on es un cruce. Una inversión en el orden $\pi=<a_1,a_2,....a_n>$ es un par $(a_i,a_j)$ tal que $a_i > a_j$ $\wedge$ $i<j$. 
 
 Decimos que una inversión representa a un cruce porque como primero se ordena por la primer componente (en verdad es la componente de la primer partición, pero para simplificar la notación nos referiremos a dicha componente como la primer componente) y luego por la segunda, si hay una inversion es porque para los ejes $(v_k,a_i)$ y $(v_p,a_j)$ valía que $v_k < v_p \wedge a_i > a_j$, y esa es la condición para que se produzca un cruce.
 
 %TODO: ver si no hay q explicar mejor como se puede calcular eso
-Entonces si ordenamos los ejes de esa manera y después contamos las inversiones, podemos obtener el numero de cruces. Para ordenar a los ejes se puede utilizar radix sort, suponiendo que los ejes tienen como componentes las posiciones relativas de los ejes (o que estas se pueden obtener), lo cual se puede calcular en caso de que esa información no este disponible con un costo de $n_1 + n_2 + m $, con $n_i$ la cantidad de nodos de la partici'on i, obteniendo los indices de los nodos en cada particion y luego usando esta información ``traducir'' los ejes; y luego considerar el arreglo que tiene a las segundas componentes de los ejes como elementos, aplicar insertion sort y por cada cambio de posición que se hace para un elemento, contar una inversión y por lo tanto un cruce. Esto último tendría un costo $O(m+c)$, con c la cantidad de cruces. En el peor caso, todos los ejes se cruzan por lo que tendríamos un costo $O(m^2)$ nuevamente.
+Entonces si ordenamos los ejes de esa manera y después contamos las inversiones, podemos obtener el numero de cruces. Para ordenar a los ejes se puede utilizar radix sort, suponiendo que los ejes tienen como componentes las posiciones relativas de los nodos (o que estas se pueden obtener), lo cual se puede calcular en caso de que esa información no este disponible con un costo de $n_1 + n_2 + m $, con $n_i$ la cantidad de nodos de la partici'on i, obteniendo los indices de los nodos en cada particion y luego usando esta información ``traducir'' los ejes; y luego consideramos el arreglo que tiene a las segundas componentes de los ejes como elementos, aplicar insertion sort y por cada cambio de posición que se hace para un elemento, contar una inversión y por lo tanto un cruce. Esto último tendría un costo $O(m+c)$, con c la cantidad de cruces. En el peor caso, todos los ejes se cruzan por lo que tendríamos un costo $O(m^2)$ nuevamente.
 
 Veamos un ejemplo de como funciona este algoritmo:
 Consideremos el siguiente grafo bipartito:
@@ -108,7 +109,7 @@ Luego corresponde insertar el eje (2,0). Incrementamos en uno el contador de la 
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.4]{./figuras/cruces/arbol3.png}
+     \includegraphics[scale=0.4]{./figuras/cruces/arbol4.png}
      \caption{Árbol con los ejes (0,0),(1,1),(1,2) y (2,0) insertados}
      \label{arbol3}
 \end{figure} 
@@ -151,8 +152,21 @@ En particular si tenemos un orden de los nodos $\pi=\left\langle v_1,v_2,...v_i,
 
 Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes de $b$ si $a$ esta en una posicion relativa menor que la de $b$ y dado que los nodos de la otra partición estan en el orden $\rho$. Esto se debe a que como dijimos anteriormente, los cruces dependen solo del orden relativo. Entonces si intercambiamos dos posiciones consecutivas, el orden relativo de los demas nodos se mantiene, es decir, los que estaban ``abajo'' de ellos siguen estando allí, y los que estaban ``arriba'' también, de modo que solo cambian los cruces que hay entre los dos nodos movidos.
 
-Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), , resulta que el algoritmo puede calcular los cruces en $O(\sharp v_2 + m_{a,b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_2$ es la otra partición. 
+\begin{figure}[H]
+    \centering
+    \subfigure[]{
+     \includegraphics[scale=0.2]{./figuras/cruces/crucesPreSwap.png}}
+     \subfigure[]{
+\includegraphics[scale=0.2]{./figuras/cruces/crucesPostSwap.png} }
+     \label{fig:swap}
+     \caption{Al intercambiar los nodos verde y azul, los cruces que involucran al resto de los nodos se mantienen}
+\end{figure} 
 
+
+Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O(\sharp v_2 + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_2$ es la otra partición. 
+
+En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_2$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b.
+ 
 En general si se intercambian dos nodos de posiciones consecutivas, $i$, $j$, la nueva cantidad de cruces se puede calcular solo teniendo en cuenta el fragmento de la particion entre las posiciones $i$ y $j$ (o $j$ e $i$ si $j<i$). Es decir si  $\pi=\left\langle v_1,v_2,...v_i,...,v_{j},...,v_n \right\rangle$ y $\pi_1=\left\langle  v_1,v_2,...v_j,...,v_i,...,v_n \right\rangle$, vale que
 
 $$C(\pi_1,\rho) = C(\pi,\rho) - \sum_{k=i+1}^{j-1}{(CrucesEntre(v_i,v_k,\rho) + CrucesEntre(v_k,v_j,\rho))}$$
@@ -164,9 +178,18 @@ Por lo tanto en estos casos se puede hacer algo un poco mejor que recalcular tod
 
 Para averiguar $\sum_{k=i+1}^{j-1}{(CrucesEntre(v_i,v_k,\rho))}$, se puede considerar un $\pi_3 = <v_i,w>$ donde w consiste en ``juntar'' todos los nodos $v_k$ con $k = i +1 ... j-1$, dandole todos sus ejes (podríamos obtener un multigrafo bipartito). 
 %FIXME: calcular orden
-Hecho esto, aplicar el algoritmo de conteo de cruces para $\pi_3$ y como $pi_3$ tiene 2 nodos, el algoritmo es $Calcular Bien$ (nuevamente, bajo hipotesis de que no hay nodos aislados).  
+Hecho esto, aplicar el algoritmo de conteo de cruces para $\pi_3$ y como $\pi_3$ tiene 2 nodos, el algoritmo es $O(m + \sharp v1 + \sharp v2 + m)$.  
 %TODO: completar explicando como. 
 %TODO: agregar dibujos
+\begin{figure}[H]
+    \centering
+    \subfigure[]{
+     \includegraphics[scale=0.2]{./figuras/cruces/nuevoNodo.png}}
+     \subfigure[]{
+\includegraphics[scale=0.2]{./figuras/cruces/compactado.png} }
+     \label{fig:swap}
+     \caption{Compactación del grafo para averiguar cuantos cruces agrega un nuevo nodo}
+\end{figure} 
 
 Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega un nodo al grafo, particularmente si se agrega al principio de la partición. En este caso, los cruces existentes entre otros nodos se mantienen, solo se podrían agregar nuevos cruces con los ejes del nodo recien agregado. Entonces podemos aplicar una estrategia similar al caso anterior, y colapsar los nodos de la partición donde se esta agregando el nuevo nodo, dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto, de modo de que el algoritmo sea O(m).
 
