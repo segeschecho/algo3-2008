@@ -1,0 +1,40 @@
+I) Enunciado
+
+II) Conteo de cruces
+ 1. Introducción
+ 2. Acum tree
+ 3. Metodos incrementales
+   a) insercion
+   b) swap
+   c) extraccion
+
+III) Solucion exacta
+ 1. Implementación eficiente sin podas
+ 2. Podas
+ 3. Casos borde
+ 4. Complejidad
+ 5. Tiempos
+
+IV) Solucion heurística
+  1) Heurísticas constructivas
+   i. Inserción de ejes (casos borde!)
+   ii. Inserción de nodos (idem)
+   iii. Mediana (idem)
+   iv. Comparacion de tiempos
+   v. Complejidad
+   vi. Conclusion
+  2) Heurísticas de búsqueda local
+   i. Swapear nodos (idem)
+   ii. Reinsercion de nodos (idem)
+   iii. Reinsercion por mediana (idem)
+   iv. Comparacion de tiempos
+   v. Complejidad
+   vi. Conclusion
+  3) Grasp
+   i. Criterios de parada
+   ii. Complejidad
+   iii. Performance (tiempo y optimalidad)
+   iv. Conclusion
+
+V) Conclusion
+
