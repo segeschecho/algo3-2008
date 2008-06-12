@@ -6,8 +6,17 @@
 
 // Funciones Publicas
 
-Dibujo :: Dibujo(GrafoBipartito*, nodo*, nodo*) {
+Dibujo :: Dibujo(GrafoBipartito* g, list<nodo>& l1, list<nodo>& l2) {
+    grafo = g;
+
+    cantFijosV1 = l1.size();
+    cantFijosV2 = l2.size();
+
+    for(unsigned int i = 0; i < cantFijosV1; i++) {
+
+    }
 }
+
 Dibujo :: Dibujo(const Dibujo&) {
 }
 
@@ -20,24 +29,21 @@ bool Dibujo :: estaFijo(nodo) const {
 bool Dibujo :: perteneceAV1(nodo) const {
 }
 
-unsigned int Dibujo :: gradoDe(nodo) const {
-}
-
 const nodo* Dibujo :: fijosEnV(bool) const {
 }
 
 unsigned int Dibujo :: grado(nodo) const {
 }
 
-const Dibujo :: nodo* ejesYaPuestosNodo(nodo) const {
+const nodo* Dibujo :: ejesYaPuestos(nodo) const {
 }
 
-const Dibujo :: nodo* ejesAPonerNodo(nodo) const {
+const nodo* Dibujo :: ejesAPoner(nodo) const {
 }
 
 unsigned int Dibujo :: contarCruces() const {
 }
 
-Dibujo Dibujo :: operator = (const GrafoBipartito&) {
+Dibujo Dibujo :: operator= (const Dibujo&) {
 }
 // Funciones Privadas
