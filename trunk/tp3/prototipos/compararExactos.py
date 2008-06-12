@@ -9,12 +9,13 @@ from time import time
 from GrafoBipartito import Dibujo, ResolvedorConstructivo
 from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
 
-from SolucionFuerzaBruta import ResolvedorFuerzaBruta
+from SolucionFuerzaBruta import ResolvedorFuerzaBruta, cuantasCombinaciones
 from SolucionBasica import ResolvedorBasico
 from SolucionBasicaPoda import ResolvedorBasicoConPoda
 from SolucionSwapper import ResolvedorSwapper
 from SolucionSwapperPoda import ResolvedorSwapperConPoda
 from SolucionSwapperTabla import ResolvedorSwapperTabla
+from SolucionSwapperTablaPoda import ResolvedorSwapperTablaConPoda
 
 class Timer:
     def __init__(self):
@@ -34,17 +35,28 @@ class Timer:
         print "Tiempo: %.2f segundos" % (time() - self.comienzo)
         self.empezo = False
 
-def comparar(): 
+def comparar():
+    n1 = 8
+    n2 = 8
+    d1 = 5
+    d2 = 5
+    f1 = n1 - d1
+    f2 = n2 - d2
+    m = n1*n2/2
+    print "Resolviendo un caso de prueba... (%E combinaciones)" % cuantasCombinaciones(f1,d1,f2,d2)
+    print
+
     t = Timer()
-    g = generarGrafoBipartitoAleatorio(n1=8, n2=8, m=25)
-    d = generarDibujoAleatorio(g, n1=5, n2=5)
+    g = generarGrafoBipartitoAleatorio(n1=n1, n2=n2, m=m)
+    d = generarDibujoAleatorio(g, n1=d1, n2=d2)
 
     sols = ResolvedorFuerzaBruta, \
            ResolvedorBasico, \
            ResolvedorBasicoConPoda, \
            ResolvedorSwapper, \
            ResolvedorSwapperConPoda, \
-           ResolvedorSwapperTabla
+           ResolvedorSwapperTabla,  \
+           ResolvedorSwapperTablaConPoda
 
     cruces = []
 

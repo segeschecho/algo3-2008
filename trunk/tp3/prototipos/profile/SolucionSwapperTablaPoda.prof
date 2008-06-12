@@ -1,0 +1,90 @@
+
+Profiling de SolucionSwapperTablaPoda.prof
+
+
+Corrida:
+    g = generarGrafoBipartitoAleatorio(n1=8, n2=8, m=25)
+    d = generarDibujoAleatorio(g, n1=4, n2=4)
+    r = ResolvedorSwapperTablaConPoda(d)
+    s = r.resolver()
+
+--------------------------------------------------------------------------------
+
+Observaciones (a partir de cumtime):
+ - Esencialmente todo el tiempo se gasta en contarCruces(), que ya está
+   muy optimizada. La poda es muy eficiente, así que se justifica el gasto.
+
+--------------------------------------------------------------------------------
+
+
+Explorando conjunto de soluciones...  Listo! (cruces: 68, podas: 99.7%)
+         4309213 function calls (4307082 primitive calls) in 63.640 CPU seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+  2267971   15.180    0.000   15.180    0.000 :0(append)
+        1    0.000    0.000    0.000    0.000 :0(close)
+        1    0.000    0.000    0.000    0.000 :0(exp)
+   810264    5.140    0.000    5.140    0.000 :0(extend)
+        1    0.000    0.000    0.000    0.000 :0(flush)
+        1    0.000    0.000    0.000    0.000 :0(hexlify)
+    34679    0.250    0.000    0.250    0.000 :0(isinstance)
+       49    0.000    0.000    0.000    0.000 :0(iter)
+       64    0.000    0.000    0.000    0.000 :0(iterkeys)
+545517/545374    4.140    0.000    4.140    0.000 :0(len)
+        2    0.000    0.000    0.000    0.000 :0(log)
+     8639    0.110    0.000    0.110    0.000 :0(map)
+   152695    0.600    0.000    0.600    0.000 :0(min)
+        1    0.000    0.000    0.000    0.000 :0(open)
+     3936    0.020    0.000    0.020    0.000 :0(pop)
+       33    0.000    0.000    0.000    0.000 :0(random)
+   344457    2.490    0.000    2.490    0.000 :0(range)
+        1    0.000    0.000    0.000    0.000 :0(read)
+        1    0.000    0.000    0.000    0.000 :0(seed)
+        1    0.000    0.000    0.000    0.000 :0(setprofile)
+        1    0.000    0.000    0.000    0.000 :0(sqrt)
+        1    0.000    0.000   63.640   63.640 <string>:1(?)
+        1    0.000    0.000    0.000    0.000 GeneradorGrafos.py:11(generarGrafoBipartitoAleatorio)
+        1    0.000    0.000    0.000    0.000 GeneradorGrafos.py:26(generarDibujoAleatorio)
+        1    0.000    0.000    0.010    0.010 GeneradorGrafos.py:4(?)
+     8724    0.050    0.000    0.050    0.000 GrafoBipartito.py:117(contarCruces)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:12(__init__)
+        2    0.000    0.000    0.000    0.000 GrafoBipartito.py:124(_contarCruces)
+    94136   29.600    0.000   53.850    0.001 GrafoBipartito.py:291(crucesEntre)
+     1968    1.560    0.001    2.780    0.001 GrafoBipartito.py:347(crucesPorAgregarAdelante)
+     1968    1.440    0.001    2.690    0.001 GrafoBipartito.py:408(crucesPorAgregarAtras)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:470(__init__)
+       23    0.000    0.000    0.000    0.000 GrafoBipartito.py:76(__init__)
+     8641    0.450    0.000    0.920    0.000 SolucionFuerzaBruta.py:76(cuantasCombinaciones)
+        1    0.000    0.000    0.000    0.000 SolucionSwapperTablaPoda.py:133(_tabular1)
+     1680    1.080    0.001   54.930    0.033 SolucionSwapperTablaPoda.py:147(_tabular2)
+     8701    0.990    0.000    1.590    0.000 SolucionSwapperTablaPoda.py:161(_minimosCrucesRestantes)
+      246    0.000    0.000    0.230    0.001 SolucionSwapperTablaPoda.py:181(_agregarAtras1)
+     1722    0.040    0.000    2.520    0.001 SolucionSwapperTablaPoda.py:191(_agregarAtras2)
+        1    0.000    0.000   63.630   63.630 SolucionSwapperTablaPoda.py:20(resolver)
+      246    0.030    0.000    0.330    0.001 SolucionSwapperTablaPoda.py:200(_sacarPrincipio1)
+     1722    0.060    0.000    2.550    0.001 SolucionSwapperTablaPoda.py:213(_sacarPrincipio2)
+     1679    0.010    0.000    0.020    0.000 SolucionSwapperTablaPoda.py:221(_retrasar1)
+     6979    0.090    0.000    0.140    0.000 SolucionSwapperTablaPoda.py:238(_retrasar2)
+   1989/1    0.290    0.000   63.620   63.620 SolucionSwapperTablaPoda.py:256(_mejor)
+        1    0.000    0.000   63.640   63.640 SolucionSwapperTablaPoda.py:314(test_resolvedorSwapperTablaConPoda)
+        1    0.010    0.010    0.010    0.010 SolucionSwapperTablaPoda.py:48(_inicializar)
+        1    0.000    0.000    0.000    0.000 os.py:711(urandom)
+        0    0.000             0.000          profile:0(profiler)
+        1    0.000    0.000   63.640   63.640 profile:0(test_resolvedorSwapperTablaConPoda())
+        3    0.000    0.000    0.000    0.000 random.py:264(sample)
+        1    0.010    0.010    0.010    0.010 random.py:39(?)
+        1    0.000    0.000    0.000    0.000 random.py:605(WichmannHill)
+        1    0.000    0.000    0.000    0.000 random.py:69(Random)
+        1    0.000    0.000    0.000    0.000 random.py:755(SystemRandom)
+        1    0.000    0.000    0.000    0.000 random.py:88(__init__)
+        1    0.000    0.000    0.000    0.000 random.py:97(seed)
+       64    0.000    0.000    0.000    0.000 sets.py:119(__iter__)
+       50    0.000    0.000    0.000    0.000 sets.py:292(__contains__)
+       46    0.000    0.000    0.000    0.000 sets.py:307(issubset)
+       46    0.000    0.000    0.000    0.000 sets.py:339(_binary_sanity_check)
+       49    0.000    0.000    0.000    0.000 sets.py:356(_update)
+       49    0.000    0.000    0.000    0.000 sets.py:425(__init__)
+      147    0.000    0.000    0.000    0.000 sets.py:99(__len__)
+
