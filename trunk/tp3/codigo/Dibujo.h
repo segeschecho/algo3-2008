@@ -2,28 +2,22 @@
 #define _DIBUJO_H_
 
 #include "GrafoBipartito.h"
-
+#include <vector>
 class Dibujo {
   public:
-    //aclaracion sobre el constructor: se produce aliasing con el parametro GrafoBipartito
-    Dibujo(GrafoBipartito* g, nodo* l1, nodo* l2);
-    Dibujo(const Dibujo& d);
+    //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
+    Dibujo(GrafoBipartito* g, list<nodo> l1, list<nodo> l2);
     ~Dibujo();
 
-    bool estaFijo(nodo) const;
-    bool perteneceAV1(nodo v) const;
-    unsigned int grado(nodo v) const;
-    const nodo* fijosEnV(bool) const;
-    const nodo* ejesYaPuestos(nodo v) const;
-    const nodo* ejesAPoner(nodo v) const;
-    unsigned int contarCruces() const;
-    Dibujo operator= (const Dibujo& d);
+    bool perteneceAP1(nodo) const;
+    bool perteneceAP2(nodo) const;
+    unsigned int grado(nodo) const;
+    const vector<nodo> nodosEnP1(void) const;
+    const vector<nodo> nodosEnP2(void) const;
 
   private:
     GrafoBipartito* grafo;
-    unsigned int cantFijosV1, cantFijosV2;
-    nodo* ordenNodosV1, ordenNodosV2;
-    nodo** ejesYaPuestosNodo, ejesAPonerNodo;
+    vector<nodo> nodosL1, nodosL2;
 };
 
 #endif
