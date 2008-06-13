@@ -1,0 +1,61 @@
+
+Profiling de HeuristicaDeLaMediana.py (r309)
+
+
+Corrida:
+    g = generarGrafoBipartitoAleatorio(50,50,1000)
+    d = generarDibujoAleatorio(g, 15, 15)
+    r = HeuristicaDeLaMediana(d).resolver()
+
+--------------------------------------------------------------------------------
+
+Observaciones (a partir de cumtime):
+ - 3.5 segundos son append()
+ - 4.3 segundos son corregirDesvios (pero son solo 2 llamadas!), se puede mejorar?
+ - 8.2 segundos son contadorDeCruces()
+
+         374769 function calls (374055 primitive calls) in 9.621 CPU seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   293338    3.544    0.000    3.544    0.000 :0(append)
+      747    0.000    0.000    0.000    0.000 :0(ceil)
+    49293    0.568    0.000    0.568    0.000 :0(extend)
+       70    0.000    0.000    0.000    0.000 :0(insert)
+       16    0.000    0.000    0.000    0.000 :0(isinstance)
+        7    0.000    0.000    0.000    0.000 :0(iter)
+       10    0.000    0.000    0.000    0.000 :0(iterkeys)
+17835/17818    0.160    0.000    0.160    0.000 :0(len)
+      747    0.020    0.000    0.020    0.000 :0(log)
+      744    0.016    0.000    0.016    0.000 :0(pow)
+     1100    0.012    0.000    0.012    0.000 :0(random)
+     6690    0.084    0.000    0.084    0.000 :0(range)
+       70    0.000    0.000    0.000    0.000 :0(remove)
+       34    0.000    0.000    0.000    0.000 :0(round)
+        1    0.000    0.000    0.000    0.000 :0(setprofile)
+       70    0.000    0.000    0.000    0.000 :0(sort)
+        1    0.000    0.000    9.621    9.621 <string>:1(<module>)
+        1    0.000    0.000    0.064    0.064 GeneradorGrafos.py:11(generarGrafoBipartitoAleatorio)
+        1    0.000    0.000    0.004    0.004 GeneradorGrafos.py:26(generarDibujoAleatorio)
+        1    0.024    0.024    0.040    0.040 GrafoBipartito.py:12(__init__)
+ 1441/744    4.524    0.003    8.281    0.011 GrafoBipartito.py:218(contadorDeCruces)
+      280    0.456    0.002    0.984    0.004 GrafoBipartito.py:291(crucesEntre)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:470(__init__)
+        2    0.000    0.000    0.000    0.000 GrafoBipartito.py:76(__init__)
+        1    0.084    0.084    9.553    9.553 HeuristicaDeLaMediana.py:12(resolver)
+        2    0.036    0.018    4.324    2.162 HeuristicaDeLaMediana.py:127(corregirDesvios)
+       70    0.056    0.001    0.100    0.001 HeuristicaDeLaMediana.py:145(tomarUnoDeMayorGrado)
+       70    0.008    0.000    0.024    0.000 HeuristicaDeLaMediana.py:174(calcularMediana)
+        1    0.000    0.000    9.621    9.621 profile:0(correr())
+        0    0.000             0.000          profile:0(profiler)
+       73    0.012    0.000    0.028    0.000 random.py:264(sample)
+       10    0.000    0.000    0.000    0.000 sets.py:119(__iter__)
+     2000    0.016    0.000    0.016    0.000 sets.py:292(__contains__)
+        4    0.000    0.000    0.000    0.000 sets.py:307(issubset)
+        4    0.000    0.000    0.000    0.000 sets.py:339(_binary_sanity_check)
+        7    0.000    0.000    0.000    0.000 sets.py:356(_update)
+        7    0.000    0.000    0.000    0.000 sets.py:425(__init__)
+       19    0.000    0.000    0.004    0.000 sets.py:99(__len__)
+        1    0.000    0.000    9.621    9.621 testEjes.py:5(correr)
+
