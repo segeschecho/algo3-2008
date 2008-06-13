@@ -1,0 +1,60 @@
+
+Profiling de HeuristicaInsercionEjes.py (r309)
+
+
+Corrida:
+  g = generarGrafoBipartitoAleatorio(20,20,100)
+  d = generarDibujoAleatorio(g, 10, 10)
+  r = HeuristicaInsercionEjes(d).resolver()
+
+--------------------------------------------------------------------------------
+
+Observaciones (a partir de cumtime):
+ - 9.7 segundos son crucesEntre(), sería bueno mejorarlo
+ - 0.5 segundos son contadorDeCruces(), no afecta
+
+--------------------------------------------------------------------------------
+
+
+         447527 function calls (447501 primitive calls) in 11.149 CPU seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   219342    2.400    0.000    2.400    0.000 :0(append)
+       78    0.000    0.000    0.000    0.000 :0(ceil)
+   103305    1.184    0.000    1.184    0.000 :0(extend)
+      146    0.000    0.000    0.000    0.000 :0(index)
+     1282    0.016    0.000    0.016    0.000 :0(insert)
+       16    0.000    0.000    0.000    0.000 :0(isinstance)
+        7    0.000    0.000    0.000    0.000 :0(iter)
+       10    0.000    0.000    0.000    0.000 :0(iterkeys)
+82716/82699    1.068    0.000    1.068    0.000 :0(len)
+       78    0.000    0.000    0.000    0.000 :0(log)
+       75    0.000    0.000    0.000    0.000 :0(pow)
+      270    0.004    0.000    0.004    0.000 :0(random)
+    19206    0.228    0.000    0.228    0.000 :0(range)
+     1338    0.016    0.000    0.016    0.000 :0(remove)
+        1    0.000    0.000    0.000    0.000 :0(setprofile)
+        1    0.000    0.000   11.149   11.149 <string>:1(<module>)
+        1    0.000    0.000    0.004    0.004 GeneradorGrafos.py:11(generarGrafoBipartitoAleatorio)
+        1    0.000    0.000    0.000    0.000 GeneradorGrafos.py:26(generarDibujoAleatorio)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:12(__init__)
+    84/75    0.296    0.004    0.576    0.008 GrafoBipartito.py:218(contadorDeCruces)
+    19006    5.328    0.000    9.733    0.001 GrafoBipartito.py:291(crucesEntre)
+        1    0.000    0.000    0.000    0.000 GrafoBipartito.py:470(__init__)
+        2    0.000    0.000    0.000    0.000 GrafoBipartito.py:76(__init__)
+      150    0.012    0.000    0.016    0.000 HeuristicaInsercionEjes.py:11(_rango)
+        1    0.592    0.592   11.145   11.145 HeuristicaInsercionEjes.py:45(resolver)
+        1    0.000    0.000   11.149   11.149 profile:0(correr())
+        0    0.000             0.000          profile:0(profiler)
+      150    0.004    0.000    0.004    0.000 random.py:246(choice)
+        3    0.000    0.000    0.004    0.001 random.py:264(sample)
+       10    0.000    0.000    0.000    0.000 sets.py:119(__iter__)
+      200    0.000    0.000    0.000    0.000 sets.py:292(__contains__)
+        4    0.000    0.000    0.000    0.000 sets.py:307(issubset)
+        4    0.000    0.000    0.000    0.000 sets.py:339(_binary_sanity_check)
+        7    0.000    0.000    0.000    0.000 sets.py:356(_update)
+        7    0.000    0.000    0.000    0.000 sets.py:425(__init__)
+       22    0.000    0.000    0.000    0.000 sets.py:99(__len__)
+        1    0.000    0.000   11.149   11.149 testEjes.py:5(correr)
