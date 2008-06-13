@@ -3,7 +3,6 @@ from GeneradorGrafos import *
 from Dibujador import *
 from SolucionBasicaPoda import *
 from HeuristicaInsercionEjes import *
-from HeuristicaInsercionNodos import *
 import random
 # grafo: todos los nodos y ejes, p1 p2 estaRel(v,u)
 #dibujo: l1, l2 los nodos que no se pueden mover
