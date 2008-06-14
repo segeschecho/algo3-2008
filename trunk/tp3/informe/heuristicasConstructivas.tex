@@ -17,6 +17,8 @@ fijo e ir agregando los nuevos nodos con sus ejes, en la mejor posición en ese m
 
 Una vez hecho eso, se elige otro nodo (entre los que todavia no estan puestos) y se insertan en la misma manera.
 
+La elección se va a haciendo para cada partición, es decir se toma primero un nodo de los que tienen que ir en la primer partición y se inserta, luego se toma otro de la segunda. Cuando ya se insertaron todos los nodos de una, se continua con los de la otra
+
 Por como procede esta heuristica, si hay ejes a agregar que tienen sus dos extremos en nodos que ya estaban en el dibujo, lo que
 hacemos es ponerlos al principio, antes de hacer nada, porque asi obtenemos mas información para insertar a los nuevos nodos.
 
@@ -93,6 +95,7 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \begin{algorithmic}[1]
 \PARAMS{un dibujo original, los nodos a colocar, y los ejes entre los nodos}
 \WHILE{Queden nodos por poner}
+\FOR{cada particion, si es posible}
 \STATE nodo $\leftarrow$ elegir uno entre los nodos a poner
 \STATE sacar al nodo de entre los nodos a poner
 \STATE colocar al nodo en la primer posicion de su partición
@@ -111,6 +114,7 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \STATE crucesPreSwap $\leftarrow$ crucesPostSwap
 \ENDWHILE
 \STATE poner al nodo finalmente en mejorPos
+\ENDFOR
 \ENDWHILE
 \end{algorithmic}
 \end{algorithm} 
@@ -324,13 +328,10 @@ Los resultados se encuantran en los graficos
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\includegraphics[scale=0.50]{./graficos/comparacionInsercionNodos/exp2.png}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\setcounter{subfigure}{0}
-\includegraphics[scale=0.70]{./graficos/comparacionInsercionNodos/exp1.png} 
+\subfigure[]{
+\includegraphics[scale=0.6]{./graficos/comparacionInsercionNodos/exp2.png}}
+\subfigure[]{
+\includegraphics[scale=0.6]{./graficos/comparacionInsercionNodos/exp1.png}} 
 \end{figure}
 
 De estas experiencias, notamos que la cantidad de cruces encontrada por los tres metodos, es relativamente similar. Sin embargo lo que notamos es que el criterio de mayor grado parecería comportarse ligeramente mejor que los otros dos. Para nosotros tiene sentido que esto sea así, ya que si se utiliza el nodo de mayor grado con respecto a lo que ya esta puesto, ese nodo tiene mas información (mas adyacentes puestos) por lo que puede ubicarse mejor. Claro esta que esto podría fallar, sin embargo a partir de esta idea, mas lo que se observa en las pruebas, decidimos utilizar al nodo de mayor grado para la heuristica de inserción de nodos.
@@ -338,59 +339,56 @@ De estas experiencias, notamos que la cantidad de cruces encontrada por los tres
 \subsection{Comparación de heuristicas constructivas}
 Los resultados de las pruebas realizadas son los siguientes:
 
-\subsubsection{ n nodos en cada partición con n creciente. Cantidad de ejes = $\frac{n^2}{2}$. Porcentaje de nodos nuevos: 60\%}
-
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Cantidad de cruces producidos en funcion de n]{
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces1.png}}
+\setcounter{subfigure}{1}
+\subfigure[Tiempo en segundos en función de n]{
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos1.png} }
+\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $\frac{n^2}{2}$. Porcentaje de nodos nuevos: 60\%}
+\end{figure}
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \subfigure[Cantidad de cruces producidos en funcion de n]{
-\includegraphics[scale=0.6]{./graficos/comparacionConstructivas/cruces1.png}}
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces2.png}}
 \setcounter{subfigure}{1}
 \subfigure[Tiempo en segundos en función de n]{
-\includegraphics[scale=0.6]{./graficos/comparacionConstructivas/tiempos1.png} }
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos2.png} }
+\caption{{ n nodos en cada partición con n creciente. Cantidad de ejes = $\frac{n^2}{2}$. Porcentaje de nodos nuevos: 40\%}}
 \end{figure}
-
-\subsubsection{ n nodos en cada partición con n creciente. Cantidad de ejes = $\frac{n^2}{2}$. Porcentaje de nodos nuevos: 40\%}
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \subfigure[Cantidad de cruces producidos en funcion de n]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/cruces2.png}}
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces3.png}}
 \setcounter{subfigure}{1}
 \subfigure[Tiempo en segundos en función de n]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/tiempos2.png} }
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos3.png} }
+\caption{ n nodos en cada partición con n creciente. Cantidad de ejes = 3n. Porcentaje de nodos nuevos: 60\%}
 \end{figure}
 
-\subsubsection{ n nodos en cada partición con n creciente. Cantidad de ejes = 3n. Porcentaje de nodos nuevos: 60\%}
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \subfigure[Cantidad de cruces producidos en funcion de n]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/cruces3.png}}
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces4.png}}
 \setcounter{subfigure}{1}
 \subfigure[Tiempo en segundos en función de n]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/tiempos3.png} }
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos4.png} }
+\caption{ n nodos en cada partición con n creciente. Cantidad de ejes = 3n. Porcentaje de nodos nuevos: 40\%}
 \end{figure}
 
-\subsubsection{ n nodos en cada partición con n creciente. Cantidad de ejes = 3n. Porcentaje de nodos nuevos: 40\%}
-\begin{figure}[H]
-\centering
-\setcounter{subfigure}{0}
-\subfigure[Cantidad de cruces producidos en funcion de n]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/cruces4.png}}
-\setcounter{subfigure}{1}
-\subfigure[Tiempo en segundos en función de n]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/tiempos4.png} }
-\end{figure}
-
-\subsubsection{ n = 30. Cantidad de ejes creciente. Porcentaje de nodos nuevos: 40\%}
 \begin{figure}[H]
 \centering
 \subfigure[Cantidad de cruces producidos en funcion de m]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/cruces5.png}}
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces5.png}}
 \subfigure[Tiempo en segundos en función de m]{
-\includegraphics[scale=0.5]{./graficos/comparacionConstructivas/tiempos5.png} }
+\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos5.png} }
+\caption{ n = 30. Cantidad de ejes creciente. Porcentaje de nodos nuevos: 40\%}
 \setcounter{subfigure}{0}
 \end{figure}

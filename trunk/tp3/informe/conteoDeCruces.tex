@@ -3,9 +3,13 @@
 Dentro del problema que tenemos que resolver, un tema a tener en cuenta es el del conteo de cruces, ya que tanto la solución exacta,
 como las heuristicas necesitan saber muchas veces (por ejemplo para decidir donde se inserta un nodo, o si una permutación ya no puede ser solución) cuantos cruces hay en el dibujo. Por esta razón consideramos que un aspecto importante a optimizar para lograr mejorar el desempeño de nuestros algoritmos es precisamente el conteo de cruces.
 
-Lo primero que se puede observar es que los cruces en el dibujo depende solamente de la posición relativa de los nodos en las particiones. Se produce un cruce si hay dos nodos en una partición $v_i$, $v_j$ que estan relacionados con un $w_k$ y $w_p$ respectivamente tal que $v_i$ esta $``arriba''$ de $v_j$ y $w_k$ esta $``abajo''$ de $w_p$.
+Lo primero que se puede observar es que los cruces en el dibujo depende solamente de la posición relativa de los nodos en las particiones. Se produce un cruce si hay dos nodos en una partición $v_i$, $v_j$ que estan relacionados con un $w_k$ y $w_p$ respectivamente tal que $v_i$ esta $``arriba''$ de $v_j$ y $w_k$ esta $``abajo''$ de $w_p$, como se ve en \ref{unCruce}.
 
-%TODO: dibujo pelotudo de esto
+\begin{figure}[H]
+    \centering
+     \includegraphics[scale=0.3]{./figuras/cruces/cruce.png}
+     \label{unCruce}
+\end{figure}
 
 Podemos entonces caracterizar en que casos se producen cruces:\\
 \textit{Dado un orden de los nodos $p_1=<v_1,v_2,...,v_n>$ en una partición y un orden $p_2=<w_1,w_2,...,w_q>$ en la otra partición , se produce un cruce si existen ejes $(v_i,w_j)$, $(v_k,w_p)$ tal que $i<k \wedge p<j$.}
