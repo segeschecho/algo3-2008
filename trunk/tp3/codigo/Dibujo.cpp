@@ -7,26 +7,23 @@
 
 // Funciones Publicas
 
-Dibujo :: Dibujo(GrafoBipartito* g, list<nodo>& l1, list<nodo>& l2) {
+Dibujo :: Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2) {
     grafo = g;
-    cantNodosL1 = l1.size();
-    cantNodosL2 = l2.size();
+    assert(l1.size() + l2.size() <= g->n);
 
-    assert(cantNodosL1 + cantNodosL2 < g->n);
-
-    nodosV1 = vector<nodo> (cantNodosL1);
+    nodosL1 = vector<nodo> (l1.size());
     list<nodo>::const_iterator it (l1.begin());
 
-    for(unsigned int i = 0; i < cantNodosL1; i++) {
-        nodosV1[i] = *it;
+    for(unsigned int i = 0; i < l1.size(); i++) {
+        nodosL1[i] = *it;
         it++;
     }
 
-    nodosV2 = vector<nodo> (cantNodosL1);
-    list<nodo>::const_iterator it (l2.begin());
+    nodosL2 = vector<nodo> (l2.size());
+    it = l2.begin();
 
-    for(unsigned int i = 0; i < cantNodosL2; i++) {
-      nodosV2[i] = *it;
+    for(unsigned int i = 0; i < l2.size(); i++) {
+      nodosL2[i] = *it;
       it++;
     }
 }
@@ -35,7 +32,7 @@ Dibujo :: ~Dibujo() {
 }
 
 bool Dibujo :: perteneceAP1(nodo v) const {
-    for(unsigned int = 0; i < cantNodosL1; i++) {
+    for(unsigned int i = 0; i < nodosL1.size(); i++) {
         if(nodosL1[i] == v) {
             return true;
         }
@@ -45,7 +42,7 @@ bool Dibujo :: perteneceAP1(nodo v) const {
 }
 
 bool Dibujo :: perteneceAP2(nodo v) const {
-  for(unsigned int = 0; i < cantNodosL2; i++) {
+  for(unsigned int i = 0; i < nodosL2.size(); i++) {
     if(nodosL2[i] == v) {
       return true;
     }
@@ -55,7 +52,7 @@ bool Dibujo :: perteneceAP2(nodo v) const {
 }
 
 unsigned int Dibujo :: grado(nodo v) const {
-    return g.grado(v);
+    return grafo->grado(v);
 }
 
 const vector<nodo>& Dibujo :: nodosEnP1(void) const {

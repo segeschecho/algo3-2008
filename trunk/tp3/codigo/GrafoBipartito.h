@@ -13,16 +13,19 @@ struct eje{
 };
 
 class GrafoBipartito {
+    friend class Dibujo;
   public:
       GrafoBipartito(const list<nodo>& Part1, const list<nodo>& Part2, const list<eje> & ejes);
       GrafoBipartito(const GrafoBipartito& g);
       ~GrafoBipartito();
 
-      unsigned int gradoDe(nodo v) const;
+      unsigned int cantNodos(void) const;
+      unsigned int cantEjes(void) const;
+      unsigned int grado(nodo v) const;
       void operator = (const GrafoBipartito& g);
 
-  private:
-      vector<nodo> P1, P2;
+  //private:
+      vector<nodo> V1, V2;
       unsigned int m, n;
       vector< vector<nodo> > diccEjes;
 };

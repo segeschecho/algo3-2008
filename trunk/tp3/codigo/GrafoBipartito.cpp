@@ -1,23 +1,42 @@
 #include "GrafoBipartito.h"
-
+#include <assert.h>
 /*
  *  Clase GrafoBipartito
  */
 
 // Funciones Publicas
 
-GrafoBipartito :: GrafoBipartito(const list<nodo>& Part1, const list<nodo>& Part2, const list<eje>& ejes) {
-    P1 = Part1;
-    P2 = Part2;
-    n = P1.size() + P2.size();
+GrafoBipartito :: GrafoBipartito(const list<nodo>& p1, const list<nodo>& p2, const list<eje>& ejes) {
+    assert(p1.size() > 0 && p2.size() > 0);
+    n = p1.size() + p2.size();
     m = ejes.size();
 
-    diccEjes = vector< list<nodo> > (cardinalV1 + cardinalV2);
-    list<eje>::const_iterator it(ejes.begin());
-    while (it != ejes.end()) {
-        diccEjes[it->primero].push_back(it->segundo);
-        diccEjes[it->segundo].push_back(it->primero);
-        it++;
+    // copio los nodos de V1
+    list<nodo>::const_iterator itNodos(p1.begin());
+    V1 = vector<nodo> (p1.size());
+    vector<nodo>::iterator itVi(V1.begin());
+    while (itNodos != p1.end()) {
+        *itVi = *itNodos;
+        itVi++;
+        itNodos++;
+    }
+
+    // copio los nodos de V2
+    itNodos = p2.begin();
+    V2 = vector<nodo> (p2.size());
+    itVi = V2.begin();
+    while (itNodos != p2.end()) {
+        *itVi = *itNodos;
+        itVi++;
+        itNodos++;
+    }
+
+    diccEjes = vector< vector<nodo> > (V1.size() + V2.size());
+    list<eje>::const_iterator itEjes(ejes.begin());
+    while (itEjes != ejes.end()) {
+        diccEjes[itEjes->primero].push_back(itEjes->segundo);
+        diccEjes[itEjes->segundo].push_back(itEjes->primero);
+        itEjes++;
     }
 }
 
@@ -28,20 +47,20 @@ GrafoBipartito :: GrafoBipartito(const GrafoBipartito& g) {
 GrafoBipartito :: ~GrafoBipartito() {
 }
 
+unsigned int GrafoBipartito :: cantNodos(void) const {
+    return n;
+}
+
+unsigned int GrafoBipartito :: cantEjes(void) const {
+    return m;
+}
+
 unsigned int GrafoBipartito :: grado(nodo v) const {
 	return diccEjes[v].size();
 }
 
 void GrafoBipartito :: operator= (const GrafoBipartito& g) {
-	P1 = g.P1;
-	P2 = g.P2;
-
-    diccEjes = vector< list<nodo> > (cantNodosV1 + cantNodosV2);
-    for(unsigned int i = 0; i < g.cantNodosV1 + g.cantNodosV2; i++) {
-        list<nodo>::iterator it = g.diccEjes[i].begin();
-	    while (it != g.diccEjes[i].end()) {
-			diccEjes[i].push_back(*it);
-			it++;
-		}
-    }
+	V1 = g.V1;
+	V2 = g.V2;
+    diccEjes = g.diccEjes;
 }

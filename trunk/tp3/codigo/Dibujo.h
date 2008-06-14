@@ -6,16 +6,16 @@
 class Dibujo {
   public:
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
-    Dibujo(GrafoBipartito* g, list<nodo> l1, list<nodo> l2);
+    Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
     ~Dibujo();
 
     bool perteneceAP1(nodo) const;
     bool perteneceAP2(nodo) const;
     unsigned int grado(nodo) const;
-    const vector<nodo> nodosEnP1(void) const;
-    const vector<nodo> nodosEnP2(void) const;
+    const vector<nodo>& nodosEnP1(void) const;
+    const vector<nodo>& nodosEnP2(void) const;
 
-  private:
+    //private:
     GrafoBipartito* grafo;
     vector<nodo> nodosL1, nodosL2;
 };
