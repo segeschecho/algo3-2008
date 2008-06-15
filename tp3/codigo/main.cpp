@@ -5,10 +5,12 @@
 
 using namespace std;
 
-void radixSort(list<eje>& listaEjes, unsigned int p1Size, unsigned int p2Size) {
+#define BETA(a) a ? 1 : 0
+
+void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2) {
     // bucket1 y bucket2 son los buckets donde voy a guardar los ejes
-    vector< list<eje> > bucket1 (p1Size);
-    vector< list<eje> > bucket2 (p2Size);
+    vector< list<eje> > bucket1 (size1);
+    vector< list<eje> > bucket2 (size2);
 
     //ordeno por segunda componente
     list<eje>::const_iterator it (listaEjes.begin());
@@ -18,7 +20,7 @@ void radixSort(list<eje>& listaEjes, unsigned int p1Size, unsigned int p2Size) {
     }
 
     listaEjes.clear();
-    for(unsigned int i = 0; i < p2Size; i++) {
+    for(unsigned int i = 0; i < size2; i++) {
         listaEjes.splice(listaEjes.end(), bucket2[i]);
     }
 
@@ -30,22 +32,12 @@ void radixSort(list<eje>& listaEjes, unsigned int p1Size, unsigned int p2Size) {
     }
 
     listaEjes.clear();
-    for(unsigned int i = 0; i < p1Size; i++) {
+    for(unsigned int i = 0; i < size1; i++) {
         listaEjes.splice(listaEjes.end(), bucket1[i]);
     }
 }
 
 unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
-    // Ahora que tengo las segundas componentes, puedo aplicar el metodo del arbol acumulador
-    // para finalmente contar los cruces
-    vector<nodo> segComp (l.size());
-
-    list<eje>::const_iterator it2(l.begin());
-    for(unsigned int i = 0; i < l.size(); i++) {
-        segComp[i] = it2->segundo;
-        it2++;
-    }
-
     // Saco donde estara guardado el primer indice
     int primerIndice = (int)pow(2, ceil(log((float)cantHojas)/log((float)2)));
     // Creo el arbol acumulador inicializado en 0
@@ -58,9 +50,10 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
 
     unsigned int cruces = 0;
     // Inserto los ejes
-    for(unsigned int i = 0; i < segComp.size(); i++) {
+    list<eje>::const_iterator it(l.begin());
+    while (it != l.end()) {
         // Indice es la hoja a la que pertenece el eje
-        unsigned int indice = segComp[i] + primerIndice;
+        unsigned int indice = it->segundo + primerIndice;
         // Hay un eje mas en esta hoja
         arbol[indice] += 1;
 
@@ -76,6 +69,7 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
             // Aumento el acumulador del nodo
             arbol[indice] += 1;
         }
+        it++;
     }
     delete arbol;
     return cruces;
@@ -168,8 +162,8 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
         vector<nodo>::const_iterator it (ejes[x].begin());
         while(it != ejes[x].end()) {
             eje e;
-            e.primero = 0;
-            e.segundo = (*indicesP2)[*it];
+            e.primero = (*indicesP2)[*it];
+            e.segundo = 0;
             listaAux.push_back(e);
             it++;
         }
@@ -177,13 +171,13 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
         it = (ejes[y].begin());
         while(it != ejes[y].end()) {
             eje e;
-            e.primero = 1;
-            e.segundo = (*indicesP2)[*it];1;
+            e.primero = (*indicesP2)[*it];
+            e.segundo = 1;
             listaAux.push_back(e);
             it++;
         }
 
-        radixSort(listaAux, 2, p2.size());
+        radixSort(listaAux, p2.size(), 2);
 
         return acumTree(listaAux, 2);
     }
@@ -224,13 +218,12 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
             eje e;
             e.primero = (*indicesP2)[*itEjes];
             if (*itNodosP1 == candidato) {
-                e.segundo = 0;
-                listaAux.push_back(e);
+                e.segundo = BETA(!agregoAdelante);
             }
             else {
-                e.segundo = 1;
-                listaAux.push_back(e);
+                e.segundo = BETA(agregoAdelante);
             }
+            listaAux.push_back(e);
             itEjes++;
         }
         itNodosP1++;
@@ -241,27 +234,21 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
         while (itEjes != ejes[*x].end()) {
             eje e;
             e.primero = (*indicesP2)[*itEjes];
-            if (*x == candidato) {
-                e.segundo = 0;
-                listaAux.push_back(e);
-            }
-            else {
-                e.segundo = 1;
-                listaAux.push_back(e);
-            }
+            e.segundo = BETA(!agregoAdelante);;
+            listaAux.push_back(e);
             itEjes++;
         }
     }
 
-    radixSort(listaAux, p1.size(), p2.size());
+    radixSort(listaAux, p2.size(), 2);
 
     return acumTree(listaAux, 2);
 }
 
 int main(int argc, char* argv[]) {
     list<eje> ejes;
-    eje e1, e2, e3, e4, e5, e6, e7;
-    list<nodo> nodosV1, nodosV2;
+    eje e1, e2, e3, e4, e5, e6, e7, e8;
+    list<nodo> nodosV1, nodosV2, nodosP1, nodosP2;
 
     e1.primero = 8;
     e1.segundo = 2;
@@ -284,12 +271,8 @@ int main(int argc, char* argv[]) {
     e7.primero = 5;
     e7.segundo = 3;
 
-    nodosV1.push_back(8);
-    nodosV1.push_back(1);
-    nodosV1.push_back(5);
-    nodosV2.push_back(2);
-    nodosV2.push_back(3);
-    nodosV2.push_back(6);
+    e8.primero = 0;
+    e8.segundo = 6;
 
     ejes.push_back(e1);
     ejes.push_back(e2);
@@ -298,13 +281,31 @@ int main(int argc, char* argv[]) {
     ejes.push_back(e5);
     ejes.push_back(e6);
     ejes.push_back(e7);
+    ejes.push_back(e8);
+
+    nodosV1.push_back(0);
+    nodosV1.push_back(8);
+    nodosV1.push_back(1);
+    nodosV1.push_back(5);
+    nodosV2.push_back(2);
+    nodosV2.push_back(3);
+    nodosV2.push_back(6);
 
     GrafoBipartito g(nodosV1, nodosV2, ejes);
 
-    Dibujo d(&g, nodosV1, nodosV2);
+    nodosP1.push_back(8);
+    nodosP1.push_back(1);
+    nodosP1.push_back(5);
+    nodosP2.push_back(2);
+    nodosP2.push_back(3);
+    nodosP2.push_back(6);
+
+    Dibujo d(&g, nodosP1, nodosP2);
 
     cout << contadorDeCruces(d.nodosL1, d.nodosL2, g.diccEjes) << endl;
     cout << crucesEntre(8,1, d.nodosL2, g.diccEjes) << endl;
+    unsigned int v = 0;
+    cout << crucesPorAgregarEnLosBordes(true, d.nodosL1, d.nodosL2, g.diccEjes, &v) << endl;
 
     system("PAUSE");
     return 0;
