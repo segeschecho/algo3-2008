@@ -7,8 +7,8 @@ using namespace std;
 
 void radixSort(list<eje>& listaEjes, unsigned int p1Size, unsigned int p2Size) {
     // bucket1 y bucket2 son los buckets donde voy a guardar los ejes
-    list<eje>* bucket1 = new list<eje> [p1Size];
-    list<eje>* bucket2 = new list<eje> [p2Size];
+    vector< list<eje> > bucket1 (p1Size);
+    vector< list<eje> > bucket2 (p2Size);
 
     //ordeno por segunda componente
     list<eje>::const_iterator it (listaEjes.begin());
@@ -79,16 +79,6 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
     }
     delete arbol;
     return cruces;
-}
-
-nodo maxElem(const vector<nodo>& p) {
-    nodo maximo = p[0];
-    for(unsigned int i = 1; i < p.size(); i++) {
-        if (maximo < p[i]) {
-            maximo = p[i];
-        }
-    }
-    return maximo;
 }
 
 unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP1 = NULL, vector<nodo>* indicesP2 = NULL) {
@@ -168,7 +158,7 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
         list<eje> listaAux;
         if (indicesP2 == NULL) {
             existiaIndicesP2 = false;
-            indicesP2 = new vector<nodo>;
+            indicesP2 = new vector<nodo> (maxElem(p2) + 1);
             for (unsigned int i = 0; i < p2.size(); i++) {
                 (*indicesP2)[p2[i]] = i;
             }
@@ -178,8 +168,8 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
         vector<nodo>::const_iterator it (ejes[x].begin());
         while(it != ejes[x].end()) {
             eje e;
-            e.primero = (*indicesP2)[*it];
-            e.segundo = 0;
+            e.primero = 0;
+            e.segundo = (*indicesP2)[*it];
             listaAux.push_back(e);
             it++;
         }
@@ -187,8 +177,8 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
         it = (ejes[y].begin());
         while(it != ejes[y].end()) {
             eje e;
-            e.primero = (*indicesP2)[*it];
-            e.segundo = 1;
+            e.primero = 1;
+            e.segundo = (*indicesP2)[*it];1;
             listaAux.push_back(e);
             it++;
         }
@@ -221,7 +211,7 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
     bool existiaIndicesP2 = true;
     if (indicesP2 == NULL) {
         existiaIndicesP2 = false;
-        indicesP2 = new vector<nodo>;
+        indicesP2 = new vector<nodo> (maxElem(p2) + 1);
         for (unsigned int i = 0; i < p2.size(); i++) {
             (*indicesP2)[p2[i]] = i;
         }
@@ -270,33 +260,51 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
 
 int main(int argc, char* argv[]) {
     list<eje> ejes;
-    eje e1, e2, e3, e4;
+    eje e1, e2, e3, e4, e5, e6, e7;
     list<nodo> nodosV1, nodosV2;
 
-    e1.primero = 0;
+    e1.primero = 8;
     e1.segundo = 2;
-    e2.primero = 0;
+
+    e2.primero = 8;
     e2.segundo = 3;
+
     e3.primero = 1;
     e3.segundo = 2;
+
     e4.primero = 1;
     e4.segundo = 3;
 
-    nodosV1.push_back(0);
+    e5.primero = 5;
+    e5.segundo = 2;
+
+    e6.primero = 8;
+    e6.segundo = 6;
+
+    e7.primero = 5;
+    e7.segundo = 3;
+
+    nodosV1.push_back(8);
     nodosV1.push_back(1);
+    nodosV1.push_back(5);
     nodosV2.push_back(2);
     nodosV2.push_back(3);
+    nodosV2.push_back(6);
 
     ejes.push_back(e1);
     ejes.push_back(e2);
     ejes.push_back(e3);
     ejes.push_back(e4);
+    ejes.push_back(e5);
+    ejes.push_back(e6);
+    ejes.push_back(e7);
 
     GrafoBipartito g(nodosV1, nodosV2, ejes);
 
     Dibujo d(&g, nodosV1, nodosV2);
 
     cout << contadorDeCruces(d.nodosL1, d.nodosL2, g.diccEjes) << endl;
+    cout << crucesEntre(8,1, d.nodosL2, g.diccEjes) << endl;
 
     system("PAUSE");
     return 0;
