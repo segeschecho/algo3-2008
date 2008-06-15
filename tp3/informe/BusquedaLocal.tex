@@ -135,7 +135,40 @@ La primer prueba se realizó en grafos con una cantidad de nodos creciente, un 40
 \caption{n nodos en cada partición con n creciente. Cantidad de ejes = $5*n$. Porcentaje de nodos nuevos: 60\%}
 \end{figure}
 
+La siguiente prueba se realizó en grafos mas densos con un 40\% de nodos nuevos. Dado que los resultados daban relativamente similares, decidimos graficar para que sea mas visible la información, la diferencia en el número de cruces en el dibujo producido por la reinserción y el producido por las otras heuristicas. 
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Diferencia en la cantidad de cruces obtenidos en función de n]{
+\includegraphics[scale=0.55]{./graficos/comparacionLocales/cruces2}}
+\setcounter{subfigure}{1}
+\subfigure[Tiempo en segundos en función de n]{
+\includegraphics[scale=0.55]{./graficos/comparacionLocales/tiempo2.png} }
+\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $n*n/2$. Porcentaje de nodos nuevos: 60\%}
+\end{figure}
+ 
+La tercara se realizó para grafos de 30 nodos, variando la cantidad de ejes. Nuevamente, el método de reinserción fue el que presentó en general un mejor compartamiento, por eso decidimos de manera similar a lo hecho en la experiencia anterior graficar la diferencia entre la cantidad de cruces.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Diferencia en la cantidad de cruces obtenidos en función de m]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/cruces}}
+\setcounter{subfigure}{1}
+\subfigure[Tiempo en segundos en función de m]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/tiempo.png} }
+\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $n*n/2$. Porcentaje de nodos nuevos: 60\%}
+\end{figure}
+
 \section{Análisis de los resultados}
+A partir de los gráficos, se puede ver que la heuristica de reinserción es la que reduce en mayor medida la cantidad de cruces. Esto se evidencia en las tres experiencias: En la primera el número de cruces en el dibujo dado por esta heuristica esta por debajo del número generado por las demas, y en la segunda y tercera al graficar \textit{cruces de la heuristica de reinserción - cruces del dibujo de otra heuristica} se observa que la mayoria de los puntos se encuntran debajo del 0, lo cual significa que encontró un dibujo con menos cruces. En cuanto al tiempo, si bien fue mayor que el tiempo de la heuristica de la mediana, fue considerablemente menor que la de intercambio goloso. Ademas, consideramos que siempre se mantuvo en intervalos razonables, es decir que no necesito de un tiempo extremadamente largo para alcanzar un mínimo local.
+
+Con respecto a la heuristica de mejor intercambio, en general quedo en segundo lugar, sin embargo el tiempo que requiere para mejorar un dibujo es demasiado alto. Esto se debe a varias razones:  En primer lugar, este metodo requiere explorar toda la vecindad, la cual tiene un tamaño $O(n^2)$, y en segundo lugar cada ``pasada'' solo hace un intercambio (el mejor entre los posibles) por lo que parece razonable pensar que si solo hace un unico intercambio cada vez, necesite varios pasos hasta lograr un mínimo local.
+
+Finalmente la heuristica de la mediana, al igual que la versión constructiva, fue la mejor en cuanto a lo que a tiempo se refiere. No obstante, no obtuvo buenos resultados en cuanto a la reducción de cruces. 
+
+Por estas razones decidimos descartar a las heuristicas de intercambio goloso y a la de la mediana y conservar a la de reinserción.
 
 \section{Detalles de implementación de la heuristica de busqueda local}
 
