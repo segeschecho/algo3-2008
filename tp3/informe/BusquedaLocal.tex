@@ -14,6 +14,8 @@ Cada paso de la busqueda local consiste entonces en reinsertar cada nodo del dib
 
 En el caso de los nodos cuyo orden relativo debe ser respetado, la reinserción se realiza entre posiciones posibles que no violen dicho invariante
 
+El procedimiento es basicamente la aplicación del criterio greedy de construcción por inserción de nodos, pero aplicado a una busqueda local. Cada reinserción (salvo para los nodos fijos, que antes no se tocaban) es basicamente el paso correspondiente a la inserción del nodo en la heuristica constructiva con sus adyacentes ya colocados.
+
 Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (para simplificar no se consideraron nodos fijos):
 
 \begin{figure}[H]
@@ -116,6 +118,22 @@ La busqueda termina cuando no es posible reducir el número de cruces ya sea ubic
 \end{algorithm} 
 
 \section{Comparación de las heuristicas de busqueda local}
+Con el fin de determinar que heuristica implementariamos en C++, decidimos realizar pruebas, de modo similar a como lo hicimos para las heuristicas contructivas, con el objetivo de estudiar a cuanto reducían el número de cruces las distintas busquedas locales, teniendo en cuenta ademas el tiempo que necesitaban para lograr el mínimo local.
+
+Para hacer las pruebas generamos distintos tipos de grafos, le aplicamos la heuristica constructiva y luego aplicamos las distintas hueristicas de busqueda local. 
+
+La primer prueba se realizó en grafos con una cantidad de nodos creciente, un 40$\%$ de nodos fijos y $m = 5*n$
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Cantidad de cruces obtenidos en función de n]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/cruces1}}
+\setcounter{subfigure}{1}
+\subfigure[Tiempo en segundos en función de n]{
+\includegraphics[scale=0.55]{./graficos/comparacionLocales/tiempo1.png} }
+\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $5*n$. Porcentaje de nodos nuevos: 60\%}
+\end{figure}
 
 \section{Análisis de los resultados}
 

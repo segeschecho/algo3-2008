@@ -38,8 +38,8 @@ Vamos a aplicar la heuristica al siguiente grafo:
      \includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyRandom/posta.png}}
      \subfigure[]{
 \includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyRandom/dibujo0.png} }
-         \label{fig:posta}    
-     \caption{dibujo óptimo y dibujo de partida}  
+     \caption{dibujo óptimo y dibujo de partida}       
+      \label{fig:posta}
 \end{figure} 
 
 \begin{itemize}
@@ -49,13 +49,13 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \centering
 \setcounter{subfigure}{0}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyRandom/dibujo1.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyRandom/dibujo1.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyRandom/dibujo2.png} }
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyRandom/dibujo2.png} }
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyRandom/dibujo3.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyRandom/dibujo3.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyRandom/dibujo4.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyRandom/dibujo4.png}}
 \end{figure}
 
 \item Inserción tomando mayor grado
@@ -64,13 +64,13 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \centering
 \setcounter{subfigure}{0}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo1.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo1.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo2.png} }
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo2.png} }
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo3.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo3.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo4.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMayorGrado/dibujo4.png}}
 \end{figure}
 
 \item Insercion por menor grado
@@ -78,13 +78,13 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \centering
 \setcounter{subfigure}{0}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo1.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo1.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo2.png} }
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo2.png} }
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo3.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo3.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo4.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionGreedyMenorGrado/dibujo4.png}}
 \end{figure}
 \end{itemize}
 
@@ -184,17 +184,17 @@ Si aplicamos la heuristica para \ref{fig:posta}, obtenemos lo siguiente:
 \centering
 \setcounter{subfigure}{0}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionEjes/dibujo1.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionEjes/dibujo1.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionEjes/dibujo2.png} }
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionEjes/dibujo2.png} }
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionEjes/dibujo3.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionEjes/dibujo3.png}}
 \subfigure[]{
-\includegraphics[scale=0.25]{./figuras/constructivas/insercionEjes/dibujo4.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/insercionEjes/dibujo4.png}}
 \end{figure}
 
 Notemos como en el ultimo paso, agrega el eje (3,8) mueve al 8 de la posición que le habia asignado antes, de modo de reducir
-la cantidad de cruces. Por otro lado notemos que si bien logro la solución óptima, esto se debió a que cuando podia elegir donde poner a los nodos, los puso abajo, si hubiese elegido ponerlos arriba (opción valida, dado que genera la misma cantidad de cruces, es decir 0) el resultado hubiera sido distinto.
+la cantidad de cruces. Por otro lado notemos que si bien logro la solución óptima, esto se debió a que cuando podia elegir donde poner a los nodos, los puso abajo, si se hubiese elegido ponerlos arriba (opción valida, dado que genera la misma cantidad de cruces, es decir 0) el resultado hubiera sido distinto.
 
 \subsubsection{Pseudocodigo}
 \begin{algorithm}[H]
@@ -317,7 +317,7 @@ Si bien consideramos que los tiempos de ejecución en un lenguaje interpretado co
 \subsection{Criterios de selección de nodos para la heuristica de inserción de nodos}
 Las pruebas que realizamos consistieron en aplicar la heuristica de insercion de nodos a grafos aleatorios variando la cantidad de nodos en cada partición.
 
-En la primer experiencia utilizamos grafos con $m=2*n$ y un $40\%$ de nodos fijos.
+En la primer experiencia utilizamos grafos con $m=2*n$ y un $40\%$ de nodos fijos (En adelante n es la cantidad de nodos de cada partición).
 
 En la segunda experiencia la cantidad de ejes estaba dada por $m=\frac{n^2}{2}$ y el porcentaje de nodos fijos fue también del $40\%$.
 
@@ -394,6 +394,14 @@ Los resultados de las pruebas realizadas son los siguientes:
 \end{figure}
 
 \section{Análisis de los resultados}
+Al observar los gr'aficos de las experiencias lo primero que salta a la vista es que el tiempo de ejecución de la heur'istica de inserción de ejes es mucho mas grande que el de las demas. Esta situación que se hace mas notoria en grafos densos hace que su uso no sea recomendable, mas si tenemos en cuenta a partir de las demas experiencias, que los resultados que obtiene no son significativamente mejores que el del resto de las heuristicas. Por ejemplo, en la experiencia 5 vemos como para un grafo con 30 nodos y 799 ejes la diferencia entre la inserción de nodos y la inserción de ejes de 442 cruces a favor de la isnserciñon de ejes (142131 contra 141689), lo cual representa una diferencia del 0.3120 \%, pero en cuanto a tiempos para la misma instancia, insercion de nodos demoró 0.5160 segundos contra 13.6870 que demoró la inserción de ejes, es decir 26.5252 veces mas.
+
+Por esta razón, si bien en general vemos que da resultados relativamente buenos, decidimos descartarla.
+
+Por otro lado, la heuristica de la mediana se muestra como la mas rapida, suponemos que debido a que la cantidad de veces que necesita contar cruces, ya sea entre dos nodos o en todo el grafo, es mucho menor que la de las otras. Sin embargo, en cuanto a la cantidad de cruces, suele dar peores resultados que las otras dos. Es por esto, que decimos descartar también esta heuristica también.
+
+De esta manera elegimos implementar en C++ la heuristica de inserción de nodos, ya que consideramos que de las tres alternativas planteadas es la que brinda resultados bastante buenos (comparada con las demas heuristicas planteadas) en tiempos razonables. 
+
 
 \section{Detalles de implementación de la heuristica constructiva}
 
