@@ -1,5 +1,6 @@
 #include "Dibujo.h"
 #include <assert.h>
+#include <iostream>
 
 /*
  *  Clase Dibujo
@@ -7,11 +8,13 @@
 
 // Funciones Publicas
 
-Dibujo :: Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2) {
-    grafo = g;
+Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nodo>& l2) {
+    g = grafo;
     assert(l1.size() + l2.size() <= g->n);
 
-    nodosL1 = vector<nodo> (l1.size());
+    nodosL1 = l1;
+    nodosL2 = l2;
+/*    nodosL1 = vector<nodo> (l1.size());
     list<nodo>::const_iterator it (l1.begin());
 
     for(unsigned int i = 0; i < l1.size(); i++) {
@@ -26,6 +29,7 @@ Dibujo :: Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2) 
       nodosL2[i] = *it;
       it++;
     }
+    */
 }
 
 Dibujo :: ~Dibujo() {
@@ -52,7 +56,7 @@ bool Dibujo :: perteneceAP2(nodo v) const {
 }
 
 unsigned int Dibujo :: grado(nodo v) const {
-    return grafo->grado(v);
+    return g->grado(v);
 }
 
 const vector<nodo>& Dibujo :: nodosEnP1(void) const {
@@ -61,4 +65,14 @@ const vector<nodo>& Dibujo :: nodosEnP1(void) const {
 
 const vector<nodo>& Dibujo :: nodosEnP2(void) const {
   return nodosL2;
+}
+
+const GrafoBipartito& Dibujo :: grafo(void) const {
+    return *g;
+}
+
+void Dibujo :: cargar(const string& s) {
+}
+
+void Dibujo :: guardar(const string&) {
 }
