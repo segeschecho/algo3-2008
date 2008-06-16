@@ -17,7 +17,7 @@ nodo maxElem(const vector<nodo>& p);
 class GrafoBipartito {
     friend class Dibujo;
   public:
-      GrafoBipartito(const list<nodo>& Part1, const list<nodo>& Part2, const list<eje> & ejes);
+      GrafoBipartito(const vector<nodo>& Part1, const vector<nodo>& Part2, const list<eje> & ejes);
       GrafoBipartito(const GrafoBipartito& g);
       ~GrafoBipartito();
 
@@ -26,6 +26,7 @@ class GrafoBipartito {
       unsigned int grado(nodo v) const;
       void operator = (const GrafoBipartito& g);
 
+      const vector< vector<nodo> >& ejes(void);
   //private:
       vector<nodo> V1, V2;
       unsigned int m, n;
