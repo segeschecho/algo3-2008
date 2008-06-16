@@ -1,6 +1,7 @@
 #include "Dibujo.h"
 #include <assert.h>
 #include <iostream>
+#include <fstream>
 
 /*
  *  Clase Dibujo
@@ -30,6 +31,79 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
       it++;
     }
     */
+}
+
+Dibujo :: Dibujo(const string& nombreArchivo) {
+    ifstream entrada (nombreArchivo.c_str());
+    assert(entrada.is_open());
+
+    vector<nodo> nodosV1, nodosV2;
+    list<eje> ejes;
+    unsigned int cantLineas;
+
+    entrada >> cantLineas;
+    while(cantLineas > 0) {
+        nodo v;
+        entrada >> v;
+        nodosL1.push_back(v);
+        nodosV1.push_back(v);
+        cantLineas--;
+    }
+
+    entrada >> cantLineas;
+    while(cantLineas > 0) {
+        nodo v;
+        entrada >> v;
+        nodosL2.push_back(v);
+        nodosV1.push_back(v);
+        cantLineas--;
+    }
+
+    entrada >> cantLineas;
+    while(cantLineas > 0) {
+        nodo v;
+        eje e;
+
+        entrada >> v;
+        e.primero = v;
+        entrada >> v;
+        e.segundo = v;
+
+        ejes.push_back(e);
+        cantLineas--;
+    }
+
+    entrada >> cantLineas;
+    while(cantLineas > 0) {
+        nodo v;
+        entrada >> v;
+        nodosV1.push_back(v);
+        cantLineas--;
+    }
+
+    entrada >> cantLineas;
+    while(cantLineas > 0) {
+        nodo v;
+        entrada >> v;
+        nodosV1.push_back(v);
+        cantLineas--;
+    }
+
+    entrada >> cantLineas;
+    while(cantLineas > 0) {
+        nodo v;
+        eje e;
+
+        entrada >> v;
+        e.primero = v;
+        entrada >> v;
+        e.segundo = v;
+
+        ejes.push_back(e);
+        cantLineas--;
+    }
+
+    g = new GrafoBipartito(nodosV1, nodosV2, ejes);
 }
 
 Dibujo :: ~Dibujo() {
@@ -71,8 +145,25 @@ const GrafoBipartito& Dibujo :: grafo(void) const {
     return *g;
 }
 
-void Dibujo :: cargar(const string& s) {
-}
+void Dibujo :: guardar(const string& nombreArchivo) {
+    ofstream salida (nombreArchivo.c_str());
+    assert(salida.is_open());
+    assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
 
-void Dibujo :: guardar(const string&) {
+    salida << contadorDeCruces(nodosL1, nodosL2, g->diccEjes) << endl;
+    salida << nodosL1.size() << endl;
+    vector<nodo>::const_iterator it (nodosL1.begin());
+
+    while(it != nodosL1.end()) {
+        salida << *it << endl;
+        it++;
+    }
+
+    salida << nodosL2.size() << endl;
+    it = nodosL2.begin();
+
+    while(it != nodosL2.end()) {
+        salida << *it << endl;
+        it++;
+    }
 }
