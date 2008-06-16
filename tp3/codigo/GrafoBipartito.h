@@ -15,7 +15,7 @@ struct eje{
 nodo maxElem(const vector<nodo>& p);
 
 class GrafoBipartito {
-    friend class Dibujo;
+      friend class Dibujo;
   public:
       GrafoBipartito(const vector<nodo>& Part1, const vector<nodo>& Part2, const list<eje> & ejes);
       GrafoBipartito(const GrafoBipartito& g);

@@ -11,7 +11,9 @@ unsigned int crucesPorAgregarEnLosBordes (bool agregoAdelante, const vector<nodo
 class Dibujo {
   public:
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
+    //aclaracion sobre el destructor: no borra GrafoBipartito
     Dibujo(GrafoBipartito* g, const vector<nodo>& l1, const vector<nodo>& l2);
+    Dibujo(const string& nombreArchivo);
     ~Dibujo();
 
     bool perteneceAP1(nodo) const;
@@ -22,8 +24,7 @@ class Dibujo {
     const vector<nodo>& nodosEnP2(void) const;
     const GrafoBipartito& grafo(void) const;
 
-    void cargar(const string&);
-    void guardar(const string&);
+    void guardar(const string& nombreArchivo);
     //private:
     GrafoBipartito* g;
     vector<nodo> nodosL1, nodosL2;
