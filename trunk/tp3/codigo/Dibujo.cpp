@@ -15,6 +15,7 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
 
     nodosL1 = l1;
     nodosL2 = l2;
+    
 /*    nodosL1 = vector<nodo> (l1.size());
     list<nodo>::const_iterator it (l1.begin());
 
@@ -55,7 +56,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
         nodo v;
         entrada >> v;
         nodosL2.push_back(v);
-        nodosV1.push_back(v);
+        nodosV2.push_back(v);
         cantLineas--;
     }
 
@@ -85,7 +86,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     while(cantLineas > 0) {
         nodo v;
         entrada >> v;
-        nodosV1.push_back(v);
+        nodosV2.push_back(v);
         cantLineas--;
     }
 
@@ -102,31 +103,26 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
         ejes.push_back(e);
         cantLineas--;
     }
-
+     
+#define print(a) cout<<a<<endl;
+    unsigned i = 0;
+    while(i < nodosV1.size()){
+      print(nodosV1[i]);
+      i++;
+    }
     g = new GrafoBipartito(nodosV1, nodosV2, ejes);
+    cout<<"aaaaaaaaaaaaaaaaaaa"<<endl;
 }
 
 Dibujo :: ~Dibujo() {
 }
 
 bool Dibujo :: perteneceAP1(nodo v) const {
-    for(unsigned int i = 0; i < nodosL1.size(); i++) {
-        if(nodosL1[i] == v) {
-            return true;
-        }
-    }
-
-    return false;
+    return v < nodosL1.size();
 }
 
 bool Dibujo :: perteneceAP2(nodo v) const {
-  for(unsigned int i = 0; i < nodosL2.size(); i++) {
-    if(nodosL2[i] == v) {
-      return true;
-    }
-  }
-
-  return false;
+    return v >= nodosL1.size() && v < nodosL1.size() + nodosL2.size();
 }
 
 unsigned int Dibujo :: grado(nodo v) const {

@@ -71,8 +71,8 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
     return cruces;
 }
 
-unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP1, vector<nodo>* indicesP2) {
-	// Quiero tener a la de menor tamaño como segundo parametro para lograr O(m*log(min(p1,p2))
+unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> >& ejes, vector<nodo>* indicesP1, vector<nodo>* indicesP2) {
+	// Quiero tener a la de menor tamaï¿½o como segundo parametro para lograr O(m*log(min(p1,p2))
     if(p2.size() < 2){
         return 0;
     }
@@ -105,7 +105,7 @@ unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, c
     list<eje> listaAux;
     vector<nodo>::const_iterator itNodosP2(p2.begin());
     while (itNodosP2 != p2.end()) {
-        vector<nodo>::const_iterator it(ejes[*itNodosP2].begin());
+        list<nodo>::const_iterator it(ejes[*itNodosP2].begin());
         while (it != ejes[*itNodosP2].end()) {
             eje e;
             e.primero = (*indicesP1)[*it];
@@ -131,7 +131,7 @@ unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, c
 // Funcion que calcula los cruces entre los ejes del nodo x y los del nodo y
 // indicesP2 es un parametro opcional para no tener que recalcular los indices
 // de la otra particion
-unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP2) {
+unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< list<nodo> >& ejes, vector<nodo>* indicesP2) {
 //    print(x);
 //    print(y)
 //    int i = 0;
@@ -158,10 +158,10 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
     }
     if ((ejes[x].size() * ejes[y].size() < p2.size()) && indicesP2 != NULL) {
         unsigned int cruces = 0;
-        vector<nodo>::const_iterator itAdyacentesX(ejes[x].begin());
+        list<nodo>::const_iterator itAdyacentesX(ejes[x].begin());
         while (itAdyacentesX != ejes[x].end()) {
             //cout<<*itAdyacentesX<<endl;
-            vector<nodo>::const_iterator itAdyacentesY(ejes[y].begin());
+            list<nodo>::const_iterator itAdyacentesY(ejes[y].begin());
             while (itAdyacentesY != ejes[y].end()) {
                 //cout<<*itAdyacentesY<<endl;
                 if ((*indicesP2)[*itAdyacentesX] > (*indicesP2)[*itAdyacentesY]) {
@@ -186,7 +186,7 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
         }
         // Me preparo la lista de ejes para hacer Radix Sort
 
-        vector<nodo>::const_iterator it (ejes[x].begin());
+        list<nodo>::const_iterator it (ejes[x].begin());
         while(it != ejes[x].end()) {
             eje e;
             e.primero = (*indicesP2)[*it];
@@ -214,7 +214,7 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
 // adelante o atras de la particion p1. Si x es NULL, se asume que el elemento
 // a contabilizar ya fue agregado en p1 (en su posicion correspondiente: adelante o atras)
 // en caso contrario se agrega el elemento x a p1.
-unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> > ejes, nodo* x, vector<nodo>* indicesP2) {
+unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x, vector<nodo>* indicesP2) {
     if(p2.size() < 2 || p1.empty() || (p1.size() == 1 && x == NULL) ){
         return 0;
     }
@@ -243,7 +243,7 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
     // Me preparo la lista de ejes para hacer RadixSort
     vector<nodo>::const_iterator itNodosP1(p1.begin());
     while (itNodosP1 != p1.end()) {
-        vector<nodo>::const_iterator itEjes(ejes[*itNodosP1].begin());
+        list<nodo>::const_iterator itEjes(ejes[*itNodosP1].begin());
         while (itEjes != ejes[*itNodosP1].end()) {
             eje e;
             e.primero = (*indicesP2)[*itEjes];
@@ -260,7 +260,7 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
     }
     // Hago una iteracion mas si existia x
     if (x != NULL) {
-        vector<nodo>::const_iterator itEjes(ejes[*x].begin());
+        list<nodo>::const_iterator itEjes(ejes[*x].begin());
         while (itEjes != ejes[*x].end()) {
             eje e;
             e.primero = (*indicesP2)[*itEjes];

@@ -18,6 +18,7 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
     assert(p1.size() > 0 && p2.size() > 0);
     n = p1.size() + p2.size();
     m = ejes.size();
+    listEjes = ejes;
 
     V1 = p1;
     V2 = p2;
@@ -42,7 +43,7 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
         itNodos++;
     }
 */
-    diccEjes = vector< vector<nodo> > (max(maxElem(V1), maxElem(V2)) + 1);
+    diccEjes = vector< list<nodo> > (p1.size() + p2.size());
     list<eje>::const_iterator itEjes(ejes.begin());
     while (itEjes != ejes.end()) {
         diccEjes[itEjes->primero].push_back(itEjes->segundo);
@@ -71,12 +72,36 @@ unsigned int GrafoBipartito :: grado(nodo v) const {
 }
 
 void GrafoBipartito :: operator= (const GrafoBipartito& g) {
-	V1 = g.V1;
-	V2 = g.V2;
+    V1 = g.V1;
+    V2 = g.V2;
     diccEjes = g.diccEjes;
+    listEjes = g.listEjes;
+/*
+    // copio las listas una por una
+    diccEjes = vector< list<nodo> > (diccEjes.size());
+    vector< list<nodo> >::const_iterator it1 (diccEjes.begin());
+    vector< list<nodo> >::const_iterator it2 (g.diccEjes.begin());
+    while (it1 != diccEjes.end()) {
+        *it1 = *it2;
+        it1++;
+        it2++;
+    }
+    */
 }
 
-const vector< vector<nodo> >& GrafoBipartito :: ejes(void) {
+const list<eje>& GrafoBipartito :: listaEjes(void) {
+    return listEjes;
+}
+
+const vector<nodo>& GrafoBipartito :: nodosV1(void) {
+    return V1;
+}
+
+const vector<nodo>& GrafoBipartito :: nodosV2(void) {
+    return V2;
+}
+
+const vector< list<nodo> >& GrafoBipartito :: ejes(void) {
     return diccEjes;
 }
 
@@ -89,3 +114,4 @@ nodo maxElem(const vector<nodo>& p) {
     }
     return maximo;
 }
+

@@ -3,12 +3,15 @@
 #include "GrafoBipartito.h"
 #include <math.h>
 #include "BusquedaLocal.h"
-#define print(a) cout<<a<<endl;
 using namespace std;
 
 
 int main(int argc, char* argv[]) {
-    list<eje> ejes;
+    Dibujo d ("Tp3.in");
+    cout<<"emiliooooooooooooooooo"<<endl;
+    BusquedaLocal bl(d);
+    
+/*    list<eje> ejes;
     eje e1, e2, e3, e4, e5, e6, e7, e8;
     vector<nodo> nodosV1, nodosV2, nodosP1, nodosP2;
 
@@ -18,8 +21,6 @@ int main(int argc, char* argv[]) {
     e2.segundo = 3;
     e3.primero = 1;
     e3.segundo = 2;
-
-
 
     e5.primero = 4;
     e5.segundo = 2;
@@ -66,9 +67,7 @@ int main(int argc, char* argv[]) {
         print(d3.nodosEnP2()[i]);
         i++;
     }
-
-
-
+*/
     system("PAUSE");
     return 0;
 }

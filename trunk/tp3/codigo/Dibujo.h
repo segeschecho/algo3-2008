@@ -4,9 +4,9 @@
 #include "GrafoBipartito.h"
 #include <vector>
 
-unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP1 = NULL, vector<nodo>* indicesP2 = NULL);
-unsigned int crucesEntre (nodo x, nodo y, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP2 = NULL);
-unsigned int crucesPorAgregarEnLosBordes (bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> > ejes, nodo* x = NULL, vector<nodo>* indicesP2 = NULL);
+unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> >& ejes, vector<nodo>* indicesP1 = NULL, vector<nodo>* indicesP2 = NULL);
+unsigned int crucesEntre (nodo x, nodo y, const vector<nodo>& p2, const vector< list<nodo> >& ejes, vector<nodo>* indicesP2 = NULL);
+unsigned int crucesPorAgregarEnLosBordes (bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x = NULL, vector<nodo>* indicesP2 = NULL);
 
 class Dibujo {
   public:
