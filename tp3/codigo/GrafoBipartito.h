@@ -2,6 +2,7 @@
 #define _GRAFOBIPARTITO_H_
 #include <list>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 

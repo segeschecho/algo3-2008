@@ -7,7 +7,13 @@
 // Funciones Publicas
 
 #define MAX(a,b) (a < b) ? b : a
-
+#define print(a) cout<<a<<endl;
+unsigned max(unsigned a, unsigned b){
+    if(a < b)
+    return b;
+    else
+    return a;
+}
 GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2, const list<eje>& ejes) {
     assert(p1.size() > 0 && p2.size() > 0);
     n = p1.size() + p2.size();
@@ -36,7 +42,7 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
         itNodos++;
     }
 */
-    diccEjes = vector< vector<nodo> > (MAX(maxElem(V1), maxElem(V2)) + 1);
+    diccEjes = vector< vector<nodo> > (max(maxElem(V1), maxElem(V2)) + 1);
     list<eje>::const_iterator itEjes(ejes.begin());
     while (itEjes != ejes.end()) {
         diccEjes[itEjes->primero].push_back(itEjes->segundo);
