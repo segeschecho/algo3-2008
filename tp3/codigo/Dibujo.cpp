@@ -149,7 +149,7 @@ void Dibujo :: guardar(const string& nombreArchivo) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
 
-    salida << contadorDeCruces(nodosL1, nodosL2, g->diccEjes) << endl;
+//    salida << contadorDeCruces(nodosL1, nodosL2, g->diccEjes) << endl;
     salida << nodosL1.size() << endl;
     vector<nodo>::const_iterator it (nodosL1.begin());
 
