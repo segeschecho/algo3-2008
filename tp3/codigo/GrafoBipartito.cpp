@@ -93,11 +93,11 @@ const list<eje>& GrafoBipartito :: listaEjes(void) {
     return listEjes;
 }
 
-const vector<nodo>& GrafoBipartito :: nodosV1(void) {
+const vector<nodo>& GrafoBipartito :: nodosEnP1(void) {
     return V1;
 }
 
-const vector<nodo>& GrafoBipartito :: nodosV2(void) {
+const vector<nodo>& GrafoBipartito :: nodosEnP2(void) {
     return V2;
 }
 
