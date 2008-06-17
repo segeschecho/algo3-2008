@@ -13,9 +13,11 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
     # Funcion global de aplicación de la heurística           #
     ###########################################################
 
-    def resolver(self, alfa=1):
+    def resolver(self, alfa=1, randomPos=False):
         assert 0 < alfa <= 1
         self.alfa = alfa
+
+        self.randomPos = randomPos
 
         self._inicializar()
 
@@ -120,7 +122,7 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
         # Elijo al azar alguno de los que superan el grado alfa-maximo
         ultimoQueSupera = 0
         while ultimoQueSupera + 1 < len(moviles) and \
-              self.gradoParcial[moviles[ultimoQueSupera + 1]] <= alfaMaximoGrado:
+              self.gradoParcial[moviles[ultimoQueSupera + 1]] >= alfaMaximoGrado:
             ultimoQueSupera += 1
 
         elegido = random.randint(0,ultimoQueSupera)
@@ -158,15 +160,15 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
                 self.adyParcial[vecino].append(nodo)
                 self.adyParcial[nodo].append(vecino)
 
-        # Busco la mejor posicion en la particion para insertar este nodo, comenzando
-        # por el final y swapeando hacia atrás hasta obtener la mejor.
+        # Busco las mejores posiciones en la particion para insertar este nodo, comenzando
+        # por el final y swapeando hacia atrás hasta obtener las mejores.
         fijos.append(nodo)
         cruces = self.cruces + crucesPorAgregarAtras(fijos, otrosFijos, self.adyParcial, indice2=self.posiciones)
         pos = len(fijos) - 1
         
         mejorCruces = cruces
-        mejorPos = pos
-
+        posValidas = [pos]
+        
         while pos > 0:
             pos = pos - 1
             cruces = (cruces - 
@@ -174,15 +176,28 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
                       crucesEntre(fijos[pos+1], fijos[pos], otrosFijos, self.adyParcial, indice2=self.posiciones))
             fijos[pos], fijos[pos+1] = fijos[pos+1], fijos[pos]
 
+            if cruces == mejorCruces:
+                posValidas.append(pos)
+                
             if cruces < mejorCruces:
                 mejorCruces = cruces
-                mejorPos = pos
+                posValidas = [pos]
 
         
-        # Inserto el nodo en la mejor posicion
+        # Inserto el nodo en alguna de las mejores posiciones
+        if self.randomPos:
+            mejorPos = random.choice(posValidas)
+        else:
+            mejorPos = posValidas[0]
+            
         fijos.pop(0)
         fijos.insert(mejorPos, nodo)
         self.cruces = mejorCruces
+
+        # Actualizo los grados parciales
+        for a in self.ady[nodo]:
+            if self.esMovil[a]:
+                self.gradoParcial[a] += 1
         
         # Actualizo las posiciones 
         for i in range(len(fijos)):
@@ -198,12 +213,17 @@ class HeuristicaInsercionNodos(ResolvedorConstructivo):
 
 
 def test_HeuristicaInsercionNodos():
-    g = generarGrafoBipartitoAleatorio(n1=50,n2=50,m=1000)
+    g = generarGrafoBipartitoAleatorio(n1=25,n2=25,m=500)
     d = generarDibujoAleatorio(g,n1=5,n2=5)
     h = HeuristicaInsercionNodos(d)
     s = h.resolver(alfa=1)
-    
     print s
+    s2 = h.resolver(alfa=1,randomPos=True)
+    print s2
+    s3 = h.resolver(alfa=0.6)
+    print s3
+    s4 = h.resolver(alfa=0.6, randomPos=True)
+    print s4
 
 
 if __name__ == '__main__':
