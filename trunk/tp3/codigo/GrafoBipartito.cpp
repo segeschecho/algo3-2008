@@ -42,7 +42,7 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
         itVi++;
         itNodos++;
     }
-*/
+*/  
     diccEjes = vector< list<nodo> > (p1.size() + p2.size());
     list<eje>::const_iterator itEjes(ejes.begin());
     while (itEjes != ejes.end()) {
@@ -104,14 +104,3 @@ const vector<nodo>& GrafoBipartito :: nodosEnP2(void) {
 const vector< list<nodo> >& GrafoBipartito :: ejes(void) {
     return diccEjes;
 }
-
-nodo maxElem(const vector<nodo>& p) {
-    nodo maximo = p[0];
-    for(unsigned int i = 1; i < p.size(); i++) {
-        if (maximo < p[i]) {
-            maximo = p[i];
-        }
-    }
-    return maximo;
-}
-

@@ -3,14 +3,17 @@
 #include "GrafoBipartito.h"
 #include <math.h>
 #include "BusquedaLocal.h"
+#include "Tp3.h"
 using namespace std;
 
 
 int main(int argc, char* argv[]) {
-    Dibujo d ("Tp3.in");
+/*    Dibujo d ("Tp3.in");
+    GrafoBipartito* graf = d.grafo();
     cout<<"emiliooooooooooooooooo"<<endl;
-    BusquedaLocal bl(d);
-    
+    Tp3 tp3(d,1,1,1,1);
+    BusquedaLocal bl(*tp3.dibujoLimpio);
+    delete graf;
 /*    list<eje> ejes;
     eje e1, e2, e3, e4, e5, e6, e7, e8;
     vector<nodo> nodosV1, nodosV2, nodosP1, nodosP2;

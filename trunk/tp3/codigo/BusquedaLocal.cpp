@@ -148,7 +148,7 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         sacar(l1,*each);
         pair<unsigned,unsigned> rangoi = rango(*each,l1);
         l1.insert(l1.begin() + rangoi.first,*each);
-        unsigned crucesInicial = contadorDeCruces(l1,l2,diccEjes,NULL,&indice2);
+        unsigned crucesInicial = contadorDeCruces(l1,l2,diccEjes,NULL,indice2);
         unsigned posMinima = rangoi.first;
         unsigned crucesAhora = crucesInicial;
         unsigned crucesMin = crucesInicial;
@@ -159,8 +159,8 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         while( i < rangoi.second-1){
                 //cout<< "i: "<<i<<endl;
 
-                unsigned crucesPreSwap = crucesEntre(l1[i],l1[i+1],l2,diccEjes,&indice2);
-                unsigned crucesPostSwap = crucesEntre(l1[i+1],l1[i],l2,diccEjes,&indice2);
+                unsigned crucesPreSwap = crucesEntre(l1[i],l1[i+1],l2,diccEjes,indice2);
+                unsigned crucesPostSwap = crucesEntre(l1[i+1],l1[i],l2,diccEjes,indice2);
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
                 nodo aux = l1[i];
                 l1[i] = l1[i+1];
@@ -190,7 +190,7 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         sacar(l2,*each);
         pair<unsigned,unsigned> rangoi = rango(*each,l2);
         l2.insert(l2.begin() + rangoi.first,*each);
-        unsigned crucesInicial = contadorDeCruces(l1,l2,diccEjes,&indice1,NULL);
+        unsigned crucesInicial = contadorDeCruces(l1,l2,diccEjes,indice1,NULL);
         unsigned posMinima = rangoi.first;
         unsigned crucesAhora = crucesInicial;
         unsigned crucesMin = crucesInicial;
@@ -201,8 +201,8 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         print(*it);
 
     }
-                unsigned crucesPreSwap = crucesEntre(l2[i],l2[i+1],l1,diccEjes,&indice1);
-                unsigned crucesPostSwap = crucesEntre(l2[i+1],l2[i],l1,diccEjes,&indice1);
+                unsigned crucesPreSwap = crucesEntre(l2[i],l2[i+1],l1,diccEjes,indice1);
+                unsigned crucesPostSwap = crucesEntre(l2[i+1],l2[i],l1,diccEjes,indice1);
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
                 nodo aux = l2[i];
                 l2[i] = l2[i+1];
