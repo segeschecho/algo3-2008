@@ -22,7 +22,7 @@ class Dibujo {
 
     const vector<nodo>& nodosEnP1(void) const;
     const vector<nodo>& nodosEnP2(void) const;
-    const GrafoBipartito& grafo(void) const;
+    GrafoBipartito* grafo(void);
 
     void guardar(const string& nombreArchivo);
     //private:

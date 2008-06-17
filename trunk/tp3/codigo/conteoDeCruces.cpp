@@ -2,7 +2,7 @@
 #include <math.h>
 
 #define BETA(a) a ? 1 : 0
-
+#define print(a) cout<<a<<endl;
 void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2) {
     // bucket1 y bucket2 son los buckets donde voy a guardar los ejes
     vector< list<eje> > bucket1 (size1);
@@ -73,6 +73,9 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
 
 unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP1, vector<nodo>* indicesP2) {
 	// Quiero tener a la de menor tamaño como segundo parametro para lograr O(m*log(min(p1,p2))
+    if(p2.size() < 2){
+        return 0;
+    }
     if (p1.size() < p2.size()) {
         return contadorDeCruces(p2, p1, ejes, indicesP2, indicesP1);
     }
@@ -110,6 +113,7 @@ unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, c
             listaAux.push_back(e);
             it++;
         }
+        //print(*itNodosP2);
         itNodosP2++;
     }
 
@@ -128,19 +132,46 @@ unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, c
 // indicesP2 es un parametro opcional para no tener que recalcular los indices
 // de la otra particion
 unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< vector<nodo> >& ejes, vector<nodo>* indicesP2) {
+//    print(x);
+//    print(y)
+//    int i = 0;
+//    while(i < p2.size()){
+//        cout<<"p2[i]";
+//        print(p2[i]);
+//        print((*indicesP2)[p2[i]]);
+//        i++;
+//    }
+//    i = 0;
+//    while(i < ejes.size()){
+//        int j = 0;
+//        cout<<"los ejes de "<<i<<" ";
+//        while(j<ejes[i].size()){
+//            cout<<ejes[i][j]<<" ";
+//            j++;
+//        }
+//        cout<<endl;
+//        i++;
+//    }
+//    i=0;
+    if(p2.size() < 2){
+        return 0;
+    }
     if ((ejes[x].size() * ejes[y].size() < p2.size()) && indicesP2 != NULL) {
         unsigned int cruces = 0;
         vector<nodo>::const_iterator itAdyacentesX(ejes[x].begin());
         while (itAdyacentesX != ejes[x].end()) {
+            //cout<<*itAdyacentesX<<endl;
             vector<nodo>::const_iterator itAdyacentesY(ejes[y].begin());
             while (itAdyacentesY != ejes[y].end()) {
-                if (indicesP2[*itAdyacentesX] > indicesP2[*itAdyacentesY]) {
+                //cout<<*itAdyacentesY<<endl;
+                if ((*indicesP2)[*itAdyacentesX] > (*indicesP2)[*itAdyacentesY]) {
                     cruces += 1;
                 }
                 itAdyacentesY++;
             }
             itAdyacentesX++;
         }
+        //cout<<"aaaa"<<endl;
         return cruces;
     }
     else {
@@ -184,6 +215,9 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< v
 // a contabilizar ya fue agregado en p1 (en su posicion correspondiente: adelante o atras)
 // en caso contrario se agrega el elemento x a p1.
 unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< vector<nodo> > ejes, nodo* x, vector<nodo>* indicesP2) {
+    if(p2.size() < 2 || p1.empty() || (p1.size() == 1 && x == NULL) ){
+        return 0;
+    }
     nodo candidato;
     if (x == NULL) {
         if (agregoAdelante) {

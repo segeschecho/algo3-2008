@@ -141,8 +141,8 @@ const vector<nodo>& Dibujo :: nodosEnP2(void) const {
   return nodosL2;
 }
 
-const GrafoBipartito& Dibujo :: grafo(void) const {
-    return *g;
+GrafoBipartito* Dibujo :: grafo(void) {
+    return g;
 }
 
 void Dibujo :: guardar(const string& nombreArchivo) {
