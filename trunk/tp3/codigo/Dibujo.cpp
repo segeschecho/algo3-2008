@@ -15,24 +15,18 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
 
     nodosL1 = l1;
     nodosL2 = l2;
-    
-/*    nodosL1 = vector<nodo> (l1.size());
-    list<nodo>::const_iterator it (l1.begin());
-
-    for(unsigned int i = 0; i < l1.size(); i++) {
-        nodosL1[i] = *it;
-        it++;
-    }
-
-    nodosL2 = vector<nodo> (l2.size());
-    it = l2.begin();
-
-    for(unsigned int i = 0; i < l2.size(); i++) {
-      nodosL2[i] = *it;
-      it++;
-    }
-    */
 }
+
+
+Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& l2) {
+    g = grafo;
+    assert(l1.size() + l2.size() <= g->n);
+    
+    nodosL1.assign(l1.begin(), l1.end());
+    nodosL2.assign(l2.begin(), l2.end());
+}
+
+
 
 Dibujo :: Dibujo(const string& nombreArchivo) {
     ifstream entrada (nombreArchivo.c_str());
@@ -140,6 +134,11 @@ const vector<nodo>& Dibujo :: nodosEnP2(void) const {
 GrafoBipartito* Dibujo :: grafo(void) {
     return g;
 }
+
+unsigned Dibujo :: contarCruces() {
+    return 7;
+}
+
 
 void Dibujo :: guardar(const string& nombreArchivo) {
     ofstream salida (nombreArchivo.c_str());

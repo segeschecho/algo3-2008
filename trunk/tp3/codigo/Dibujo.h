@@ -13,6 +13,7 @@ class Dibujo {
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
     //aclaracion sobre el destructor: no borra GrafoBipartito
     Dibujo(GrafoBipartito* g, const vector<nodo>& l1, const vector<nodo>& l2);
+    Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
     Dibujo(const string& nombreArchivo);
     ~Dibujo();
 
@@ -25,6 +26,7 @@ class Dibujo {
     GrafoBipartito* grafo(void);
 
     void guardar(const string& nombreArchivo);
+    unsigned contarCruces();
     //private:
     GrafoBipartito* g;
     vector<nodo> nodosL1, nodosL2;
