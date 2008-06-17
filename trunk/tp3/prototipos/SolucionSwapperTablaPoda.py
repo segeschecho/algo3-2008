@@ -31,9 +31,9 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
         sys.stdout.flush()
         self.podas = 0
         combinaciones = cuantasCombinaciones(self.fijo1, self.fijo2, self.movil1, self.movil2)
+        
         self._mejor()
         
-        #combinaciones = cuantasCombinaciones(self.fijo1, self.fijo2, self.movil1, self.movil2)
         porcent_podas = (self.podas * 100.0) / combinaciones
         print "Listo! (cruces: %s, podas: %.1f%%)" % \
             (self.mejorDibujo.contarCruces(), porcent_podas)
@@ -323,7 +323,7 @@ def test_resolvedorSwapperTablaConPoda():
     from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
     from SolucionFuerzaBruta import ResolvedorFuerzaBruta
 
-    g = generarGrafoBipartitoAleatorio(n1=7, n2=7, m=49)
+    g = generarGrafoBipartitoAleatorio(n1=7, n2=7, m=20)
     d = generarDibujoAleatorio(g, n1=5, n2=5)
 
     r1 = ResolvedorFuerzaBruta(d)
