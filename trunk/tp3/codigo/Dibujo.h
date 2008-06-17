@@ -8,6 +8,11 @@ unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, c
 unsigned int crucesEntre (nodo x, nodo y, const vector<nodo>& p2, const vector< list<nodo> >& ejes, vector<nodo>* indicesP2 = NULL);
 unsigned int crucesPorAgregarEnLosBordes (bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x = NULL, vector<nodo>* indicesP2 = NULL);
 
+unsigned int crucesPorAgregarAdelante(const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x, vector<nodo>* indicesP2);
+
+unsigned int crucesPorAgregarAtras(const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x, vector<nodo>* indicesP2);
+
+
 class Dibujo {
   public:
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
@@ -15,6 +20,7 @@ class Dibujo {
     Dibujo(GrafoBipartito* g, const vector<nodo>& l1, const vector<nodo>& l2);
     Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
     Dibujo(const string& nombreArchivo);
+    Dibujo(const Dibujo& d);
     ~Dibujo();
 
     bool perteneceAP1(nodo) const;
@@ -26,7 +32,11 @@ class Dibujo {
     GrafoBipartito* grafo(void);
 
     void guardar(const string& nombreArchivo);
+
+    void operator= (const Dibujo& d);
+
     unsigned contarCruces();
+
     //private:
     GrafoBipartito* g;
     vector<nodo> nodosL1, nodosL2;

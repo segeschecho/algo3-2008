@@ -3,6 +3,17 @@
 
 #define BETA(a) a ? 1 : 0
 #define print(a) cout<<a<<endl;
+
+nodo maxElem(const vector<nodo>& p) {
+  nodo maximo = p[0];
+  for(unsigned int i = 1; i < p.size(); i++) {
+    if ( p[i] > maximo) {
+      maximo = p[i];
+    }
+  }
+  return maximo;
+}
+
 void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2) {
     // bucket1 y bucket2 son los buckets donde voy a guardar los ejes
     vector< list<eje> > bucket1 (size1);
@@ -67,7 +78,7 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
         }
         it++;
     }
-    delete arbol;
+    delete [] arbol;
     return cruces;
 }
 
@@ -274,3 +285,12 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
 
     return acumTree(listaAux, 2);
 }
+
+unsigned int crucesPorAgregarAdelante(const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x, vector<nodo>* indicesP2) {
+    return crucesPorAgregarEnLosBordes(true, p1, p2, ejes, x, indicesP2);
+}
+
+unsigned int crucesPorAgregarAtras(const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> > ejes, nodo* x, vector<nodo>* indicesP2) {
+    return crucesPorAgregarEnLosBordes(false, p1, p2, ejes, x, indicesP2);
+}
+
