@@ -108,6 +108,10 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     cout<<"aaaaaaaaaaaaaaaaaaa"<<endl;
 }
 
+Dibujo :: Dibujo(const Dibujo& d) {
+    *this = d;
+}
+
 Dibujo :: ~Dibujo() {
 }
 
@@ -161,4 +165,10 @@ void Dibujo :: guardar(const string& nombreArchivo) {
         salida << *it << endl;
         it++;
     }
+}
+
+void Dibujo :: operator= (const Dibujo& d) {
+    nodosL1 = d.nodosL1;
+    nodosL2 = d.nodosL2;
+    g = d.g;
 }
