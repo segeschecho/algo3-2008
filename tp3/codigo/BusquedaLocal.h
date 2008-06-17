@@ -27,7 +27,7 @@ private:
 	bool perteneceAP2(nodo x);
 	unsigned  obtenerIndice(nodo x, const vector<nodo>& pi);
 	pair<unsigned,unsigned> rango(nodo x, vector<nodo>& pi);
-	void mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< vector<nodo> >& diccEjes);
+	void mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes);
 
 };
 

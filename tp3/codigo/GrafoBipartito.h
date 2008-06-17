@@ -26,12 +26,16 @@ class GrafoBipartito {
       unsigned int cantEjes(void) const;
       unsigned int grado(nodo v) const;
       void operator = (const GrafoBipartito& g);
+      const vector< list<nodo> >& ejes(void);
+      const list<eje>& listaEjes(void);
+      const vector<nodo>& nodosV1(void);
+      const vector<nodo>& nodosV2(void);
 
-      const vector< vector<nodo> >& ejes(void);
   //private:
       vector<nodo> V1, V2;
       unsigned int m, n;
-      vector< vector<nodo> > diccEjes;
+      vector< list<nodo> > diccEjes;
+      list<eje> listEjes;
 };
 
 #endif

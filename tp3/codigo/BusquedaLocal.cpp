@@ -132,7 +132,7 @@ void sacar(vector<nodo>& li,nodo x){
         }
     }
 }
-void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< vector<nodo> >& diccEjes){
+void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes){
     //FIXME: la funcion de contarCruces no esta buena
     vector<nodo> indice2(maxElem(l2)+1);
     unsigned i = 0;
