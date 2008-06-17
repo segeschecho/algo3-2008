@@ -4,7 +4,6 @@
 #include <vector>
 #include "Dibujo.h"
 #include "GrafoBipartito.h"
-#include "cruces.h"
 #include <iostream>
 
 using namespace std;
