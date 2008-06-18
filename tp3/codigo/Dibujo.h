@@ -1,8 +1,12 @@
-#ifndef _DIBUJO_H_
-#define _DIBUJO_H_
+#ifndef _Dibujo_H
+#define _Dibujo_H
+
+#include <assert.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 #include "GrafoBipartito.h"
-#include <vector>
 
 unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP1, const vector<nodo>& indicesP2);
 unsigned int crucesEntre (nodo x, nodo y, const vector<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2);

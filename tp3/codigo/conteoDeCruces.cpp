@@ -1,5 +1,4 @@
-#include "Dibujo.h"
-#include <math.h>
+#include "conteoDeCruces.h"
 
 #define BETA(a) a ? 1 : 0
 #define print(a) cout<<a<<endl;

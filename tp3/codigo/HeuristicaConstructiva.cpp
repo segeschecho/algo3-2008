@@ -120,6 +120,7 @@ void HeuristicaConstructiva :: inicializar() {
     // Almaceno para los nodos fijos su posicion en la particion
     // que les corresponde - esto permite agilizar los conteos de cruces.
     unsigned i;
+    posiciones = vector< unsigned > (esMovil.size()); 
 
     i = 0;
     it = fijo1.begin();
@@ -240,14 +241,14 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     }
 
     fijos.pop_front();
-    it = fijos.begin();
-    for(unsigned i = 0; i != mejorPos; i++) it++;
-    fijos.insert(it, n);
+    itc = fijos.begin();
+    for(unsigned i = 0; i != mejorPos; i++) itc++;
+    fijos.insert(itc, n);
     cruces = mejorCruces;
 
     // Actualizo los grados parciales
-    it = d->grafo()->ejes()[n].begin()
-    while (it != d->grafo()->ejes()[n].end) {
+    it = d->grafo()->ejes()[n].begin();
+    while (it != d->grafo()->ejes()[n].end()) {
         if (esMovil[*it]) {
             gradoParcial[*it]++;
         }

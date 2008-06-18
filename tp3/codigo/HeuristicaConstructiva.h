@@ -1,11 +1,11 @@
-#ifndef _Heuristica_Constructiva_h
-#define _Heuristica_Constructiva_h
+#ifndef _Heuristica_Constructiva_H
+#define _Heuristica_Constructiva_H
 
 #include <vector>
 #include <list>
 #include "GrafoBipartito.h"
 #include "Dibujo.h"
-#include "conteoDeCruces.cpp"
+#include "conteoDeCruces.h"
 
 using namespace std;
 

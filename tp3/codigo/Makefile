@@ -4,16 +4,12 @@ FLAGS=-g
 all: cruces
 
 # ejecutables
-
-cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o BusquedaLocal.o Tp3.o
-	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o BusquedaLocal.o Tp3.o
-
-
-
+cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o
+	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o
 
 
 # objetos
-conteoDeCruces.o: conteoDeCruces.cpp
+conteoDeCruces.o: conteoDeCruces.cpp conteoDeCruces.h
 	$(CC) $(FLAGS) -c conteoDeCruces.cpp
 
 HeuristicaConstructiva.o: HeuristicaConstructiva.cpp HeuristicaConstructiva.h
@@ -25,8 +21,8 @@ Dibujo.o: Dibujo.cpp Dibujo.h GrafoBipartito.h
 GrafoBipartito.o: GrafoBipartito.cpp GrafoBipartito.h
 	$(CC) $(FLAGS) -c GrafoBipartito.cpp
 
-BusquedaLocal.o: BusquedaLocal.cpp BusquedaLocal.h Dibujo.h GrafoBipartito.h  conteoDeCruces.o
-	$(CC) $(FLAGS) -c BusquedaLocal.cpp 
+#BusquedaLocal.o: BusquedaLocal.cpp BusquedaLocal.h
+#	$(CC) $(FLAGS) -c BusquedaLocal.cpp 
 
 Tp3.o: Tp3.cpp Tp3.h Dibujo.h GrafoBipartito.h 
 	$(CC) $(FLAGS) -c Tp3.cpp 

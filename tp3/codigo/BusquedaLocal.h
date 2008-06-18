@@ -1,5 +1,5 @@
-#ifndef _Busqueda_Local_h
-#define _Busqueda_Local_h
+#ifndef _Busqueda_Local_H
+#define _Busqueda_Local_H
 
 #include <vector>
 #include "Dibujo.h"

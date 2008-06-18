@@ -1,5 +1,4 @@
 #include "GrafoBipartito.h"
-#include <assert.h>
 /*
  *  Clase GrafoBipartito
  */

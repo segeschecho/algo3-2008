@@ -1,8 +1,3 @@
-#include <iostream>
-#include "Dibujo.h"
-#include "GrafoBipartito.h"
-#include <math.h>
-#include "BusquedaLocal.h"
 #include "Tp3.h"
 using namespace std;
 

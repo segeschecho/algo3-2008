@@ -1,7 +1,4 @@
 #include "Dibujo.h"
-#include <assert.h>
-#include <iostream>
-#include <fstream>
 
 /*
  *  Clase Dibujo
