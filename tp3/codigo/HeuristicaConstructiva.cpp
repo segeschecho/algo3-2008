@@ -158,7 +158,6 @@ nodo HeuristicaConstructiva :: tomarSiguiente(list<nodo>& moviles) {
     // Elijo al azar alguno de los que superan el grado alfa-maximo
     unsigned ultimoQueSupera = 0;
     list<nodo>::iterator it = moviles.begin();
-    // FIXME: esto anda como el totó, es obvio
     while (++it != moviles.end() &&
            gradoParcial[*it] >= alfaMaximoGrado) {
         ultimoQueSupera++;
@@ -183,6 +182,7 @@ nodo HeuristicaConstructiva :: tomarSiguiente2() {
     return tomarSiguiente(movil2);
 }
 
+// TODO
 void HeuristicaConstructiva :: ordenarPorGradoParcial(list<nodo>& moviles) {
 }
 
@@ -224,7 +224,6 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
         itc--;
         itcp1--;
 
-        // FIXME: verificar este espanto
         c = c -
             crucesEntre(*itc, *itcp1, otrosFijos, adyParcial, posiciones) +
             crucesEntre(*itcp1, *itc, otrosFijos, adyParcial, posiciones);
