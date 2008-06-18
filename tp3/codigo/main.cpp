@@ -9,116 +9,28 @@ using namespace std;
 #define print(a) cout<<a<<endl;
 
 int main(int argc, char* argv[]) {
-    Dibujo d ("Tp3.in");
-    GrafoBipartito* graf = d.grafo();
-    cout<<"aaaaaaaasssasdadsada"<<endl;
-//    for(vector<nodo> :: const_iterator it = graf->V1.begin(); it != graf->V1.end(); it++){
-//        print(*it);
-//        cout<<*((graf->ejes[*it]).begin())<<endl;;
-//    }
-    cout<<"emiliooooooooooooooooo"<<endl;
-
-    Tp3 tp3(d,7,2,4,5);
-    cout<<"por q programo tan mal???"<<endl;
-    print("p1")
-    cout<<*tp3.dibujoLimpio<<endl;
+    //cargamos un dibujo
+	Dibujo d ("Tp3.in");
+    // Tp3 se encarga de limpiar el grafo. ya se q el nombre es choto
+    Tp3 tp3(d);
+   //generamos un heuristica constructiva con el grafo ya limpio
     HeuristicaConstructiva hc(*tp3.dibujoLimpio);
-
+   //tomamos la solucion que nos da le heuristica
     Dibujo dib =hc.construirSolucion();
-    cout<<"por favorrrr"<<endl;
+    cout<<"dib tiene: "<<dib.contarCruces()<<" cruces"<<endl;
+	//a partir del dibujo limpio tambien armamos la busqueda local
     BusquedaLocal bl(*tp3.dibujoLimpio);
-
+	//pedimos que nos mejore el dibujo de la heur constructiva
+	//nos da uno nuevo
     Dibujo carlos = bl.hallarMinimoLocal(dib);
-
+    cout<<"carlos tiene "<<carlos.contarCruces()<<" cruces"<<endl;
+	//construimos un nuevo dibujo con el orden dado por la heuristica, pero los nombres de nodos correctos
     Dibujo fabian =tp3.reconstruirDibujo(carlos);
-    print("p1")
-    for(vector<nodo> :: const_iterator it = fabian.nodosEnP1().begin(); it != fabian.nodosEnP1().end(); it++){
-        print(*it)
-    }
-    print("p2");
-    for(vector<nodo> :: const_iterator it = fabian.nodosEnP2().begin(); it != fabian.nodosEnP2().end(); it++){
-        print(*it)
-    }
-    cout<<"ahora miremos el grafo"<<endl;
-    print("v1")
-    for(vector<nodo> :: const_iterator it = fabian.grafo()->nodosEnP1().begin(); it != fabian.grafo()->nodosEnP1().end(); it++){
-        print(*it)
-    }
-    print("v2");
-    for(vector<nodo> :: const_iterator it = fabian.grafo()->nodosEnP2().begin(); it != fabian.grafo()->nodosEnP2().end(); it++){
-        print(*it)
-    }
-    vector<nodo> indice(fabian.nodosEnP1().size()+fabian.nodosEnP2().size());
-    unsigned i = 0;
-    for(vector<nodo> :: const_iterator it =fabian.nodosEnP1().begin(); it != fabian.nodosEnP1().end(); it++){
-        indice[*it] = i;
-        i++;
-    }
-    i = 0;
-    for(vector<nodo> :: const_iterator it =fabian.nodosEnP2().begin(); it != fabian.nodosEnP2().end(); it++){
-        indice[*it] = i;
-        i++;
-    }
-    cout<<"cruces "<<contadorDeCruces(fabian.nodosEnP1(),fabian.nodosEnP2(),fabian.grafo()->ejes(),indice,indice)<<endl;
-    cout<<"prueba "<<fabian.contarCruces();
-    //delete graf;
-/*    list<eje> ejes;
-    eje e1, e2, e3, e4, e5, e6, e7, e8;
-    vector<nodo> nodosV1, nodosV2, nodosP1, nodosP2;
-
-    e1.primero = 0;
-    e1.segundo = 88;
-    e2.primero = 0;
-    e2.segundo = 3;
-    e3.primero = 1;
-    e3.segundo = 2;
-
-    e5.primero = 4;
-    e5.segundo = 2;
-
-
-    ejes.push_back(e1);
-    ejes.push_back(e3);
-    ejes.push_back(e2);
-    ejes.push_back(e5);
-
-    nodosV1.push_back(0);
-    nodosV1.push_back(1);
-    nodosV1.push_back(4);
-    nodosV2.push_back(2);
-    nodosV2.push_back(3);
-    nodosV2.push_back(88);
-
-    GrafoBipartito g(nodosV1, nodosV2, ejes);
-
-    nodosP1.push_back(0);
-    nodosP1.push_back(1);
-
-    nodosP2.push_back(2);
-    nodosP2.push_back(3);
-    Dibujo d(&g, nodosP1, nodosP2);
-
-    BusquedaLocal bl(d);
-
-    nodosP1.push_back(4);
-    nodosP2.push_back(88);
-    Dibujo d2(&g, nodosP1,nodosP2);
-
-
-    Dibujo d3 = bl.hallarMinimoLocal(d2);
-
-    print(contadorDeCruces(d3.nodosEnP1(),d3.nodosEnP2(),g.ejes()));
-    unsigned i = 0;
-    while(i < d3.nodosEnP1().size()){
-        print(d3.nodosEnP1()[i]);
-        i++;
-    }
-    i = 0;
-    while(i < d3.nodosEnP2().size()){
-        print(d3.nodosEnP2()[i]);
-        i++;
-    }
-*/
+   //luego de todo tenemos estos cruces
+	cout<<"luego de pasarlo tenemos"<<fabian.contarCruces()<<" cruces (debe ser igual que carlos :P)"<<endl;
+	//lo guardamos en un aromatico archivo
+    fabian.guardar("caca.txt");
+	//esto lo pone emilio sino el visual c++ le cierra la consola :P
     system("PAUSE");
     return 0;
 }

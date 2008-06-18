@@ -3,8 +3,8 @@
 
 #include <math.h>
 
-#include "Dibujo.h"
-
+//#include "Dibujo.h"
+#include "GrafoBipartito.h"
 nodo maxElem(const vector<nodo>& p);
 void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2);
 unsigned int acumTree (const list<eje>& l, unsigned int cantHojas);

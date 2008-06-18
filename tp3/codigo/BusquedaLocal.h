@@ -2,10 +2,9 @@
 #define _Busqueda_Local2_h
 
 #include <vector>
-#include <iostream>
-
 #include "Dibujo.h"
 #include "GrafoBipartito.h"
+#include <iostream>
 #include "conteoDeCruces.h"
 
 using namespace std;

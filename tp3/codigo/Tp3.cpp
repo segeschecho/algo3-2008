@@ -19,27 +19,28 @@ void imprimir(list<nodo>& l){
 #endif
 
 #define print(a) cout<<a<<endl;
-Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsigned IV2In){
+Tp3::Tp3(Dibujo& entrada){
         marcados1 = entrada.nodosEnP1();
         marcados2 = entrada.nodosEnP2();
-        v1 = v1Inic;
+        /*v1 = v1Inic;
         v2 = v2Inic;
         IV1 = IV1In;
-        IV2 = IV2In;
+        IV2 = IV2In;*/
+        v1 = marcados1.size();
+        v2 = marcados2.size();
+        IV1 = entrada.grafo()->nodosEnP1().size() -v1;
+        IV2 = entrada.grafo()->nodosEnP2().size()-v2;
         GrafoBipartito* g = entrada.grafo();
         grafoOriginal = g;
         list<nodo> marcadosNoNulos1,marcadosNoNulos2,noNulos1,noNulos2;
         for(vector<nodo>:: const_iterator each = entrada.grafo()->nodosEnP1().begin();each != entrada.grafo()->nodosEnP1().end(); each ++){
-             if(*each < v1Inic){
+             if(*each < v1){
 
                 if(!((g->ejes())[*each].empty())){
-                   cout<<"each"<<endl;
-                   cout<<*each<<endl;
-                   cout<<*((g->ejes())[*each].begin())<<endl;
                    marcadosNoNulos1.push_back(*each);
                 }
              }
-             else if(*each < v2Inic + v1Inic + IV1){
+             else if(*each < v2 + v1 + IV1){
                if(!(g->ejes())[*each].empty()){
                    noNulos1.push_back(*each);
                 }
@@ -48,13 +49,11 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
                 }
              }
              else{
-                 cout<<"tiene q se menor q esto:"<<v2Inic + v1Inic + IV1<<endl;
-                 cout<<*each<<endl;
                  abort();
              }
           }
           for(vector<nodo>:: const_iterator each = entrada.grafo()->nodosEnP2().begin();each != entrada.grafo()->nodosEnP2().end(); each ++){
-            if(*each < v2Inic+v1Inic){
+            if(*each < v2+v1){
               if(!((g->ejes())[*each].empty())){
                 marcadosNoNulos2.push_back(*each);
               }
@@ -124,11 +123,14 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
             e.segundo = indice[x->segundo];
             losEjesNuevos->push_back(e);
           }
+          imprimir(*nuevoV1);
+
+          imprimir(*nuevoV2);
 
          grafoLimpio = new GrafoBipartito(*nuevoP1,*nuevoP2,*losEjesNuevos);
-         cout<<"llegaste aca????"<<endl;
+       //  cout<<"llegaste aca????"<<endl;
          dibujoLimpio = new Dibujo(grafoLimpio,*nuevoV1,*nuevoV2);
-         cout<<"y aca????"<<endl;
+        // cout<<"y aca????"<<endl;
 }
 
 Dibujo Tp3:: reconstruirDibujo(Dibujo& resuelto){
@@ -146,26 +148,27 @@ Dibujo Tp3:: reconstruirDibujo(Dibujo& resuelto){
                p1Posta->push_back(traduccion[*each]);
             }
        }
-        print("p1Posta");
-        imprimir(*p1Posta);
-        print("nulos1");
-        imprimir(nulos1);
+       // print("p1Posta");
+       // imprimir(*p1Posta);
+       // print("nulos1");
+       // imprimir(nulos1);
         p1Posta->splice(p1Posta->end(),nulos1);
 
         while(i < marcados1.size()){
              p1Posta->push_back(marcados1[i]);
 	     i++;
         }
-       print("p1Posta");
-    imprimir(*p1Posta);
-    print((*p1Posta).size());
+    //   print("p1Posta");
+    //imprimir(*p1Posta);
+   // print((*p1Posta).size());
+       i = 0;
        p2Posta = new list<nodo>();
        for(vector<nodo> :: const_iterator each =resuelto.nodosEnP2().begin(); each != resuelto.nodosEnP2().end();each++){
-            if( !(traduccion[*each] < v1)){
+            if( !(traduccion[*each] < v1+v2)){
                p2Posta->push_back(traduccion[*each]);
             }else{
                while(i < marcados2.size() && marcados2[i] != traduccion[*each]){
-                   p2Posta->push_back(marcados1[i]);
+                   p2Posta->push_back(marcados2[i]);
                    i++;
                }
                i++;

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
+#include "conteoDeCruces.h"
 #include "GrafoBipartito.h"
 
 
@@ -17,7 +17,7 @@ class Dibujo {
     Dibujo(const string& nombreArchivo);
     Dibujo(const Dibujo& d);
     ~Dibujo();
-    
+
     friend std::ostream& operator<< (ostream&, const Dibujo&);
 
     bool perteneceAP1(nodo) const;

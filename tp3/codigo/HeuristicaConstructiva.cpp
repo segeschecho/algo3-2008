@@ -1,18 +1,5 @@
 #include "HeuristicaConstructiva.h"
 
-
-class AdaptadorTabla { 
-public:
-    AdaptadorTabla(vector<unsigned>& t) : tabla(t) {
-    };
-    bool operator() (nodo a, nodo b) {
-        return tabla[a] > tabla[b];
-    };
-private:
-    vector<unsigned>& tabla; 
-};
-
-
 HeuristicaConstructiva :: HeuristicaConstructiva(Dibujo& original) {
     d = &original;
 }
@@ -195,9 +182,8 @@ nodo HeuristicaConstructiva :: tomarSiguiente2() {
     return tomarSiguiente(movil2);
 }
 
+// TODO
 void HeuristicaConstructiva :: ordenarPorGradoParcial(list<nodo>& moviles) {
-    AdaptadorTabla a(gradoParcial);
-    moviles.sort(a);
 }
 
 
@@ -293,4 +279,3 @@ void HeuristicaConstructiva :: insertarEn1(nodo n) {
 void HeuristicaConstructiva :: insertarEn2(nodo n) {
     insertar(n, fijo2, fijo1);
 }
-
