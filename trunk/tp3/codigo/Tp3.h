@@ -8,6 +8,7 @@
 
 #include "Dibujo.h"
 #include "GrafoBipartito.h"
+#include "HeuristicaConstructiva.h"
 
 using namespace std;
 

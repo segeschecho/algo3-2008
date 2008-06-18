@@ -1,5 +1,5 @@
 CC = g++
-FLAGS=-g
+FLAGS=-g -Wall
 
 all: cruces
 
