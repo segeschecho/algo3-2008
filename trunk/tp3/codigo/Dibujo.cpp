@@ -37,6 +37,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     while(cantLineas > 0) {
         nodo v;
         entrada >> v;
+		v--;
         nodosL1.push_back(v);
         nodosV1.push_back(v);
         cantLineas--;
@@ -46,7 +47,8 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     while(cantLineas > 0) {
         nodo v;
         entrada >> v;
-        nodosL2.push_back(v);
+        v--;
+		nodosL2.push_back(v);
         nodosV2.push_back(v);
         cantLineas--;
     }
@@ -57,9 +59,11 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
         eje e;
 
         entrada >> v;
-        e.primero = v;
+        v--;
+		e.primero = v;
         entrada >> v;
-        e.segundo = v;
+        v--;
+		e.segundo = v;
 
         ejes.push_back(e);
         cantLineas--;
@@ -69,7 +73,8 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     while(cantLineas > 0) {
         nodo v;
         entrada >> v;
-        nodosV1.push_back(v);
+        v--;
+		nodosV1.push_back(v);
         cantLineas--;
     }
 
@@ -77,7 +82,8 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     while(cantLineas > 0) {
         nodo v;
         entrada >> v;
-        nodosV2.push_back(v);
+        v--;
+		nodosV2.push_back(v);
         cantLineas--;
     }
 
@@ -87,9 +93,11 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
         eje e;
 
         entrada >> v;
-        e.primero = v;
+        v--;
+		e.primero = v;
         entrada >> v;
-        e.segundo = v;
+        v--;
+		e.segundo = v;
 
         ejes.push_back(e);
         cantLineas--;
