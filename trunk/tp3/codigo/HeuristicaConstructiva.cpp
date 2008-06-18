@@ -1,7 +1,7 @@
 #include "HeuristicaConstructiva.h"
 
 HeuristicaConstructiva :: HeuristicaConstructiva(Dibujo& original) {
-    d = &original; 
+    d = &original;
 }
 
 Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
@@ -9,20 +9,21 @@ Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
     this->randomPos = randomPos;
 
     inicializar();
-    
+
     // Ejecuto la heurística constructiva greedy
     nodo sig;
     while (!movil1.empty() || !movil2.empty()) {
         if (!movil1.empty()) {
             sig = tomarSiguiente1();
             insertarEn1(sig);
+
         }
         if (!movil2.empty()) {
             sig = tomarSiguiente2();
             insertarEn2(sig);
         }
     }
-    
+
     return Dibujo(d->grafo(), fijo1, fijo2);
 }
 
@@ -30,12 +31,12 @@ Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
 void HeuristicaConstructiva :: inicializar() {
     fijo1.assign(d->nodosEnP1().begin(), d->nodosEnP1().end());
     fijo2.assign(d->nodosEnP2().begin(), d->nodosEnP2().end());
-    
+
     vector<nodo>::const_iterator itv;
 
     movil1 = list<nodo>();
     movil2 = list<nodo>();
-    
+
     itv = d->grafo()->nodosEnP1().begin();
     while (itv != d->grafo()->nodosEnP1().end()) {
         if (!d->perteneceAP1(*itv)) {
@@ -79,7 +80,7 @@ void HeuristicaConstructiva :: inicializar() {
 
     // Construyo 2 diccionarios que voy a necesitar:
     // - listas de adyacencia del subgrafo ya fijado
-    adyParcial = vector< list<nodo> >(d->grafo()->cantNodos()); 
+    adyParcial = vector< list<nodo> >(d->grafo()->cantNodos());
 
     // - grados de los nodos (moviles) contando solo los ejes
     //   que van a los nodos ya fijados
@@ -120,7 +121,7 @@ void HeuristicaConstructiva :: inicializar() {
     // Almaceno para los nodos fijos su posicion en la particion
     // que les corresponde - esto permite agilizar los conteos de cruces.
     unsigned i;
-    posiciones = vector< unsigned > (esMovil.size()); 
+    posiciones = vector< unsigned > (esMovil.size());
 
     i = 0;
     it = fijo1.begin();
@@ -157,10 +158,10 @@ nodo HeuristicaConstructiva :: tomarSiguiente(list<nodo>& moviles) {
            gradoParcial[*it] >= alfaMaximoGrado) {
         ultimoQueSupera++;
     }
-    
+
     // FIXME: elegir al azar en [0..ultimoQueSupera]
     unsigned elegido = 0;
- 
+
     // Busco el elemento en la posición elegida, lo borro
     // de la lista y a lo devuelvo.
     it = moviles.begin();
@@ -183,15 +184,16 @@ void HeuristicaConstructiva :: ordenarPorGradoParcial(list<nodo>& moviles) {
 
 
 void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& otrosFijos) {
-    
+
     esMovil[n] = false;
-    
+
     // Actualizo la lista de adyacencias parcial para incorporar las adyacencias
     // del nodo que voy a agregar - esto es necesario puesto que las funciones de conteo
     // de cruces se usan dentro del subgrafo fijo y por tanto para que tengan en cuenta
     // al nodo a agregar, es necesario completarlas con sus ejes.
     adyParcial[n] = list<nodo>();
     list<nodo>::const_iterator it = d->grafo()->ejes()[n].begin();
+
     while (it != d->grafo()->ejes()[n].end()) {
         if (!esMovil[*it]) {
             adyParcial[*it].push_back(n);
@@ -199,14 +201,16 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
         }
         it++;
     }
-    // Busco las mejores posiciones en la particion para insertar este nodo, 
+
+    // Busco las mejores posiciones en la particion para insertar este nodo,
     // comenzando por el final y swapeando hacia atrás hasta obtener las mejores.
     fijos.push_back(n);
     unsigned c = cruces + crucesPorAgregarAtras(fijos, otrosFijos, adyParcial, posiciones);
+                                        cout<<"hice esto por lo menos?"<<endl;
     unsigned pos = fijos.size() - 1;
     list<nodo>::iterator itc = fijos.end(); itc--;
 
-    
+
     unsigned mejorCruces = c;
     list<unsigned> posValidas;
     posValidas.push_back(pos);
@@ -252,11 +256,11 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
         if (esMovil[*it]) {
             gradoParcial[*it]++;
         }
+        it++;
     }
-    
+
     // Actualizo las posiciones
     unsigned i;
-
     i = 0;
     it = fijos.begin();
     while (it != fijos.end()) {
@@ -264,7 +268,7 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
         it++;
         i++;
     }
-    
+
 }
 void HeuristicaConstructiva :: insertarEn1(nodo n) {
     insertar(n, fijo1, fijo2);
