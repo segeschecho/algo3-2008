@@ -80,6 +80,7 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
             traduccion[i] = *each;
             indice[*each] = i;
             (*nuevoP1)[j] =  i;
+            nuevoV2->push_back(i);
             i = i +1;
             j++;
           }
@@ -106,7 +107,7 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
             e.primero = indice[x->primero];
             e.segundo = indice[x->segundo];
             losEjesNuevos->push_back(e);
-         }
+          }
 
          grafoLimpio = new GrafoBipartito(*nuevoP1,*nuevoP2,*losEjesNuevos);
          dibujoLimpio = new Dibujo(grafoLimpio,*nuevoV1,*nuevoV2);
