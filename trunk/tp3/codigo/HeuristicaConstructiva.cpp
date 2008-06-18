@@ -1,4 +1,5 @@
 #include "HeuristicaConstructiva.h"
+#include <time.h>
 
 HeuristicaConstructiva :: HeuristicaConstructiva(Dibujo& original) {
     d = &original;
@@ -30,7 +31,7 @@ Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
 
 void HeuristicaConstructiva :: inicializar() {
     // Inicializo el generador de numeros aleatorios
-    srand((unsigned) time(0));
+    srand((unsigned) time(NULL));
 
     // Obtengo las listas de nodos fijos y moviles con las que voy a operar
     fijo1.assign(d->nodosEnP1().begin(), d->nodosEnP1().end());
@@ -110,12 +111,12 @@ void HeuristicaConstructiva :: inicializar() {
 
     list<eje>::const_iterator ite = d->grafo()->listaEjes().begin();
     while (ite != d->grafo()->listaEjes().begin()) {
-        if (!esMovil[ite->primero] and !esMovil[ite->segundo]) {
+        if (!esMovil[ite->primero] && !esMovil[ite->segundo]) {
             adyParcial[ite->primero].push_back(ite->segundo);
             adyParcial[ite->segundo].push_back(ite->primero);
         }
 
-        if (!esMovil[ite->primero] or !esMovil[ite->segundo]) {
+        if (!esMovil[ite->primero] || !esMovil[ite->segundo]) {
             gradoParcial[ite->primero]++;
             gradoParcial[ite->segundo]++;
         }
