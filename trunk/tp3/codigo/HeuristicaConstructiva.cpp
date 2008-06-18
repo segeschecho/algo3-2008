@@ -56,6 +56,7 @@ void HeuristicaConstructiva :: inicializar() {
         itv++;
     }
 
+
     // Guardo en un diccionario quien es movil y quien no
     // (este diccionario se ira modificando a medida que voy "fijando" nodos)
     esMovil = vector<bool>(d->grafo()->cantNodos());
@@ -109,7 +110,7 @@ void HeuristicaConstructiva :: inicializar() {
     }
 
     list<eje>::const_iterator ite = d->grafo()->listaEjes().begin();
-    while (ite != d->grafo()->listaEjes().begin()) {
+    while (ite != d->grafo()->listaEjes().end()) {
         if (!esMovil[ite->primero] && !esMovil[ite->segundo]) {
             adyParcial[ite->primero].push_back(ite->segundo);
             adyParcial[ite->segundo].push_back(ite->primero);
@@ -211,6 +212,7 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     unsigned c = cruces + crucesPorAgregarAtras(fijos, otrosFijos, adyParcial, posiciones);
     unsigned pos = fijos.size() - 1;
     list<nodo>::iterator itc = fijos.end(); itc--;
+    list<nodo>::iterator itcp1 = fijos.end();
 
 
     unsigned mejorCruces = c;
@@ -220,12 +222,13 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     while (itc != fijos.begin()) {
         pos--;
         itc--;
+        itcp1--;
+
         // FIXME: verificar este espanto
         c = c -
-            crucesEntre(*itc, *(++itc), otrosFijos, adyParcial, posiciones) +
-            crucesEntre(*itc, *(--itc), otrosFijos, adyParcial, posiciones);
-        swap(*itc, *(++itc));
-        itc--;
+            crucesEntre(*itc, *itcp1, otrosFijos, adyParcial, posiciones) +
+            crucesEntre(*itcp1, *itc, otrosFijos, adyParcial, posiciones);
+        swap(*itc, *itcp1);
 
         if (c == mejorCruces) {
             posValidas.push_back(pos);

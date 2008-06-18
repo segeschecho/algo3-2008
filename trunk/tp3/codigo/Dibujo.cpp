@@ -159,11 +159,17 @@ std::ostream& operator<< (ostream& o, const Dibujo& d) {
     o << "------------------------" << endl;
     o << "L1: [";
     it = d.nodosEnP1().begin();
-    while (it++ != d.nodosEnP1().end()) o << *it << ",";
+    while (it != d.nodosEnP1().end()) {
+        o << *it << ",";
+        it++;
+    }
     o << "]" << endl;
     o << "L2: [";
     it = d.nodosEnP2().begin();
-    while (it++ != d.nodosEnP2().end()) o << *it << ",";
+    while (it != d.nodosEnP2().end()) {
+        o << *it << ",";
+        it++;
+    }
     o << "]" << endl;
     o << "Cruces: " << d.contarCruces() << endl;
     o << "------------------------" << endl;
