@@ -158,15 +158,16 @@ void actualizarIndice(vector<nodo>& li,unsigned inic,unsigned fin,vector<nodo>& 
 
 
 void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice){
-    //FIXME: la funcion de contarCruces no esta buena
 
     unsigned i = 0;
-
-    /*for(vector<nodo> :: iterator it = l2.begin(); it != l2.end(); it++){
+    /*print("manolo")
+    for(vector<nodo> :: iterator it = l1.begin(); it != l1.end(); it++){
         print(*it);
-        indice[*it] = i;
+        print("indice");
+        print(indice[*it]) ;
         i+=1;
-    }*/
+    }
+    print("cuanta info")*/
     i=0;
     vector<nodo> l1Aux = vector<nodo>(l1);
     for(vector<nodo>::iterator each = l1Aux.begin(); each != l1Aux.end(); each++){
@@ -180,9 +181,13 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         unsigned crucesAhora = crucesInicial;
         unsigned crucesMin = crucesInicial;
         i = rangoi.first;
-        //print("rangoisecond");
+        /*print("rangoisecond");
         //print(rangoi.second);
-
+        for(vector<nodo> :: iterator it = l1.begin(); it != l1.end(); it++){
+        print(*it);
+        print("indice");
+        print(indice[*it]) ;
+        }*/
         while( i < rangoi.second-1){
                 //cout<< "i: "<<i<<endl;
 
@@ -224,11 +229,12 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         unsigned crucesMin = crucesInicial;
         i = rangoi.first;
         while( i < rangoi.second-1){
-                    print("p2 se mueve");
+               /*     print("p2 se mueve");
                for(vector<nodo> :: iterator it = l2.begin(); it != l2.end(); it++){
-        print(*it);
-
-               }
+                   print(*it);
+                   print("indice");
+                   print(indice[*it]);
+               }*/
                 unsigned crucesPreSwap = crucesEntre(l2[i],l2[i+1],l1,orig->grafo()->ejes(),indice);
                 unsigned crucesPostSwap = crucesEntre(l2[i+1],l2[i],l1,orig->grafo()->ejes(),indice);
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
@@ -253,17 +259,21 @@ Dibujo BusquedaLocal :: hallarMinimoLocal(Dibujo& candidato){
     vector<nodo> l1 = vector<nodo>(candidato.nodosEnP1());
     vector<nodo> l2 = vector<nodo>(candidato.nodosEnP2());
     unsigned i = 0;
+    //print("asigno los indices a p1");
     for(vector<nodo> :: iterator it = l1.begin(); it != l1.end(); it++){
         print(*it);
         indice[*it] = i;
+        //print("a "<<*it<<" le toco"<<i)
         i+=1;
     }
     i = 0;
+    print("no me digas q sigue andando mal la mierda esa");
     for(vector<nodo> :: iterator it = l2.begin(); it != l2.end(); it++){
         print(*it);
         indice[*it] = i;
         i+=1;
     }
+
     unsigned crucesInicial = contadorDeCruces(candidato.nodosEnP1(),candidato.nodosEnP2(),(candidato.grafo())->ejes(),indice,indice);
     bool cambio = true;
 
