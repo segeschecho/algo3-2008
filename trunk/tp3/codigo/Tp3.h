@@ -1,9 +1,13 @@
-#ifndef Tp3_h
-#define Tp3_h
+#ifndef Tp3_H
+#define Tp3_H
 
-#include "Dibujo.h"
 #include <vector>
 #include <list>
+#include <iostream>
+#include <math.h>
+
+#include "Dibujo.h"
+#include "GrafoBipartito.h"
 
 using namespace std;
 

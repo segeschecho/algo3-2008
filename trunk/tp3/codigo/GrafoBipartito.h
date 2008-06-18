@@ -1,8 +1,10 @@
-#ifndef _GRAFOBIPARTITO_H_
-#define _GRAFOBIPARTITO_H_
+#ifndef _Grafo_Bipartito_H
+#define _Grafo_Bipartito_H
+
 #include <list>
 #include <vector>
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 
