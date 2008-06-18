@@ -300,3 +300,8 @@ unsigned int crucesPorAgregarAtras(const list<nodo>& p1, const list<nodo>& p2, c
     return crucesPorAgregarEnLosBordes(false, vectorP1, vectorP2, ejes, indicesP2);
 }
 
+unsigned int crucesEntre(nodo x, nodo y, const list<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2) {
+    vector<nodo> vectorP2 (p2.size());
+    vectorP2.assign(p2.begin(), p2.end());
+    return crucesEntre(x, y, vectorP2, ejes, indicesP2);
+}
