@@ -26,8 +26,6 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& 
     nodosL2.assign(l2.begin(), l2.end());
 }
 
-
-
 Dibujo :: Dibujo(const string& nombreArchivo) {
 
     desdeArchivo = true;
