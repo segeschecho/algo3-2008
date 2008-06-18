@@ -18,9 +18,7 @@ int main(int argc, char *argv[]) {
     }
 
     Dibujo d (ruta);
-    GrafoBipartito* gPtr = d.grafo();
     HeuristicaConstructiva(d).construirSolucion().guardar(salida);
 
-    system("PAUSE");
     return 0;
 }
