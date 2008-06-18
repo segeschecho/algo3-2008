@@ -29,6 +29,10 @@ Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
 
 
 void HeuristicaConstructiva :: inicializar() {
+    // Inicializo el generador de numeros aleatorios
+    srand((unsigned) time(0));
+
+    // Obtengo las listas de nodos fijos y moviles con las que voy a operar
     fijo1.assign(d->nodosEnP1().begin(), d->nodosEnP1().end());
     fijo2.assign(d->nodosEnP2().begin(), d->nodosEnP2().end());
 
@@ -159,8 +163,7 @@ nodo HeuristicaConstructiva :: tomarSiguiente(list<nodo>& moviles) {
         ultimoQueSupera++;
     }
 
-    // FIXME: elegir al azar en [0..ultimoQueSupera]
-    unsigned elegido = 0;
+    unsigned elegido = rand() % (ultimoQueSupera + 1);
 
     // Busco el elemento en la posición elegida, lo borro
     // de la lista y a lo devuelvo.
@@ -206,7 +209,6 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     // comenzando por el final y swapeando hacia atrás hasta obtener las mejores.
     fijos.push_back(n);
     unsigned c = cruces + crucesPorAgregarAtras(fijos, otrosFijos, adyParcial, posiciones);
-                                        cout<<"hice esto por lo menos?"<<endl;
     unsigned pos = fijos.size() - 1;
     list<nodo>::iterator itc = fijos.end(); itc--;
 
@@ -238,8 +240,7 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     // Inserto el nodo en alguna de las mejores posiciones
     unsigned mejorPos;
     if (randomPos) {
-        // FIXME: elegir al azar
-        mejorPos = posValidas.front();
+        mejorPos = rand() % posValidas.size();
     } else {
         mejorPos = posValidas.front();
     }
