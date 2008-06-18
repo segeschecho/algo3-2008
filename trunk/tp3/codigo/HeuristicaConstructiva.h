@@ -34,6 +34,7 @@ private:
     nodo tomarSiguiente(list<nodo>& moviles);
     nodo tomarSiguiente1();
     nodo tomarSiguiente2();
+    
     void ordenarPorGradoParcial(list<nodo>& moviles);
 
     void insertar(nodo, list<nodo>& fijos, list<nodo>& otrosFijos);
