@@ -1,9 +1,12 @@
 #ifndef Tp3_h
 #define Tp3_h
 
-#include "Dibujo.h"
 #include <vector>
 #include <list>
+
+#include "Dibujo.h"
+#include "HeuristicaConstructiva.h"
+#include "BusquedaLocal.h"
 
 using namespace std;
 
