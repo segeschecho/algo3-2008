@@ -1,5 +1,4 @@
 #include "HeuristicaConstructiva.h"
-#include <time.h>
 
 HeuristicaConstructiva :: HeuristicaConstructiva(Dibujo& original) {
     d = &original;

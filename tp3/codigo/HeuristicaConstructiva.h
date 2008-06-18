@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <list>
+#include <time.h>
+
 #include "GrafoBipartito.h"
 #include "Dibujo.h"
 #include "conteoDeCruces.h"
