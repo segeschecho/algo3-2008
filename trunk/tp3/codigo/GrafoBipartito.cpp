@@ -44,13 +44,14 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
 */
     diccEjes = vector< list<nodo> > (p1.size() + p2.size());
     list<eje>::const_iterator itEjes(ejes.begin());
-    print("lo arma mal?");
+    //print("lo arma mal?");
     while (itEjes != ejes.end()) {
-        print(itEjes->primero<<" "<<itEjes->segundo);
+        //print(itEjes->primero<<" "<<itEjes->segundo);
         diccEjes[itEjes->primero].push_back(itEjes->segundo);
         diccEjes[itEjes->segundo].push_back(itEjes->primero);
         itEjes++;
     }
+    cout<<"sal"<<endl;
 }
 
 GrafoBipartito :: GrafoBipartito(const GrafoBipartito& g) {

@@ -39,6 +39,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     unsigned int cantLineas;
 
     entrada >> cantLineas;
+    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -49,6 +50,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     }
 
     entrada >> cantLineas;
+    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -59,6 +61,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     }
 
     entrada >> cantLineas;
+    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         eje e;
@@ -71,11 +74,12 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
         e.segundo = v;
 
         ejes.push_back(e);
-        cout << e.primero << " " << e.segundo<<endl;
+       // cout << e.primero << " " << e.segundo<<endl;
         cantLineas--;
     }
 
     entrada >> cantLineas;
+    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -85,6 +89,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     }
 
     entrada >> cantLineas;
+    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -94,6 +99,7 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     }
 
     entrada >> cantLineas;
+    cout<<"lines"<<cantLineas<<endl;
     #define print(a) cout<< a << endl;
     print("ejes");
     while (cantLineas > 0) {
@@ -108,13 +114,8 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
         e.segundo = v;
 
         ejes.push_back(e);
-        print(e.primero<<" "<<e.segundo);
+        //print(e.primero<<" "<<e.segundo);
         cantLineas--;
-    }
-
-    unsigned i = 0;
-    while (i < nodosV1.size()) {
-        i++;
     }
     g = new GrafoBipartito(nodosV1, nodosV2, ejes);
 }
@@ -152,7 +153,14 @@ const vector<nodo>& Dibujo :: nodosEnP2(void) const {
 GrafoBipartito* Dibujo :: grafo(void) {
     return g;
 }
-
+void imprimeVector(const vector<nodo>& a){
+    unsigned i = 0;
+    while(i < a.size()){
+        cout<<a[i]<<" ";
+        i++;
+    }
+    cout<<endl;
+}
 unsigned Dibujo :: contarCruces() const {
     vector<nodo> indice(nodosL1.size()+nodosL2.size());
     unsigned i = 0;
@@ -207,8 +215,8 @@ void Dibujo :: guardar(const string& nombreArchivo) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
 
-//    salida << contadorDeCruces(nodosL1, nodosL2, g->diccEjes) << endl;
-    salida << nodosL1.size()+1 << endl;
+    salida << contarCruces()<<endl;
+    salida << nodosL1.size() << endl;
     vector<nodo>::const_iterator it (nodosL1.begin());
 
     while (it != nodosL1.end()) {

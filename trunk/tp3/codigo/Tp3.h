@@ -9,7 +9,7 @@ using namespace std;
 
 class Tp3{
 public:
-  Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsigned IV2In);
+  Tp3(Dibujo& entrada);
 	   Dibujo reconstruirDibujo(Dibujo& limpio);
        Dibujo* dibujoLimpio;
   ~Tp3(){delete dibujoLimpio; delete grafoLimpio;delete nuevoP1;delete nuevoP2;delete nuevoV1; delete nuevoV2;delete losEjesNuevos;delete p1Posta; delete p2Posta;};
