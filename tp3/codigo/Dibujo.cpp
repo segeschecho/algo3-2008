@@ -16,12 +16,12 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
 
 
 Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& l2) {
-    
+
     desdeArchivo = false;
 
     g = grafo;
     assert(l1.size() + l2.size() <= g->n);
-    
+
     nodosL1.assign(l1.begin(), l1.end());
     nodosL2.assign(l2.begin(), l2.end());
 }
@@ -38,83 +38,80 @@ Dibujo :: Dibujo(const string& nombreArchivo) {
     unsigned int cantLineas;
 
     entrada >> cantLineas;
-    while(cantLineas > 0) {
+    while (cantLineas > 0) {
         nodo v;
         entrada >> v;
-		v--;
+        v--;
         nodosL1.push_back(v);
         nodosV1.push_back(v);
         cantLineas--;
     }
 
     entrada >> cantLineas;
-    while(cantLineas > 0) {
+    while (cantLineas > 0) {
         nodo v;
         entrada >> v;
         v--;
-		nodosL2.push_back(v);
+        nodosL2.push_back(v);
         nodosV2.push_back(v);
         cantLineas--;
     }
 
     entrada >> cantLineas;
-    while(cantLineas > 0) {
+    while (cantLineas > 0) {
         nodo v;
         eje e;
 
         entrada >> v;
         v--;
-		e.primero = v;
+        e.primero = v;
         entrada >> v;
         v--;
-		e.segundo = v;
+        e.segundo = v;
 
         ejes.push_back(e);
         cantLineas--;
     }
 
     entrada >> cantLineas;
-    while(cantLineas > 0) {
+    while (cantLineas > 0) {
         nodo v;
         entrada >> v;
         v--;
-		nodosV1.push_back(v);
+        nodosV1.push_back(v);
         cantLineas--;
     }
 
     entrada >> cantLineas;
-    while(cantLineas > 0) {
+    while (cantLineas > 0) {
         nodo v;
         entrada >> v;
         v--;
-		nodosV2.push_back(v);
+        nodosV2.push_back(v);
         cantLineas--;
     }
 
     entrada >> cantLineas;
-    while(cantLineas > 0) {
+    while (cantLineas > 0) {
         nodo v;
         eje e;
 
         entrada >> v;
         v--;
-		e.primero = v;
+        e.primero = v;
         entrada >> v;
         v--;
-		e.segundo = v;
+        e.segundo = v;
 
         ejes.push_back(e);
         cantLineas--;
     }
-     
-#define print(a) cout<<a<<endl;
+
     unsigned i = 0;
-    while(i < nodosV1.size()){
-      print(nodosV1[i]);
-      i++;
+    while (i < nodosV1.size()) {
+        i++;
     }
     g = new GrafoBipartito(nodosV1, nodosV2, ejes);
-    cout<<"aaaaaaaaaaaaaaaaaaa"<<endl;
 }
 
 Dibujo :: Dibujo(const Dibujo& d) {
@@ -144,17 +141,35 @@ const vector<nodo>& Dibujo :: nodosEnP1(void) const {
 }
 
 const vector<nodo>& Dibujo :: nodosEnP2(void) const {
-  return nodosL2;
+    return nodosL2;
 }
 
 GrafoBipartito* Dibujo :: grafo(void) {
     return g;
 }
 
-unsigned Dibujo :: contarCruces() {
+unsigned Dibujo :: contarCruces() const {
     return 7;
 }
 
+std::ostream& operator<< (ostream& o, const Dibujo& d) {
+    vector<nodo>::const_iterator it;
+    o << "------------------------" << endl;
+    o << "Dibujo de GrafoBipartito" << endl;
+    o << "------------------------" << endl;
+    o << "L1: [";
+    it = d.nodosEnP1().begin();
+    while (it++ != d.nodosEnP1().end()) o << *it << ",";
+    o << "]" << endl;
+    o << "L2: [";
+    it = d.nodosEnP2().begin();
+    while (it++ != d.nodosEnP2().end()) o << *it << ",";
+    o << "]" << endl;
+    o << "Cruces: " << d.contarCruces() << endl;
+    o << "------------------------" << endl;
+
+    return o;
+}
 
 void Dibujo :: guardar(const string& nombreArchivo) {
     ofstream salida (nombreArchivo.c_str());
@@ -165,7 +180,7 @@ void Dibujo :: guardar(const string& nombreArchivo) {
     salida << nodosL1.size() << endl;
     vector<nodo>::const_iterator it (nodosL1.begin());
 
-    while(it != nodosL1.end()) {
+    while (it != nodosL1.end()) {
         salida << *it << endl;
         it++;
     }
@@ -173,7 +188,7 @@ void Dibujo :: guardar(const string& nombreArchivo) {
     salida << nodosL2.size() << endl;
     it = nodosL2.begin();
 
-    while(it != nodosL2.end()) {
+    while (it != nodosL2.end()) {
         salida << *it << endl;
         it++;
     }
