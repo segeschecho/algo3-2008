@@ -1,12 +1,9 @@
 #ifndef Tp3_h
 #define Tp3_h
 
+#include "Dibujo.h"
 #include <vector>
 #include <list>
-
-#include "Dibujo.h"
-#include "HeuristicaConstructiva.h"
-#include "BusquedaLocal.h"
 
 using namespace std;
 
@@ -15,7 +12,7 @@ public:
   Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsigned IV2In);
 	   Dibujo reconstruirDibujo(Dibujo& limpio);
        Dibujo* dibujoLimpio;
-  ~Tp3(){delete dibujoLimpio; delete grafoLimpio;delete nuevoP1;delete nuevoP2;delete nuevoV1; delete nuevoV2;delete losEjesNuevos;};
+  ~Tp3(){delete dibujoLimpio; delete grafoLimpio;delete nuevoP1;delete nuevoP2;delete nuevoV1; delete nuevoV2;delete losEjesNuevos;delete p1Posta; delete p2Posta;};
 
 private:
         vector<nodo> marcados1,marcados2;
@@ -29,6 +26,8 @@ private:
         list<nodo>* nuevoV2;
         list<eje> * losEjesNuevos;
         unsigned v1,v2,IV1,IV2;
+        list<nodo>* p1Posta;
+        list<nodo>* p2Posta;
 };
 
 #endif
