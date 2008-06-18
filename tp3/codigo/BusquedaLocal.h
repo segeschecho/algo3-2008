@@ -1,5 +1,5 @@
-#ifndef _Busqueda_Local_H
-#define _Busqueda_Local_H
+#ifndef _Busqueda_Local2_h
+#define _Busqueda_Local2_h
 
 #include <vector>
 #include "Dibujo.h"
@@ -13,22 +13,17 @@ public:
 	BusquedaLocal(Dibujo& original);
 	Dibujo hallarMinimoLocal(Dibujo& candidato);
 private:
-	unsigned int maximoP1;
-	unsigned int minimoP2;
-	unsigned int maximoP2;
-	vector<bool>  estaEnP1;
-	vector<bool>  estaEnP2;
-	vector<unsigned> indiceP1;
-	vector<unsigned> indiceP2;
-	vector<nodo> p1;
-	vector<nodo> p2;
+    Dibujo* orig;
+    unsigned minimoP2;
+    unsigned maximoP2;
 	bool esFijo(nodo x);
 	bool perteneceAP1(nodo x);
 	bool perteneceAP2(nodo x);
 	unsigned  obtenerIndice(nodo x, const vector<nodo>& pi);
-	pair<unsigned,unsigned> rango(nodo x, vector<nodo>& pi);
-	void mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes);
+	pair<unsigned,unsigned> rango(nodo x, vector<nodo>& pi,vector<nodo>& indice);
+	void mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice);
 
 };
 
 #endif
+

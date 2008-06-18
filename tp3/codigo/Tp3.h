@@ -1,14 +1,9 @@
-#ifndef Tp3_H
-#define Tp3_H
-
-#include <vector>
-#include <list>
-#include <iostream>
-#include <math.h>
+#ifndef Tp3_h
+#define Tp3_h
 
 #include "Dibujo.h"
-#include "GrafoBipartito.h"
-#include "HeuristicaConstructiva.h"
+#include <vector>
+#include <list>
 
 using namespace std;
 
@@ -17,15 +12,19 @@ public:
   Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsigned IV2In);
 	   Dibujo reconstruirDibujo(Dibujo& limpio);
        Dibujo* dibujoLimpio;
-  ~Tp3(){delete dibujoLimpio; delete grafoLimpio;};
-	   
+  ~Tp3(){delete dibujoLimpio; delete grafoLimpio;delete nuevoP1;delete nuevoP2;delete nuevoV1; delete nuevoV2;delete losEjesNuevos;};
+
 private:
         vector<nodo> marcados1,marcados2;
         vector<nodo> traduccion;
         list<nodo> nulos1, nulos2;
         GrafoBipartito *grafoOriginal;
         GrafoBipartito* grafoLimpio;
-	
+	    vector<nodo>* nuevoP1;
+        vector<nodo>* nuevoP2;
+        list<nodo>* nuevoV1;
+        list<nodo>* nuevoV2;
+        list<eje> * losEjesNuevos;
         unsigned v1,v2,IV1,IV2;
 };
 

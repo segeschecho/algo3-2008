@@ -1,12 +1,13 @@
 #include "Tp3.h"
 
-/* 
+/*
  * saca de un grafo los nodos con grado 0
  * v1Inic = nodos viejos en la particion 1
  * v2Inic =   "     "     "  "     "     2
  * IV1 = nodos nuevos en particion 1
  * IV" = nodos viejos en particion 2
-*/ 
+*/
+#define print(a) cout<<a<<endl;
 Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsigned IV2In){
         marcados1 = entrada.nodosEnP1();
         marcados2 = entrada.nodosEnP2();
@@ -20,6 +21,8 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
         for(vector<nodo>:: const_iterator each = entrada.grafo()->nodosEnP1().begin();each != entrada.grafo()->nodosEnP1().end(); each ++){
              if(*each < v1Inic){
                 if(!(g->ejes())[*each].empty()){
+                   print("agrego a un marcado no nulo");
+                   print(*each);
                    marcadosNoNulos1.push_back(*each);
                 }
              }
@@ -31,7 +34,7 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
                     nulos1.push_back(*each);
                 }
              }
-             
+
           }
           for(vector<nodo>:: const_iterator each = entrada.grafo()->nodosEnP2().begin();each != entrada.grafo()->nodosEnP2().end(); each ++){
             if(*each < v2Inic+v1Inic){
@@ -58,54 +61,55 @@ Tp3::Tp3(Dibujo& entrada,unsigned v1Inic,unsigned v2Inic, unsigned IV1In, unsign
           //TODO: deberia ser list
           vector<list<unsigned> > ejesNuevos(tam);
           vector<nodo> indice(g->cantNodos());
-          vector<nodo> nuevoP1(tamv1+tamIV1);
-          vector<nodo> nuevoP2(tamv2+tamIV2);
-          list<nodo> nuevoV1;
-          list<nodo> nuevoV2;
-          list<eje>  losEjesNuevos;
+          nuevoP1 = new vector<nodo>(tamv1+tamIV1);
+          nuevoP2= new vector<nodo>(tamv2+tamIV2);
+          nuevoV1 = new list<nodo>;
+          nuevoV2 = new list<nodo>;
+          losEjesNuevos = new list<eje>;
           unsigned j = 0;
           for(list<nodo>::iterator each = marcadosNoNulos1.begin(); each != marcadosNoNulos1.end(); each++){
             traduccion[i] = *each;
             indice[*each] = i;
+            (*nuevoP1)[j] =  i;
+            nuevoV1->push_back(i);
             i = i +1;
-            nuevoP1[j] =  *each;
-            nuevoV1.push_back(*each);
             j++;
           }
 
           for(list<nodo>::iterator each = marcadosNoNulos2.begin(); each != marcadosNoNulos2.end(); each++){
             traduccion[i] = *each;
             indice[*each] = i;
+            (*nuevoP1)[j] =  i;
             i = i +1;
-            nuevoP1[j] =  *each;
             j++;
           }
           j=0;
           for(list<nodo>::iterator each = noNulos1.begin(); each != noNulos1.end(); each++){
             traduccion[i] = *each;
             indice[*each] = i;
+            (*nuevoP2)[j] =  i;
+            nuevoV2->push_back(i);
             i = i +1;
-            nuevoP2[j] =  *each;
-            nuevoV2.push_back(*each);
             j++;
           }
-          
+
           for(list<nodo>::iterator each = noNulos2.begin(); each != noNulos2.end(); each++){
             traduccion[i] = *each;
             indice[*each] = i;
+
+            (*nuevoP2)[j] =  i;
             i = i +1;
-            nuevoP2[j] =  *each;
             j++;
           }
           for(list<eje>::const_iterator x =g->listaEjes().begin(); x != g->listaEjes().end(); x++){
             eje e;
             e.primero = indice[x->primero];
             e.segundo = indice[x->segundo];
-            losEjesNuevos.push_back(e);        
+            losEjesNuevos->push_back(e);
          }
-          
-         grafoLimpio = new GrafoBipartito(nuevoP1,nuevoP2,losEjesNuevos);
-         dibujoLimpio = new Dibujo(grafoLimpio,nuevoV1,nuevoV2);          
+
+         grafoLimpio = new GrafoBipartito(*nuevoP1,*nuevoP2,*losEjesNuevos);
+         dibujoLimpio = new Dibujo(grafoLimpio,*nuevoV1,*nuevoV2);
 }
 
 Dibujo Tp3:: reconstruirDibujo(Dibujo& resuelto){
@@ -128,7 +132,7 @@ Dibujo Tp3:: reconstruirDibujo(Dibujo& resuelto){
              p1Posta.push_back(marcados1[i]);
 	     i++;
         }
-        
+
        list<nodo> p2Posta;
        for(vector<nodo> :: const_iterator each =resuelto.nodosEnP2().begin(); each != resuelto.nodosEnP2().end();each++){
             if( !(traduccion[*each] < v1)){
@@ -147,7 +151,7 @@ Dibujo Tp3:: reconstruirDibujo(Dibujo& resuelto){
              p2Posta.push_back(marcados2[i]);
 	     i++;
         }
-        
+
         return Dibujo(grafoOriginal,p1Posta,p2Posta);
 }
 
