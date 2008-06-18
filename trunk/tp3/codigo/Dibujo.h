@@ -44,6 +44,7 @@ class Dibujo {
     //private:
     GrafoBipartito* g;
     vector<nodo> nodosL1, nodosL2;
+    bool desdeArchivo;
 };
 
 #endif

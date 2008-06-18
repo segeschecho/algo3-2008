@@ -16,6 +16,9 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
 
 
 Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& l2) {
+    
+    desdeArchivo = false;
+
     g = grafo;
     assert(l1.size() + l2.size() <= g->n);
     
@@ -26,6 +29,9 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& 
 
 
 Dibujo :: Dibujo(const string& nombreArchivo) {
+
+    desdeArchivo = true;
+
     ifstream entrada (nombreArchivo.c_str());
     assert(entrada.is_open());
 
@@ -118,6 +124,9 @@ Dibujo :: Dibujo(const Dibujo& d) {
 }
 
 Dibujo :: ~Dibujo() {
+    if (desdeArchivo) {
+        delete g;
+    }
 }
 
 bool Dibujo :: perteneceAP1(nodo v) const {
