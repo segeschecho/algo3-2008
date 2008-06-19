@@ -20,9 +20,8 @@ private:
 	bool esFijo(nodo x);
 	bool perteneceAP1(nodo x);
 	bool perteneceAP2(nodo x);
-	unsigned  obtenerIndice(nodo x, const vector<nodo>& pi);
-	pair<unsigned,unsigned> rango(nodo x, vector<nodo>& pi,vector<nodo>& indice);
-	void mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice);
+	pair<unsigned,unsigned> rango(nodo x, list<nodo>& pi,vector<nodo>& indice);
+	void mejorar(list<nodo>& l1, list<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice);
 
 };
 

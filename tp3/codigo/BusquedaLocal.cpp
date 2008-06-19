@@ -29,7 +29,7 @@ bool BusquedaLocal :: perteneceAP2(nodo x){
 
 //determina el rango en el q x puede moverse
 
-pair<unsigned,unsigned> BusquedaLocal :: rango(nodo x, vector<nodo>& pi,vector<nodo>& indice){
+pair<unsigned,unsigned> BusquedaLocal :: rango(nodo x, list<nodo>& pi,vector<nodo>& indice){
     unsigned tam = pi.size();
     //si x no es fijo, lo muevo por toda la particion
     if (! esFijo(x)){
@@ -67,10 +67,21 @@ pair<unsigned,unsigned> BusquedaLocal :: rango(nodo x, vector<nodo>& pi,vector<n
     }
 }
 
+list<nodo> :: iterator iteradorAvanzado(list<nodo> :: iterator it, unsigned offset){
+	list<nodo> :: iterator it2 = it;
+	while(offset > 0){
+		it2++;
+		offset--;
+	}
+	return it2;
+}
 //saca un elemento de un vector (no actualiza indice)
 //pero devuelve de que posicion lo saco para poder actualizar el indice
-unsigned sacar(vector<nodo>& li,nodo x){
-    unsigned i = 0;
+unsigned sacar(list<nodo>& li,nodo x,vector<nodo>& indice){
+    unsigned pos = indice[x];
+	li.erase(iteradorAvanzado(li.begin(),pos));
+	return pos;
+	/*unsigned i = 0;
     for(vector<nodo> :: iterator it = li.begin(); it != li.end(); it++){
         if(*it == x){
             li.erase(it);
@@ -80,13 +91,13 @@ unsigned sacar(vector<nodo>& li,nodo x){
     }
     //FIXME:
     cout<<"me fui de mambo en sacar"<<endl;
-    abort();
+    abort();*/
 }
 
 //actualiza el indice por insertar un nodo en li en la pos inic
-void actualizarIndice(vector<nodo>& li,unsigned inic,vector<nodo>& indice){
+void actualizarIndice(list<nodo>& li,unsigned inic,vector<nodo>& indice){
     //primer pos que tengo q cambiar
-     vector<nodo>::iterator tipito = li.begin()+inic;
+     list<nodo>::iterator tipito = iteradorAvanzado(li.begin(),inic);
      unsigned pos = inic;
      //del nuevo en adelante todos cambian su pos
      while( tipito != li.end()){
@@ -97,9 +108,9 @@ void actualizarIndice(vector<nodo>& li,unsigned inic,vector<nodo>& indice){
 }
 
 //actualiza los indices cuando saco a un nodo de li, y el nodo estaba en donde
-void actualizarIndicePorSacar(vector<nodo>& li,unsigned donde,vector<nodo>& indice){
-    vector<nodo>::iterator tipito = li.begin()+donde;
-    while(tipito < li.end()){
+void actualizarIndicePorSacar(list<nodo>& li,unsigned donde,vector<nodo>& indice){
+    list<nodo>::iterator tipito = iteradorAvanzado(li.begin(),donde);
+    while(tipito != li.end()){
         indice[*tipito]--;
         tipito++;
     }
@@ -107,7 +118,7 @@ void actualizarIndicePorSacar(vector<nodo>& li,unsigned donde,vector<nodo>& indi
 }
 
 // funcion que engloba cada paso de la busqueda local
-void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice){
+void BusquedaLocal :: mejorar(list<nodo>& l1, list<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice){
 
     unsigned i = 0;
 /*
@@ -119,17 +130,17 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
     }
     i=0;*/
     //l1Aux me sirve para iterar por los elementos de l1
-    vector<nodo> l1Aux = vector<nodo>(l1);
+    list<nodo> l1Aux = list<nodo>(l1);
     //bucle que recorre a todos los elementos de l1
-    for(vector<nodo>::iterator each = l1Aux.begin(); each != l1Aux.end(); each++){
+    for(list<nodo>::iterator each = l1Aux.begin(); each != l1Aux.end(); each++){
         //saco al nodo candidato
-        unsigned pos = sacar(l1,*each);
+        unsigned pos = sacar(l1,*each,indice);
         //como lo saque, actualizo los indice
         actualizarIndicePorSacar(l1,pos,indice);
         //determino en que posiciones lo puedo poner
         pair<unsigned,unsigned> rangoi = rango(*each,l1,indice);
         //lo coloco en la primera posible
-        l1.insert(l1.begin() + rangoi.first,*each);
+        l1.insert(iteradorAvanzado(l1.begin(),rangoi.first),*each);
         //actualizo cada indice
         actualizarIndice(l1,rangoi.first,indice);
         //cuanto la cantidad de cruces (a priori no hay algo mucho mas eficiente porq el tipo pudo cambiar mucho de pos)
@@ -142,53 +153,57 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
         unsigned crucesMin = crucesInicial;
         //recorro las posiciones donde puedo poner al nodo
         i=rangoi.first;
+		list<nodo> :: iterator elem = iteradorAvanzado(l1.begin(),i);
         while( i < rangoi.second-1){
+			list<nodo> :: iterator elemMasUno = iteradorAvanzado(elem,1);
                 //cruces entre el nodo i, y el siguiente antes de un intercambio
-                unsigned crucesPreSwap = crucesEntre(l1[i],l1[i+1],l2,orig->grafo()->ejes(),indice);
+                unsigned crucesPreSwap = crucesEntre(*elem,*elemMasUno,l2,orig->grafo()->ejes(),indice);
                 //cruces luego de q los invierto
-                unsigned crucesPostSwap = crucesEntre(l1[i+1],l1[i],l2,orig->grafo()->ejes(),indice);
+                unsigned crucesPostSwap = crucesEntre(*elemMasUno,*elem,l2,orig->grafo()->ejes(),indice);
                 //solo cambian los cruces entre ellos 2
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
                 //cout<<"crucesAhora "<<crucesAhora<<endl;
                 //realizo elswap
-                nodo aux = l1[i];
-                l1[i] = l1[i+1];
-                l1[i+1] = aux;
+                nodo aux = *elem;
+                *elem = *elemMasUno;
+                *elemMasUno = aux;
                 //restauro los indices
-                unsigned aux2 = indice[l1[i]];
-                indice[l1[i]] = indice[l1[i+1]];
-                indice[l1[i+1]] = aux2;
+                unsigned aux2 = indice[*elem];
+                indice[*elem] = indice[*elemMasUno];
+                indice[*elemMasUno] = aux2;
                 //cout<<"posta hay "<<contadorDeCruces(l1,l2,orig->grafo()->ejes(),indice,indice)<<endl;
                 //si baje los cruces, me guardo la nueva pos
                 if (crucesAhora < crucesMin){
                    // cout<<"mejor"<<endl;
                     crucesMin = crucesAhora;
                     posMinima = i+1;
+
                 }
+			elem++;
             i++;
         }
         //ya recorri todo el rango, entonces lo saco
-        pos=sacar(l1,*each);
+        pos=sacar(l1,*each,indice);
         //actualizo indices
         actualizarIndicePorSacar(l1,pos,indice);
         //lo vuelvo a insertar, esta vez en su mejor posicion
-        l1.insert(l1.begin()+posMinima,*each);
+        l1.insert(iteradorAvanzado(l1.begin(),posMinima),*each);
         actualizarIndice(l1,posMinima,indice);
        // cout<<"lo puse en su mejor pos y me quedo con "<<contadorDeCruces(l1,l2,orig->grafo()->ejes(),indice,indice)<<endl;
 
     }
     i=0;
     //ahora hacemos el mismo procedimiento para la otra particion
-    vector<nodo> l2Aux = vector<nodo>(l2);
-    for(vector<nodo>::iterator each = l2Aux.begin(); each != l2Aux.end(); each++){
+    list<nodo> l2Aux(l2);
+    for(list<nodo>::iterator each = l2Aux.begin(); each != l2Aux.end(); each++){
 
-        unsigned pos = sacar(l2,*each);
+        unsigned pos = sacar(l2,*each,indice);
 
         actualizarIndicePorSacar(l2,pos,indice);
 
         pair<unsigned,unsigned> rangoi = rango(*each,l2,indice);
 
-        l2.insert(l2.begin() + rangoi.first,*each);
+        l2.insert(iteradorAvanzado(l2.begin(), rangoi.first),*each);
 
         actualizarIndice(l2,rangoi.first,indice);
 
@@ -202,24 +217,28 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
 
         i = rangoi.first;
 
+		list<nodo> :: iterator elem = iteradorAvanzado(l2.begin(),i);
+
         while( i < rangoi.second-1){
+                list<nodo> :: iterator elemMasUno = iteradorAvanzado(elem,1);
 
-                unsigned crucesPreSwap = crucesEntre(l2[i],l2[i+1],l1,orig->grafo()->ejes(),indice);
+                unsigned crucesPreSwap = crucesEntre(*(elem),*elemMasUno,l1,orig->grafo()->ejes(),indice);
 
-                unsigned crucesPostSwap = crucesEntre(l2[i+1],l2[i],l1,orig->grafo()->ejes(),indice);
+                unsigned crucesPostSwap = crucesEntre(*elemMasUno,*(elem),l1,orig->grafo()->ejes(),indice);
 
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
-                nodo aux = l2[i];
+                
+				nodo aux = *(elem);
 
-                l2[i] = l2[i+1];
+                *(elem) = *elemMasUno;
 
-                l2[i+1] = aux;
+                *elemMasUno = aux;
 
-                unsigned aux2 = indice[l2[i]];
+                unsigned aux2 = indice[*elem];
 
-                indice[l2[i]] = indice[l2[i+1]];
+                indice[*elem] = indice[*elemMasUno];
 
-                indice[l2[i+1]] = aux2;
+                indice[*elemMasUno] = aux2;
 
                 if (crucesAhora < crucesMin){
 
@@ -229,14 +248,15 @@ void BusquedaLocal :: mejorar(vector<nodo>& l1, vector<nodo>& l2, const  vector<
 
                 }
             i++;
+			elem++;
 
         }
 
-        pos=sacar(l2,*each);
+        pos=sacar(l2,*each,indice);
 
         actualizarIndicePorSacar(l2,pos,indice);
 
-        l2.insert(l2.begin()+posMinima,*each);
+        l2.insert(iteradorAvanzado(l2.begin(),posMinima),*each);
 
         actualizarIndice(l2,posMinima,indice);
     }
@@ -250,20 +270,20 @@ Dibujo BusquedaLocal :: hallarMinimoLocal(Dibujo& candidato){
     //creo el arreglo donde voy a guardar los indices de los tipitos
     vector<nodo> indice(orig->grafo()->cantNodos());
     //copio las particiones del dib candidato porque gonza no me lo deja mutar
-    vector<nodo> l1 = vector<nodo>(candidato.nodosEnP1());
-
-    vector<nodo> l2 = vector<nodo>(candidato.nodosEnP2());
-
+    //vector<nodo> l1 = vector<nodo>(candidato.nodosEnP1());
+      list<nodo> l1(candidato.nodosEnP1().begin(),candidato.nodosEnP1().end()); 
+    //vector<nodo> l2 = vector<nodo>(candidato.nodosEnP2());
+      list<nodo> l2(candidato.nodosEnP2().begin(),candidato.nodosEnP2().end());
     unsigned i = 0;
     //asigno los indices a p1
-    for(vector<nodo> :: iterator it = l1.begin(); it != l1.end(); it++){
+    for(list<nodo> :: iterator it = l1.begin(); it != l1.end(); it++){
         indice[*it] = i;
 
         i+=1;
     }
     i = 0;
     //analogo para p2
-    for(vector<nodo> :: iterator it = l2.begin(); it != l2.end(); it++){
+    for(list<nodo> :: iterator it = l2.begin(); it != l2.end(); it++){
 
         indice[*it] = i;
         i+=1;
