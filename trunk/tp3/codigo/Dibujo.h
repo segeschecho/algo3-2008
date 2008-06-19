@@ -14,7 +14,7 @@ class Dibujo {
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
     Dibujo(GrafoBipartito* g, const vector<nodo>& l1, const vector<nodo>& l2);
     Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
-    Dibujo(const string& nombreArchivo);
+    Dibujo(ifstream& entrada);
     Dibujo(const Dibujo& d);
     ~Dibujo();
 
@@ -28,7 +28,7 @@ class Dibujo {
     const vector<nodo>& nodosEnP2(void) const;
     GrafoBipartito* grafo(void);
 
-    void guardar(const string& nombreArchivo);
+    void guardar(ofstream& salida);
 
     void operator= (const Dibujo& d);
 

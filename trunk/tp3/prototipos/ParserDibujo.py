@@ -1,5 +1,5 @@
 from GrafoBipartito import GrafoBipartito, Dibujo
-import Dibujador
+from Dibujador import DibujadorGrafoBipartito 
 from sets import Set
 
 class ParserDibujoOUT:
@@ -7,6 +7,8 @@ class ParserDibujoOUT:
         # levanto el archivo
         f = open(archivo, 'r')
 
+        # ignoro los cruces
+        f.readline()
         # cantidad de nodos en P1
         cantLineas = int(f.readline())
         nodosP1 = []
@@ -36,11 +38,11 @@ class ParserDibujoOUT:
         f.close()
 
         g = GrafoBipartito(Set(nodosP1), Set(nodosP2), Set(ejes))
-        d = Dibujo(g, nodosP1, nodosP2)
+        self.d = Dibujo(g, nodosP1, nodosP2)
 
     def dibujo(self):
-        return d
+        return self.d
 
 if __name__ == '__main__':
-    dib = ParserDibujoOUT()
+    dib = ParserDibujoOUT().dibujo()
     DibujadorGrafoBipartito(dib).grabar('dibujoOUT.svg')
