@@ -215,12 +215,12 @@ void Dibujo :: guardar(const string& nombreArchivo) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
 
-    salida << contarCruces()<<endl;
+    salida << contarCruces() << endl;
     salida << nodosL1.size() << endl;
     vector<nodo>::const_iterator it (nodosL1.begin());
 
     while (it != nodosL1.end()) {
-        salida << *it+1 << endl;
+        salida << *it + 1 << endl;
         it++;
     }
 
@@ -228,8 +228,15 @@ void Dibujo :: guardar(const string& nombreArchivo) {
     it = nodosL2.begin();
 
     while (it != nodosL2.end()) {
-        salida << *it+1 << endl;
+        salida << *it + 1 << endl;
         it++;
+    }
+
+    salida << g->listaEjes().size() << endl;
+    list<eje>::const_iterator itEjes (g->listaEjes().begin());
+    while (itEjes != g->listaEjes().end()) {
+        salida << itEjes->primero << " " << itEjes->segundo << endl;
+        itEjes++;
     }
 }
 
