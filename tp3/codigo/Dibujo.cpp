@@ -27,11 +27,10 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& 
     nodosL2.assign(l2.begin(), l2.end());
 }
 
-Dibujo :: Dibujo(const string& nombreArchivo) {
+Dibujo :: Dibujo(ifstream & entrada) {
 
     desdeArchivo = true;
 
-    ifstream entrada (nombreArchivo.c_str());
     assert(entrada.is_open());
 
     vector<nodo> nodosV1, nodosV2;
@@ -210,12 +209,12 @@ std::ostream& operator<< (ostream& o, const Dibujo& d) {
     return o;
 }
 
-void Dibujo :: guardar(const string& nombreArchivo) {
-    ofstream salida (nombreArchivo.c_str());
+void Dibujo :: guardar(ofstream& salida) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
 
-    salida << contarCruces() << endl;
+    //FIXME: borrar la parte de: << "cruces: " que sigue antes de entregar el TP
+    salida << "cruces: " << contarCruces() << endl;
     salida << nodosL1.size() << endl;
     vector<nodo>::const_iterator it (nodosL1.begin());
 
@@ -232,10 +231,11 @@ void Dibujo :: guardar(const string& nombreArchivo) {
         it++;
     }
 
+    // FIXME: borrar las siguientes 6 lineas antes de entregar el TP
     salida << g->listaEjes().size() << endl;
     list<eje>::const_iterator itEjes (g->listaEjes().begin());
     while (itEjes != g->listaEjes().end()) {
-        salida << itEjes->primero << " " << itEjes->segundo << endl;
+        salida << itEjes->primero + 1 << " " << itEjes->segundo + 1 << endl;
         itEjes++;
     }
 }
