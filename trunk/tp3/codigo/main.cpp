@@ -1,15 +1,17 @@
 #include <iostream>
+#include <math.h>
 #include "Dibujo.h"
 #include "GrafoBipartito.h"
-#include <math.h>
-#include "BusquedaLocal.h"
 #include "Tp3.h"
 #include "HeuristicaConstructiva.h"
+#include "BusquedaLocal.h"
+#include "Grasp.h"
+
 using namespace std;
 #define print(a) cout<<a<<endl;
 
 int main(int argc, char* argv[]) {
-    string metodo = "1";        //metodo por defecto: Heuristica constructiva
+    string metodo = "3";        //metodo por defecto: Heuristica constructiva
     if (argc >= 2) {
         metodo = argv[1];
     }
@@ -67,7 +69,24 @@ int main(int argc, char* argv[]) {
         //aca va el greedy y busqueda local cuando esten listos
     }
     if (metodo.compare("3") == 0) {
-        //aca va el grasp
+        while (entrada.peek() != '-') { // Termina cuando encuentra el '-1'
+            //cargamos un dibujo
+            Dibujo d (entrada);
+            // Tp3 se encarga de limpiar el grafo. ya se q el nombre es choto
+            Tp3 tp3(d);
+
+            //generamos un heuristica constructiva con el grafo ya limpio
+            Grasp gp(*tp3.dibujoLimpio);
+            Dibujo dib (gp.resolver(1));
+            cout << "Grasp logro: " << dib.contarCruces() << " cruces" << endl;
+
+            //construimos un nuevo dibujo con el orden dado por la heuristica, pero los nombres de nodos correctos
+            Dibujo reconstruido = tp3.reconstruirDibujo(dib);
+            cout << "Reconstruyendo el dibujo nos dio " << reconstruido.contarCruces() << " cruces (debe ser igual que el anterior :P)" << endl;
+            reconstruido.guardar(salida);
+
+            entrada.ignore();   //ignoro el caracter de fin de linea ('\n')
+        }
     }
     entrada.close();
     salida.close();

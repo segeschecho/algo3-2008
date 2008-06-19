@@ -7,9 +7,9 @@
 //y que el incremntal que debe mejorar se construyo a partir
 //de este
 BusquedaLocal :: BusquedaLocal(Dibujo& original){
-        minimoP2 = original.nodosEnP1().size();
-        maximoP2 = minimoP2 + original.nodosEnP2().size() - 1;
-        orig = &original;
+    minimoP2 = original.nodosEnP1().size();
+    maximoP2 = minimoP2 + original.nodosEnP2().size() - 1;
+    orig = &original;
 }
 
 //decide si x es de los nodos cuyo orden relativo debe respetarse

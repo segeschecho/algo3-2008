@@ -1,46 +1,37 @@
 #include "Grasp.h"
 
-Grasp :: Grasp(const Dibujo& original) {
-    vector<nodo> fijosP1, fijosP2;
-    fijosP1 = original.nodosEnP1();
-    fijosP2 = original.nodosEnP2();
-    float k = 0.3;
+Grasp :: Grasp(Dibujo& original) {
+    d = &original;
+}
 
-    HeuristicaConstructiva(original);
-    Dibujo mejorSolucion (HeuristicaConstructiva(original).construirSolucion(1));
-    mejorSolucion = BusquedaLocal(original).hallarMinimoLocal(mejorSol);
+Dibujo Grasp :: resolver(float alfa) {
+    Dibujo mejorSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa));
+    mejorSolucion = BusquedaLocal(*d).hallarMinimoLocal(mejorSolucion);
 
-    unsigned int mejoresCruces = contadorDeCruces(mejorSolucion.nodosEnP1(),mejorSolucion.nodosEnP2(), original.grafo().ejes())
+    vector<unsigned int> indicesP1, indicesP2;
+    armarIndices(mejorSolucion.nodosEnP1(), indicesP1);
+    armarIndices(mejorSolucion.nodosEnP2(), indicesP2);
+    unsigned int crucesMejor = contadorDeCruces(mejorSolucion.nodosEnP1(),mejorSolucion.nodosEnP2(), d->grafo()->ejes(), indicesP1, indicesP2);
     int sinMejorar = 0;
 
     while (sinMejorar < 100) {
-        Dibujo res (HeuristicaConstructiva(original).resolver(k));
-        res = BusquedaLocal(original).hallarMinimoLocal(res);
-        unsigned int nuevosCruces = 
+        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa));
+        nuevaSolucion = BusquedaLocal(*d).hallarMinimoLocal(nuevaSolucion);
+        armarIndices(nuevaSolucion.nodosEnP1(), indicesP1);
+        armarIndices(nuevaSolucion.nodosEnP2(), indicesP2);
+        unsigned int crucesNueva = contadorDeCruces(nuevaSolucion.nodosEnP1(),nuevaSolucion.nodosEnP2(), d->grafo()->ejes(), indicesP1, indicesP2);
+        if (crucesNueva < crucesMejor) {
+            mejorSolucion = nuevaSolucion;
+            crucesMejor = crucesNueva;
+            sinMejorar = 0;
+        }
+        else {
+            sinMejorar++;
+        }
     }
 
-}
-
-const Dibujo& Grasp :: resolver(void) {
-    return resuelto;
+    return mejorSolucion;
 }
 
 Grasp :: ~Grasp() {
 }
-
-
-/*
-       
-        while (sinMejorar < 100):
-            res =  HeuristicaInsercionEjes(dibujo).resolver(alfa=k)
-            blie.mejorar(res,marcados1,marcados2,losEjesDe)
-            nuevosCruces = contadorDeCruces(res.l1,res.l2,losEjesDe)
-            if nuevosCruces < mejoresCruces:
-                mejorSol = res
-                mejoresCruces = nuevosCruces
-                sinMejorar=0
-            else:
-                sinMejorar +=1
-        DibujadorGrafoBipartito(mejorSol,marcados1=marcados1,marcados2=marcados2).grabar('grasp.svg')
-        return mejorSol
-*/

@@ -6,11 +6,11 @@
 
 class Grasp {
 public:
-    Grasp (const Dibujo& original);
-    const Dibujo& resolver(void);
+    Grasp (Dibujo& original);
+    Dibujo resolver(float alfa);
     ~Grasp();
 private:
-    Dibujo resuelto;
+    Dibujo* d;
 };
 
 #endif
