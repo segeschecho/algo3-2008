@@ -214,11 +214,46 @@ En el peor de los casos, en la solución inicial cada eje se cruzaba con todos lo
 %TODO: guarda con esto
 Sin embargo, creemos que en general la cantidad de iteraciones hasta converger sera mucho menor. 
 
-Ademas de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heuristica constructiva. En conclusión, el orden es $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + limpieza)$ %FIXME: completar cuando esto este completo
+Ademas de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heuristica constructiva. En conclusión, el orden es $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + (V_1+V_2+m))$ %FIXME: completar cuando esto este completo
 
+Con respecto a la complejidad en función del tamaño de la entrada, podemos ver que la entrada es:
+$$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
+ $$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$ 
+ 
+ donde $P_i$ es la cantidad de nodos originales de la primera partición, $m_p$ es la cantidad de ejes originales, $IV_i$ es la cantidad de nodos que se agregan a la partición i y $m_iv$ es la cantidad de ejes que se agregan
+ 
+ Entonces, vale que:
+ 
+ $$t \geq log(P_1)+ P_1+ log(P_2)+P_2 + log(m_p) +m_p +log(IV_1) + IV_1 + log(IV_2) + IV_2 + log(m_{iv})+ m_{iv}$$
+ 
+ pero $P_i + IV_i = V_i$ y $m_p + m_iv = m$, luego:
+ 
+ $$t \geq log(P_1)+ v_1+ log(P_2)+V_2 + log(m_p) +m +log(IV_1) + log(IV_2) + log(m_{iv})$$
+ 
+ a partir de esto, vemos que:
+ $$ t \geq V_i \geq v_i$$
+ $$ t \geq V_{max} \geq v_{max}$$
+ $$ t \geq m $$
+ 
+ Luego $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ %TODO: ojo con esto, verificar
+ 
 \section{Analisis experimental}
-\subsection{Casos borde}
+\subsection{Relación con la heuristica constructiva}
+Si bien vimos que de todas las variantes propuestas la que obtuvo un mejor desempeño fue la heuristica de busqueda local por reinserción de nodos, consideramos que debíamos observar si esta busqueda local se beneficiaba de partir de un dibujo construido mediante la heuristica constructiva. Para observar esto, lo que hicimos fue correr la heuristica de busqueda local para un mismo grafo, a partir de un dibujo generado al azar y un dibujo generado por la heuristica constructiva. Luego medimos la diferencia en el número de cruces en las mejoras de cada dibujo. Los resultados fueron los siguientes:
 
-\subsection{Casos generales}
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[60\% de nodos nuevos, $m = n*n/5$]{
+\includegraphics[scale=0.6]{./graficos/comparacionLocales/localRandomConstr.png}}
+\setcounter{subfigure}{1}
+\subfigure[40\% de nodos nuevos, $m = 5*n$]{
+\includegraphics[scale=0.6]{./graficos/comparacionLocales/localRandomConstr2.png} }
+\caption{Diferencia en la cantidad de cruces obtenidos en función de n}
+\end{figure}
+
+\subsection{Tiempo de ejecución}
+
+\subsection{Casos borde}
 
 \section{Discusión}
