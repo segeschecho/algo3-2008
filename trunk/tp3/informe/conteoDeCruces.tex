@@ -1,4 +1,5 @@
 \chapter{Conteo de Cruces}
+\label{conteoCruces}
 \section{Distintos algoritmos}
 Dentro del problema que tenemos que resolver, un tema a tener en cuenta es el del conteo de cruces, ya que tanto la solución exacta,
 como las heuristicas necesitan saber muchas veces (por ejemplo para decidir donde se inserta un nodo, o si una permutación ya no puede ser solución) cuantos cruces hay en el dibujo. Por esta razón consideramos que un aspecto importante a optimizar para lograr mejorar el desempeño de nuestros algoritmos es precisamente el conteo de cruces.
@@ -122,13 +123,7 @@ Luego corresponde insertar el eje (2,0). Incrementamos en uno el contador de la 
 
 El procedimiento se repite hasta colocar todos los ejes.
 
-Veamos que costo tiene este algoritmo:\\ 
-Primero ordenamos los ejes, como lo hacemos con radix sort, el costo es $max(m,\sharp v_1, \sharp v_2)$, puesto que tengo que ordenar m ejes, y para hacerlo voy a necesitar de $\sharp v_1$ $buckets$ primero y $\sharp v_2$ $buckets$ luego.
-Una vez ordenado y armado el 'arbol, que se puede hacer en O($v_2$) como se vera mas adelante, vamos a mirar todos los ejes. Para cada eje recorremos el arbol desde una hoja hasta la raiz. Como el arbol tiene $2^k$ hojas, tiene $log_{2}(2^k)$ de altura, pero $log_{2}(2^k)=k=\left\lceil log_{2}(\sharp v2)\right\rceil$.
-
-El arbol se puede implementar sobre un arreglo, de modo que la posición 0 sea la raíz, la 1 y 2 sus hijos izquierdo y derecho respectivamente, y asi sucesivamente. De esta manera, los nodos izquierdos del árbol quedan en las posiciones impares, y aumentar cada contador, asi como también moverse dentro del árbol de un nodo a su padre se puede hacer en O(1). Por lo tanto, el costo de insertar todos los ejes es $O(max(m,\sharp v_1, \sharp v_2)+m*log(\sharp v_2) )$
-
-Ahora bien, en vez de ordenar primero por la primer componente y luego con respecto a la segunda, podr'iamos hacer el mismo procedimiento pero ordenando primero por la segunda, luego por la primera y armando el arbol para $v_1$. Entonces, en particular el procedimiento se podria realizar utilizando el  $v_i$ de menor cardinal. Con lo cual el costo de las inserciones es de $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp v_i) ))$
+Como veremos mas adelante, este procedimiento tiene como orden $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp(v_i))))$
 
 Repasando tenemos 3 algoritmos para calcular los cruces:
 \begin{itemize}
@@ -145,17 +140,14 @@ Si en cambio $m < log(min_{i=1,2}(\sharp(v_i)))$ (un grafo con muy pocos ejes) r
 
 Sin embargo, podemos evitar los casos donde se tengan pocos ejes. Para hacerlo, preprocesamos el grafo, de modo de sacar los nodos aislados, ya que estos se pueden insertar en cualquier lado sin que agreguen cruces.En el caso de un nodo del grafo original, si bien no puede insertarse en cualquier lado en el sentido estricto, vale que no suma cruces igualmente, por lo cual se lo puede sacar para aplicar cualquier algoritmo y luego insertarlo en la solución en una posición valida.
 
-De esta manera, el algoritmo 3 se muestra como la mejor opción.
+De esta manera, el algoritmo 3 se muestra como la mejor opción, ya que si $m>\sharp v_i$, resulta que $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp(v_i)))) \subseteq O(m*log(min_{i=1,2}(\sharp(v_i))))$.
 
 \subsection{Pseudocodigo}
 \begin{algorithm}[H]
 \caption{Cuenta los cruces en un dibujo usando un arbol acumulador}
 \begin{algorithmic}[1]
 \PARAMS{particiones del dibujo (suponemos para simplificar que p2 tiene menos nodos (o igual cantidad) que p1}
-\PARAMS{los ejes del dibujo, puede recibir también las posiciones (indice) de los nodos}
-\IF{no se conoce en que posición esta cada nodo}
-\STATE averiguar dichas posiciones
-\ENDIF
+\PARAMS{los ejes del dibujo,las posiciones (indice) de los nodos}
 \STATE ejsPorPos $\leftarrow$ $[]$
 \FOR{cada eje(x,y) del dibujo}
 \STATE agregar a ejesPorPos la tupla (posicion de x, posicion de y)
@@ -182,9 +174,35 @@ De esta manera, el algoritmo 3 se muestra como la mejor opción.
 \end{algorithmic}
 \end{algorithm} 
 
+\subsection{Calculo de complejidad}
+Sea $v_i$ la cantidad de nodos de la particion i, y m la cantidad de ejes del grafo.
+
+Si bien comentamos que la función podría en caso de que no este disponible calcular los indices de los elementos, esta funcionalidad no fue utilizada, de modo que el algoritmo recibe los indices ya armados. De este modo, el costo de armar y manter a los indices sera tenido en cuenta en los respectivos algoritmos que utilicen a esta función.
+
+Primero lo que hacemos es traducir los ejes, segun los indices. Para hacer esto, lo que se hace es recorrer todos los ejes (se recorren las listas de adyacencia de los nodos de una de las particiones) y se van guardando en una lista, los ejes con sus compoentes traducidas (ciclo de la línea 2).
+
+Luego ordenamos los ejes, como lo hacemos con radix sort, el costo es $max(m, v_1, v_2)$, puesto que tengo que ordenar m ejes, y para hacerlo voy a necesitar de $\sharp v_1$ $buckets$ primero y $\sharp v_2$ $buckets$ luego.
+
+Una vez ordenado y armado el 'arbol, que se puede hacer en O($v_2$) como se vera mas adelante, vamos a mirar todos los ejes. Para cada eje recorremos el arbol desde una hoja hasta la raiz. Como el arbol tiene $2^k$ hojas, tiene $log_{2}(2^k)$ de altura, pero $log_{2}(2^k)=k=\left\lceil log_{2}(\sharp v2)\right\rceil$.
+
+El arbol se puede implementar sobre un arreglo, de modo que la posición 0 sea la raíz, la 1 y 2 sus hijos izquierdo y derecho respectivamente, y asi sucesivamente (de manera analoga a como se hace para implementar un heap). De esta manera, los nodos izquierdos del árbol quedan en las posiciones impares, y aumentar cada contador, asi como también moverse dentro del árbol de un nodo a su padre se puede hacer en O(1). Por lo tanto, el costo de insertar todos los ejes es $O(max(m,\sharp v_1, \sharp v_2)+m*log(\sharp v_2) )$.
+
+\begin{figure}[H]
+    \centering
+    \subfigure[Árbol acumulador]{
+     \includegraphics[scale=0.2]{./figuras/cruces/arbolito.png}}
+     \subfigure[Representación en arreglo]{
+     \includegraphics[scale=0.2]{./figuras/cruces/arreglito.png}}
+
+\end{figure} 
+
+Ahora bien, en vez de ordenar primero por la primer componente y luego con respecto a la segunda, podr'iamos hacer el mismo procedimiento pero ordenando primero por la segunda, luego por la primera y armando el arbol para $v_1$. Entonces, en particular el procedimiento se podria realizar utilizando el  $v_i$ de menor cardinal. Con lo cual el costo de las inserciones es de $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp v_i) ))$
+
+Como dijimos, este algoritmo podria no ser eficiente si la cantidad de ejes es muy pequeña, ya que para hacer radix sort se van a recorrer todos los nodos de ambas particiones, lo cual podria ser un costo mas grande que mirar todos los ejes. Sin embargo, también comentamo que vamos a filtrar a los nodos de grado 0 antes de trabajar con el dibujo, por lo cual creemos que este algoritmo es eficiente. Filtrar a los nodos de grado 0 tiene sentido, ya que por ejemplo en nuestro algoritmo exacto, un pequeño incremento en la cantidad de nodos, siginifica un gran aumento en la cantidad de permutaciones, de esta manera si lo separamos el algoritmo no perderia tiempo en mover a este nodo que no genera cambio alguno.
+
 \section{Reutilización de los cálculos}
 \label{reUso}
-Si bien hay situaciones donde el orden relativo de los nodos en las particiones se modifica sustancialmente, por lo cual es necesario recalcular los cruces nuevamente, lo cual, como vimos en la sección anterior, tiene un costo bastante alto; hay otros casos donde se hace una modificación mas pequeña al orden de los mismos y es posible no recalcular todos los cruces.
+Si bien hay situaciones donde el orden relativo de los nodos en las particiones se podría modificar sustancialmente, por lo cual sería necesario recalcular los cruces nuevamente , lo cual, como vimos en la sección anterior, tiene un costo bastante alto; hay otros casos donde se hace una modificación mas pequeña al orden de los mismos y es posible no recalcular todos los cruces.
 
 En particular si tenemos un orden de los nodos $\pi=\left\langle v_1,v_2,...v_i,v_{i+1},...,v_n \right\rangle$ y realizamos un ``swap'' entre dos posiciones consecutivas $i$, $i + 1$, podemos observar que si $\pi_1=C(\left\langle v_1,v_2,...,v_{i+1},v_{i},...v_n \right\rangle$ y definimos C($\pi$,$\rho$) como la cantidad de cruces entre los ejes del grafo, dado que los nodos de la primer partición estan ordenados seg'un $\pi$ y los de la segunda segunda según $\rho$, vale que:
 
@@ -203,24 +221,11 @@ Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes 
 \end{figure} 
 
 
-Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O(\sharp v_2 + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_2$ es la otra partición. 
+Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O( v_2 + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_2$ es la otra partición. 
 
-En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_2$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b.
+%FIXME: Esto esta bien?
+En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_2$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b
  
-%En general si se intercambian dos nodos de posiciones consecutivas, $i$, $j$, la nueva cantidad de cruces se puede calcular solo teniendo en cuenta el fragmento de la particion entre las posiciones $i$ y $j$ (o $j$ e $i$ si $j<i$). Es decir si  $\pi=\left\langle v_1,v_2,...v_i,...,v_{j},...,v_n \right\rangle$ y $\pi_1=\left\langle  v_1,v_2,...v_j,...,v_i,...,v_n \right\rangle$, vale que
-%
-%$$C(\pi_1,\rho) = C(\pi,\rho) - \sum_{k=i+1}^{j-1}{(CrucesEntre(v_i,v_k,\rho) + CrucesEntre(v_k,v_j,\rho))}$$
-%$$-CrucesEntre(v_i,v_j,\rho) +  \sum_{k=i+1}^{j-1}{(CrucesEntre(v_k,v_i,\rho) + CrucesEntre(v_j,v_k,\rho))}$$
-%$$+CrucesEntre(v_j,v_i,\rho)$$
-%
-%
-%Por lo tanto en estos casos se puede hacer algo un poco mejor que recalcular todo de nuevo. 
-%
-%Para averiguar $\sum_{k=i+1}^{j-1}{(CrucesEntre(v_i,v_k,\rho))}$, se puede considerar un $\pi_3 = <v_i,w>$ donde w consiste en ``juntar'' todos los nodos $v_k$ con $k = i +1 ... j-1$, dandole todos sus ejes (podríamos obtener un multigrafo bipartito). 
-%%FIXME: calcular orden
-%Hecho esto, aplicar el algoritmo de conteo de cruces para $\pi_3$ y como $\pi_3$ tiene 2 nodos, el algoritmo es $O(m + \sharp v1 + \sharp v2 + m)$.  
-%TODO: completar explicando como. 
-%TODO: agregar dibujos
 \begin{figure}[H]
     \centering
     \setcounter{subfigure}{0}
@@ -232,11 +237,8 @@ En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp
      \label{fig:compactar}
 \end{figure} 
 
-Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega un nodo al dibujo, particularmente si se agrega al principio o al final de la partición. En este caso, los cruces existentes entre otros nodos se mantienen, solo se podrían agregar nuevos cruces con los ejes del nodo recien agregado. Entonces podemos colapsar los nodos de la partición donde se esta agregando el nuevo nodo, dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto como ilustra la figura \ref{fig:compactar}, de modo de que el algoritmo sea O(m).
+Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega un nodo al dibujo, particularmente si se agrega al principio o al final de la partición. En este caso, los cruces existentes entre otros nodos se mantienen, solo se podrían agregar nuevos cruces con los ejes del nodo recien agregado. Entonces podemos colapsar los nodos de la partición donde se esta agregando el nuevo nodo, dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto como ilustra la figura \ref{fig:compactar}, de modo de que el algoritmo sea O(m) (recorar que asumimos que m $>$ $v_i$).
 
+Estas situaciones si bien parecen casos muy especificos, pueden ser aprovechados por los distintos algoritmos que desarrollamos.
 
-
-
-
-
-   
+\chapter{Eliminación de nodos nulos}
