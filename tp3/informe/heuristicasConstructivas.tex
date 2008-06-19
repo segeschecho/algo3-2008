@@ -1,13 +1,11 @@
 \chapter{Heuristicas Constructivas}
 
 \section{Introduccíon}
-Para enfrentar al problema, pensamos varias heuristicas constructivas distintas.
+Para enfrentar al problema de construir un dibujo incremental, pensamos varias heuristicas distintas.
 
-A continuación se presentan las mismas, comentando las ideas sobre las que se basan, mostrando su aplicación a un grafo de ejemplo y se muestra un pseudocodigo de cada una.
+A continuación se presentan las mismas, comentando las ideas sobre las que se basan, mostrando su aplicación a un grafo de ejemplo y el pseudocodigo de cada una.
 
-Posteriormente se realiza un estudio empirico de ellas comparando su desempeño para minimizar el número de cruces, asi como el tiempo que necesitan para poder ejecutarse. A partir de estas experiencias seleccionamos una heuristica para su implementación definitiva.
-
-Los pseudocodigos de este apartado son de caracter ilustrativo.
+Posteriormente se realiza un estudio empirico de ellas comparando su desempeño para minimizar el número de cruces, asi como el tiempo que necesitan para poder ejecutarse. A partir de estas experiencias seleccionamos una heuristica para su implementación definitiva en C++.
 
 \section{Descripción de las heuristicas}
 
@@ -24,7 +22,7 @@ hacemos es ponerlos al principio, antes de hacer nada, porque asi obtenemos mas 
 
 Hay varias formas de elegir a que nodo insertar. Nosotros consideramos tres formas distintas:
 \begin{enumerate}
-\item Escoger un nodo al azar entre los libre
+\item Escoger un nodo al azar entre los libres
 \item Escoger el nodo de mayor grado hacia el dibujo armado (es decir el nodo que tenga mas adyacentes ya colocados)
 \item Escoger el nodo de menor grado hacia el dibujo armado (el nodo que tenga menos adyacentes ya colocados)
 \end{enumerate}
@@ -98,14 +96,14 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \FOR{cada particion, si es posible}
 \STATE nodo $\leftarrow$ elegir uno entre los nodos a poner
 \STATE sacar al nodo de entre los nodos a poner
-\STATE colocar al nodo en la primer posicion de su partición
+\STATE colocar al nodo en la ultima posicion de su partición
 \STATE cruces $\leftarrow$ cuantos cruces se agregan
 \STATE mejorCruces $\leftarrow$ cruces
-\STATE crucesPreSwap $\leftarrow$ cruces entre el nodo y el nodo siguiente en la particion
-\STATE mejorPos = 0
+\STATE crucesPreSwap $\leftarrow$ cruces entre el nodo y el nodo anterior en la particion
+\STATE mejorPos = ultima posicion
 \WHILE{No revise todas las posiciones}
-\STATE mover al nodo a la proxima posición
-\STATE crucesPreSwap $\leftarrow$ cruces entre el nodo y el nodo siguiente en la particion
+\STATE mover al nodo a la proxima posición \COMMENT{``swapear'' al nodo con el que esta en la posicion anterior}
+\STATE crucesPostSwap $\leftarrow$ cruces entre el nodo y el nodo anterior en la particion
 \STATE cruces $\leftarrow$ cruces - crucesPreSwap + crucesPostSwap
 \IF{ cruces $<$ mejorCruces}
 \STATE mejorCruces $\leftarrow$ cruces
@@ -119,58 +117,6 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \end{algorithmic}
 \end{algorithm} 
 
-%TODO: capaz al pedo
-%\subsubsection{Calculo de complejidad}
-%Para determinar la complejidad de este algoritmo, así como para las futuras heuristicas, utilizaremos el modelo uniforme, ya que consideramos el la parte central del problema no esta en el costo que puedan tener las operaciones matematicas que se realicen sino la cantidad de nodos y ejes del dibujo.
-%
-%De acuerdo con esto, veamos que complejidad tiene el algoritmo, para esto asumiremos que m $\leq v_1$ $\wedge$ m $\leq v_2$, con $v_i$ la cantidad de nodos de la partición i luego de sacar a los nodos sin ejes, y $m$ la cantidad de ejes del grafo; ya que como dijimos anteriormente, los nodos sin ejes se pueden sacar antes de procesar. Tenemos, entonces un costo por sacar a los nodos sin ejes, esto se puede hacer en $O( V_1 +  v_2)$ donde $V_i$, es la cantidad original de nodos, antes de sacar los que tenían grado nulo. Para hacerlo simplemente recorremos todos los nodos, preguntando cuantos adyacentes tiene cada uno. Notemos que $v_i \leq V_i$.
-%
-%Entonces, en el algoritmo, si bien no esta en el pseudocodigo, se crea un indice con las posiciones que ocupan los nodos ya puestos en cada partición, lo cual sirve para poder hacer mas rápidamente los calculos de cruces. Armar este indice, que no es mas que un arreglo de $v_1 +  v_2$ posiciones, tiene costo $O(p_1 + p_2)$ con $p_i$ los nodos ya puestos.
-%
-%Luego tenemos un ciclo que se ejecuta mientras queden nodos por colocar, es decir $IV_1 + IV_2$ iteraciones, con $IV_i$ la cantidad de nodos a agregar en la partición i.
-%
-%En este ciclo se elige un candidato para colocar. Digamos por ahora que esta elección tiene costo C.
-%
-%Luego se saca al candidato, lo cual tiene costo $O(v_i)$ porque los candidatos los tenemos en una lista y podriamos tener que sacar un candidato de la mitad de la lista %FIXME: completenme
-%
-%A continuación, insetamos al nodo en su partición, y contamos los cruces que se agregan, que como dijimos se puede hacer en $O(  p_1 +   p_2 + m)$.
-%
-%A partir de aquí, lo que hacemos es ir intercambiando al nodo con su inmediato siguiente, viendo cuantos cruces se producen por el intercambio, y cuantos dejan de existir. Esto ultimo lo logramos con $O(  p_opuesta +   m_x +   m _y)$ donde $p_opuesta$ son los nodos de la partición opuesta a la de x e y y, $m_x$ y $m_y$ son los ejes de los nodos que se van a swapear.
-%Como $p_opuesta \subseteq v_opuesta$ y ademas $m_x\subseteq m \wedge m_y \subseteq m$ podemos decir que cada iteración es, acotando, $O(m+v_opuesta)$. Como hacemos $  p_i$ iteraciones,  y $p_i \subseteq v_i$, resulta que todo el ciclo es $O(  m*  v_i +   v_i*   v_opuesta)$ 
-%
-%Una vez que decidimos en que posición lo vamos a insertar (es decir en que posición el número de crueces fue mínimo) esta inserción tiene $O(  p_i)$. Al igual que actualizar el indice (solo se actualiza la parte correspondiente a la partición modificada).
-%
-%Entonces tenemos un ciclo que itera $  IV_1 +   IV_2$, y sumando los costos internos al ciclo tenemos que cada iteración tiene costo:  
-%
-%$O(  m*  v_i +   v_i*   v_opuesta +   p_1 +   p_2 +   m + C +   v_i)$
-%
-%Usando que $  v_i*   v_opuesta = v_1*v_2$ y que $p_i \subseteq v_i$, lo que obtenmos es:
-%
-%$O(  m*  v_i +   v_1*v_2 +   v_1 +   v_2 +   m + C +   v_i)$
-%
-%podemos ademas acotar $  v_i$ por $  v_{max}$, resulta que nos queda:
-%
-%$O(  m*  v_{max} +   v_{max}^2 +   v_{max} +   m + C +   v_{max})$
-%
-%como este costo es el de una iteración, nos queda que el orden del ciclo completo es:
-%
-%$O((  IV_1 +   IV_2)(  m*  v_{max} +   v_{max}^2 +   v_{max} +   m + C +   v_{max}))$
-%
-%pero $  IV_1 \leq   IV_{max}$ y de la misma manera vale lo mismo para $IV_2$, luego tenemos que el orden es:
-%
-%$O(   IV_{max}(  m*  v_{max} +   v_{max}^2 +   v_{max} +   m + C +   v_{max}))$
-%
-%si bien, $  IV_{max}$ se puede acotar por $  v_{max}$, preferimos dejarlo de esta manera, ya que evidencia mejor como el aumento de la cantidad de nodos a poner influye mas que la cantidad de nodos fijos.
-%
-%Por otro lado no hay que olvidarse del costo de filtrar los nodos de grado 0 y volverlos a colocar, lo cual tiene orden
-%
-%$O(   V_{max})$, entonces el orden total es  
-%
-%$O(   V_{max} +   IV_{max}(  m*  v_{max} +   v_{max}^2 +   v_{max} +   m + C +   v_{max}))$
-%
-%Con respecto al costo C, en el caso de la elección random, el costo es O(1) y en la elección por grado máximo o mínimo, esta es $O(  v_{max})$.
-%
-%Para este algoritmo, el peor caso se da cuando hay muchos nodos para agregar y el grafo es muy denso. En particular si tenemos que no hay nodos fijos y el grafo es completo, el costo nos queda $O( V_{max}^4)$ porque $IV_i = v_i = V_i$ y ademas es del orden de $V_i^2$. 
 \subsection{Heuristica de insercion Greedy por ejes}
 Nuevamente partimos del dibujo original, pero esta vez vamos agregando ejes. Es decir tomamos un eje de los que vienen en el nuevo dibujo y lo agregamos poniendo a sus nodos en la posición que minimize el número de cruces. Si tomamos un eje que une dos nodos que no fueron puestos aun, se agregan ambos nodos y se prueban las distintas combinaciones para minimizar los cruces. Si alguno (o ambos extremos) ya estaban puestos, se sacan ambos y se reubican. 
 
@@ -402,7 +348,7 @@ Por otro lado, la heuristica de la mediana se muestra como la mas rapida, supone
 
 De esta manera elegimos implementar en C++ la heuristica de inserción de nodos, ya que consideramos que de las tres alternativas planteadas es la que brinda resultados bastante buenos (comparada con las demas heuristicas planteadas) en tiempos razonables. 
 
-
+%es un buen momento para comentar la estructura que se utilizo 
 \section{Detalles de implementación de la heuristica constructiva}
 
 %darle rigurosidad al pseudocodigo correspondiente para poder usarlo aca

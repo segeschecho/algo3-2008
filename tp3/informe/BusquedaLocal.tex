@@ -24,7 +24,7 @@ Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (
     \subfigure[Dibujo a mejorar (4 cruces)]{
      \includegraphics[scale=0.3]{./figuras/BusquedaLocal/reinsercion.png}}     
      \setcounter{subfigure}{1}\hspace{1.0in}
-     \subfigure[Buscamos a donde reinsertae al nodo A, delante de D logramos minimizar los cruces]{
+     \subfigure[Buscamos a donde reinsertar al nodo A, delante de D logramos minimizar los cruces]{
      \includegraphics[scale=0.3]{./figuras/BusquedaLocal/reinsercion1.png}}    
      \setcounter{subfigure}{2}
      \subfigure[Movemos al nodo A, no podemos mover a nadie mas de esta partición de modo de bajar el número de cruces, por lo cual, pasamos a la siguiente partición. Moviendo a 4 no logramos nada, por lo que buscamos mover a 3(1 cruce)]{
@@ -171,9 +171,50 @@ Finalmente la heuristica de la mediana, al igual que la versión constructiva, fu
 Por estas razones decidimos descartar a las heuristicas de intercambio goloso y a la de la mediana y conservar a la de reinserción.
 
 \section{Detalles de implementación de la heuristica de busqueda local}
+Para implementar esta heuristica se utilizaron las estructuras de Dibujo y GrafoBipartito comentadas anteriormente. %TODO: ver q asi seea
+La clase busqueda local se construye tomando un dibujo y recibe un dibujo incremental al cual mejora, devolviendo un nuevo dibujo.
 
+Se utilizaron listas para guardar las particiones que se van modificando en cada paso de la busqueda local. No se utilzaron vectores porque es necesario eliminar elementos de posiciones arbitrarias lo cual puede hacerse de manera mas eficiente en listas.
+
+Una vez insertado un nodo, el rango en el cual el mismo puede ubicarse se recorrer mediante ``swaps'' de modo de poder calcular mas facilmente los cruces por cambiarlo de posición.
+
+Por otro lado se mantienen durante cada iteración los indices de cada partición (arreglo). Estos indices se pueden actualizar facilmente cuando se ``swapea'' a un nodo, sin embargo el sacar un nodo y reinsertarlo hace que el calculo del mismo sea de orden lineal.
+
+Para poder iterar sobre los elementos de cada partición, lo que hacemos es tener otra copia de la lista que se va a modificar a fin de poder recorrer los elementos en el orden en que vienen dados.
+
+El dibujo que recibe la heuristica, no posee nodos de grado 0, ya que estos son filtrados al inicio, ademas como resultado de este filtrado los nodos que deben guardar una posicion relativa dada, cumplen que su id respeta ese orden, es decir si el nodo a tiene que estar antes que b entonces a $<$ b.
 %darle rigurosidad al pseudocodigo correspondiente para poder usarlo aca
 \section{Calculo de complejidad}
+Para realizar el calculo, definiremos $v_i$ como la cantidad de nodos de la partición i, y m como la cantidad de ejes del dibujo. Dado que el dibujo no posee nodos de grado 0, sabemos que m $>$ $v_i$. Ademas definimos $v_{max}$ como la cantidad de nodos de la particion mas grande. Utilizaremos el modelo uniforme, ya que consideramos que lo importante es la cantidad de nodos y ejes en el dibujo, mas que las operaciones aritmeticas que se realizan.
+
+A la complejidad del algoritmo que vamos a describir a continuación, debe sumarse la complejidad de ``limpiar'' al grafo y de correr la heuristica constructiva.
+
+Una vez que hicimos esto, veamos el costo de cada paso.
+
+La heuristica de busqueda local va a iterar para cada nodo del dibujo. Dado un nodo, primero se lo retira de su partición. Esto tiene un costo $O(v_{i})$. Una vez que lo retiramos, determinamos el rango donde insertarlo. Si no es un nodo de los que deben guardar un orden relativo dado (en adelante nodos fijos), el rango es toda la partición. Si es un nodo fijo, el rango es delante del fijo anterior a el (o la primer posición si no existe tal nodo) y detras del fijo siguiente (o la ultima posición si no existe tal fijo). Determinar dicho rango es $O(1)$, pues dado un nodo podemos saber facil si es fijo o no por su identificador. Y dado un nodo fijo, también por su identificador podemos saber cual es el nodo fijo anterior o siguiente, y los indices como dijimos anteriormente los tenemos actualizados, de modo que conocer la posición de estos nodos también es $O(1)$.
+
+Luego insertamos el nodo en su primer posición valida. Hacerlo es $O(v_{i})$ ya que si es un nodo fijo, podriamos tener que insertarlo en posiciones arbitrarias.
+
+Este borrado y reinserción del nodo, requiere que se actualice el indice de la partición, también en $O(v_{max})$, y por otro lado requiere que se recalculen los cruces. Hacer esto último nos cuesta $O(m*log(v_{min}))$ como vimos en \ref{conteoCruces}
+
+A partir de este momento, el nodo es ``swapeado'' para recorrer todo su rango. El rango, tiene a lo sumo $v_{max}$ posiciones. Para calcular los cruces se calcula los cruces entre el nodo y el nodo inmediatamente siguiente antes y despues de intercambiar y se aplica la formula dada también en \ref{conteoCruces}. Calcula entonces los cruces nos cuesta $O(min(v_i,m_a,m_b,m_a*m_b))$, esto sale de que vimos que el orden de calcular cruces entre dos posiciones adyacentes era $O(v_i,m_a,m_b)$ y si teniamos pocos ejes, es decir $m_a*m_b < v_i$ y no nos era conveniente hacer el radix sort, usabamos el algoritmo de conteo de cruces consistente en comparar los ejes de a y b de a pares. Podemos suponer sin equivocarnos que $min(v_i,m_a,m_b,m_a*m_b)\leq v_{max}$ y considerar que es $O(v_{max})$
+
+Al ``swapear'' nodos se pueden actualizar los indices en $O(1)$ ya que solo cambian dos posiciones, por otro lado comparar la cantidad de cruces para decidir si el nodo esta en una mejor posicion y en caso afirmativo guardar dicha posición también se realiza en $O(1)$. 
+
+Una vez que recorrimos todo el rango, sacamos de nuevo al nodo para ponerlo en la mejor posición (y se actualizan los indices), lo cual se hace en $O(v_{max})$.
+
+En conclusión, iteramos para $v_1 + v_2$ nodos, es decir $O(v_{max})$ iteraciones. Cada iteración tiene un costo de 
+$O(v_{max}*(v_{max} + m*log(v_{max}))) \subseteq O(v_{max}*m*log(v_{max}))$. 
+
+Luego cada paso tiene un costo $O(v_{max}^2*m*log(v_{max}))$.
+
+Ahora bien, este costo es el de cada pasos. El orden de toda la busqueda local es $O((Pasos)*v_{max}^2*m*log(v_{max}))$. Necesitariamos saber cuantos pasos puede realizar la busqueda. A priori no sabemos cuantos puede realizar, ya que tampoco tenemos una cota que nos diga que tan lejos puede estar la solución inicial del mínimo local. Por esta razón, lo mejor que podemos llegar a hacer, es ver que la cantidad de iteraciones no es de orden exponencial. 
+
+En el peor de los casos, en la solución inicial cada eje se cruzaba con todos los demas, dando una cantidad de cruces $O(m^2)$, el mínimo local es 0 y en cada iteración se disminuye en uno la cantidad de cruces (tiene que disminuir en cada iteración ya que sino la busqueda se detiene. En este caso, entonces la cantidad de iteraciones es $O(m^2)$, por lo cual la busqueda local tiene un orden $O(v_{max}^2*m*log(v_{max})*m^2)$.
+%TODO: guarda con esto
+Sin embargo, creemos que en general la cantidad de iteraciones hasta converger sera mucho menor. 
+
+Ademas de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heuristica constructiva. En conclusión, el orden es $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + limpieza)$ %FIXME: completar cuando esto este completo
 
 \section{Analisis experimental}
 \subsection{Casos borde}
