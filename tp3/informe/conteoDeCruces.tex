@@ -1,6 +1,7 @@
-\chapter{Conteo de Cruces}
+\chapter{Consideraciones preliminares}
+\section{Conteo de cruces}
 \label{conteoCruces}
-\section{Distintos algoritmos}
+\subsection{Distintos algoritmos}
 Dentro del problema que tenemos que resolver, un tema a tener en cuenta es el del conteo de cruces, ya que tanto la solución exacta,
 como las heuristicas necesitan saber muchas veces (por ejemplo para decidir donde se inserta un nodo, o si una permutación ya no puede ser solución) cuantos cruces hay en el dibujo. Por esta razón consideramos que un aspecto importante a optimizar para lograr mejorar el desempeño de nuestros algoritmos es precisamente el conteo de cruces.
 
@@ -142,11 +143,11 @@ Sin embargo, podemos evitar los casos donde se tengan pocos ejes. Para hacerlo, 
 
 De esta manera, el algoritmo 3 se muestra como la mejor opción, ya que si $m>\sharp v_i$, resulta que $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp(v_i)))) \subseteq O(m*log(min_{i=1,2}(\sharp(v_i))))$.
 
-\subsection{Pseudocodigo}
+\subsubsection{Pseudocodigo}
 \begin{algorithm}[H]
 \caption{Cuenta los cruces en un dibujo usando un arbol acumulador}
 \begin{algorithmic}[1]
-\PARAMS{particiones del dibujo (suponemos para simplificar que p2 tiene menos nodos (o igual cantidad) que p1}
+\PARAMS{particiones del dibujo (suponemos para simplificar que p2 tiene menos nodos (o igual cantidad) que p1)}
 \PARAMS{los ejes del dibujo,las posiciones (indice) de los nodos}
 \STATE ejsPorPos $\leftarrow$ $[]$
 \FOR{cada eje(x,y) del dibujo}
@@ -200,7 +201,7 @@ Ahora bien, en vez de ordenar primero por la primer componente y luego con respe
 
 Como dijimos, este algoritmo podria no ser eficiente si la cantidad de ejes es muy pequeña, ya que para hacer radix sort se van a recorrer todos los nodos de ambas particiones, lo cual podria ser un costo mas grande que mirar todos los ejes. Sin embargo, también comentamo que vamos a filtrar a los nodos de grado 0 antes de trabajar con el dibujo, por lo cual creemos que este algoritmo es eficiente. Filtrar a los nodos de grado 0 tiene sentido, ya que por ejemplo en nuestro algoritmo exacto, un pequeño incremento en la cantidad de nodos, siginifica un gran aumento en la cantidad de permutaciones, de esta manera si lo separamos el algoritmo no perderia tiempo en mover a este nodo que no genera cambio alguno.
 
-\section{Reutilización de los cálculos}
+\subsection{Reutilización de los cálculos}
 \label{reUso}
 Si bien hay situaciones donde el orden relativo de los nodos en las particiones se podría modificar sustancialmente, por lo cual sería necesario recalcular los cruces nuevamente , lo cual, como vimos en la sección anterior, tiene un costo bastante alto; hay otros casos donde se hace una modificación mas pequeña al orden de los mismos y es posible no recalcular todos los cruces.
 
@@ -241,4 +242,21 @@ Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega
 
 Estas situaciones si bien parecen casos muy especificos, pueden ser aprovechados por los distintos algoritmos que desarrollamos.
 
-\chapter{Eliminación de nodos nulos}
+\section{Eliminación de nodos nulos}
+Como dijimos, antes de aplicar las heuristicas, eliminamos los nodos de grado cero en lo que sería el grafo con todos los nodos ya puesto. Consideramos que esto evita que las heuristicas, asi como también el algoritmo exacto, realicen calculos innecesarios.
+
+Para hacerlo, basicamente tomamos los nodos de la entrada, asi como sus ejes y construimos un dibujo. A partir de este dibujo, que ya tiene armadas las listas de adyacencia, podemos separar en una lista a los nodos de grado distinto a cero. 
+
+Si solamente los sacaramos, nos encontraríamos frente al problema de que los nodos no tienen como identificadores números consecutivos. Por esta razón, no solo filtramos a los nodos de grado nulo, sino que se realiza un nueva númeración de los nodos que quedan. La misma cumple que los nodos fijos tienen númeración consecutiva (la cual ademas indica la posición relativa, es decir si a $<$ b con a y b nodos de la misma partición, entonces el nodo fijo a esta antes que el nodo fijo b) y que los números son asignados primero a los nodos fijos de la primer partición, luego a los nodos fijos de la segunda, en tercer lugar a los nodos no fijos de la primera y finalmente a los de la segunda.
+
+Para realizar dicha traducción se utilizan diccionarios sobre arreglos a fin de poder realizarla rapidamente. Lo que se guarda es dado un identifador nuevo a que nodo viejo identifica. 
+
+Los ejes también son traducidos, por lo cual se necesita momentaneamente poder ir de un identificador viejo a su numero nuevo, por lo cual se necesita otro indice provisioriamete.
+
+Una vez que se realizó la traducción, las heuristicas y el algoritmo exacto trabajan con el dibujo nuevo.
+
+Cuando terminan se realiza el proceso inverso para volver de los nodos nuevos a los viejos, y ademas insertar a los viejos en posiciones validas (hay que respetar la posicon de los nodos fijos que tenían grado cero y no fueron tenidos en cuenta)
+
+Todo este proceso nos agrega un costo $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes. En el peor caso, ningún nodo tenía grado cero, por lo que esta mejora representa un overhead, sin embargo como se verá mas adelante el orden de los distintos algoritmos es lo suficientemente elevado como para hacer despreciable dicho overhead.
+
+%TODO: comparar que pasa si no saco los nodos al pedo y si los saco
