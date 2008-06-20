@@ -144,12 +144,10 @@ void SolucionExacta :: mejorar() {
     if (movil1.empty() && movil2.empty()) {
         if (cruces < mejorDibujo.contarCruces()) {
             if (invertirLados) {
-                mejorDibujo = Dibujo(d->grafo(), list<nodo>(fijo2), list<nodo>(fijo1));
+                mejorDibujo = Dibujo(d->grafo(), list<nodo>(fijo2), list<nodo>(fijo1), cruces);
             } else {
-                mejorDibujo = Dibujo(d->grafo(), list<nodo>(fijo1), list<nodo>(fijo2));
+                mejorDibujo = Dibujo(d->grafo(), list<nodo>(fijo1), list<nodo>(fijo2), cruces);
             }
-            // FIXME: asignar el valor de this->cruces a mejorDibujo.cruces para evitar
-            // recalcular los cruces cuando lo vuelva a consultar.
         }
     }
 

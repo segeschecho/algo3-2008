@@ -1,18 +1,5 @@
 #include "GrafoBipartito.h"
-/*
- *  Clase GrafoBipartito
- */
 
-// Funciones Publicas
-
-#define MAX(a,b) (a < b) ? b : a
-#define print(a) cout<<a<<endl;
-unsigned max(unsigned a, unsigned b){
-    if(a < b)
-    return b;
-    else
-    return a;
-}
 GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2, const list<eje>& ejes) {
     assert(p1.size() > 0 && p2.size() > 0);
     n = p1.size() + p2.size();
@@ -21,37 +8,14 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
 
     V1 = p1;
     V2 = p2;
-/*
-    // copio los nodos de V1
-    list<nodo>::const_iterator itNodos(p1.begin());
-    V1 = vector<nodo> (p1.size());
-    vector<nodo>::iterator itVi(V1.begin());
-    while (itNodos != p1.end()) {
-        *itVi = *itNodos;
-        itVi++;
-        itNodos++;
-    }
-
-    // copio los nodos de V2
-    itNodos = p2.begin();
-    V2 = vector<nodo> (p2.size());
-    itVi = V2.begin();
-    while (itNodos != p2.end()) {
-        *itVi = *itNodos;
-        itVi++;
-        itNodos++;
-    }
-*/
+    
     diccEjes = vector< list<nodo> > (p1.size() + p2.size());
     list<eje>::const_iterator itEjes(ejes.begin());
-    //print("lo arma mal?");
     while (itEjes != ejes.end()) {
-        //print(itEjes->primero<<" "<<itEjes->segundo);
         diccEjes[itEjes->primero].push_back(itEjes->segundo);
         diccEjes[itEjes->segundo].push_back(itEjes->primero);
         itEjes++;
     }
-    cout<<"sal"<<endl;
 }
 
 GrafoBipartito :: GrafoBipartito(const GrafoBipartito& g) {
@@ -78,17 +42,6 @@ void GrafoBipartito :: operator= (const GrafoBipartito& g) {
     V2 = g.V2;
     diccEjes = g.diccEjes;
     listEjes = g.listEjes;
-/*
-    // copio las listas una por una
-    diccEjes = vector< list<nodo> > (diccEjes.size());
-    vector< list<nodo> >::const_iterator it1 (diccEjes.begin());
-    vector< list<nodo> >::const_iterator it2 (g.diccEjes.begin());
-    while (it1 != diccEjes.end()) {
-        *it1 = *it2;
-        it1++;
-        it2++;
-    }
-    */
 }
 
 const list<eje>& GrafoBipartito :: listaEjes(void) {
