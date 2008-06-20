@@ -76,6 +76,7 @@ def generarEntrada(iv1,iv2,v1,v2,m):
     out.write(str(len(ejesNuevos))+"\n")
     for (x,y) in ejesNuevos:
         out.write(str(x+1)+" " +str(y+1)+"\n")
+    out.write("-1"+"\n")
 
 def test_generadores():
     g = generarGrafoBipartitoAleatorio(n1=10, n2=10, m=25)
