@@ -1,4 +1,4 @@
-#include "Tp3.h"
+#include "FiltroGrafos.h"
 
 /*
  * saca de un grafo los nodos con grado 0
@@ -17,9 +17,9 @@ void imprimir(list<nodo>& l){
     cout<<endl;
 }
 #endif
-Tp3::~Tp3(){delete dibujoLimpio; delete grafoLimpio;};
+FiltroGrafos::~FiltroGrafos(){delete dibujoLimpio; delete grafoLimpio;};
 #define print(a) cout<<a<<endl;
-Tp3::Tp3(Dibujo& entrada){
+FiltroGrafos::FiltroGrafos(Dibujo& entrada){
         marcados1 = entrada.nodosEnP1();
         marcados2 = entrada.nodosEnP2();
         v1 = marcados1.size();
@@ -121,7 +121,7 @@ Tp3::Tp3(Dibujo& entrada){
          dibujoLimpio = new Dibujo(grafoLimpio,nuevoV1,nuevoV2);
 }
 
-Dibujo Tp3:: reconstruirDibujo(Dibujo& resuelto){
+Dibujo FiltroGrafos:: reconstruirDibujo(Dibujo& resuelto){
        unsigned i = 0;
        for(vector<nodo> :: const_iterator each =resuelto.nodosEnP1().begin(); each != resuelto.nodosEnP1().end();each++){
             if( !(traduccion[*each] < v1)){
