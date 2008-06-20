@@ -155,7 +155,17 @@ const vector<nodo>& Dibujo :: nodosEnP2(void) const {
 GrafoBipartito* Dibujo :: grafo(void) {
     return g;
 }
-
+bool estaEn(nodo each, vector<nodo> &li){
+    vector<nodo> :: iterator it = li.begin();
+    while(it != li.end()){
+        if(*it == each){
+            return true;
+        }
+        it++;
+    
+    }
+    return false;
+}
 unsigned Dibujo :: contarCruces() {
     if(contado == false) {
     	vector<nodo> indice(nodosL1.size()+nodosL2.size());
@@ -175,7 +185,7 @@ unsigned Dibujo :: contarCruces() {
     	vector< list<nodo> > ejesAux(nodosL1.size()+nodosL2.size());
     	for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++) {
     		for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++) {
-    		    if (*it2 < nodosL1.size()+nodosL2.size()){
+    		    if (estaEn(*it2,nodosL2)){//*it2 < nodosL1.size()+nodosL2.size()){
         			ejesAux[*it].push_back(*it2);
         			ejesAux[*it2].push_back(*it);
         		}
