@@ -8,6 +8,7 @@
 
 Dibujo :: Dibujo() {
 	desdeArchivo = false;
+        contado = false;
 }
 
 Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nodo>& l2) {
@@ -17,6 +18,7 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
 
     nodosL1 = l1;
     nodosL2 = l2;
+    contado = false;
 }
 
 
@@ -29,6 +31,7 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& 
 
     nodosL1.assign(l1.begin(), l1.end());
     nodosL2.assign(l2.begin(), l2.end());
+    contado = false;
 }
 
 Dibujo :: Dibujo(ifstream & entrada) {
@@ -111,6 +114,7 @@ Dibujo :: Dibujo(ifstream & entrada) {
         cantLineas--;
     }
     g = new GrafoBipartito(nodosV1, nodosV2, ejes);
+    contado = false;
 }
 
 Dibujo :: Dibujo(const Dibujo& d) {
@@ -156,31 +160,35 @@ void imprimeVector(const vector<nodo>& a){
     }
     cout<<endl;
 }
-unsigned Dibujo :: contarCruces() const {
-    vector<nodo> indice(nodosL1.size()+nodosL2.size());
-    unsigned i = 0;
-    for(vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++){
-        indice[*it] = i;
-        i++;
+unsigned Dibujo :: contarCruces() {
+    if(contado == false){
+        contado = true;
+	vector<nodo> indice(nodosL1.size()+nodosL2.size());
+	unsigned i = 0;
+	for(vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++){
+		indice[*it] = i;
+		i++;
+	}
+	i = 0;
+	for(vector<nodo> :: const_iterator it =nodosL2.begin(); it != nodosL2.end(); it++){
+		indice[*it] = i;
+		i++;
+	}
+	vector< list<nodo> > ejesAux(nodosL1.size()+nodosL2.size());
+	for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++){
+		for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++){
+		if (*it2 < nodosL1.size()+nodosL2.size()){
+			ejesAux[*it].push_back(*it2);
+			ejesAux[*it2].push_back(*it);
+		}
+		}
+	}
+        cruces = contadorDeCruces(nodosL1,nodosL2,ejesAux,indice,indice);
     }
-    i = 0;
-    for(vector<nodo> :: const_iterator it =nodosL2.begin(); it != nodosL2.end(); it++){
-        indice[*it] = i;
-        i++;
-    }
-    vector< list<nodo> > ejesAux(nodosL1.size()+nodosL2.size());
-    for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++){
-        for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++){
-            if (*it2 < nodosL1.size()+nodosL2.size()){
-                ejesAux[*it].push_back(*it2);
-                ejesAux[*it2].push_back(*it);
-            }
-        }
-    }
-    return contadorDeCruces(nodosL1,nodosL2,ejesAux,indice,indice);
+    return cruces;
 }
 
-std::ostream& operator<< (ostream& o, const Dibujo& d) {
+std::ostream& operator<< (ostream& o, Dibujo& d) {
     vector<nodo>::const_iterator it;
     o << "------------------------" << endl;
     o << "Dibujo de GrafoBipartito" << endl;
@@ -234,6 +242,7 @@ void Dibujo :: guardar(ofstream& salida) {
         salida << itEjes->primero + 1 << " " << itEjes->segundo + 1 << endl;
         itEjes++;
     }
+    contado = false;
 }
 
 void Dibujo :: operator= (const Dibujo& d) {
@@ -241,4 +250,6 @@ void Dibujo :: operator= (const Dibujo& d) {
     nodosL2 = d.nodosL2;
     g = d.g;
     desdeArchivo = false;
+    contado = d.contado;
+    cruces = d.cruces;
 }
