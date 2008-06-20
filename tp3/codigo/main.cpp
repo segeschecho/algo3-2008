@@ -74,19 +74,12 @@ int main(int argc, char* argv[]) {
             Dibujo reconstruido = tp3.reconstruirDibujo(dib);
             reconstruido.guardar(o);
 
-            f.ignore(2, '\n');   //ignoro el caracter de fin de linea ('\n')
+            f.ignore(2, '\n');
         }
     }
     else if (metodo.compare("mejora") == 0) {
-/*
-        //a partir del dibujo limpio tambien armamos la busqueda local
-        BusquedaLocal bl(*tp3.dibujoLimpio);
-        //pedimos que nos mejore el dibujo de la heur constructiva
-        //nos da uno nuevo
-        Dibujo minLoc = bl.hallarMinimoLocal(dib);
-        cout << "Hallando el minimo local se logro: " << minLoc.contarCruces() << " cruces" << endl;
-*/
-        //aca va el greedy y busqueda local cuando esten listos
+        // FIXME
+        cout << "Emilio trolo!!" << endl;
     }
     else if (metodo.compare("grasp") == 0) {
         while (f.peek() != '-') {
