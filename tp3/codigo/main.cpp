@@ -1,11 +1,6 @@
 #include <iostream>
-#include <math.h>
-#include "Dibujo.h"
-#include "GrafoBipartito.h"
-#include "Tp3.h"
-#include "HeuristicaConstructiva.h"
+#include "FiltroGrafos.h"
 #include "SolucionExacta.h"
-#include "BusquedaLocal.h"
 #include "Grasp.h"
 
 using namespace std;
@@ -64,13 +59,13 @@ int main(int argc, char* argv[]) {
     if (metodo.compare("constructivo") == 0) {
         while (f.peek() != '-') {
             Dibujo d (f);
-            Tp3 tp3(d);
+            FiltroGrafos filtro(d);
 
-            HeuristicaConstructiva hc(*tp3.dibujoLimpio);
+            HeuristicaConstructiva hc(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion();
             cout << "Heuristica Constructiva logro: " << dib.contarCruces() << " cruces." << endl;
             
-            Dibujo reconstruido = tp3.reconstruirDibujo(dib);
+            Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(o);
 
             f.ignore(2, '\n');
@@ -83,13 +78,13 @@ int main(int argc, char* argv[]) {
     else if (metodo.compare("grasp") == 0) {
         while (f.peek() != '-') {
             Dibujo d (f);
-            Tp3 tp3(d);
+            FiltroGrafos filtro(d);
 
-            Grasp gp(*tp3.dibujoLimpio);
+            Grasp gp(*filtro.dibujoLimpio);
             Dibujo dib (gp.resolver(1));
             cout << "Grasp logro: " << dib.contarCruces() << " cruces." << endl;
 
-            Dibujo reconstruido = tp3.reconstruirDibujo(dib);
+            Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(o);
 
             f.ignore(2,'\n');
@@ -98,13 +93,13 @@ int main(int argc, char* argv[]) {
     else if (metodo.compare("exacto") == 0) {
         while (f.peek() != '-') {
             Dibujo d(f);
-            Tp3 tp3(d);
+            FiltroGrafos filtro(d);
             
-            SolucionExacta s(*tp3.dibujoLimpio);
+            SolucionExacta s(*filtro.dibujoLimpio);
             Dibujo dib (s.resolver());
             cout << "El algoritmo exacto logro: " << dib.contarCruces() << " cruces." << endl;
             
-            Dibujo reconstruido = tp3.reconstruirDibujo(dib);
+            Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(o);
 
             f.ignore(2,'\n');

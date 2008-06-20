@@ -4,11 +4,11 @@ FLAGS=-g -Wall
 all: cruces
 
 # ejecutables
-cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
-	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 
-testSolucionExacta: testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
-	$(CC) $(FLAGS) -o testSolucionExacta testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+testSolucionExacta: testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+	$(CC) $(FLAGS) -o testSolucionExacta testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 
 # objetos
 conteoDeCruces.o: conteoDeCruces.cpp conteoDeCruces.h
@@ -32,8 +32,8 @@ BusquedaLocal.o: BusquedaLocal.cpp BusquedaLocal.h
 Grasp.o: Grasp.cpp Grasp.h
 	$(CC) $(FLAGS) -c Grasp.cpp
 
-Tp3.o: Tp3.cpp Tp3.h Dibujo.h GrafoBipartito.h 
-	$(CC) $(FLAGS) -c Tp3.cpp 
+FiltroGrafos.o: FiltroGrafos.cpp FiltroGrafos.h Dibujo.h GrafoBipartito.h 
+	$(CC) $(FLAGS) -c FiltroGrafos.cpp 
 
 clean:
 	rm -f *.o
