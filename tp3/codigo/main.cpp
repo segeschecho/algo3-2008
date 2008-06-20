@@ -9,7 +9,6 @@
 #include "Grasp.h"
 
 using namespace std;
-#define print(a) cout<<a<<endl;
 
 void help() {
     cout << "Uso ./cruces <metodo> <infile> <outfile>" << endl;
@@ -19,7 +18,7 @@ void help() {
 }
 
 int main(int argc, char* argv[]) {
-    string metodo = "constructivo";        //metodo por defecto: Heuristica constructiva
+    string metodo = "constructivo";
     if (argc >= 2) {
         metodo = argv[1];
         if (!(metodo.compare("constructivo") == 0 ||
