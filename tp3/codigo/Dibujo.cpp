@@ -168,7 +168,7 @@ bool estaEn(nodo each, vector<nodo> &li){
 }
 unsigned Dibujo :: contarCruces() {
     if(contado == false) {
-    	vector<nodo> indice(nodosL1.size()+nodosL2.size());
+    	vector<nodo> indice(g->cantNodos());
     	unsigned i;
         
         i = 0;
@@ -182,10 +182,10 @@ unsigned Dibujo :: contarCruces() {
     		i++;
     	}
 
-    	vector< list<nodo> > ejesAux(nodosL1.size()+nodosL2.size());
+    	vector< list<nodo> > ejesAux(g->cantNodos());
     	for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++) {
     		for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++) {
-    		    if (estaEn(*it2,nodosL2)){//*it2 < nodosL1.size()+nodosL2.size()){
+    		    if (estaEn(*it2,nodosL2)){
         			ejesAux[*it].push_back(*it2);
         			ejesAux[*it2].push_back(*it);
         		}
@@ -225,9 +225,12 @@ std::ostream& operator<< (ostream& o, Dibujo& d) {
 void Dibujo :: guardar(ofstream& salida) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
+    
+    vector<nodo>::const_iterator it;
 
-    vector<nodo>::const_iterator it (nodosL1.begin());
-
+    salida << nodosL1.size() << endl;
+    it = nodosL1.begin();
+    
     while (it != nodosL1.end()) {
         salida << *it + 1 << endl;
         it++;
@@ -248,7 +251,6 @@ void Dibujo :: guardar(ofstream& salida) {
         salida << itEjes->primero + 1 << " " << itEjes->segundo + 1 << endl;
         itEjes++;
     }
-    contado = false;
 }
 
 void Dibujo :: operator= (const Dibujo& d) {
