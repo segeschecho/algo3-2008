@@ -7,6 +7,7 @@
 // Funciones Publicas
 
 Dibujo :: Dibujo() {
+	desdeArchivo = false;
 }
 
 Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nodo>& l2) {
@@ -41,7 +42,6 @@ Dibujo :: Dibujo(ifstream & entrada) {
     unsigned int cantLineas;
 
     entrada >> cantLineas;
-    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -52,7 +52,6 @@ Dibujo :: Dibujo(ifstream & entrada) {
     }
 
     entrada >> cantLineas;
-    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -63,7 +62,6 @@ Dibujo :: Dibujo(ifstream & entrada) {
     }
 
     entrada >> cantLineas;
-    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         eje e;
@@ -76,12 +74,10 @@ Dibujo :: Dibujo(ifstream & entrada) {
         e.segundo = v;
 
         ejes.push_back(e);
-       // cout << e.primero << " " << e.segundo<<endl;
         cantLineas--;
     }
 
     entrada >> cantLineas;
-    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -91,7 +87,6 @@ Dibujo :: Dibujo(ifstream & entrada) {
     }
 
     entrada >> cantLineas;
-    cout<<"lines"<<cantLineas<<endl;
     while (cantLineas > 0) {
         nodo v;
         entrada >> v;
@@ -101,9 +96,6 @@ Dibujo :: Dibujo(ifstream & entrada) {
     }
 
     entrada >> cantLineas;
-    cout<<"lines"<<cantLineas<<endl;
-    #define print(a) cout<< a << endl;
-    print("ejes");
     while (cantLineas > 0) {
         nodo v;
         eje e;
@@ -116,13 +108,11 @@ Dibujo :: Dibujo(ifstream & entrada) {
         e.segundo = v;
 
         ejes.push_back(e);
-        //print(e.primero<<" "<<e.segundo);
         cantLineas--;
     }
     g = new GrafoBipartito(nodosV1, nodosV2, ejes);
 }
 
-// FIXME FIXME FIXME: esto es absurdo
 Dibujo :: Dibujo(const Dibujo& d) {
     *this = d;
 }
@@ -131,7 +121,7 @@ Dibujo :: ~Dibujo() {
     // FIXME: arreglar este destructor, por ahora lo comento
     // porque sino provoca segfaults.
     if (desdeArchivo) {
-        //delete g;
+        delete g;
     }
 }
 
@@ -250,4 +240,5 @@ void Dibujo :: operator= (const Dibujo& d) {
     nodosL1 = d.nodosL1;
     nodosL2 = d.nodosL2;
     g = d.g;
+    desdeArchivo = false;
 }
