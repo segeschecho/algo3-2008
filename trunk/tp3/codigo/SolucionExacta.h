@@ -43,8 +43,8 @@ private:
     void sacarPrincipio2();
     void agregarAtras1();
     void agregarAtras2();
-    void retrasar1(list<nodo>::iterator i, unsigned pos);
-    void retrasar2(list<nodo>::iterator i, unsigned pos);
+    void retrasar1(list<nodo>::iterator& i, unsigned pos);
+    void retrasar2(list<nodo>::iterator& i, unsigned pos);
 
 };
 
