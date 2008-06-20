@@ -7,6 +7,8 @@ all: cruces
 cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 
+testSolucionExacta: testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+	$(CC) $(FLAGS) -o testSolucionExacta testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 
 # objetos
 conteoDeCruces.o: conteoDeCruces.cpp conteoDeCruces.h
@@ -36,3 +38,4 @@ Tp3.o: Tp3.cpp Tp3.h Dibujo.h GrafoBipartito.h
 clean:
 	rm -f *.o
 	rm -f cruces
+	rm -f testSolucionExacta
