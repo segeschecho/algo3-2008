@@ -17,9 +17,9 @@ HeuristicaConstructiva :: HeuristicaConstructiva(Dibujo& original) {
     d = &original;
 }
 
-Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
-    this->alfa = alfa;
-    this->randomPos = randomPos;
+Dibujo HeuristicaConstructiva :: construirSolucion(float a, bool randPos) {
+    alfa = a;
+    randomPos = randPos;
 
     inicializar();
 
