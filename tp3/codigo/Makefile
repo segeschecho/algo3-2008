@@ -1,14 +1,12 @@
 CC = g++
 FLAGS=-g -Wall
+#FLAGS=-O3
 
 all: cruces
 
 # ejecutables
 cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
-
-testSolucionExacta: testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
-	$(CC) $(FLAGS) -o testSolucionExacta testSolucionExacta.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 
 # objetos
 conteoDeCruces.o: conteoDeCruces.cpp conteoDeCruces.h
@@ -38,4 +36,3 @@ FiltroGrafos.o: FiltroGrafos.cpp FiltroGrafos.h Dibujo.h GrafoBipartito.h
 clean:
 	rm -f *.o
 	rm -f cruces
-	rm -f testSolucionExacta

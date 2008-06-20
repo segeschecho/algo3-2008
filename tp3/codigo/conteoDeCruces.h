@@ -3,7 +3,6 @@
 
 #include <math.h>
 
-//#include "Dibujo.h"
 #include "GrafoBipartito.h"
 
 // ACLARACION: indicesPi[k] da la posicion del nodo k en la particion Pi
