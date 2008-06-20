@@ -15,6 +15,7 @@ class Dibujo {
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
     Dibujo(GrafoBipartito* g, const vector<nodo>& l1, const vector<nodo>& l2);
     Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
+    Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2, unsigned cruces);
     Dibujo(ifstream& entrada);
     Dibujo(const Dibujo& d);
     Dibujo();

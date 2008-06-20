@@ -81,17 +81,6 @@ unsigned sacar(list<nodo>& li,nodo x,vector<nodo>& indice){
     unsigned pos = indice[x];
 	li.erase(iteradorAvanzado(li.begin(),pos));
 	return pos;
-	/*unsigned i = 0;
-    for(vector<nodo> :: iterator it = li.begin(); it != li.end(); it++){
-        if(*it == x){
-            li.erase(it);
-            return i;
-        }
-        i++;
-    }
-    //FIXME:
-    cout<<"me fui de mambo en sacar"<<endl;
-    abort();*/
 }
 
 //actualiza el indice por insertar un nodo en li en la pos inic
@@ -121,14 +110,6 @@ void actualizarIndicePorSacar(list<nodo>& li,unsigned donde,vector<nodo>& indice
 void BusquedaLocal :: mejorar(list<nodo>& l1, list<nodo>& l2, const  vector< list<nodo> >& diccEjes,vector<nodo>& indice){
 
     unsigned i = 0;
-/*
-    for(vector<nodo> :: iterator it = l1.begin(); it != l1.end(); it++){
-        print(*it);
-        print("indice");
-        print(indice[*it]) ;
-        i+=1;
-    }
-    i=0;*/
     //l1Aux me sirve para iterar por los elementos de l1
     list<nodo> l1Aux = list<nodo>(l1);
     //bucle que recorre a todos los elementos de l1
@@ -162,7 +143,6 @@ void BusquedaLocal :: mejorar(list<nodo>& l1, list<nodo>& l2, const  vector< lis
                 unsigned crucesPostSwap = crucesEntre(*elemMasUno,*elem,l2,orig->grafo()->ejes(),indice);
                 //solo cambian los cruces entre ellos 2
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
-                //cout<<"crucesAhora "<<crucesAhora<<endl;
                 //realizo elswap
                 nodo aux = *elem;
                 *elem = *elemMasUno;
@@ -171,10 +151,8 @@ void BusquedaLocal :: mejorar(list<nodo>& l1, list<nodo>& l2, const  vector< lis
                 unsigned aux2 = indice[*elem];
                 indice[*elem] = indice[*elemMasUno];
                 indice[*elemMasUno] = aux2;
-                //cout<<"posta hay "<<contadorDeCruces(l1,l2,orig->grafo()->ejes(),indice,indice)<<endl;
                 //si baje los cruces, me guardo la nueva pos
                 if (crucesAhora < crucesMin){
-                   // cout<<"mejor"<<endl;
                     crucesMin = crucesAhora;
                     posMinima = i+1;
 
@@ -189,79 +167,50 @@ void BusquedaLocal :: mejorar(list<nodo>& l1, list<nodo>& l2, const  vector< lis
         //lo vuelvo a insertar, esta vez en su mejor posicion
         l1.insert(iteradorAvanzado(l1.begin(),posMinima),*each);
         actualizarIndice(l1,posMinima,indice);
-       // cout<<"lo puse en su mejor pos y me quedo con "<<contadorDeCruces(l1,l2,orig->grafo()->ejes(),indice,indice)<<endl;
 
     }
     i=0;
     //ahora hacemos el mismo procedimiento para la otra particion
     list<nodo> l2Aux(l2);
     for(list<nodo>::iterator each = l2Aux.begin(); each != l2Aux.end(); each++){
-
         unsigned pos = sacar(l2,*each,indice);
-
         actualizarIndicePorSacar(l2,pos,indice);
-
         pair<unsigned,unsigned> rangoi = rango(*each,l2,indice);
-
         l2.insert(iteradorAvanzado(l2.begin(), rangoi.first),*each);
-
         actualizarIndice(l2,rangoi.first,indice);
-
+        
         unsigned crucesInicial = contadorDeCruces(l1,l2,orig->grafo()->ejes(),indice,indice);
-
         unsigned posMinima = rangoi.first;
-
         unsigned crucesAhora = crucesInicial;
-
         unsigned crucesMin = crucesInicial;
 
         i = rangoi.first;
-
 		list<nodo> :: iterator elem = iteradorAvanzado(l2.begin(),i);
-
         while( i < rangoi.second-1){
                 list<nodo> :: iterator elemMasUno = iteradorAvanzado(elem,1);
-
                 unsigned crucesPreSwap = crucesEntre(*(elem),*elemMasUno,l1,orig->grafo()->ejes(),indice);
-
                 unsigned crucesPostSwap = crucesEntre(*elemMasUno,*(elem),l1,orig->grafo()->ejes(),indice);
-
                 crucesAhora = crucesAhora - crucesPreSwap + crucesPostSwap;
-                
 				nodo aux = *(elem);
-
                 *(elem) = *elemMasUno;
-
                 *elemMasUno = aux;
-
                 unsigned aux2 = indice[*elem];
-
                 indice[*elem] = indice[*elemMasUno];
-
                 indice[*elemMasUno] = aux2;
 
                 if (crucesAhora < crucesMin){
-
                     crucesMin = crucesAhora;
-
                     posMinima = i+1;
-
                 }
             i++;
 			elem++;
-
         }
 
         pos=sacar(l2,*each,indice);
-
         actualizarIndicePorSacar(l2,pos,indice);
-
         l2.insert(iteradorAvanzado(l2.begin(),posMinima),*each);
-
         actualizarIndice(l2,posMinima,indice);
     }
-
-
 }
 
 //funcion que toma un dibujo candidato e intenta mejorarlo

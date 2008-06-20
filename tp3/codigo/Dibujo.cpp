@@ -1,14 +1,8 @@
 #include "Dibujo.h"
 
-/*
- *  Clase Dibujo
- */
-
-// Funciones Publicas
-
 Dibujo :: Dibujo() {
 	desdeArchivo = false;
-        contado = false;
+    contado = false;
 }
 
 Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nodo>& l2) {
@@ -23,15 +17,24 @@ Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nod
 
 
 Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& l2) {
-
     desdeArchivo = false;
-
     g = grafo;
     assert(l1.size() + l2.size() <= g->n);
 
     nodosL1.assign(l1.begin(), l1.end());
     nodosL2.assign(l2.begin(), l2.end());
     contado = false;
+}
+
+Dibujo :: Dibujo(GrafoBipartito* grafo, const list<nodo>& l1, const list<nodo>& l2, unsigned c) {
+    desdeArchivo = false;
+    g = grafo;
+    assert(l1.size() + l2.size() <= g->n);
+
+    nodosL1.assign(l1.begin(), l1.end());
+    nodosL2.assign(l2.begin(), l2.end());
+    cruces = c;
+    contado = true;
 }
 
 Dibujo :: Dibujo(ifstream & entrada) {
@@ -152,38 +155,34 @@ const vector<nodo>& Dibujo :: nodosEnP2(void) const {
 GrafoBipartito* Dibujo :: grafo(void) {
     return g;
 }
-void imprimeVector(const vector<nodo>& a){
-    unsigned i = 0;
-    while(i < a.size()){
-        cout<<a[i]<<" ";
-        i++;
-    }
-    cout<<endl;
-}
+
 unsigned Dibujo :: contarCruces() {
-    if(contado == false){
-        contado = true;
-	vector<nodo> indice(nodosL1.size()+nodosL2.size());
-	unsigned i = 0;
-	for(vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++){
-		indice[*it] = i;
-		i++;
-	}
-	i = 0;
-	for(vector<nodo> :: const_iterator it =nodosL2.begin(); it != nodosL2.end(); it++){
-		indice[*it] = i;
-		i++;
-	}
-	vector< list<nodo> > ejesAux(nodosL1.size()+nodosL2.size());
-	for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++){
-		for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++){
-		if (*it2 < nodosL1.size()+nodosL2.size()){
-			ejesAux[*it].push_back(*it2);
-			ejesAux[*it2].push_back(*it);
-		}
-		}
-	}
+    if(contado == false) {
+    	vector<nodo> indice(nodosL1.size()+nodosL2.size());
+    	unsigned i;
+        
+        i = 0;
+    	for(vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++) {
+    		indice[*it] = i;
+    		i++;
+    	}
+    	i = 0;
+    	for(vector<nodo> :: const_iterator it =nodosL2.begin(); it != nodosL2.end(); it++) {
+    		indice[*it] = i;
+    		i++;
+    	}
+
+    	vector< list<nodo> > ejesAux(nodosL1.size()+nodosL2.size());
+    	for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++) {
+    		for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++) {
+    		    if (*it2 < nodosL1.size()+nodosL2.size()){
+        			ejesAux[*it].push_back(*it2);
+        			ejesAux[*it2].push_back(*it);
+        		}
+    		}
+    	}
         cruces = contadorDeCruces(nodosL1,nodosL2,ejesAux,indice,indice);
+        contado = true;
     }
     return cruces;
 }
@@ -217,9 +216,6 @@ void Dibujo :: guardar(ofstream& salida) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
 
-    //FIXME: borrar la parte de: << "cruces: " que sigue antes de entregar el TP
-    salida << "cruces: " << contarCruces() << endl;
-    salida << nodosL1.size() << endl;
     vector<nodo>::const_iterator it (nodosL1.begin());
 
     while (it != nodosL1.end()) {
