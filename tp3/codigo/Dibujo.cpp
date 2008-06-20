@@ -6,6 +6,9 @@
 
 // Funciones Publicas
 
+Dibujo :: Dibujo() {
+}
+
 Dibujo :: Dibujo(GrafoBipartito* grafo, const vector<nodo>& l1, const vector<nodo>& l2) {
     desdeArchivo = false;
     g = grafo;
