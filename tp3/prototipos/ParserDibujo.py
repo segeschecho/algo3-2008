@@ -58,8 +58,6 @@ class ParserDibujoOut:
         # levanto el archivo
         f = open(archivo, 'r')
 
-        # ignoro los cruces
-        f.readline()
         # cantidad de nodos en P1
         cantLineas = int(f.readline())
         nodosP1 = []
