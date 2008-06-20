@@ -37,7 +37,10 @@ Dibujo HeuristicaConstructiva :: construirSolucion(float alfa, bool randomPos) {
         }
     }
 
-    return Dibujo(d->grafo(), fijo1, fijo2);
+    Dibujo dtmp = Dibujo(d->grafo(), fijo1, fijo2);
+    // FIXME: eliminar esto cuando haya una confianza decente
+    assert(dtmp.contarCruces() == cruces);
+    return dtmp;
 }
 
 
