@@ -219,8 +219,8 @@ void SolucionExacta :: tabular2() {
     for (it1 = l2.begin(); it1 != l2.end(); it1++) {
         for (it2 = l2.begin(); it2 != l2.end(); it2++) {
             if (*it1 < *it2) {
-                tabla2[*it1][*it2] = crucesEntre(*it1, *it2, fijo2, d->grafo()->ejes(), posiciones1);
-                tabla2[*it2][*it1] = crucesEntre(*it2, *it1, fijo2, d->grafo()->ejes(), posiciones1);
+                tabla2[*it1][*it2] = crucesEntre(*it1, *it2, fijo1, d->grafo()->ejes(), posiciones1);
+                tabla2[*it2][*it1] = crucesEntre(*it2, *it1, fijo1, d->grafo()->ejes(), posiciones1);
             }
         }
     }
