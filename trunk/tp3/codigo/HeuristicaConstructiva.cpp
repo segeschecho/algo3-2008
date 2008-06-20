@@ -264,7 +264,10 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     // Inserto el nodo en alguna de las mejores posiciones
     unsigned mejorPos;
     if (randomPos) {
-        mejorPos = rand() % posValidas.size();
+        unsigned randomIndex = rand() % posValidas.size();
+        itc = posValidas.begin();
+        for(unsigned i = 0; i != randomIndex; i++) itc++;
+        mejorPos = *itc;
     } else {
         mejorPos = posValidas.front();
     }
@@ -274,6 +277,10 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     for(unsigned i = 0; i != mejorPos; i++) itc++;
     fijos.insert(itc, n);
     cruces = mejorCruces;
+
+    // FIXME: borrar esto cuando haya fe
+    Dibujo dib(d->grafo(), list<nodo>(fijo1), list<nodo>(fijo2));
+    assert(dib.contarCruces() == cruces);
 
     // Actualizo los grados parciales
     it = d->grafo()->ejes()[n].begin();

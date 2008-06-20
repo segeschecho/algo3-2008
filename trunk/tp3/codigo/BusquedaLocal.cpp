@@ -240,7 +240,6 @@ Dibujo BusquedaLocal :: hallarMinimoLocal(Dibujo& candidato){
 
     //me guardo cuantas cruces tiene este dibujo
     unsigned crucesInicial = contadorDeCruces(candidato.nodosEnP1(),candidato.nodosEnP2(),(candidato.grafo())->ejes(),indice,indice);
-    cout<<"cruces inicial "<<crucesInicial<<endl;
     //flag de cambio para saber cuando me estanque
     bool cambio = true;
     //contador de cruces en cada iteracion
@@ -256,7 +255,6 @@ Dibujo BusquedaLocal :: hallarMinimoLocal(Dibujo& candidato){
         //si mejoro hay q volver a iterar
         if(crucesActual < crucesInicial){
             crucesInicial = crucesActual;
-            cout<<"mejore "<<crucesActual<<endl;
             cambio = true;
         }
     }
