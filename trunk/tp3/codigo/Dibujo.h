@@ -16,6 +16,7 @@ class Dibujo {
     Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
     Dibujo(ifstream& entrada);
     Dibujo(const Dibujo& d);
+    Dibujo();
     ~Dibujo();
 
     friend std::ostream& operator<< (ostream&, const Dibujo&);
