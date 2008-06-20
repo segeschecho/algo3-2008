@@ -333,3 +333,4 @@ unsigned int crucesPorAgregarAtras(const vector<nodo>& p1, const vector<nodo>& p
 unsigned int crucesPorAgregarAtras(const list<nodo>& p1, const list<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2) {
     return crucesPorAgregarEnLosBordes(false, p1, p2, ejes, indicesP2);
 }
+
