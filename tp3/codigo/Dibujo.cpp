@@ -122,13 +122,16 @@ Dibujo :: Dibujo(ifstream & entrada) {
     g = new GrafoBipartito(nodosV1, nodosV2, ejes);
 }
 
+// FIXME FIXME FIXME: esto es absurdo
 Dibujo :: Dibujo(const Dibujo& d) {
     *this = d;
 }
 
 Dibujo :: ~Dibujo() {
+    // FIXME: arreglar este destructor, por ahora lo comento
+    // porque sino provoca segfaults.
     if (desdeArchivo) {
-        delete g;
+        //delete g;
     }
 }
 
