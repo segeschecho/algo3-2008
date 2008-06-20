@@ -179,7 +179,12 @@ nodo HeuristicaConstructiva :: tomarSiguiente(list<nodo>& moviles) {
         ultimoQueSupera++;
     }
 
-    unsigned elegido = rand() % (ultimoQueSupera + 1);
+    unsigned elegido;
+    if (alfa == 1) {
+        elegido = 0;
+    } else {
+        elegido = rand() % (ultimoQueSupera + 1);
+    }
 
     // Busco el elemento en la posición elegida, lo borro
     // de la lista y a lo devuelvo.
