@@ -4,8 +4,8 @@ FLAGS=-g -Wall
 all: cruces
 
 # ejecutables
-cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o
-	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o
+cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o Tp3.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
 
 
 # objetos
@@ -26,6 +26,9 @@ SolucionExacta.o: SolucionExacta.cpp SolucionExacta.h HeuristicaConstructiva.h
 
 BusquedaLocal.o: BusquedaLocal.cpp BusquedaLocal.h
 	$(CC) $(FLAGS) -c BusquedaLocal.cpp 
+
+Grasp.o: Grasp.cpp Grasp.h
+	$(CC) $(FLAGS) -c Grasp.cpp
 
 Tp3.o: Tp3.cpp Tp3.h Dibujo.h GrafoBipartito.h 
 	$(CC) $(FLAGS) -c Tp3.cpp 

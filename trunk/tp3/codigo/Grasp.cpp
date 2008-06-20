@@ -35,3 +35,4 @@ Dibujo Grasp :: resolver(float alfa) {
 
 Grasp :: ~Grasp() {
 }
+
