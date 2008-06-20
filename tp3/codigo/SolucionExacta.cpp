@@ -291,14 +291,13 @@ void SolucionExacta :: retrasar1(list<nodo>::iterator& it, unsigned pos) {
     unsigned cAntes = tabla1[*itAux][*it];
     unsigned cDespues = tabla1[*it][*itAux];
 
+    posiciones1[*itAux] = pos;
+    posiciones1[*it] = pos - 1;
+    
     nodo val = *it;
     fijo1.erase(it);
     fijo1.insert(itAux,val);
     it = itAux;
-
-    swap(*itAux, *it);
-    posiciones1[*itAux] = pos;
-    posiciones1[*it] = pos - 1;
 
     cruces = cruces - cAntes + cDespues;
 }
