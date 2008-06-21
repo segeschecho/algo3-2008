@@ -38,19 +38,27 @@ Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (
 \begin{algorithm}[H]
 \caption{Intenta mejorar un dibujo mediante la reinserción golosa de nodos}
 \begin{algorithmic}[1]
+\PARAMS{lista de nodos del dibujo, indice con la posición de cada nodo en la lista}
 \FOR{cada nodo del dibujo}
 \STATE sacar al nodo del mismo
-\STATE obtener las posiciones donde es posible insertarlo
-\STATE mejoresCruces $\leftarrow$ cruces por ponerlo en la primer posición posible
-\STATE mejorPosición $\leftarrow$ primer posición
-\FOR{cada posición donde se puede poner al nodo}
-\STATE crucesActuales $\leftarrow$ cruces por ponerlo en dicha posición
-\IF{crucesActuales $<$ mejoresCruces}
-\STATE mejoresCruces $\leftarrow$ crucesActuales
+\STATE calcular el rango en el cual puedo mover al nodo
+\STATE insertar al nodo en la primer posición del rango
+\STATE reacomodar los indices
+\STATE mejoresCruces $\leftarrow$ los cruces por ponerlos en esta posición
 \STATE mejorPosición $\leftarrow$ posición actual
+\STATE crucesahora $\leftarrow$ mejoresCruces
+\FOR{cada posicion donde se puede poner al nodo}
+\STATE contar los cruces entre el nodo y su vecino siguiente \COMMENT{crucesEntre(nodo,vecino)}
+\STATE contar los cruces entre el vecino siguiente y el nodo \COMMENT{crucesEntre(vecino,nodo)}
+\STATE crucesAhora $\leftarrow$ crucesAhora - crucesEntre(nodo,vecino) + crucesEntre(vecino,nodo) \COMMENT{cambio de cruces por hacer ``swap''}
+\STATE hacer el swap entre el nodo y su vecino
+\STATE actualizar los indices
+\IF{crucesAhora $<$ mejoresCruces}
+   \STATE mejoresCruces $\leftarrow$ crucesAhora
+   \STATE mejorPosición $\leftarrow$ posicion actual
 \ENDIF
 \ENDFOR
-\STATE poner al nodo en la mejor posición
+\STATE poner al nodo en  mejorPosicion
 \ENDFOR
 \end{algorithmic}
 \end{algorithm} 
@@ -237,7 +245,45 @@ $$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log(
  
  Luego $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ %TODO: ojo con esto, verificar
  
-\section{Analisis experimental}
+\section{Analisis}
+\subsection{Casos Borde}
+Para observar que tan mala podría ser nuestra heuristica de busqueda local, lo que buscamos es encontrar alguna familia de instancias donde no pudiera lograr la solución óptima.
+
+Consideremos entonces el siguiente grafo:
+
+\begin{figure}[H]
+    \centering
+     \includegraphics[scale=0.2]{./figuras/BusquedaLocal/CasoBordeLocal.png}
+     \caption{Mal caso para la busqueda local}
+\end{figure}
+
+Frente a este grafo, la heuristica de busqueda local, no podrá hacer ninguna mejora, ya que para cualquier nodo que mueva, siempre obtiene mas o igual numero de cruces. Entonces, en este caso, el dibujo que provee la heuristica frente a esta entrada tiene 4 cruces, 2 mas que la solución óptima:
+
+\begin{figure}[H]
+    \centering
+     \includegraphics[scale=0.2]{./figuras/BusquedaLocal/CasoBordeLocalSol.png}
+     \caption{Solución optima para el grafo de ejemplo}
+\end{figure}
+
+En general, podemos considerar los grafos que tengan la forma anterior, pero que en vez de dos nodos nuevos, tengan $k$ nodos nuevos:
+
+\begin{figure}[H]
+    \centering
+     \includegraphics[scale=0.2]{./figuras/BusquedaLocal/CasoBordeLocalFlia.png}
+     \caption{Familia de casos borde para la busqueda local}\label{familiaLocal}
+\end{figure}
+
+Frente a toda esta familia de grafos, nuestra busqueda local no puede hacer nada. De esta manera frente a una solución que tiene 2 cruces (como en el ejemplo, se bajan a los nodos nuevos, dejando a los relaciones enfrentados, de modo que no generen cruces), nuestra heuristica devuelve un dibujo que tiene k + 2 cruces. De modo que aumentando k lo suficiente, se puede lograr que el número de cruces diste de la solución optima, tanto como se desee.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.6]{./graficos/comparacionLocales/malCaso.png}
+\caption{Cantidad de cruces en funcion de la cantidad de nodos nuevos agregados para grafos de la familia \ref{familiaLocal}}
+\end{figure}
+
+Este ejemplo, aunque sencillo, nos alcanza para ver que nuestra busqueda local no es una heuristica buena, ya que se puede hacer, para ciertas instancias, que el número de cruces óptimo diste arbitrariamente de la solución propuesta.
+
 \subsection{Relación con la heuristica constructiva}
 Si bien vimos que de todas las variantes propuestas la que obtuvo un mejor desempeño fue la heuristica de busqueda local por reinserción de nodos, consideramos que debíamos observar si esta busqueda local se beneficiaba de partir de un dibujo construido mediante la heuristica constructiva. Para observar esto, lo que hicimos fue correr la heuristica de busqueda local para un mismo grafo, a partir de un dibujo generado al azar y un dibujo generado por la heuristica constructiva. Luego medimos la diferencia en el número de cruces en las mejoras de cada dibujo. Los resultados fueron los siguientes:
 
@@ -252,8 +298,14 @@ Si bien vimos que de todas las variantes propuestas la que obtuvo un mejor desem
 \caption{Diferencia en la cantidad de cruces obtenidos en función de n}
 \end{figure}
 
+En los graficos, lo que observamos es que la mayor parte de los puntos son mayores que cero. Dado que lo que graficamos fue la diferencia entre los cruces obtenidos al comenzar por un dibujo al azar y por el dibujo obtenido por la heuristica constructiva, resulta que un punto positivo nos dice que:
+$$Cruces_{Azar} - Cruces_{Constructiva} > 0$$
+ 
+es decir
+ 
+$$Cruces_{Azar} > Cruces_{Constructiva}$$
+ 
+Luego, lo que observamos es que en general la construcción de un dibujo con la heuristica de inserción greedy de nodos permite que obtengamos, luego de la busqueda local, mejores resultados que con un dibujo al azar. Esto coincide con lo esperado, ya que en general la heuristica da ``buenos'' resultados de entrada, por lo que, tendemos a pensar, que mejorarlos requiera menos trabajo.
+
 \subsection{Tiempo de ejecución}
 
-\subsection{Casos borde}
-
-\section{Discusión}
