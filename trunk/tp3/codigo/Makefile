@@ -5,10 +5,14 @@ FLAGS=-g -Wall
 all: cruces
 
 # ejecutables
-cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
-	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o
+cruces: main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o cmdline/cmdline.o
+	$(CC) $(FLAGS) -o cruces main.cpp GrafoBipartito.o Dibujo.o conteoDeCruces.o FiltroGrafos.o HeuristicaConstructiva.o BusquedaLocal.o SolucionExacta.o Grasp.o cmdline/cmdline.o
 
 # objetos
+
+cmdline/cmdline.o:
+	cd cmdline && make && cd ..
+
 conteoDeCruces.o: conteoDeCruces.cpp conteoDeCruces.h
 	$(CC) $(FLAGS) -c conteoDeCruces.cpp
 

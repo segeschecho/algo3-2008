@@ -1,7 +1,7 @@
 #include "GrafoBipartito.h"
 
 GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2, const list<eje>& ejes) {
-    assert(p1.size() > 0 && p2.size() > 0);
+    //assert(p1.size() > 0 && p2.size() > 0);
     n = p1.size() + p2.size();
     m = ejes.size();
     listEjes = ejes;

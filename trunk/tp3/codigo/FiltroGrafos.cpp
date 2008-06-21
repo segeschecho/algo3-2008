@@ -123,6 +123,8 @@ FiltroGrafos::FiltroGrafos(Dibujo& entrada){
 
 Dibujo FiltroGrafos:: reconstruirDibujo(Dibujo& resuelto){
        unsigned i = 0;
+	   p1Posta.clear();
+	   p2Posta.clear();
        for(vector<nodo> :: const_iterator each =resuelto.nodosEnP1().begin(); each != resuelto.nodosEnP1().end();each++){
             if( !(traduccion[*each] < v1)){
                p1Posta.push_back(traduccion[*each]);
