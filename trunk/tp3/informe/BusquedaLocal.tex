@@ -41,12 +41,12 @@ Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (
 \PARAMS{lista de nodos del dibujo, indice con la posición de cada nodo en la lista}
 \FOR{cada nodo del dibujo}
 \STATE sacar al nodo del mismo
-\STATE calcular el rango en el cual puedo mover al nodo
+\STATE calcular el rango en el cual se puede mover al nodo
 \STATE insertar al nodo en la primer posición del rango
 \STATE reacomodar los indices
 \STATE mejoresCruces $\leftarrow$ los cruces por ponerlos en esta posición
 \STATE mejorPosición $\leftarrow$ posición actual
-\STATE crucesahora $\leftarrow$ mejoresCruces
+\STATE crucesAhora $\leftarrow$ mejoresCruces
 \FOR{cada posicion donde se puede poner al nodo}
 \STATE contar los cruces entre el nodo y su vecino siguiente \COMMENT{crucesEntre(nodo,vecino)}
 \STATE contar los cruces entre el vecino siguiente y el nodo \COMMENT{crucesEntre(vecino,nodo)}
