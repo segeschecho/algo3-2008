@@ -192,7 +192,7 @@ void SolucionExacta :: mejorar() {
             if (movil1.empty()) {
                 tabular2();
             }
-
+            // FIXME: falta la poda en función de tabla1!
             mejorar();
         }
 
