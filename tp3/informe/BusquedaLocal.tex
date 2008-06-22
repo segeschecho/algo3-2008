@@ -22,16 +22,16 @@ Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (
     \centering
     \setcounter{subfigure}{0}
     \subfigure[Dibujo a mejorar (4 cruces)]{
-     \includegraphics[scale=0.3]{./figuras/BusquedaLocal/reinsercion.png}}     
+     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion.png}}     
      \setcounter{subfigure}{1}\hspace{1.0in}
      \subfigure[Buscamos a donde reinsertar al nodo A, delante de D logramos minimizar los cruces]{
-     \includegraphics[scale=0.3]{./figuras/BusquedaLocal/reinsercion1.png}}    
+     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion1.png}}    
      \setcounter{subfigure}{2}
      \subfigure[Movemos al nodo A, no podemos mover a nadie mas de esta partición de modo de bajar el número de cruces, por lo cual, pasamos a la siguiente partición. Moviendo a 4 no logramos nada, por lo que buscamos mover a 3(1 cruce)]{
-     \includegraphics[scale=0.3]{./figuras/BusquedaLocal/reinsercion2.png}}     
+     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion2.png}}     
      \setcounter{subfigure}{3}\hspace{1.0in}
      \subfigure[Movimos a 3, y ya no queda ninguna mejora por hacer (0 cruces)]{
-     \includegraphics[scale=0.3]{./figuras/BusquedaLocal/reinsercion3.png}}     
+     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion3.png}}     
 \end{figure} 
 
 \subsubsection{Pseudocodigo}
@@ -68,7 +68,7 @@ Esta heuristica contempla como soluciones vecinas de un dibujo a aquellas que se
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.5]{./figuras/BusquedaLocal/vecindad.png}
+     \includegraphics[scale=0.5]{./figuras/busquedaLocal/vecindad.png}
 \end{figure}
 
 Primero se considera la vecindad, consistente en todo posible intercambio de dos nodos (siempre que dicho intercambio no viole el orden relativo de los nodos originales) y luego prueba cual de todos esos intercambios reporta mayor beneficio, es decir reduce mas el número de cruces. Una vez encontrado dicho par, nos movemos a la solución vecina realizando el intercambio de dichos nodos. Al hacerlo terminamos un paso de la busqueda local.
@@ -253,7 +253,7 @@ Consideremos entonces el siguiente grafo:
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.2]{./figuras/BusquedaLocal/CasoBordeLocal.png}
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/CasoBordeLocal.png}
      \caption{Mal caso para la busqueda local}
 \end{figure}
 
@@ -261,7 +261,7 @@ Frente a este grafo, la heuristica de busqueda local, no podrá hacer ninguna mej
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.2]{./figuras/BusquedaLocal/CasoBordeLocalSol.png}
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/CasoBordeLocalSol.png}
      \caption{Solución optima para el grafo de ejemplo}
 \end{figure}
 
@@ -269,7 +269,7 @@ En general, podemos considerar los grafos que tengan la forma anterior, pero que
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.2]{./figuras/BusquedaLocal/CasoBordeLocalFlia.png}
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/CasoBordeLocalFlia.png}
      \caption{Familia de casos borde para la busqueda local}\label{familiaLocal}
 \end{figure}
 

@@ -1,76 +1,228 @@
 \chapter{Algoritmo exacto}
 \section{Desarrollo}
-Un dibujo incremental valido para el problema, consiste en una permutación de los nodos de cada partción que mantenga el orden relativo de los nodos antiguos. Si tenemos $v_i$ nodos inicialmente en la particion i, y se agregan $IV_i$ nodos en cada partición, la cantidad posible de soluciones es:
+Un dibujo incremental válido consiste en una permutación de los nodos 
+de cada partición que mantenga el orden relativo de los nodos previamente 
+fijados. Dados $v_i$ nodos originales en la partición i, se agregan $IV_i$ 
+nodos en cada partición. La cantidad posible de soluciones es:
 $$IV_1!*\dbinom{IV_1 + v_1}{v_1}*IV_2\dbinom{IV_2 + v_2}{v_2}$$
-Esto se debe a que la partición 1 tiene $IV_1 + v_1$ nodos, por lo tanto hay esa cantidad de posiciones. De esas tengo que usar $v_1$ para los nodos viejos. Una vez que elegimos las posiciones, el orden entre ellos es fijo, por lo que si elegimos $v_1$ posiciones, solo hay 1 forma de ubicarlos. Pero en las $IV_1$ posiciones que quedan libres podemos poner cualquier permutación de los nodos nuevos. De ahi viene que la cantidad de ordenes válidos para la particion 1 sea: 
+Esto se debe a que la partición 1 tiene $IV_1 + v_1$ nodos, y por lo 
+tanto hay esa cantidad de posiciones. De esas, $v_1$ estarán destinadas a los
+nodos existentes, cuyo orden relativo es fijo. Una vez que elegimos sus posiciones, 
+el orden entre ellos es fijo. En las $IV_1$ posiciones restantes podemos poner 
+cualquier permutación de los nodos nuevos. Luego la cantidad de órdenes válidos
+para la partición 1 es: 
 $$ IV_1!*\dbinom{IV_1 + v_1}{v_1} $$
-Para cada una de estas permutaciones, tenemos, haciendo un razonamiento similar a lo visto antes, una cantidad de permutaciones igual a:
-$$IV_2!*\dbinom{IV_2 + v_2}{v_2}$$ permutaciones en la segunda partición.  
+Luego, para cada uno de estos órdenes válidos en la partición 1, tenemos (análogamente)
+una cantidad equivalente para la partición 2:
+$$IV_2!*\dbinom{IV_2 + v_2}{v_2}$$ permutaciones en la segunda partición.
+El total de combinaciones es finalmente el producto de las combinaciones de cada
+partición, que resulta en la fórmula presentada anteriormente.
 
-Dada la naturaleza del problema a resolver, lo que planteamos como acercamiento para un algoritmo exacto es utilizar la tecnica de backtracking.
+Dada la naturaleza exponencial del problema a resolver, decidimos utilizar la técnica de
+\textit{backtracking} para formular un algoritmo exacto. Comenzamos por desarrollar un algoritmo
+de fuerza bruta que simplemente explora el árbol de combinaciones que va generando progresivamente,
+y luego lo fuimos refinando agregando optimizaciones y podas.
 
-La idea es obtener una solución base de alguna manera, por ejemplo a partir de la heuristica constructiva que desarrollamos mas adelante en la parte \ref{constructivas}, y usar esta solución inicial para poder descartar de las posibles permutaciones de los nodos a las que generan mas cruces, y cada vez que encontramos una permutación que genera menos cruces, utilizamos esa para filtrar al resto. Para armar las soluciones, partimos de los nodos antiguos ya puestos, y vamos llenando la partición que tenga menos permutaciones validas (en adelante, le diremos partición 1), cuando que llenamos esta, probamos todas las permutaciones de la otra.
+El algoritmo de backtracking aprovecha la naturaleza recursiva del problema de dibujo incremental,
+agregando progresivamente cada nodo móvil en todas sus posiciones válidas y produciendo así
+un nuevo conjunto de nodos fijos que se incrementará con una llamada recursiva. Dado un candidato
+inicial con una cantidad de cruces dada, esta situación nos permite realizar una poda sencilla
+del árbol de combinaciones. Ocurre que inevitablemente todo dibujo incremental del grafo parte
+de un dibujo original cuya cantidad de cruces acota inferiormente la del dibujo incrementado.
+Por lo tanto, al construir un candidato para una llamada recursiva, si la cantidad de cruces
+en su parte fija supera a la del mejor candidato hallado hasta el momento, no tiene sentido descender
+por la rama y puede podarse sin perder soluciones.
 
-De esta manera, el árbol de backtracking que tenemos es:
+Con esta idea, resulta útil proveerse rápidamente de un candidato inicial cuya cantidad de cruces
+sea baja, ya que \textit{a priori} permitirá descartar mayor cantidad de ramas por pasarse de su
+valor. Con este fin, tiene sentido utilizar alguna solución heurística de las desarrolladas en este
+trabajo.
+
+El pseudocódigo del algoritmo resultante es aproximadamente:
+\begin{algorithm}[H]
+\caption{Halla la solución exacta al problema de dibujo bipartito incremental}
+\begin{algorithmic}[1]
+\PARAMS{fijo1, fijo2, movil1, movil2, adyacencias}
+\STATE construir un candidato abritrario y 
+\IF{fijo1 = $\emptyset$ y fijo2 = $\emptyset$}
+    \IF{el dibujo obtenido tiene menos cruces que el mejor candidato}
+        \STATE reemplazar el mejor candidato por este dibujo
+    \ENDIF
+\ELSIF{fijo1 $\neq$ $\emptyset$}
+    \STATE tomar el primer elemento de movil1
+    \FOR{cada posición del elemento en fijo1}
+        \STATE poner el elemento en esa posición
+        \IF{el dibujo obtenido no tiene más cruces que el mejor candidato}
+            \STATE llamar recursivamente
+        \ENDIF
+        \STATE sacar el elemento de esa posición
+    \ENDFOR
+\ELSIF{fijo2 $\neq$ $\emptyset$}
+    \STATE tomar el primer elemento de movil2
+    \FOR{cada posición del elemento en fijo2}
+        \STATE poner el elemento en esa posición
+        \IF{el dibujo obtenido no tiene más cruces que el mejor candidato}
+            \STATE llamar recursivamente
+        \ENDIF
+        \STATE sacar el elemento de esa posición
+    \ENDFOR
+\ENDIF
+\RETURN el mejor candidato hallado
+\end{algorithmic}
+\end{algorithm}
+
+De esta manera, el árbol de \textit{backtracking} que tenemos es:
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \includegraphics[scale=0.25]{./figuras/exacto/arbolbt.png}
-\caption{Arbol de backtracking}
+\caption{Árbol de \textit{backtracking}}
 \end{figure}
 
-Nuestro algoritmo lo va recorriendo a la manera de DFS, cortando aquellas ramas que se pueden descartar por tener un número de cruces mas alto que la mejor solución encontrada hasta el momento.
+El algoritmo lo recorre en orden DFS, cortando aquellas ramas que pueden ser descartadas
+inmediatamente sin visitarlas.
+
+\subsection{Implementación eficiente}
+
+Dado que el algoritmo recursivo se ejecutará una vez por cada nodo del árbol de combinaciones,
+es importante que su ejecución sea lo más eficiente posible para disminuir el tiempo total
+de ejecución.
+
+La primera versión del algoritmo era similar a la de fuerza bruta: recorría el árbol de combinaciones,
+y cuando obtenía una permutación completa, construía el dibujo y contaba enteramente sus cruces.
+A continuación agregamos la poda simple descripta anteriormente. Sin embargo, resultaba claro
+que recalcular los cruces de todo el dibujo para cada hoja del árbol de permutaciones no era
+eficiente ya que gran parte de los cálculos eran redundantes entre hojas vecinas del árbol, puesto
+que compartían gran parte de las posiciones de los nodos en el dibujo.
+
+Utilizando los métodos descriptos anteriormente, decidimos efectuar los cálculos mediante
+una técnica incremental. Constatamos que la iteración que en el pseudocódigo corresponde
+a agregar un nodo móvil en todas las posiciones posibles dentro del dibujo fijo de su partición
+puede describirse en términos de 3 operaciones: agregar el nodo al final del dibujo, 
+permutarlo $n$ veces hacia atrás con su vecino inmediato, y finalmente extraerlo del principio 
+del dibujo donde habrá quedado ubicado. Con este procedimiento, un nodo móvil dado
+pasa por todas las posiciones posibles dentro del dibujo fijo original.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.25]{./figuras/exacto/swaps.png}
+\caption{Permutaciones mediante swaps}
+\end{figure}
+
+Dado un candidato, la cantidad de cruces que se agregan por agregarle un nuevo nodo al 
+final a una partición puede ser calculada mucho más rápidamente que los cruces de todo 
+el dibujo. Además, como se vio anteriormente, calcular la cantidad de cruces que resulta
+de un \textit{swap} también es eficiente. Esta mejora se incluye en el algoritmo evitando
+así recalcular todos los cruces para cada permutación, y en cambio llevando una cuenta temporal
+de cruces que se modifica continuamente para reflejar los cruces del candidato que se está
+evaluando.
+
+\subsection{Tabulado de resultados}
+
+Aún tras incluir los cálculos incrementales como se describió en el último párrafo, se puede
+aprovechar de forma más eficiente aún la realización de ciertos cálculos.
+Consideremos un dibujo con dos permutaciones $V = <v_1,v_2,...,v_n>$, $W = <w_1,w_2,...,w_k>$.
+La cantidad de cruces puede obtenerse como:
+$$Cruces(V,W) = \sum_{i=1}^{k-1}{\sum_{j=i+1}^{k}{crucesEntre(w_i,w_j,V)}}$$
+
+Esto es, dada una permutación de V, los cruces de todo el dibujo, para cualquier
+permutación de W, dependen únicamente de los valores de $crucesEntre(w_i, w_j, V)$, función
+que calcula los cruces entre dos nodos $w_i$ y $w_j$ para la permutación de V elegida y
+suponiendo que $w_i$ está antes de $w_j$ en el dibujo. Esto puede hacerse ya que la cantidad
+de cruces que se producen entre los ejes de 2 nodos de una partición depende únicamente de su
+orden relativo y de las posiciones dentro de la partición restante.
+
+Por lo tanto, una vez que construimos una permutación de una de las 2 particiones (parte superior
+del árbol en el gráfico explicativo del árbol de \textit{backtracking}), podemos tabular los $k^2$
+valores de  $crucesEntre()$ necesarios para el cálculo de los cruces de cualquier permutación de
+la otra partición: todo el subárbol que pende de una permutación completa de la partición 1 comparte
+los mismos valores de $crucesEntre()$. Teniendo esta tabla, el cálculo de cruces del dibujo completo
+puede realizarse mediante la suma de los mismos según la fórmula de arriba, lo cual podría agilizar
+el conteo de cruces. Cabe destacarse que el llenado de esta tabla tiene un costo no despreciable,
+y por tanto es importante realizar pruebas para determinar si las ventajas de realizar este tabulado
+no son superadas por el costo de la creación de la tabla. 
+
+Como se verá más adelante, las pruebas mostraron que el uso de esta tabulación mejora significativamente
+el rendimiento del algoritmo. En función de esta mejora, podemos observar que los cálculos realizados
+con ayuda de la tabla son mucho más rápidos que los que se realizan sin ella. Por lo tanto decidimos
+incluir una segunda mejora que consiste en decidir cual de las 2 particiones tiene más permutaciones
+posibles, y asignar ésta a la parte inferior del árbol cuya exploración está más optimizada gracias al
+uso de la tabla. Antes de esta decisión, se tomaba de forma arbitraria que lo recibido como
+``partición 1'' se ubicaba en la parte superior del árbol, puesto que la situación era simétrica y solo
+influía el tamaño total del árbol.
+
+Si bien no es posible realizar la misma tabulación para la partición asignada a la parte
+superior del árbol (puesto que no disponemos de la ubicación de los nodos en la otra partición
+aún), es posible realizar una optimización parcial: si bien no conocemos las posiciones
+de \textit{todos} los nodos en la partición vecina, si conocemos la posición de aquellos
+que son fijos y por tanto no modifican su orden relativo. Se puede construir una tabla más
+pequeña para, nuevamente, agilizar el conteo de cruces en las permutaciones de la
+partición de la parte superior.
+
+
+% TODO: hacer un gráfico que muestre la mejora producto de elegir el de menos permutaciones!
 
 \subsection{Podas}
-La poda basica que efectuamos consiste en eliminar aquellas permutaciones que sabemos que no pueden ser solución porque ya tienen mas cruces que otra permutación que armamos. 
 
-Sin embargo, nos gustaría poder desarrollar algún otro tipo de poda, que nos permita mejorar el rendimiento del algoritmo.
-
-Consideremos un dibujo con dos permutaciones $V = <v_1,v_2,...,v_n>$, $W = <w_1,w_2,...,w_k>$, la cantidad de cruces se puede obtener como:
-
-$$Cruces(V,W) = \sum_{i=1}^{k-1}{\sum_{j=i+1}^{k}{crucesEntre( w_i,w_j,V)}}$$
-
-Entonces, una vez que tenemos llena la primer partición, podemos obtener una cota inferior para la cantidad de cruces que va a haber en la partición 2:
+Disponiendo de la tabla de cruces entre pares de nodos, pudimos construir una función de poda
+más efectiva, mediante una cota inferior más fina para la cantidad mínima de ejes que produce
+una rama. Nuevamente, para una permutación dada de $V$, tenemos que:
 
 $$Cruces(V,W) \geq \sum_{i=1}^{k-1}{\sum_{j=i+1}^{k}{min(crucesEntre(w_i,w_j,V),crucesEntre(w_j,w_i,V))}}$$
 
-Esto nos dice que dados dos nodos, $w_i$ y $w_j$, sabiendo en que orden estan los nodos de la otra partición, hay dos formas de coloarlos y una forma que genera menos cruces (podrian ser las dos formas si son iguales). Entonces en el mejor de los casos, todos los nodos estan ordenados de modo que dado un par cualquiera cumplen que estan en el mejor orden. 
+Como tenemos estos valores tabulados, resulta muy sencillo calcular esta cota y podar en función
+del valor obtenido. Esto utiliza el hecho de que dados dos nodos $w_i$, $w_j$ de la partición 2, 
+una vez que se los coloque en el dibujo, agregarán una cierta cantidad de cruces (ya sea $crucesEntre(w_i, w_j)$
+o $crucesEntre(w_j, w_i)$ dependiendo de su orden relativo). Como disponemos de estos dos valores,
+podemos usar el mínimo entre ambos como una cota inferior de los cruces producidos por la dupla
+$w_i$, $w_j$ dada la permutación de $V$ tomada.
 
-De esta manera, obtenemos una cota que nos permite desarrollar otra poda para aplicar a nuestro algoritmo: Una vez que completamos la primer partición, podemos ver antes de agregar un nodo a la segunda partición, si los cruces que ya hay entre los nodos puestos, mas este limite inferior para el número de cruces que involucran a los nodos que todavia no pusimos, es mayor que la cantidad de la mejor solución hasta el momento, no vale la pena seguir construyendo esta permutación.
+Una vez que tenemos esta cota inferior, podemos descartar de antemano a aquellas ramas donde el
+valor de dicha cota supere la cantidad de cruces del mejor candidato obtenido hasta el momento.
+Una vez más, este cálculo redunda en un costo adicional que podría ser contraproducente
+en caso de que la poda no lograra eliminar una cantidad significativa de ramas. Nuevamente, es
+necesario realizar pruebas para determinar su efectividad. Las mediciones observaron que este
+mecanismo de poda es particularmente bueno y elimina partes sustanciales del árbol de permutaciones
+sin un costo excesivo (producto, en gran parte, de la disponibilidad de la tabla de cruces
+descripta previamente, que aligera mucho el cómputo de la cota).
 
-Es de notar que el calculo de esta cota implica un overhead, por eso un factor que deberemos estudiar es si es conveniente aplicarla, ya que en el peor caso, no se poda nunca y el rendimiento es peor que si no usaramos la poda. Entonces algo que debemos observar es si la poda aporta un beneficio o es mas bien un overhead inutil.
 
-\subsection{Tabulado de resultados}
-Para ir construyendo las permutaciones, vamos agregando nodos al final, hacemos una llamada recursiva donde agregamos a los otros nodos. Cuando termina una llamada, lo que hacemos es un swap entre el nodo que agregamos y su anterior, y se repite la llamada, asi hasta que el nodo llega al final de la partición y hay que sacarlo.
-
-Cada vez que hacemos un swap, calculamos la cantidad de cruces que hay entre dos nodos antes de hacer el swap y despues de hacerlo, para saber cuantos cruces hay en el dibujo que estamos armando.
-
-Si consideramos la primer partición, como la armamos primero, resulta que en la partición opuesta solo estan los nodos antiguos, cuyo orden es fijo. Por lo cual los cruces entre dos nodos de la primer partición, cuando esta todavia no se lleno es siempre la misma. 
-
-Esto quiere decir, que estamos repitiendo calculos, ya que al sacar un nodo y volverlo a poner, calculamos los cruces que genera con los demas, lo cual podriamos haber evitado. Por esta razon, al comenzar el backtracking, calculamos la cantidad de cruces entre dos nodos cualesquiera de la primer partición, de modo tal que cuando lo estemos moviendo mediante swaps, no necesitemos calcular nuevamente los cruces que genera con sus compañeros de partición.
-
-Si bien hacer esto, tiene un costo espacial y temporal $O(V_1^2)$, dado el costo que tiene contar los cruces, y la cantidad de veces que es necesario hacerlo, creemos que es una optimización valida.
-
-De manera similar, cuando se llena la partición 1, los cruces entre nodos de otra partición son siempre iguales, por esta razón cada vez que llenamos a la primer partición, calculamos una tabla similar para la segunda. Esta tabla ademas nos es de mucha utilidad para poder calcular la poda antes descripta en un orden mucho menor, ya que todos los valores que necesitamos sumar, ya estan calculados.
- 
-\section{Pseudocodigo}
+\section{Pseudocódigo}
 \begin{algorithm}[H]
-\caption{Resuelve de forma exacta el problema de dibujar grafos incrementales bipartitos}
+\caption{Resuelve de forma exacta el problema de dibujo incremental de grafos bipartitos}
 \begin{algorithmic}[1]
 \STATE generar excepción de no implementado
 \end{algorithmic}
 \end{algorithm}
 
 \section{Detalles de implementación}
+% uso de listas doblemente enlazadas para push_back(), pop_front() y swap() en O(1)
 
-\section{Calculo de complejidad}
+% uso de buffers únicos para fijo1, fijo2, movil1, movil2 y cruces que son usados
+% por todas las instancias recursivas del algoritmo (ahorra mucho espacio en stack y evita
+% muchas copias de listas o conjuntos de nodos fijos y moviles).
+
+% uso de diccionarios sobre arreglo para mayor velocidad (el uso de memoria del
+% algoritmo está básicamente determinado por el tamaño del stack, por lo tanto
+% no tiene sentido optimizar el uso de memoria de los factores constantes)
+
+% uso de la heurística constructiva para determinar el candidato inicial
+
+\section{Cálculo de complejidad}
 
 \subsection{Peores casos}
 
-\section{Analisis experimental}
+\section{Análisis experimental}
 
 \subsection{Experiencias realizadas}
+% utilidad de invertir particion1 y particion2
+% aptitud de las podas: poda "simple" vs. poda loca
+% utilidad de las tablas: algoritmo con y sin tabulado
+
+% tiempos del algoritmo de backtracking vs. tabla vs. tabla + poda loca (en funcion de las combinaciones)
 
 \subsection{Resultados}
+% estimación del tiempo del algoritmo para resolver un caso dado (en funció de la cantidad de combianciones)
 
 \section{Discusión}
