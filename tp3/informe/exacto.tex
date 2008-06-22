@@ -4,7 +4,7 @@ Un dibujo incremental válido consiste en una permutación de los nodos
 de cada partición que mantenga el orden relativo de los nodos previamente 
 fijados. Dados $v_i$ nodos originales en la partición i, se agregan $IV_i$ 
 nodos en cada partición. La cantidad posible de soluciones es:
-$$IV_1!*\dbinom{IV_1 + v_1}{v_1}*IV_2\dbinom{IV_2 + v_2}{v_2}$$
+$$IV_1!*\dbinom{IV_1 + v_1}{v_1}*(IV_2!*\dbinom{IV_2 + v_2}{v_2})$$
 Esto se debe a que la partición 1 tiene $IV_1 + v_1$ nodos, y por lo 
 tanto hay esa cantidad de posiciones. De esas, $v_1$ estarán destinadas a los
 nodos existentes, cuyo orden relativo es fijo. Una vez que elegimos sus posiciones, 
