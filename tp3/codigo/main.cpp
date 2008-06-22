@@ -1,31 +1,42 @@
 #include <iostream>
 #include <cstdlib>
+#include <string>
+
 #include "FiltroGrafos.h"
 #include "SolucionExacta.h"
 #include "Grasp.h"
 #include "cmdline/CmdLine.h"
-#include <string>
+
 using namespace std;
 
 void help() {
-    cout << "Uso ./cruces <params>" << endl;
-    cout << "-i file: archivo de entrada" << endl;
-    cout << "-o file: archivo de salida (se le agrega postfijo de metodo)" << endl;
-    cout << "Metodos Posibles:" << endl;
-    cout << "-e: exacto" << endl;
-    cout << "-c: contructiva" << endl;
-    cout << "-l: local" << endl;
-    cout << "-g: grasp" << endl;
-    cout << "-a: todas las aproximadas" << endl;
-    cout << "-t: todos los metodos" << endl;
-    cout << "por defecto: -a " << endl;
+    cout << "Uso: ./cruces <params>" << endl;
+    cout << "  -i file: archivo de entrada" << endl;
+    cout << "  -o file: archivo de salida (se le agrega sufijo del método)" << endl;
+    cout << "Métodos Posibles:" << endl;
+    cout << "  -e: exacto" << endl;
+    cout << "  -c: contructiva" << endl;
+    cout << "  -l: local" << endl;
+    cout << "  -g: grasp" << endl;
+    cout << "  -a: todas las aproximadas" << endl;
+    cout << "  -t: todos los metodos" << endl;
+    cout << "Método por defecto: -a " << endl;
+    cout << endl;
 }
 
 int main(int argc, char* argv[]) {
     CCmdLine cmdLine;
     bool todas=false, aproximados=false, constructiva=false,local=false,grasp=false,exacta=false;
+    cout << endl;
+    cout << "---------------------------------------------------------------------" << endl;
+    cout << "Constructor de dibujos de grafos bipartitos" << endl;
+    cout << "González, Martínez, Sainz-Trápaga" << endl;
+    cout << "Algoritmos y Estructuras de Datos 3 - FCEN, UBA (2008)" << endl; 
+    cout << "---------------------------------------------------------------------" << endl << endl;
+
     if (cmdLine.SplitLine(argc, argv) < 1) {
-        cout << "Se ejecutan metodos aproximados por defecto" << endl << endl;;
+        cout << "Se ejecutan métodos aproximados por defecto." << endl;
+        cout << "Para ver las opciones utilice el parámetro -h." << endl << endl;
         aproximados = true;
     }
     else{
@@ -53,6 +64,7 @@ int main(int argc, char* argv[]) {
             exacta = true;
         }
     }
+
     string i, o;
     try {
         i = cmdLine.GetArgument("-i",0);
@@ -60,19 +72,23 @@ int main(int argc, char* argv[]) {
     catch(...){
         i = "Tp3.in";
     }
+
     try {
         o = cmdLine.GetArgument("-o",0);
     }
     catch(...){
         o = "Tp3.out";
     }
+
     if(!(todas || aproximados || constructiva || local || grasp || exacta)){
-        cout << "Se ejecutan metodos aproximados por defecto" << endl << endl;;
+        cout << "Se ejecutan métodos aproximados por defecto." << endl;
+        cout << "Para ver las opciones utilice el parámetro -h." << endl << endl;
         aproximados = true;
     }
+
     ifstream f (i.c_str());
     if (!f.is_open()) {
-        cout << endl << "ERROR: No se pudo abrir el archivo de f!" << endl;
+        cout << endl << "ERROR: No se pudo abrir el archivo de entrada!" << endl;
         help();
         return 1;
     }
@@ -92,6 +108,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+
     if(todas || aproximados || constructiva){
         string salidaConstructiva = o;
         string :: iterator it = salidaConstructiva.begin();
@@ -106,6 +123,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+
     if(todas || aproximados || local){
         string salidaLocal = o;
         string :: iterator it = salidaLocal.begin();
@@ -120,6 +138,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+
     if(todas || aproximados || grasp){
         string salidaGrasp = o;
         string :: iterator it = salidaGrasp.begin();
@@ -142,7 +161,7 @@ int main(int argc, char* argv[]) {
 	    if(todas || exacta){
 		    SolucionExacta s(*filtro.dibujoLimpio);
             Dibujo dib (s.resolver());
-            cout << "El algoritmo exacto logro: " << dib.contarCruces() << " cruces." << endl;
+            cout << "El algoritmo exacto logró:         " << dib.contarCruces() << " cruces" << endl;
             
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outE);
@@ -150,7 +169,7 @@ int main(int argc, char* argv[]) {
 	    if(todas || aproximados || constructiva){
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion();
-            cout << "Heuristica Constructiva logro: " << dib.contarCruces() << " cruces." << endl;
+            cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl;
             
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outC);
@@ -159,18 +178,18 @@ int main(int argc, char* argv[]) {
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
 		    BusquedaLocal bl(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion();
-		    cout<<dib<<endl;
 		    Dibujo dibu = bl.hallarMinimoLocal(dib);
-		    cout<<dibu<<endl;
-            cout << "Heuristica Local logro: " << dibu.contarCruces() << " cruces." << endl;
+            cout << "La búsqueda local logró:           " << dibu.contarCruces() << " cruces" << endl;
 
             Dibujo reconstruido = filtro.reconstruirDibujo(dibu);
             reconstruido.guardar(outL);
 	    }
 	    if(todas || aproximados || grasp){
             Grasp gp(*filtro.dibujoLimpio);
+            // FIXME: este parámetro está hardcodeado acá que probablemente
+            // no es la mejor idea, no hay que olvidárselo.
             Dibujo dib (gp.resolver(0.65));
-            cout << "Grasp logro: " << dib.contarCruces() << " cruces." << endl;
+            cout << "Grasp logró:                       " << dib.contarCruces() << " cruces" << endl;
             
 		    Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outG);
@@ -190,5 +209,6 @@ int main(int argc, char* argv[]) {
     if(todas || aproximados || grasp){
 	    outG.close();
     }
+    cout << endl;
     return 0;
 }
