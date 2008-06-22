@@ -1,5 +1,5 @@
 \chapter{Heuristicas Constructivas}
-
+\label{constructivas}
 \section{Introduccíon}
 Para enfrentar al problema de construir un dibujo incremental, pensamos varias heuristicas distintas.
 
@@ -354,10 +354,54 @@ De esta manera elegimos implementar en C++ la heuristica de inserción de nodos, 
 %darle rigurosidad al pseudocodigo correspondiente para poder usarlo aca
 \section{Calculo de complejidad}
 
-\section{Analisis experimental}
+\section{Analisis}
+\subsection{Casos borde}
+Para ver que tan mala podría ser nuestra heuristica, lo que hicimos fue busacar casos donde se el resultado que proponga diste arbitrariamente de la solución óptima.
+
+Un ejemplo donde la heuristica se equivoca es el siguiente:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.25]{./figuras/constructivas/malCasoConstructivo.png}
+\caption{Mal caso para la heuristica constructiva}
+\end{figure}
+
+En este ejemplo, los nodos númerados, son los nodos que se agregan, mientras que los que tienen letras son los originales del dibujo.
+
+Veamos que hace la heuristica constructiva frente a este caso:
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Partimos del dibujo original]{
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons0.png}}
+\subfigure[El 1 tiene mayor grado hacia lo que ya está. Como sirve cualquier posición, lo insertemos en la primera que probamos(recordar que vamos desde atras hacia adelante)]{
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons1.png} }
+\subfigure[La mejor posición para el nodo 2, es arriba de todo ya que no genera cruces]{
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons2.png}}
+\subfigure[El nodo 3 esta obligado a colocarse en una posición que genera un cruce]{
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons3.png}}
+\subfigure[Ocurre lo mismo para el nodo 4]{
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons4.png}}
+\end{figure}
+
+Como vemos, en este caso, frente a un grafo que se podía lograr sin cruces, nuestra heuristica obtiene un dibujo con 2 cruces.
+
+Ahora bien, si tuvieramos un nodo nuevo mas que estuviera relacionado con D, el dibujo óptimo seguiría teniendo 0 cruces, sin embargo, nuestra heuristica daría 3 cruces. En general si a este grafo le agregamos nodos fijos debajo de D y nodos nuevos unidos a estos (con grado 1) el número de cruces optimo sigue siendo 0, pero nuestra heuristica va a dar mas y mas cruces.
+En particular, una cruz mas por cada par de nodos que se agregue. %TODO: ver si no esta claro
+
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.25]{./figuras/constructivas/familiaMala.png}
+\caption{Familia de casos malos}
+\end{figure}
+
+Luego la cantidad de cruces de la constructiva es k, donde k es la cantidad de pares de nodos, de la forma viejo nuevo que se agregan. 
 \subsection{Tiempo de ejecución}
 
-\subsection{Casos borde}
+
 %TODO: no olvidar poner constructiva vs azar
 
 \section{Discusión}

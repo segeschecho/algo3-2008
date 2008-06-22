@@ -222,10 +222,10 @@ Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes 
 \end{figure} 
 
 
-Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$, y solo teniendo en cuenta los ejes que salen de ellos dos. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O( v_2 + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_2$ es la otra partición. 
+Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$, y solo teniendo en cuenta los ejes que salen de ellos dos. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O( v_j + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_j$ es la otra partición. Basicamente lo que hacemos solo mirar los ejes que salen de a y de b, armar un arbol de dos posiciones y aplicar el procedimiento anterior
 
 %FIXME: Esto esta bien?
-En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_2$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b
+En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_j$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b. De este modo el orden para contar cruces es $min(max(v_2,m_a,m_b),m_a*m_b)$
  
 \begin{figure}[H]
     \centering
@@ -238,7 +238,7 @@ En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp
      \label{fig:compactar}
 \end{figure} 
 
-Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega un nodo al dibujo, particularmente si se agrega al principio o al final de la partición. En este caso, los cruces existentes entre otros nodos se mantienen, solo se podrían agregar nuevos cruces con los ejes del nodo recien agregado. Entonces podemos colapsar los nodos de la partición donde se esta agregando el nuevo nodo, dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto como ilustra la figura \ref{fig:compactar}, de modo de que el algoritmo sea O(m) (recorar que asumimos que m $>$ $v_i$).
+Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega un nodo al dibujo, particularmente si se agrega al principio o al final de la partición. En este caso, los cruces existentes entre otros nodos se mantienen, solo se podrían agregar nuevos cruces con los ejes del nodo recien agregado. Entonces podemos colapsar los nodos de la partición donde se esta agregando el nuevo nodo, dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto como ilustra la figura \ref{fig:compactar}, de modo de que el algoritmo sea $O(m + v_1+v_2 + m)$. Esto es asi porque el costo de la traducción y del radix sort hay que hacerlo igual, pero al igual que en el caso de los cruces entre dos nodos consecutivos, el arbol tiene solo 2 elementos: el nodo que se agrega y el nodo que compacta a todos los demas con sus ejes.
 
 Estas situaciones si bien parecen casos muy especificos, pueden ser aprovechados por los distintos algoritmos que desarrollamos.
 
