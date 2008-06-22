@@ -165,7 +165,7 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
                                     self.ady,indice2=self.posiciones1)
                     self.tabla2[(j,i)] = c
 
-    def _minimosCrucesRestantes(self):
+    def _minimosCrucesRestantes2(self):
         c = 0
         for i in self.movil2:
             for j in self.movil2:
@@ -176,7 +176,18 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
                 c += min(self.tabla2[(i,j)], self.tabla2[(j,i)])
 
         return c
-                    
+
+    def _minimosCrucesRestantes1(self):
+        c = 0
+        for i in self.movil1:
+            for j in self.movil1:
+                if i < j:
+                    c += min(self.tabla1[(i,j)], self.tabla1[(j,i)])
+
+            for j in self.fijo1:
+                c += min(self.tabla1[(i,j)], self.tabla1[(j,i)])
+
+        return c
                 
 
 
@@ -295,7 +306,7 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
                 if i != -1:
                     self._retrasar2(i)
 
-                if self._minimosCrucesRestantes() + self.cruces < self.mejorDibujo.contarCruces():
+                if self._minimosCrucesRestantes2() + self.cruces < self.mejorDibujo.contarCruces():
                     self._mejor()
                 else:
                     self.podas += cuantasCombinaciones(fijo1, fijo2, movil1, movil2) - 1
@@ -313,7 +324,10 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
                     self._retrasar1(i)
                 if movil1 == []:
                     self._tabular2()
-                self._mejor()
+                if self._minimosCrucesRestantes1() + self.cruces < self.mejorDibujo.contarCruces():
+                    self._mejor()
+                else:
+                    self.podas += cuantasCombinaciones(fijo1, fijo2, movil1, movil2) - 1
             
             self._sacarPrincipio1()
 
@@ -323,8 +337,8 @@ def test_resolvedorSwapperTablaConPoda():
     from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
     from SolucionFuerzaBruta import ResolvedorFuerzaBruta
 
-    g = generarGrafoBipartitoAleatorio(n1=7, n2=7, m=20)
-    d = generarDibujoAleatorio(g, n1=5, n2=5)
+    g = generarGrafoBipartitoAleatorio(n1=16, n2=4, m=7)
+    d = generarDibujoAleatorio(g, n1=4, n2=3)
 
     r1 = ResolvedorFuerzaBruta(d)
     s1 = r1.resolver()
