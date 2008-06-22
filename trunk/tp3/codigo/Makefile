@@ -38,5 +38,6 @@ FiltroGrafos.o: FiltroGrafos.cpp FiltroGrafos.h Dibujo.h GrafoBipartito.h
 	$(CC) $(FLAGS) -c FiltroGrafos.cpp 
 
 clean:
+	cd cmdline && make clean && cd ..
 	rm -f *.o
 	rm -f cruces
