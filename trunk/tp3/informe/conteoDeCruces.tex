@@ -225,7 +225,7 @@ Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes 
 Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$, y solo teniendo en cuenta los ejes que salen de ellos dos. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O( v_j + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_j$ es la otra partición. Basicamente lo que hacemos solo mirar los ejes que salen de a y de b, armar un arbol de dos posiciones y aplicar el procedimiento anterior
 
 %FIXME: Esto esta bien?
-En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_j$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b. De este modo el orden para contar cruces es $min(max(v_2,m_a,m_b),m_a*m_b)$
+En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_j$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b. De este modo el orden para contar cruces es $min(max(v_j,m_a,m_b),m_a*m_b)$
  
 \begin{figure}[H]
     \centering

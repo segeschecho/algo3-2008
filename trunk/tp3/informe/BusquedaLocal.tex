@@ -307,5 +307,84 @@ $$Cruces_{Azar} > Cruces_{Constructiva}$$
  
 Luego, lo que observamos es que en general la construcción de un dibujo con la heuristica de inserción greedy de nodos permite que obtengamos, luego de la busqueda local, mejores resultados que con un dibujo al azar. Esto coincide con lo esperado, ya que en general la heuristica da ``buenos'' resultados de entrada, por lo que, tendemos a pensar, que mejorarlos requiera menos trabajo.
 
-\subsection{Tiempo de ejecución}
+\subsection{Aplicación a distintas instancias}
+Para probar el desempeño de nuestra implementación, realizamos varias pruebas sobre diferentes tipos de instancias.
 
+Aplicamos como primera experiencia, la heurisitca a grafos con n nodos de cada lado, n creciente, y una cantidad de ejes igual a n*n/5. La cantidad de nodos libres fue del 40\%.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Diferencia en la cantidad de cruces con respecto a la Heuristica constructiva]{
+\includegraphics[scale=0.55]{./graficos/comparacionLocales/difCrucesTest1.png}}
+\setcounter{subfigure}{1}
+\subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
+\includegraphics[scale=0.4]{./graficos/comparacionLocales/iteracionesTest1.png} }
+\subfigure[Tiempo (en segundos) y complejidad teorica]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/tiempoTest1.png}\label{TiempoOrdenTeorico} }
+\caption{Aplicación a grafos con n nodos en cada partición, n creciente, m = n*n/5, porcentaje de nuevos 40\%} 
+\end{figure}
+
+Del primer grafico, podemos observar como la busqueda local logra una mejora sustancial en la cantidad de cruces, por ejemplo cuando tenemos 200 nodos de cada lado, la diferencia entre la cantidad de cruces de la heuristica constructiva y la de busqueda local es mayor que $3*10^6$. Por otro lado si míramos la cantidad de iteraciones que necesita la busqueda local hasta llegar a un mínimo es bastante pequeña en general, asi para un grafo con 200 nodos, no necesito mas de 24 pasos hasta lograr el mínimo.
+En \ref{TiempoOrdenTeorico}, vemos el tiempo de ejecución, y como la complejidad teorica acota bastante bien a los valores obtenidos. Esta complejidad teorica, se calculo utilizando el número real de iteraciones, el cual recordemos, en el calculo de complejidad lo acotamos por $m^2$, sin embargo como vemos en esta experiencia y en las siguientas, dicho acote es considerablemente grueso.
+
+La experiencia siguiente, fue similar a la anterior, pero esta vez se modifico la cantidad de ejes, que esta vez fue 5*n, por otro lado la cantidad de nodos libres
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Diferencia en la cantidad de cruces con respecto a la Heuristica constructiva]{
+\includegraphics[scale=0.50]{./graficos/comparacionLocales/difCrucesTest3.png}\label{crucesTest3}}
+\setcounter{subfigure}{1}
+\subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
+\includegraphics[scale=0.45]{./graficos/comparacionLocales/iterTest3.png}\label{iterTest3} }
+\subfigure[Tiempo (en segundos) de la busqueda local y de la heuristica constructiva]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/tiemposTest3.png}\label{tiempoTest3}}
+\caption{Aplicación a grafos con n nodos en cada partición, n creciente, m = 5*n, porcentaje de nuevos 60\%} 
+\end{figure}
+
+Nuevamente notamos como la busqueda local corrige bastante a la solución propuesta por la constructiva, ya que como vemos en \ref{crucesTest3} la diferencia en el número de cruces llega al orden de $2*10^4$, diferencia que es menor que en la experiencia anterior, pero esto es esperable ya que al haber menos ejes, es probable que la cantidad de cruces baje, y que por lo tanto la diferencia que se puede lograr sea menor. Como vemos en \ref{iter3}, nuevamente la cantidad de iteraciones es considerablemente menor que la cota que propusimos en el analisis teorico.
+
+En \ref{tiempoTest3} vemos la diferencia entre el tiempo de la busqueda y el de la construcción mediante la otra heuristica de una solución. Como era de esperarse, la busqueda local tiene un tiempo mucho mayor que la constructiva (de hecho tiene que ser mayor si o si, ya que se parte de una solución que se construye con el metodo constructivo). Sin embargo hay un detalle a notar en este grafico, y es que al compararlo con \ref{TiempoOrdenTeorico} notamos que el tiempo es mucho mayor, lo cual refleja el hecho de que el conteo de cruces se hace mas caro, en particular en el primer caso, el factor m se convierte en $v_i^2$, por lo cual es de esperar esta gran diferencia entre los tiempos. También podemos extraer de este grafico, que la construcción de la solución base tiene un costo muy bajo comparado con el costo de mejorarla. Esto refuerza la idea de que es conveniente comenzar con una solución generada por la heuristica constructiva, ya que antes vimos que en general obtiene menos cruces que un ordenamiento al azar y como vemos en \ref{tiempoTest3} el tiempo de construcción es casi despreciable con respecto al tiempo total de la busqueda.
+
+Para ver como influía la cantidad de ejes en el desempeño de la heuristica, decidimos hacer una prueba dejando la cantidad de nodos fija (en particular en 30) y variar la cantidad de ejes del grafo, los resultados son los siguientes
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Diferencia en la cantidad de cruces con respecto a la Heuristica constructiva]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/difCrucesTest5.png}\label{crucesTest5}}
+\setcounter{subfigure}{1}
+\subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
+\includegraphics[scale=0.55]{./graficos/comparacionLocales/iteracionesTest5.png}\label{iterTest5} }
+\subfigure[Tiempo (en segundos) de la busqueda local y de la heuristica constructiva]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/tiemposTest5.png}\label{tiempoTest5}}
+\caption{Diferencia entre cruces, cantidad de iteraciones y tiempo de ejecución en función de m}
+\end{figure}
+
+Con respecto a \ref{crucesTest5}, vemos que la diferencia aumenta y luego pareceria comenzar a disminuir. Creemos que se debe a que cuando hay pocos ejes es mas facil lograr pocos cruces. A medida que aumenta es mas posible mejorar la solución inicial, pero cuando se va saturando el grafo, es menos lo que se puede hacer para reducir el número de cruces (en el extremo, dado un grafo completo cualquier ordenamiento logra la misma cantidad de cruces). En \ref{iterTest5} podemos observar como al igual que en las experiencias anteriores, la cantidad de iteraciones es mucho menor que la cota dad en el analisis teorico. Pero ademas en este caso, a diferencia que en los anteriores, lo que se observa es que la cantidad de iteraciones no fue considerablemente mas chica que la cantidad de nodos que habia en el grafo. 
+Al mirar \ref{tiempoTest5}, se nota claramente la relación entre el tiempo de ejecución y la cantidad de iteraciones, ya que al observar la grafica de tiempo, asi como también la de iteraciones, vemos una forma muy similar en ambas. De hecho a grandes rasgos parecería verificarse que el tiempo de ejecución es de cantidad de iteraciones sobre diez. notar también que cuando hay pocos ejes, el mismo número de iteraciones requiere un tiempo menor, lo cual es muy razonable, ya que contar cruces se hace mas caro y es basicamente el ``core'' de cada paso de la busqueda local.
+
+Finalmente, buscamos observar que influencia tenia la cantidad de nodos nuevos. Por eso, creamos distintos grafos aleatorios, donde lo que variaba era precisamente esa caracterisitca. Los resultados son los que se presentan a continuación:
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Cantidad de cruces con respecto a la Heuristica constructiva]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/crucesTest6.png}\label{crucesTest6}}
+\setcounter{subfigure}{1}
+\subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
+\includegraphics[scale=0.55]{./graficos/comparacionLocales/iteracionesTest6.png}\label{iterTest6} }
+\subfigure[Tiempo (en segundos) de la busqueda local y de la heuristica constructiva]{
+\includegraphics[scale=0.5]{./graficos/comparacionLocales/tiemposTest6.png}\label{tiempoTest6}}
+\caption{Diferencia entre cruces, cantidad de iteraciones y tiempo de ejecución en función de la cantidad de nodos nuevos}
+\end{figure}
+
+Lo que notamos es que cuanto mayor es la cantidad de nodos libres mas mejora la heuristica al resultado obtenido por la constructiva. También vemos que esta mejora mayor necesita de mas iteraciones. La relación que se observa entre el aumento entre la cantidad de iteraciones y del tiempo, consideramos que pone de manifiesto como nuestra heuristica de busqueda local no es tan sensible al aumento de la cantidad de nodos libres, es decir, creemos que demora mas porque necesita mas iteraciones, pero el costo de cada iteración es similar. Esto se debe a que a los nodos fijos también se los intenta mover, y si bien estos nodos tienen un rango de desplazamiento menor, sacarlos del dibujo asi como volverlos a insertar ya de por si trae un costo lineal aparejado.
+
+\subsection{Conclusiones empíricas}
+A partir de las experiencias realizadas podemos concluir lo siguiente:
+\begin{itemize}
+\item Existen casos donde la solución propuesta por la busqueda local diste tanto como se desee de la solución óptima.
+\item Es conveniente comenzar de una solución construida por la heuristica constructiva, en general se obtienen mejores resultados y el costo de la construcción suele ser despreciable con respecto al costo de la busqueda.
+\item La busqueda local es bastante sensible a la cantidad de ejes que posee el grafo, no solo por cuanto puede mejorar sino por lo que aumenta el costo de cada paso
+\item No obstante lo anterior, la cota para la cantidad de iteraciones ( $O(m^2)$), se mostró en la practica, exagerada. Esto se condice con lo que esperabamos, sin embargo no pudimos construir un acotamiento mejor.
+\item Logra mejorar considerablemente mas en los casos donde la cantidad de nodos que se agregan es mayor
+\end{itemize}
