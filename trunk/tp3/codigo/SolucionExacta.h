@@ -38,7 +38,8 @@ private:
     void mejorar();
     void tabular1();
     void tabular2();
-    unsigned minimosCrucesRestantes();
+    unsigned minimosCrucesRestantes1();
+    unsigned minimosCrucesRestantes2();
     void sacarPrincipio1();
     void sacarPrincipio2();
     void agregarAtras1();
