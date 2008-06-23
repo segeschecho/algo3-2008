@@ -91,6 +91,23 @@ def cuantasCombinaciones(fijo1, fijo2, movil1, movil2):
     return c
 
 
+def tamArbol(fijo1, fijo2, movil1, movil2):
+    if isinstance(fijo1, list) and \
+       isinstance(fijo2, list) and \
+       isinstance(movil1, list) and \
+       isinstance(movil2, list):
+        f1, f2, m1, m2 = map(len, [fijo1, fijo2, movil1, movil2])
+    else:
+        f1, f2, m1, m2 = fijo1, fijo2, movil1, movil2
+
+    if m1 == 0 and m2 == 0:
+        return 1
+    elif m2 != 0:
+        return (f2+1)*tamArbol(f1, f2+1, m1, m2-1) + 1
+    elif m1 != 0:
+        return (f1+1)*tamArbol(f1+1, f2, m1-1, m2) + 1
+
+
 def test_resolvedorFuerzaBruta():
     from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
 

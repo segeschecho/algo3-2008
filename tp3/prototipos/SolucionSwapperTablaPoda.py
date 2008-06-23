@@ -8,7 +8,7 @@ import sys
 
 from GrafoBipartito import Dibujo, ResolvedorConstructivo
 from GrafoBipartito import crucesEntre, crucesPorAgregarAdelante, crucesPorAgregarAtras
-from SolucionFuerzaBruta import cuantasCombinaciones
+from SolucionFuerzaBruta import cuantasCombinaciones, tamArbol
 
 
 class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
@@ -17,7 +17,9 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
     # Funcion global de resolución exacta                     #
     ###########################################################
     
-    def resolver(self):
+    def resolver(self, invertir=True):
+        self.total = 0
+        self.invertir = invertir
         g = self.dibujo.g
         d = self.dibujo
 
@@ -29,14 +31,24 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
         # busco el mejor candidato
         print "Explorando conjunto de soluciones... ",
         sys.stdout.flush()
-        self.podas = 0
+
+        self.podasHojas = 0
+        self.podasArbol = 0
+        self.casosBase = 0
+        self.llamadas = 0
+
         combinaciones = cuantasCombinaciones(self.fijo1, self.fijo2, self.movil1, self.movil2)
+        tamanioArbol = tamArbol(self.fijo2, self.fijo2, self.movil1, self.movil2)
         
         self._mejor()
         
-        porcent_podas = (self.podas * 100.0) / combinaciones
-        print "Listo! (cruces: %s, podas: %.1f%%)" % \
-            (self.mejorDibujo.contarCruces(), porcent_podas)
+        assert tamanioArbol == self.llamadas + self.podasArbol
+        assert combinaciones == self.casosBase + self.podasHojas
+
+        porcent_podasArbol = (self.podasArbol * 100.0) / tamanioArbol
+        porcent_podasHojas = (self.podasHojas * 100.0) / combinaciones
+        print "Listo! (cruces: %s, podas: %.6f%% de nodos, %.6f%% de hojas)" % \
+            (self.mejorDibujo.contarCruces(), porcent_podasArbol, porcent_podasHojas)
 
         return self.mejorDibujo
 
@@ -73,6 +85,10 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
             invertirLados = True
         else:
             invertirLados = False
+
+        if not self.invertir:
+            invertirLados = False
+
         self.invertirLados = invertirLados
 
         # estos son los buffers que usa el algoritmo recursivo
@@ -272,6 +288,7 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
     ###########################################################
 
     def _mejor(self):
+        self.llamadas += 1
         # valores misc
         fijo1 = self.fijo1
         fijo2 = self.fijo2
@@ -284,7 +301,7 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
         # solución mejor a la previamente máxima, y de ser así la 
         # actualizo con el nuevo valor
         if movil1 == [] and movil2 == []:
-            
+            self.casosBase += 1
             if self.cruces < self.mejorDibujo.contarCruces():
                 # creo un dibujo (copiando las listas!), y guardo la cantidad
                 # de cruces que ya tengo calculada en el atributo cruces (para
@@ -309,7 +326,8 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
                 if self._minimosCrucesRestantes2() + self.cruces < self.mejorDibujo.contarCruces():
                     self._mejor()
                 else:
-                    self.podas += cuantasCombinaciones(fijo1, fijo2, movil1, movil2) - 1
+                    self.podasHojas += cuantasCombinaciones(fijo1, fijo2, movil1, movil2)
+                    self.podasArbol += tamArbol(fijo1, fijo2, movil1, movil2)
             
             self._sacarPrincipio2()
 
@@ -327,7 +345,8 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
                 if self._minimosCrucesRestantes1() + self.cruces < self.mejorDibujo.contarCruces():
                     self._mejor()
                 else:
-                    self.podas += cuantasCombinaciones(fijo1, fijo2, movil1, movil2) - 1
+                    self.podasHojas += cuantasCombinaciones(fijo1, fijo2, movil1, movil2)
+                    self.podasArbol += tamArbol(fijo1, fijo2, movil1, movil2)
             
             self._sacarPrincipio1()
 
@@ -337,11 +356,11 @@ def test_resolvedorSwapperTablaConPoda():
     from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
     from SolucionFuerzaBruta import ResolvedorFuerzaBruta
 
-    g = generarGrafoBipartitoAleatorio(n1=16, n2=4, m=7)
-    d = generarDibujoAleatorio(g, n1=4, n2=3)
+    g = generarGrafoBipartitoAleatorio(n1=8, n2=8, m=30)
+    d = generarDibujoAleatorio(g, n1=4, n2=4)
 
-    r1 = ResolvedorFuerzaBruta(d)
-    s1 = r1.resolver()
+    #r1 = ResolvedorFuerzaBruta(d)
+    #s1 = r1.resolver()
     r2 = ResolvedorSwapperTablaConPoda(d)
     s2 = r2.resolver()
 
