@@ -222,7 +222,7 @@ En el peor de los casos, en la solución inicial cada eje se cruzaba con todos lo
 %TODO: guarda con esto
 Sin embargo, creemos que en general la cantidad de iteraciones hasta converger sera mucho menor. 
 
-Ademas de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heuristica constructiva. En conclusión, el orden es $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + (V_1+V_2+m))$ %FIXME: completar cuando esto este completo
+Ademas de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heuristica constructiva. En conclusión, el orden es $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m))$ %FIXME: completar cuando esto este completo
 
 Con respecto a la complejidad en función del tamaño de la entrada, podemos ver que la entrada es:
 $$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
@@ -243,7 +243,7 @@ $$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log(
  $$ t \geq V_{max} \geq v_{max}$$
  $$ t \geq m $$
  
- Luego $O(v_{max}^2*m*log(v_{max})*m^2 + greedy + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ %TODO: ojo con esto, verificar
+ Luego $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ %TODO: ojo con esto, verificar
  
 \section{Analisis}
 \subsection{Casos Borde}
