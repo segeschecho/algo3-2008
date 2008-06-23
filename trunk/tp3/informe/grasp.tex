@@ -15,13 +15,13 @@ Nuestra heuristica constructiva frente a un ``empate'' de posiciones, es decir, 
 \centering
 \setcounter{subfigure}{0}
 \subfigure[]{
-\includegraphics[scale=0.15]{./figuras/grasp/empate1.png}}
+\includegraphics[scale=0.2]{./figuras/grasp/empate1.png}}
 \setcounter{subfigure}{1}
 \subfigure[]{
-\includegraphics[scale=0.15]{./figuras/grasp/empate2.png}}
+\includegraphics[scale=0.2]{./figuras/grasp/empate2.png}}
 \subfigure[]{
-\includegraphics[scale=0.15]{./figuras/grasp/empate3.png}}
-\caption{Empate entre posiciones: cualquiera de las 3 posiciones es a priori tan buena como las otras}
+\includegraphics[scale=0.2]{./figuras/grasp/empate3.png}}
+\caption{Cualquiera de las 3 posiciones para v es a priori tan buena como las otras}
 \end{figure}
 
 Entonces podemos modificar esto, para que si hay empate eliga alguna de todas estas posiciones al azar.
@@ -30,16 +30,154 @@ Entonces podemos modificar esto, para que si hay empate eliga alguna de todas es
 Posteriormente realizaremos, experiencias con el fin de determinar si estas modificaciones son utilies, y ademas con el fin de determinar que valor de $\alpha$ debe usarse.
 
 \section{Determinación de los parametros}
-
+Para nuestro grasp debíamos fijar tres parametros:
+\begin{enumerate}
+\item criterio de parada
+\item alfa (que determina el tamaño de la lista restringida de candidatos)
+\item posición aleatoria, que determina si frente a un empate de posiciones nos quedamos con la primera encontrada o con alguna al azar.
+\end{enumerate}
+Para cada parametro se propusieron distintos valores alternativos, y luego realizamos experiencias para determinar cual de las distintas combinaciones daba un mejor resultado en función de la cantidad de cruces obtenida y el tiempo requerido.
 \subsection{Criterios de parada}
+Consideramos que el criterio de parada debia tener en cuenta la cantidad de nodos que posee el grafo, ya que esta cantidad influye en la cantidad posible de configuraciones y por ende en la cantidad de mejoras que se pueden hacer. Por ejemplo como vimos en la busqueda local, en general necesitaban mas iteraciones para mejorar una solución. Por esta razón el primer criterio que proponemos es el maximo de los tamaños de las particiones, criterio que nos da un una cantidad de iteraciones lineal en la cantidad de nodos.
+
+El otro criterio que planteamos varia su cantidad de iteraciones de una manera adaptativa. Se toma como valor maximo en el numero de iteraciones la cantidad de nodos del grafo. Ahora si en un iteracion no se produce una mejora, se disminuye en 1 la cantidad de iteraciones. Si en cambio se produce una mejor, la cantidad maxima de iteraciones se divide por 2. 
+Este criterio utiliza como el anterior, la idea de que mas nodos implica mas trabajo para mejorar, pero por otro lado agrega la idea de que no es posible mejorar indefinidamete y que si se mejoro mucho es menos probable que se siga mejorando.
+
+En el peor caso, si no mejora nunca, este criterio hace que el grasp genere mas iteraciones que el criterio anterior, pero en el mejor caso hace una cantidad logaritmica de iteraciones.
 % deberian ir juntos
 \subsection{Tamaño de la lista de candidatos}
+Para determinar el tamaño de la lista de candidatos propusimos también dos opciones:
+\begin{itemize}
+\item Tomar un alfa fijo = 0.75: La idea es que un valor bajo de alfa genera muchas soluciones, entre las cuales puede haber muchas malas, mientras que un alfa demasiado grande limita mucho la variedad de las soluciones generadas. Por esa razon nos parece que alfa = 0.75 podria ser un valor razonable.
+\item Tomar un alfa adaptativo: En este caso, se parte de un alfa alto, 0.95, y en cada iteracion, si no se produce mejora, lo que se hace es disminuir el valor de alfa. De esta manera, la lista de candidatos comienza siendo pequeña, con la esperanza de lograr buenos resultados, y a medida que no se mejora, se da lugar a soluciones mas variadas
+\end{itemize}
+\subsection{Posicion aleatoria}
+En este caso, se consideraron las dos alternativas: tomar posicion aleatoria o tomar la primer posición.
+
+\subsection{Experimentos}
+Con el fin de observar si alguna configuración de los parametros, se comportaba mejor que las demas, decidimos aplicar cada posible configuración a distintas instancias del problema.
+Decidimos identificar a cada combinación mediante un número, lo cual hicimos de la siguiente manera:
+\begin{enumerate}
+\item alfa 0.75, primera posición, parada por maximo de partición
+\item alfa 0.75, primera posición, parada adaptativa
+\item alfa 0.75, posición aleatoria, parada por maximo de partición
+\item alfa 0.75, posición aleatoria, parada adaptativa
+\item alfa adaptativa, primera posición, parada por maximo de partición
+\item alfa adaptativa, primera posición, parada adaptativa
+\item alfa adaptativa, posición aleatoria, parada por maximo de partición
+\item alfa adaptativa, posición aleatoria, parada adaptativa
+\end{enumerate}
+Para comparar, decidimos medir el tiempo que requería cada heuristica y ademas considerar cuanto lograban disminuir la cantidad de cruces, con respecto a la busqueda local. Es decir dada la solución inicial con la que comienza el grasp, que tanto logra mejorarla.
+
+Realizamos las siguientes experiencias:
+\begin{itemize}
+\item Aplicar la heuristica a grafos densos con entre 30 y 50 nodos en cada partición
+\item Aplicar la heuristica a grafos con menos ejes y entre 50 y 70 nodos en cada partición
+\end{itemize}
+
+Como en cada experiencia aplicamos las 8 combinaciones, decidimos dividir los gráficos, dejando en uno a los que tienen alfa fijo (combinaciones 1,2,3,4) y por otro a los que usan un alfa adaptativo (5,6,7,8) ya que de no hacer esto, se hacia mas dificl visualizar los graficos.
+
+Los resultados de la primer experiencia son los siguientes:
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[]{
+\includegraphics[scale=0.6]{./graficos/grasp/test2.png}}
+\setcounter{subfigure}{1}
+\subfigure[]{
+\includegraphics[scale=0.65]{./graficos/grasp/test22.png}}
+\caption{Mejora con respecto a la solución propuesta por la busqueda local}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[]{
+\includegraphics[scale=0.6]{./graficos/grasp/tiempos2.png}}
+\setcounter{subfigure}{1}
+\subfigure[]{
+\includegraphics[scale=0.6]{./graficos/grasp/tiempos22.png}}
+\caption{Tiempo de ejecución (en segundos)}
+\end{figure}
+
+Lo que podemos observar es que si bien no existe uno que se destaque por sobre el resto, en general, 2 y 6 obtienen buenos resultados, lo cual es interesante, si tenemos en cuenta que son metodos que utilizan el criterio de parada adapatativo. Con respecto a los tiempos de ejecución, el criterio adaptativo suele tener tiempos mas bajas, sin embargo en los casos donde mejora poca, por ejemplo, para n=41, el metodo 4 casi no logró mejoras y como podemos observar su tiempo fue mas alto en ese caso que el de los metodos no adaptativos.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[]{
+\includegraphics[scale=0.65]{./graficos/grasp/crucesP.png}}
+\setcounter{subfigure}{1}
+\subfigure[]{
+\includegraphics[scale=0.65]{./graficos/grasp/crucesP2.png}}
+\caption{Mejora con respecto a la solución propuesta por la busqueda local}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[]{
+\includegraphics[scale=0.65]{./graficos/grasp/tiemposP.png}}
+\setcounter{subfigure}{1}
+\subfigure[]{
+\includegraphics[scale=0.65]{./graficos/grasp/tiemposP2.png}}
+\caption{Tiempo de ejecución (en segundos)}
+\end{figure}
+
+En esta experiencia, se nota claramente la diferencia de tiempo entre los metodos adaptativos y el resto. Con respecto a la mejora en la cantidad de cruces, en este experimento si se observa un método que se desempeñó mejor, el método número 6,  mientras que el método 2 que en la experiencia anterior se habia comportado bastante bien, en esta no lo hizo tan bien.
+
+\subsection{Conclusiones}
+A partir de las experiencias, lo que observamos es que si bien hay diferencias entre las distintas combinaciones de parametros, en general no existe un ganador contundente. 
+
+No obstante, en ambas experiencias la combinación \textit{alfa adaptativa, primera posición y parada adaptativa} se mostró como una buena opción. Tanto a nivel de mejora en la cantidad de cruces, como a nivel de tiempo de ejecución.
+
+Lo que nos sorprendió, es el hecho de que utilizar una posición aleatoria en lugar de la primer posición, no lograra mejoras. 
+
+Por esa razón, es que decidimos utilizar esos parametros.
 
 \section{Pseudocodigo}
 
+\begin{algorithm}[H]
+\caption{Propone un dibujo mediante la metahuristica GRASP}
+\begin{algorithmic}[1]
+\STATE solActual $\leftarrow$ construir solución mediante la heursitca constructiva y mejorarla mediante la busqueda local.
+\STATE crucesActual $\leftarrow$ cantidad de cruces de la solución propuesta
+\STATE iteraciones $\leftarrow$ 0
+\STATE maxIteraciones = cantidad de nodos
+\STATE alfa $\leftarrow$ 0.95
+\WHILE{iteraciones < maxIteraciones}
+\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heuristica constructiva randomizada con alfa, y aplicar busqueda local
+\STATE nuevosCruces $\leftarrow$ cantidad de cruces de nuevoDibujo
+\IF{ nuevosCruces $<$ crucesActual}
+\STATE solActual $\leftarrow$ nuevoDibujo
+\STATE crucesActual $\leftarrow$ nuevosCruces
+\STATE maxIteraciones $\leftarrow$ maxIteraciones $/$ 2
+\ELSE
+\STATE iteraciones $\leftarrow$ iteraciones + 1
+\STATE alfa $\leftarrow$ minimo(alfa - 0.02,0)
+\ENDIF
+\ENDWHILE
+\RETURN solActual
+\end{algorithmic}
+\end{algorithm} 
+
 \section{Calculo de complejidad}
+Lo primero que hacemos es crear una primer solución mediante la heursitica constructiva y mejorarla con nuestra heuristica de busqueda local. El orden de hacer esto es $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)))$. 
+
+Contar los cruces de esta solución tiene un costo $O(m*log(v_max))$, pero este costo es absorvido por la construcción de la solución inicial.
+
+Luego comenzamos a iterar. Cada iteracíón tiene el costo de las heuristicas, mas el conteo de cruecs, por lo que vimos recien en total es  $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m))$. Esto lo hacemos cada vez que iteramos. En el peor de los casos, nunca logramos hacer ninguna mejora y por lo tanto iteramos tantas veces como nodos hay, es decir, $O(v_max)$ iteraciones. Luego el costo total de la heuristica grasp es:
+
+$$O(v_{max}*(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)))$$
+
+Hay que notar que en un mejor caso, siempre mejora por lo que la cantidad de iteraciones no es lineal en $v_{max}$, sino de orden logaritmico.
+
+En función del tamaño de la entrada, sabemos que: 
+$$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
+ $$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$ 
+
+Usando esto, mas el calculo hecho para la complejidad de la busqueda local en función de la entrada, podemos ver que el orden es $O(t^6*log(t))$
 
 \section{Analisis experimental}
-
 
 \section{Discusión}

@@ -359,7 +359,8 @@ En cada paso se elige uno de grado máximo y se busca una de las mejores posicion
 %Para construir la soluci'on se elige un nodo entre los que superan un grado alfa-m'aximo. Se puede optar por elegir uno de esos nodos de forma aleatoria. Para elegir el alfa-m'aximo primero ordenamos la lista de nodos moviles por grado parcial en orden creciente, y lo hacemos utilizando el sort de la STL.
 Cuando buscamos la posici'on mas conveniente para el nodo (aquella que genere menos cruces) lo hacemos insert'andolo al final de la particion y luego swapeandolo con su nodo contiguo de la misma partici'on. En cada paso debemos calcular los cruces que se generan, y lo hacemos reutilizando los datos, como ya se coment'o en el apartado de consideraciones preliminares.
 
-%darle rigurosidad al pseudocodigo correspondiente para poder usarlo aca
+%FIXME: falta en función del tamaño de la entrada
+%FIXME: no olvidar el costo de limpiar el grafo
 \section{Calculo de complejidad}
 La heur'istica de inserci'on de nodos comienza asignando variables y atributos 'utiles para la reutilizaci'on de c'alculos. Inicializamos dos listas de nodos fijos y dos de nodos a agregar (un par para cada partici'on), y los diccionarios de adyacencias parcial, grado parcial, posiciones y nodos moviles. Todo esto tiene un costo de $O(n + m)$. Adem'as en esta parte inicializamos la variable cruces, contando los cruces del dibujo sin agregar ning'un nodo, que nos cuesta $O(m*log(fijos_{max})+fijos_{max}))$, entonces la parte de inicializaci'on nos cuesta $O(n + m + m*log(fijos_{max})+fijos_{max})$, donde $n$ es la cantidad de nodos del grafo bipartito, $m$ su cantidad de ejes, y $fijos_{max}$ es la cantidad de nodos fijos de la partici'on que tiene m'as nodos fijos.
 
@@ -428,7 +429,6 @@ Como vemos, en este caso, frente a un grafo que se podía lograr sin cruces, nues
 
 Ahora bien, si tuvieramos un nodo nuevo mas que estuviera relacionado con D, el dibujo óptimo seguiría teniendo 0 cruces, sin embargo, nuestra heuristica daría 3 cruces. En general si a este grafo le agregamos nodos fijos debajo de D y nodos nuevos unidos a estos (con grado 1) el número de cruces optimo sigue siendo 0, pero nuestra heuristica va a dar mas y mas cruces.
 En particular, una cruz mas por cada par de nodos que se agregue. %TODO: ver si no esta claro
-
 
 \begin{figure}[H]
 \centering
