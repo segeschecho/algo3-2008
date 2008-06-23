@@ -22,16 +22,16 @@ Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (
     \centering
     \setcounter{subfigure}{0}
     \subfigure[Dibujo a mejorar (4 cruces)]{
-     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion.png}}     
-     \setcounter{subfigure}{1}\hspace{1.0in}
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion.png}}     
+     \setcounter{subfigure}{1}%\hspace{1.0in}
      \subfigure[Buscamos a donde reinsertar al nodo A, delante de D logramos minimizar los cruces]{
-     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion1.png}}    
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion1.png}}    
      \setcounter{subfigure}{2}
      \subfigure[Movemos al nodo A, no podemos mover a nadie mas de esta partición de modo de bajar el número de cruces, por lo cual, pasamos a la siguiente partición. Moviendo a 4 no logramos nada, por lo que buscamos mover a 3(1 cruce)]{
-     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion2.png}}     
-     \setcounter{subfigure}{3}\hspace{1.0in}
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion2.png}}     
+     \setcounter{subfigure}{3}%\hspace{1.0in}
      \subfigure[Movimos a 3, y ya no queda ninguna mejora por hacer (0 cruces)]{
-     \includegraphics[scale=0.3]{./figuras/busquedaLocal/reinsercion3.png}}     
+     \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion3.png}}     
 \end{figure} 
 
 \subsubsection{Pseudocodigo}
@@ -342,7 +342,7 @@ La experiencia siguiente, fue similar a la anterior, pero esta vez se modifico l
 \caption{Aplicación a grafos con n nodos en cada partición, n creciente, m = 5*n, porcentaje de nuevos 60\%} 
 \end{figure}
 
-Nuevamente notamos como la busqueda local corrige bastante a la solución propuesta por la constructiva, ya que como vemos en \ref{crucesTest3} la diferencia en el número de cruces llega al orden de $2*10^4$, diferencia que es menor que en la experiencia anterior, pero esto es esperable ya que al haber menos ejes, es probable que la cantidad de cruces baje, y que por lo tanto la diferencia que se puede lograr sea menor. Como vemos en \ref{iter3}, nuevamente la cantidad de iteraciones es considerablemente menor que la cota que propusimos en el analisis teorico.
+Nuevamente notamos como la busqueda local corrige bastante a la solución propuesta por la constructiva, ya que como vemos en \ref{crucesTest3} la diferencia en el número de cruces llega al orden de $2*10^4$, diferencia que es menor que en la experiencia anterior, pero esto es esperable ya que al haber menos ejes, es probable que la cantidad de cruces baje, y que por lo tanto la diferencia que se puede lograr sea menor. Como vemos en \ref{iterTest3}, nuevamente la cantidad de iteraciones es considerablemente menor que la cota que propusimos en el analisis teorico. También se observa que la cantidad de iteraciones tienda a aumentar a medida que aumenta la cantidad de nodos.
 
 En \ref{tiempoTest3} vemos la diferencia entre el tiempo de la busqueda y el de la construcción mediante la otra heuristica de una solución. Como era de esperarse, la busqueda local tiene un tiempo mucho mayor que la constructiva (de hecho tiene que ser mayor si o si, ya que se parte de una solución que se construye con el metodo constructivo). Sin embargo hay un detalle a notar en este grafico, y es que al compararlo con \ref{TiempoOrdenTeorico} notamos que el tiempo es mucho mayor, lo cual refleja el hecho de que el conteo de cruces se hace mas caro, en particular en el primer caso, el factor m se convierte en $v_i^2$, por lo cual es de esperar esta gran diferencia entre los tiempos. También podemos extraer de este grafico, que la construcción de la solución base tiene un costo muy bajo comparado con el costo de mejorarla. Esto refuerza la idea de que es conveniente comenzar con una solución generada por la heuristica constructiva, ya que antes vimos que en general obtiene menos cruces que un ordenamiento al azar y como vemos en \ref{tiempoTest3} el tiempo de construcción es casi despreciable con respecto al tiempo total de la busqueda.
 

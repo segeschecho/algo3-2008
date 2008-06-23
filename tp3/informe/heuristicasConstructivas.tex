@@ -91,34 +91,30 @@ Vamos a aplicar la heuristica al siguiente grafo:
 \begin{algorithm}[H]
 \caption{Propone un dibujo mediante la inserción golosa de nodos}
 \begin{algorithmic}[1]
-\PARAMS{un dibujo original, un alfa, un booleano randPos}
+\PARAMS{un dibujo original al cual agregarle los nodos de un grafo}
 \STATE cruces $\leftarrow$ contar cruces del dibujo sin agregar nodos
 \WHILE{Queden nodos por poner}
 \FOR{cada particion, si es posible}
-\STATE nodo $\leftarrow$ elegir uno entre los nodos a poner que superen un grado alfa-maximo
+\STATE nodo $\leftarrow$ elegir uno entre los nodos a poner que grado maximo%superen un grado alfa-maximo
 \STATE sacar al nodo de entre los nodos a poner
 \STATE colocar al nodo en la ultima posicion de su partición
 \STATE crucesNuevo $\leftarrow$ cruces + cruces que hace agregar el nodo atras de la particion
 \STATE mejorCruces $\leftarrow$ crucesNuevo
-\STATE posCandidatas = ultima posicion
+\STATE mejorPos = ultima posicion
 \WHILE{No revise todas las posiciones dentro de la particion}
 \STATE mover al nodo a la proxima posición \COMMENT{``swapear'' al nodo con el que esta en la posicion anterior}
 \STATE crucesPostSwap $\leftarrow$ cruces entre el nodo a insertar y el nodo anterior\COMMENT{suponiendo que swapeamos}
 \STATE cruces $\leftarrow$ cruces - crucesPreSwap + crucesPostSwap
-\IF{ cruces $=$ mejorCruces}
-	\STATE agregar ultima posicion a posCandidatas
-\ENDIF
+%\IF{ cruces $=$ mejorCruces}
+%	\STATE agregar ultima posicion a posCandidatas
+%\ENDIF
 \IF{ cruces $<$ mejorCruces}
 	\STATE mejorCruces $\leftarrow$ cruces
-	\STATE posCandidatas $\leftarrow$ la posicion donde esta ahora
+	\STATE mejorPos $\leftarrow$ la posicion donde esta ahora
 \ENDIF
 \STATE crucesPreSwap $\leftarrow$ crucesPostSwap
 \ENDWHILE
-\IF{randPos = true}
-	\STATE poner al nodo en una de las posiciones candidatas de forma aleatoria
-\ELSE
-	\STATE poner al nodo en la primer posicion candidata hallada
-\ENDIF
+	\STATE poner al nodo en mejorPos
 \STATE cruces $\leftarrow$ mejorCruces
 \ENDFOR
 \ENDWHILE
@@ -359,21 +355,43 @@ De esta manera elegimos implementar en C++ la heuristica de inserción de nodos, 
 %es un buen momento para comentar la estructura que se utilizo 
 \section{Detalles de implementación de la heuristica constructiva}
 Para implementar la heur'istica hicimos una estructura aparte que almacena listas y vectores de la librer'ia STL para guardar datos y reutilizar los c'alculos tales como el grado parcial de cada nodo, la lista de adyacencia parcial y las secuencias de nodos fijos y moviles correspondientes a cada partici'on. Parcial se refiere a que vamos agregando nodos uno por uno, y eso me define parcialmente el dibujo incremental final.
-Para construir la soluci'on se elige un nodo entre los que superan un grado alfa-m'aximo. Se puede optar por elegir uno de esos nodos de forma aleatoria. Para elegir el alfa-m'aximo primero ordenamos la lista de nodos moviles por grado parcial en orden creciente, y lo hacemos utilizando el sort de la STL.
-Cuando buscamos la posici'on mas conveniente para el nodo (aquella que genere menos cruces) lo hacemos insert'andolo al principio de la particion y luego swapeandolo con su nodo contiguo de la misma partici'on. En cada paso debemos calcular los cruces que se generan, y lo hacemos reutilizando los datos, como ya se coment'o en el apartado de consideraciones preliminares.
+En cada paso se elige uno de grado máximo y se busca una de las mejores posiciones para insertarlo.
+%Para construir la soluci'on se elige un nodo entre los que superan un grado alfa-m'aximo. Se puede optar por elegir uno de esos nodos de forma aleatoria. Para elegir el alfa-m'aximo primero ordenamos la lista de nodos moviles por grado parcial en orden creciente, y lo hacemos utilizando el sort de la STL.
+Cuando buscamos la posici'on mas conveniente para el nodo (aquella que genere menos cruces) lo hacemos insert'andolo al final de la particion y luego swapeandolo con su nodo contiguo de la misma partici'on. En cada paso debemos calcular los cruces que se generan, y lo hacemos reutilizando los datos, como ya se coment'o en el apartado de consideraciones preliminares.
 
 %darle rigurosidad al pseudocodigo correspondiente para poder usarlo aca
 \section{Calculo de complejidad}
 La heur'istica de inserci'on de nodos comienza asignando variables y atributos 'utiles para la reutilizaci'on de c'alculos. Inicializamos dos listas de nodos fijos y dos de nodos a agregar (un par para cada partici'on), y los diccionarios de adyacencias parcial, grado parcial, posiciones y nodos moviles. Todo esto tiene un costo de $O(n + m)$. Adem'as en esta parte inicializamos la variable cruces, contando los cruces del dibujo sin agregar ning'un nodo, que nos cuesta $O(m*log(fijos_{max})+fijos_{max}))$, entonces la parte de inicializaci'on nos cuesta $O(n + m + m*log(fijos_{max})+fijos_{max})$, donde $n$ es la cantidad de nodos del grafo bipartito, $m$ su cantidad de ejes, y $fijos_{max}$ es la cantidad de nodos fijos de la partici'on que tiene m'as nodos fijos.
 
-Veamos ahora cuanto nos cuesta elegir un nodo entre los nodos a agregar que supere un grado alfa-m'aximo. Primero ordenamos de forma creciente (con sort de STL) los nodos a agregar por su grado parcial, es decir considerando solamente los ejes que van del nodo hacia un nodo fijo o del nodo hacia un nodo que esta ya fue agregado. Este ordenamiento tiene complejidad $O(cantMovilesPi*log(cantMovilesPi))$.Luego de ordenarlos, iteramos la secuencia hasta que el grado maximo multiplicado por alfa sea mayor al grado del nodo actualmente iterando, esto nos cuesta $O(cantMovilesPi)$. Todo esto tiene costo $O(cantMovilesPi + cantMovilesPi*log(cantMovilesPi))$, siendo Pi la partici'on sobre la cual estamos agregando el nodo.
+Veamos ahora cuanto nos cuesta elegir un nodo entre los nodos a agregar. Primero ordenamos de forma creciente (con sort de STL) los nodos a agregar por su grado parcial, es decir considerando solamente los ejes que van del nodo hacia un nodo fijo o del nodo hacia un nodo que esta ya fue agregado. 
+%FIXME: en el caso no random es al pedo iterar, hay q quedarse con el ultimo
+Este ordenamiento tiene complejidad $O(cantMovilesPi*log(cantMovilesPi))$.Luego de ordenarlos, iteramos la secuencia hasta que el grado maximo sea mayor al grado del nodo en la posición que estamos mirando y de estos nodos nos quedamos con uno, esto nos cuesta $O(cantMovilesPi)$. Luego estos pasos tienen un costo $O(cantMovilesPi + cantMovilesPi*log(cantMovilesPi))$, siendo Pi la partici'on sobre la cual estamos agregando el nodo.
 
-Ahora buscamos una de las mejores posiciones en la partici'on para insertar este nodo. Primero actualizamos la lista de adyacencias parcial para incorporar las adyacencias del nodo que voy a agregar (esto es necesario pues las funciones de conteo de cruces se usan dentro del subgrafo fijo y por tanto para que tengan en cuenta al nodo a agregar, es necesario completarlas con sus ejes). Suponemos que insertamos el nodo al final de la partici'on. Actualizar la lista de adyacencias parcial tiene un costo $O(m)$. Luego contamos los cruces por agregar atraso tiene un costo $O(n+m)$. Ahora swapeamos el nodo con su nodo anterior de la particion y recalculamos los cruces hasta que el nodo a agregar queda primero. Aqu'i podemos aprobechar lo mostrado en el apartado que explica el conteo de cruces, y lo hacemos con costo $O(min(max(vi,m_a,m_b),m_a*m_b))$. Esto, haciendolo por cada posici'on en la partici'on que estamos agregando, tiene un costo de $O(cantModosParticion * min(max(vi,m_a,m_b),m_a*m_b))$. Dado que $max(vi, m_a, m_b) \leq v_{max}$, $min(a, b) \leq a$ o sea $min(v_{max},m_a*m_b)) \leq v_{max}$ y que $cantMnodosParticion \leq v_{max}$ entonces la complejidad de este ciclo nos queda $O(v_{max}^2)$.
+Ahora buscamos una de las mejores posiciones en la partici'on para insertar este nodo. Primero actualizamos la lista de adyacencias parcial para incorporar las adyacencias del nodo que voy a agregar (esto es necesario pues las funciones de conteo de cruces se usan dentro del subgrafo fijo y por tanto para que tengan en cuenta al nodo a agregar, es necesario completarlas con sus ejes) y luego insertamos el nodo al final de la partici'on.
 
-Finalmente insertamos el nodo y actualizamos los grados parciales y el vector de posiciones, con un costo de $O(m + cantMnodosPartici'on)$.
+Actualizar la lista de adyacencias parcial tiene un costo $O(m_a)$, con $m_a$ los ejes del nodo a agregar. Entonces una vez que agregue a todos los nodos, en el peor de los casos agregue todos los ejes también, por lo que esto tiene un costo $O(m)$. Luego contamos los cruces por agregar atras, lo cual tiene un costo $O(n+m)$. Ahora swapeamos el nodo con su nodo anterior de la particion y recalculamos los cruces hasta que el nodo a agregar queda primero. Aqu'i podemos utilizar lo mostrado en el apartado que explica el conteo de cruces, y lo hacemos con costo $O(min(max(vi,m_a,m_b),m_a*m_b))$. Esto, haciendolo por cada posici'on en la partici'on que estamos agregando, tiene un costo de $O(cantModosParticion * min(max(vi,m_a,m_b),m_a*m_b))$. Dado que $max(vi, m_a, m_b) \leq v_{max}$ porque vale para vi, pero ademas $m_a$ y $m_b$ son a lo sumo tan grandes como la particion mas grande, en el caso en el que los nodos esten relacionados con todos los de la partición de enfrente, por otro lado com vale que $min(max(vi,m_a,m_b),m_a*m_b) \leq max(vi,m_a,m_b)$, resulta que la complejidad de este ciclo nos queda $O(v_{max}^2)$.
 
-Dado que este procedimiento lo hacemos para todos los nodos a agregar, la complejidad resultante es: $O(cantMoviles*(m + n + v_{max}^2 + cantMoviles + cantMovilesP1*log(cantMovilesP1) + cantMovilesP2*log(cantMovilesP2)) + m*log(p_{max})+p_max) \subseteq O(cantMoviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max})$ siendo cantMoviles la cantidad total de nodos a agregar, $v_{max}$ la cantidad de nodos de la partici'on mas grande del dibujo resultante, $m$ la cantidad de ejes del dibujo resultante y $p_{max}$ la cantidad de nodos fijos de la partici'on que m'as nodos fijos tiene.
+Finalmente insertamos el nodo y actualizamos los grados parciales y el vector de posiciones, con un costo de $O(m + cantMnodosParticion)$.
 
+Dado que este procedimiento lo hacemos para todos los nodos a agregar, la complejidad resultante es: 
+
+$$O(cantMoviles*(\underbrace{m + n}_{a} + \underbrace{v_{max}^2}_{b} + \underbrace{Moviles + MovilesP1*log(MovilesP1) + MovilesP2*log(MovilesP2))}_{c} + \underbrace{m*log(p_{max})+p_max}_{d})  (*)$$ 
+
+\begin{itemize}
+\item $a$ es por agregar al nodo atras
+\item $b$ es por moverlo por toda la particion
+\item $c$ es por obtener cada vez uno de grado maximo
+\item $d$ es por obtener por primera vez los cruces
+\end{itemize}
+
+Pero $* \subseteq O(Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max})$
+siendo Moviles la cantidad total de nodos a agregar, $v_{max}$ la cantidad de nodos de la partici'on mas grande del dibujo resultante, $m$ la cantidad de ejes del dibujo resultante y $p_{max}$ la cantidad de nodos fijos de la partici'on que m'as nodos fijos tiene.
+
+Esto es asi porque:
+
+$O(m+n) \subseteq O(Moviles*v_{max}^2)$ dado que $n \leq v_{max}$ y $m \leq v_max*v_{max}$ 
+
+$O(MovilesPi + MovilesPi*log(MovilesPi)) \subseteq O(MovilesPi*log(MovilesPi))$ y como $MovilesPi*log(MovilesPi) \leq v_{max}*log(v_{max}) \leq v_{max}*v_{max}$, vale que $O(MovilesPi + MovilesPi*log(MovilesPi)) \subseteq  O(v_{max}^2)$
 
 \section{Analisis}
 \subsection{Casos borde}
