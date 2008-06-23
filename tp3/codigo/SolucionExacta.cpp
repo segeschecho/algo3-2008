@@ -167,7 +167,7 @@ void SolucionExacta :: mejorar() {
                 it--;
             }
 
-            if (minimosCrucesRestantes() + cruces < mejorDibujo.contarCruces()) {
+            if (minimosCrucesRestantes2() + cruces < mejorDibujo.contarCruces()) {
                 mejorar();
             }
         }
@@ -192,8 +192,10 @@ void SolucionExacta :: mejorar() {
             if (movil1.empty()) {
                 tabular2();
             }
-            // FIXME: falta la poda en función de tabla1!
-            mejorar();
+            
+            if (minimosCrucesRestantes1() + cruces < mejorDibujo.contarCruces()) {
+                mejorar();
+            }
         }
 
         sacarPrincipio1();
@@ -225,7 +227,24 @@ void SolucionExacta :: tabular2() {
 }
 
 
-unsigned SolucionExacta :: minimosCrucesRestantes() {
+unsigned SolucionExacta :: minimosCrucesRestantes1() {
+    unsigned c = 0;
+    list<nodo>::const_iterator it1, it2;
+    for (it1 = movil1.begin(); it1 != movil1.end(); it1++) {
+        for (it2 = movil1.begin(); it2 != movil1.end(); it2++) {
+            if (*it1 < *it2) {
+                c = c + min(tabla1[*it1][*it2], tabla1[*it2][*it1]);
+            }
+        }
+        for (it2 = fijo1.begin(); it2 != fijo1.end(); it2++) {
+            c = c + min(tabla1[*it1][*it2], tabla1[*it2][*it1]);
+        }        
+    }
+    return c;
+}
+
+
+unsigned SolucionExacta :: minimosCrucesRestantes2() {
     unsigned c = 0;
     list<nodo>::const_iterator it1, it2;
     for (it1 = movil2.begin(); it1 != movil2.end(); it1++) {
