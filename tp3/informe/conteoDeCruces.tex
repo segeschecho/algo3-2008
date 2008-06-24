@@ -1,55 +1,85 @@
 \chapter{Consideraciones preliminares}
-\section{Descripción del problema}
-\subsection{Aplicaciones practicas}
+\section{Aplicaciones prácticas}
 
 \section{Conteo de cruces}
 \label{conteoCruces}
 \subsection{Distintos algoritmos}
-Dentro del problema que tenemos que resolver, un tema a tener en cuenta es el del conteo de cruces, ya que tanto la solución exacta,
-como las heuristicas necesitan saber muchas veces (por ejemplo para decidir donde se inserta un nodo, o si una permutación ya no puede ser solución) cuantos cruces hay en el dibujo. Por esta razón consideramos que un aspecto importante a optimizar para lograr mejorar el desempeño de nuestros algoritmos es precisamente el conteo de cruces.
+Dentro del problema a resolver, un tema a tener en cuenta es el del conteo de cruces, ya 
+que tanto la solución exacta como las heurísticas necesitan contabilizar con frecuencia los 
+cruces que resultan de un dibujo dado para tomar decisiones (como por ejemplo para decidir cual
+es la posición óptima para insertar un nodo, o si una permutación es mejor o peor que otra). Por
+esta razón consideramos que un aspecto importante a optimizar para lograr mejorar el desempeño 
+de nuestros algoritmos es precisamente el conteo de cruces.
 
-Lo primero que se puede observar es que los cruces en el dibujo depende solamente de la posición relativa de los nodos en las particiones. Se produce un cruce si hay dos nodos en una partición $v_i$, $v_j$ que estan relacionados con un $w_k$ y $w_p$ respectivamente tal que $v_i$ esta ``$arriba$'' de $v_j$ y $w_k$ esta ``$abajo$'' de $w_p$, como se ve en \ref{unCruce}.
+Lo primero que se puede observar es que los cruces en el dibujo dependen solamente de la 
+posición relativa de los nodos en las particiones. Se produce un cruce si hay dos nodos en 
+una partición $v_i$, $v_j$ que estén relacionados con un $w_k$ y $w_p$ respectivamente tal 
+que $v_i$ esta ``$arriba$'' de $v_j$ y $w_k$ esta ``$abajo$'' de $w_p$, como se ve en \ref{unCruce}.
 
 \begin{figure}[H]
     \centering
      \includegraphics[scale=0.3]{./figuras/cruces/cruce.png}
-     \caption{esquema de un cruce}
+     \caption{Esquema de un cruce}
      \label{unCruce}
 \end{figure}
 
-Podemos entonces caracterizar en que casos se producen cruces:\\
-\textit{Dado un orden de los nodos $p_1=<v_1,v_2,...,v_n>$ en una partición y un orden $p_2=<w_1,w_2,...,w_q>$ en la otra partición , se produce un cruce si existen ejes $(v_i,w_j)$, $(v_k,w_p)$ tal que $i<k \wedge p<j$.}
+Podemos entonces caracterizar en qué casos se producen cruces:\\
+\textit{Dado un orden de los nodos $p_1=<v_1,v_2,...,v_n>$ en una partición y un orden 
+$p_2=<w_1,w_2,...,w_q>$ en la otra partición, se produce un cruce si existen ejes $(v_i,w_j)$,
+$(v_k,w_p)$ tal que $i<k \wedge p<j$.}
 
-De esta manera un primer algoritmo para contar los cruces, consiste en tomar cada par de ejes y comparar las posiciones relativas de sus nodos.
-Hacer esto tiene un costo $\theta(m^2)$, siendo $m$ la cantidad de ejes, ya que la cantidad de posibles pares de ejes es $\binom{m}{2} = \frac{m*(m-1)}{2}$. Este costo puede ser excesivo, principalmente en grafos densos, donde m puede ser del orden de $n_1*n_2$, siendo $n_i$ la cantidad de nodos en las particion i.
+De esta manera algoritmo sencillo para contar los cruces consiste en tomar cada par de ejes y 
+comparar las posiciones relativas de sus nodos, lo cual puede ser computado con un costo temporal
+en $\theta(m^2)$, siendo $m$ la cantidad de ejes del grafo. La cantidad de posibles pares de ejes 
+es $\binom{m}{2} = \frac{m*(m-1)}{2}$. Este costo resulta grande en grafos densos (con muchos ejes),
+donde $m$ puede ser del orden de $n_1*n_2$, siendo $n_i$ la cantidad de nodos en la partición $i$.
+Esta complejidad corresponde al modelo uniforme de complejidad, puesto que las operaciones en juego
+no involucran una dificultad aritmética importante, y por lo tanto podemos despreciar los costos
+de las operaciones matemáticas convencionales. El modelo uniforme es el elegido para usarse con este
+problema, y todas las complejidades examinadas en el trabajo corresponden a este modelo.
 
-Buscamos entonces algún algoritmo que nos de un orden mejor que $O(m^2)$\footnote{cuando hablamos de complejidad en el ámbito del conteo de cruces, nos referimos a complejidad en el modelo uniforme}. 
+Veamos entonces como construir un algoritmo que nos permita mejorar el orden de complejidad del
+conteo de cruces en un dibujo. Introducimos para eso un criterio de orden entre los ejes del grafo:
+se ordenan los ejes del grafo primero por su posición en la partición $p_1$ y luego por su 
+posición en $p_2$. Si tomamos dos ejes $e_i=(i_1,i_2)$ y $e_j=(j_1,j_2)$ con ${i_1, j_1} <  |p_1|$ y 
+${i_2, j_2} < |p_2|$ las posiciones de los nodos que unen, consideramos que $e_i < e_j 
+\Leftrightarrow i_1 < j_1 \vee (i_1 == j_1 \wedge i_2 < j_2)$. Asumimos por simplicidad que $i_k$ es
+la posición en la partición 1, y $j_k$ es la posición en la partición 2.
 
-Si se ordenan los ejes del grafo primero por su componente en la particion $p_1$ y luego por su componente $p_2$, es decir si $e_i=(i_1,i_2)$ y $e_j=(j_1,j_2)$ son ejes del grafo, consideramos que $e_i < e_j \Leftrightarrow i_1 < j_1 \vee (i_1 == j_1 \wedge i_2 < j_2)$ y consideramos luego el orden en el que quedan las segundas componentes, podemos ver que cada inversi'on es un cruce. Una inversión en el orden $\pi=<a_1,a_2,....a_n>$ es un par $(a_i,a_j)$ tal que $a_i > a_j$ $\wedge$ $i<j$. 
-
-Decimos que una inversión representa a un cruce porque como primero se ordena por la primer componente (en verdad es la componente de la primer partición, pero para simplificar la notación nos referiremos a dicha componente como la primer componente) y luego por la segunda, si hay una inversion es porque para los ejes $(v_k,a_i)$ y $(v_p,a_j)$ valía que $v_k < v_p \wedge a_i > a_j$, y esa es la condición para que se produzca un cruce.
+Si observamos luego el orden en el que quedan las segundas componentes de los ejes, podemos ver 
+que cada inversi'on de orden es un cruce en el dibujo. Una inversión en el orden $\pi=<j_1,j_2,....j_n>$ 
+es un par $(j_k,j_m)$ tal que $j_k > j_m$ $\wedge$ $k<m$. Esto vale porque como primero se ordena 
+por la posición en la primer partición, y luego por la posición en la segunda, si hay una inversión 
+es porque para los ejes $(v_1,j_k)$ y $(v_2,j_m)$ valía que $v_1 < v_2 \wedge j_k > j_m$, que es la 
+condición para que se produzca un cruce.
 
 %TODO: ver si no hay q explicar mejor como se puede calcular eso
-Entonces si ordenamos los ejes de esa manera y después contamos las inversiones, podemos obtener el numero de cruces. Para ordenar a los ejes se puede utilizar radix sort, suponiendo que los ejes tienen como componentes las posiciones relativas de los nodos (o que estas se pueden obtener), lo cual se puede calcular en caso de que esa información no este disponible con un costo de $n_1 + n_2 + m $, con $n_i$ la cantidad de nodos de la partici'on i, obteniendo los indices de los nodos en cada particion y luego usando esta información ``traducir'' los ejes; y luego consideramos el arreglo que tiene a las segundas componentes de los ejes como elementos, aplicar insertion sort y por cada cambio de posición que se hace para un elemento, contar una inversión y por lo tanto un cruce. Esto último tendría un costo $O(m+c)$, con c la cantidad de cruces. En el peor caso, todos los ejes se cruzan por lo que tendríamos un costo $O(m^2)$ nuevamente.
+Resulta de esto que si ordenamos los ejes de esa manera y después contamos las inversiones podemos
+obtener el número de cruces. El mecanismo utilizado para contar los ejes es \textit{radix sort} a partir
+de la definición de los ejes como el par de posiciones que unen (y no como el par de nodos que unen, que es
+lo convencional). Esta definición de los ejes puede calcularse fácilmente recorriendo los dibujos y almacenando
+las posiciones de cada nodo en tiempo $O(n_1 + n_2 + m)$, siendo $n_i$ la cantidad de nodos en la partición $i$ y
+$m$ la cantidad de ejes entre ellos. Una vez ``traducidos'' los ejes a esta notación, pueden ordenarse como
+vimos antes y contar la cantidad de inversiones en tiempo $O(m^2)$, lo cual redunda en la misma complejidad que
+teníamos previamente. Un procedimiento válido para contar las inversiones es utilizar \textit{insertion sort} y sumar
+un cruce por cada \textit{swap} realizado para ordenar la secuencia. Con este método, el costo final del conteo
+es $O(max(n_1, n_2, m) + c)$ con $c$ la cantidad de \textit{swaps} (o cruces) del dibujo.
 
-Veamos un ejemplo de como funciona este algoritmo:
-Consideremos el siguiente grafo bipartito:
+Para ver un ejemplo de este algoritmo, consideremos el siguiente grafo bipartito:
 \begin{figure}[H]
     \centering
      \includegraphics[scale=0.8]{./figuras/cruces/ejemplo1.png}
-     \caption{Grafo de ejemplo para la aplicacion de los algoritmos de conteo de cruces}
+     \caption{Grafo de ejemplo para la aplicación del segundo algoritmo de conteo de cruces}
      \label{ejemplo1}
 \end{figure} 
 
-Ahora ordenamos los ejes de acuerdo a su primer componente y luego a su segunda, obtenemos lo siguiente:
-
+Ahora ordenamos los ejes de acuerdo a su primer componente y luego a su segunda, obteniendo:
 $$\left\langle (0,0),(1,1),(1,2),(2,0),(2,3),(2,4),(3,0),(3,2),(4,3),(5,2),(5,4)\right\rangle$$
 
-Entonces el arreglo formado por las segundas componentes es el siguiente:
-
+Entonces, las segundas componentes son:
 $$\left\langle0,1,2,\textcolor{Red}{0},3,4,0,2,3,2,4\right\rangle$$
 
-Entonces, aplicamos selection sort. El 0 (de color rojo),recorre dos posiciones antes de insertarse en su posición correcta.
+Entonces, aplicamos \textit{insertion sort}. El 0 (rojo) recorre dos posiciones antes de insertarse en su posición correcta.
 
 $$\left\langle0,0,1,2,3,4,\textcolor{Red}{0},2,3,2,4\right\rangle$$
 
@@ -67,20 +97,32 @@ $$\left\langle0,0,0,1,2,2,3,3,4,\textcolor{Red}{2},4\right\rangle$$
 
 Finalmente el último 2 es swapeado tres posiciones.
 
-Entonces la cantidad de cruces del grafo es: $2+4+2+1+3 = 12$
+Entonces la cantidad de cruces del grafo es $2+4+2+1+3 = 12$.
 
-Si bien en el caso general este algoritmo tiene un mejor orden, en peor caso sigue siendo $O(m^2)$.
+Si bien en el caso general este algoritmo tiene un rendimiento superior, en peor caso sigue siendo $O(m^2)$.
 
-Veamos un tercer acercamiento al problema: Sea $\sharp v_2$ la cantidad de nodos de la particion 2. Consideremos un arbol binario con $2^k$ hojas donde k es tal que $2^{k-1} < \sharp v_2 <= 2^{k}$ de modo de que cada nodo este en una hoja (podria haber hojas que no tengan a ningun nodo), dispuestos de izquierda a derecha según su orden en la partición. Este árbol tiene $2^{k+1}-1$ nodos. Ademas $k=\left\lceil log_{2}(\sharp v2)\right\rceil$
+Veamos un tercer acercamiento al problema \footnote{Ver referencia a Bath, Mutzel, Junger}: sea $|v_2|$ la 
+cantidad de nodos de la partición 2 en un dibujo dado. Consideremos un arbol binario con $2^k$ hojas donde 
+$k$ es tal que $2^{k-1} < |v_2| <= 2^{k}$. El árbol se completa de modo de que cada nodo esté en una hoja 
+(aunque podría haber hojas que tengan ningún nodo), dispuestos de izquierda a derecha según su orden en la 
+partición. Este árbol tiene $2^{k+1}-1$ nodos, y además $k=\left\lceil log_{2}(|v2|)\right\rceil$. Todos
+los nodos del árbol (hojas o no) se inicializan con un contador de valor $0$, y se tiene un contador
+adicional que representa el total de cruces con los ejes agregados hasta el momento, también inicializado
+en $0$.
 
-Lo que vamos a hacer es ordenar a los ejes como lo hicimos para el algoritmo anterior. Luego lo que haremos es agregar a los ejes segun dicho orden. Agregar el eje consiste en incrementar en uno el contador, en principio inicializado en 0, de la hoja correspondiente al nodo de la segunda componente del eje. Ademas se incrementa también en uno el contador del padre de dicha hoja y este incremento se va propagando hacia arriba hasta la raíz.
-
-Cada vez que insertamos un eje, en cada nivel, si estamos parados en un nodo izquierdo aumentamos el número de cruces seg'un el valor del hermano del nodo.
+La idea es ordenar los ejes como lo hicimos para el algoritmo anterior. Luego lo que haremos es ``agregar'' los 
+ejes en el árbol según dicho orden. Agregar el eje consiste en incrementar en uno el contador de la hoja 
+correspondiente al nodo de la segunda componente del eje, y a continuación se incrementa también el contador 
+del padre de dicha hoja, y sucesivamente se propaga el incremento por todos los contadores del único camino
+desde la hoja hasta la raíz. A medida que propagamos el incremento hacia arriba, modificamos el contador
+del total de cruces. Para esto, se chequea si el nodo en que estamos parados es hijo izquierdo de su padre.
+Si no lo es, se pasa al siguiente nodo, pero de serlo se suma al total de cruces del dibujo el valor del
+contador almacenado en el hermano del nodo actual (el hijo derecho del padre).
 
 El procedimiento puede resultar confuso en un principio por lo cual mostraremos un ejemplo de su aplicación.
 Apliquemos el algoritmo para el grafo de \ref{ejemplo1}:
 
-Como tenemos $\sharp v_2 = 5$, el arbol va a tener 8 hojas y un total de 15 nodos.
+Como tenemos $|v_2| = 5$, el árbol va a tener 8 hojas y un total de 15 nodos.
  
 \begin{figure}[H]
     \centering
@@ -89,14 +131,23 @@ Como tenemos $\sharp v_2 = 5$, el arbol va a tener 8 hojas y un total de 15 nodo
      \label{arbol}
 \end{figure} 
 
-Los nodos cuadrados (del 'arbol) son las hojas que representan al nodo (del grafo bipartito) cuyo numero es el de la derecha de la hoja. Cada nodo tiene un contador , en principio inicializado en 0. El contador de cruces también esta inicializado en 0.
+Los nodos cuadrados (del 'arbol) son las hojas que representan nodos del grafo (cuyo número es el de la derecha de la hoja). 
+Cada nodo tiene un contador, en principio inicializado en 0. El contador de cruces también está inicializado en 0.
 
 Recordemos que luego de ordenar los ejes el vector era:
 $$\left\langle(0,0),(1,1),(1,2),(2,0),(2,3),(2,4),(3,0),(3,2),(4,3),(5,2),(5,4)\right\rangle$$
 
-Lo primero que hacemos entonces es insertar el eje (0,0), de modo que se incrementa el contador de la hoja 0 y este incremento se propaga hacia arriba. Como 0 esta en un nodo izquierdo, lo que se hace es sumar a la cantidad de cruces el valor del contador del hermano de 0 (la hoja 1). Esto porque, porque el valor de dicho contador indica la cantidad de ejes insertados que terminaban en 1, pero ademas dado el orden que se usa para agregar a los nodos, sabemos que la primer coordenada de estos ejes que terminaban en 1 era menor que la del ejes que estoy insertando ahora, por lo tanto hay un cruce. En otras palabras, agregue un eje (a,1) antes que uno (b,0) y por como estban ordenados los nodos, sabemos que $a<b$ y como $1>0$, hay una inversión.
+Lo primero que hacemos entonces es insertar el eje $(0,0)$, de modo que se incrementa el contador de la hoja 0 y este 
+incremento se propaga hacia arriba. Como 0 está en un nodo izquierdo, lo que se hace es sumar a la cantidad de cruces 
+el valor del contador del hermano de 0 (la hoja 1). La razón detrás de este procedimiento es que el valor de dicho 
+contador indica la cantidad de ejes insertados que terminaban en el nodo 1; además dado el orden que se usa para agregar 
+a los nodos, sabemos que la primer coordenada de estos ejes que terminaban en 1 era menor que la de ejes que estoy insertando
+ahora, y por lo tanto hay un cruce. En síntesis, agregué un eje $(a,1)$ antes que uno $(b,0)$ y por como estaban ordenados 
+los ejes y nodos, sabemos que $a<b$ y como $1>0$, hay una inversión.
 
-Al subir de nivel, como también estamos en un nodo izquierdo, agregamos a la cantidad de cruces el valor del contador del hermano correspondiente. En este caso, dicho contador guarda la cantidad de ejes agregados que terminan en 2 0 3. Y asi sucesivamente hasta la raíz. 
+Al subir de nivel, como también estamos en un nodo izquierdo, agregamos a la cantidad de cruces el valor del 
+contador del hermano correspondiente. En este caso, dicho contador guarda la cantidad de ejes agregados que 
+terminan en 2 o 3. Procedemos de esta manera hasta la raíz del árbol.
 
 Luego de esta inserción obtenemos el siguiente árbol:
 \begin{figure}[H]
@@ -106,7 +157,8 @@ Luego de esta inserción obtenemos el siguiente árbol:
      \label{arbol2}
 \end{figure} 
 
-De manera analoga, se insertan los ejes (1,1) y (1,2), sin que se generen cruces, en este caso el arbol queda de la siguiente manera:
+De manera análoga, se insertan los ejes $(1,1)$ y $(1,2)$ sin que se generen cruces, y el árbol 
+queda de la siguiente manera:
 
 \begin{figure}[H]
     \centering
@@ -115,7 +167,15 @@ De manera analoga, se insertan los ejes (1,1) y (1,2), sin que se generen cruces
      \label{arbol3}
 \end{figure} 
 
-Luego corresponde insertar el eje (2,0). Incrementamos en uno el contador de la hoja 0. Como es un nodo izquierdo, sumamos a cantidad de cruces el valor de la hoja 1, que es 1. Este incremento corresponde al cruce del eje (2,0) con el eje (1,1). Subimos un nivel e incrementamos en 1 el contador del padre de la hoja 0. Nuevamente sumamos al contador de cruces, el valor del contador del hermano del nodo donde estamos parados, ya que otra vez estamos en un nodo izquierdo. Este nuevo incremento corresponde al cruce entre el eje (2,0) y el eje (1,2). Seguimos subiendo hasta llegar a la raíz, incrementando el valor de los contadores y en el caso de pasar por un nodo izquierdo, sumando el valor de los contadores de los nodos derechos. En particular en este caso, volvemos a caer en un nodo izquierdo, pero el contador de su hermano es 0. Esto se debe a que todavia no insertamos ningún eje que terminara en 4.
+Luego corresponde insertar el eje $(2,0)$. Incrementamos en uno el contador de la hoja 0. Como es un nodo 
+izquierdo, sumamos a cantidad de cruces el valor de la hoja 1, que es 1. Este incremento corresponde al 
+cruce del eje $(2,0)$ con el eje $(1,1)$. Subimos un nivel e incrementamos en 1 el contador del padre de 
+la hoja 0. Nuevamente, sumamos al contador de cruces el valor del contador del hermano del nodo actual, 
+ya que otra vez estamos en un hijo izquierdo. Este nuevo incremento corresponde al cruce entre el eje 
+$(2,0)$ y el eje $(1,2)$. Seguimos subiendo hasta llegar a la raíz, incrementando el valor de los contadores, y en
+caso de pasar por un nodo izquierdo, sumando el valor de los contadores de los nodos derechos. En este caso particular
+volvemos a caer en un nodo izquierdo, pero el contador de su hermano es 0. Esto se debe a que todavia no insertamos 
+ningún eje que terminara en 4.
 
 \begin{figure}[H]
     \centering
@@ -124,95 +184,138 @@ Luego corresponde insertar el eje (2,0). Incrementamos en uno el contador de la 
      \label{arbol4}
 \end{figure} 
 
+El procedimiento se repite de la misma manera hasta colocar todos los ejes.
 
-El procedimiento se repite hasta colocar todos los ejes.
-
-Como veremos mas adelante, este procedimiento tiene como orden $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp(v_i))))$
+Como veremos mas adelante, este procedimiento tiene como orden $O(max(m,|v_1|, |v_2|)$ $+$ $m*log(min(|v_1|, |v_2|))))$.
 
 Repasando tenemos 3 algoritmos para calcular los cruces:
 \begin{itemize}
-\item El primero, consiste en revisar todo par de ejes. Tiene un costo $O(m^2)$
-\item El segundo ordena los ejes y luego realiza insertion sort para contar inversiones. Tiene un costo de $O(max(m,\sharp v_1, \sharp v_2)+c)$
-\item El tercero utiliza el arbol binario para contar inversiones. Tiene un orden $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp(v_i))))$
+\item El primero consiste en revisar todo par de ejes posible. Tiene un costo $O(m^2)$.
+\item El segundo ordena los ejes y luego realiza \textit{insertion sort} para contar inversiones. Tiene un costo de $O(max(m,|v_1|, |v_2|)+c)$.
+\item El tercero utiliza el arbol binario para contar inversiones. Tiene un orden $O(max(m,|v_1|,|v_2|)$ $+$ $m*log(min(|v_1|, |v_2|)))$
 \end{itemize}
 
-Todas estos algoritmos requieren conocer el ``orden'' de los nodos en cada particion, lo cual podria hacerse, en $O(\sharp(v_1) + \sharp(v_2))$ costo que se suma a los algoritmos en caso de que no se tenga dicha información.
+Todos estos algoritmos requieren conocer las posiciones de los nodos dentro de cada partición. En caso de no 
+estar disponible, éste puede obtenerse $O(|v_1| + |v_2|)$,  costo que se suma al de los algoritmos 
+en caso de que no se tenga dicha información.
 
-Si $m > log(min_{i=1,2}(\sharp(v_i)))$ conviene utilizar el tercer algoritmo, pues tiene una complejidad menor que la de los otros dos.
+Si $m > log(min(|v_i|, |v_2|))$ conviene utilizar el tercer algoritmo, pues tiene una complejidad 
+menor que la de los otros dos. Si en cambio $m < log(min(|v_1|, |v_2|))$ (un grafo con muy pocos ejes) 
+resulta conveniente utilizar el segundo algoritmo ya que provee un mejor orden. Podemos saltear esta
+diferenciación preprocesando el grafo para evitar los casos donde ocurre el segundo caso. Para ello,
+construimos un grafo auxiliar eliminando todos los nodos aislados del grafo original (sean fijos
+o móviles). Esto es lícito ya que la inserción de nodos sin ejes no afecta de ninguna manera el
+criterio a optimizar (los cruces entre ejes). De esta manera, el algoritmo 3 se muestra como la mejor 
+opción, ya que si $m>|v_i|$ resulta que 
+$O(max(m,|v_1|,|v_2|)$ $+$ $m*log(min(|v_1|, |v_2|))) \subseteq O(m*log(min(|v_1|, |v_2|)))$. Este
+preprocesamiento se discute con más detalle en la sección sobre \ref{sacoNulos}.
 
-Si en cambio $m < log(min_{i=1,2}(\sharp(v_i)))$ (un grafo con muy pocos ejes) resulta conveniente utilizar el segundo algoritmo ya que provee un mejor orden.
 
-Sin embargo, podemos evitar los casos donde se tengan pocos ejes. Para hacerlo, preprocesamos el grafo, de modo de sacar los nodos aislados, ya que estos se pueden insertar en cualquier lado sin que agreguen cruces.En el caso de un nodo del grafo original, si bien no puede insertarse en cualquier lado en el sentido estricto, vale que no suma cruces igualmente, por lo cual se lo puede sacar para aplicar cualquier algoritmo y luego insertarlo en la solución en una posición valida.
-
-De esta manera, el algoritmo 3 se muestra como la mejor opción, ya que si $m>\sharp v_i$, resulta que $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp(v_i)))) \subseteq O(m*log(min_{i=1,2}(\sharp(v_i))))$.
-
-\subsubsection{Pseudocodigo}
+\subsubsection{Pseudocódigo}
 \begin{algorithm}[H]
 \caption{Cuenta los cruces en un dibujo usando un arbol acumulador}
 \begin{algorithmic}[1]
-\PARAMS{particiones del dibujo (suponemos para simplificar que p2 tiene menos nodos (o igual cantidad) que p1)}
-\PARAMS{los ejes del dibujo,las posiciones (indice) de los nodos}
-\STATE ejsPorPos $\leftarrow$ $[]$
+\PARAMS{particiones del dibujo (suponemos para simplificar que $|p_2| <= |p_1|$)}
+\PARAMS{ejes del dibujo, posiciones de los nodos (índices dentro de su partición)}
+\STATE ejesPorPos $\leftarrow$ $[]$
 \FOR{cada eje(x,y) del dibujo}
-\STATE agregar a ejesPorPos la tupla (posicion de x, posicion de y)
+    \STATE agregar a ejesPorPos la tupla (posición de x, posición de y)
 \ENDFOR
-\STATE lista $\leftarrow$ RadixSort de los ejes de ejesPorPos de modo que (x,y) $<$ (z,w) si $x < z \vee x = z \wedge y < w$
-\STATE primerIndice $\leftarrow$ $2^{ \left\lceil log_{2}(largo de p2) \right\rceil }$
+\STATE lista $\leftarrow$ RadixSort de ejesPorPos de modo que $(x,y)$ $<$ $(z,w)$ si $x < z \vee x = z \wedge y < w$
+\STATE primerIndice $\leftarrow$ $2^{ \left\lceil log_{2}(|p_2|) \right\rceil }$
 \STATE arbol $\leftarrow \underbrace{[0,...,0]}_{2*primerIndice - 1}$
-\STATE \COMMENT{arbol es el arbol acumulador}
+\STATE \COMMENT{árbol es el árbol acumulador}
 \STATE decrementar primerIndice
 \STATE cruces $\leftarrow$ 0
 \FOR{cada eje de la lista}
-\STATE indice $\leftarrow$ segunda componente del eje + primerIndice
-\STATE arbol[indice] $\leftarrow$ arbol[indice] + 1 \COMMENT{un eje mas en esta hoja}
-\WHILE{ indice $>$ 0}
-\IF{indice es impar}
-\STATE \COMMENT{estoy en un nodo izquierdo}
-\STATE cruces $\leftarrow$ cruces + arbol[indice]
-\ENDIF
-\STATE indice $\leftarrow$ $(indice -1)/2$ \COMMENT{subo un nivel}
-\STATE arbol[indice]~$\leftarrow$ arbol[indice] + 1
-\ENDWHILE
+    \STATE indice $\leftarrow$ segunda componente del eje + primerIndice
+    \STATE arbol[indice] $\leftarrow$ arbol[indice] + 1 \COMMENT{un eje más en esta hoja}
+    \WHILE{indice $>$ 0}
+        \IF{indice es impar}
+            \STATE \COMMENT{estoy en un nodo izquierdo}
+            \STATE cruces $\leftarrow$ cruces + arbol[indice]
+        \ENDIF
+        \STATE indice $\leftarrow$ $(indice -1)/2$ \COMMENT{subo un nivel}
+        \STATE arbol[indice] $\leftarrow$ arbol[indice] + 1
+    \ENDWHILE
 \ENDFOR
 \RETURN cruces
 \end{algorithmic}
 \end{algorithm} 
 
-\subsection{Calculo de complejidad}
-Sea $v_i$ la cantidad de nodos de la particion i, y m la cantidad de ejes del grafo.
+\subsection{Cálculo de complejidad}
+Sea $v_i$ la cantidad de nodos de la particion $i$, y $m$ la cantidad de ejes del grafo.
 
-Si bien comentamos que la función podría en caso de que no este disponible calcular los indices de los elementos, esta funcionalidad no fue utilizada, de modo que el algoritmo recibe los indices ya armados. De este modo, el costo de armar y manter a los indices sera tenido en cuenta en los respectivos algoritmos que utilicen a esta función.
+Si bien comentamos que la función podría, en caso de que no esté disponible, calcular 
+los índices de los elementos dentro de su partición, esta funcionalidad no fue utilizada, 
+de modo que el algoritmo recibe los índices ya precalculados. De este modo, el costo de armar 
+y mantener los índices será tenido en cuenta en los respectivos algoritmos que utilicen a esta función.
 
-Primero lo que hacemos es traducir los ejes, segun los indices. Para hacer esto, lo que se hace es recorrer todos los ejes (se recorren las listas de adyacencia de los nodos de una de las particiones) y se van guardando en una lista, los ejes con sus compoentes traducidas (ciclo de la línea 2).
+Lo primero que hacemos es traducir los ejes segun los índices de sus nodos. Para hacer esto, lo que se 
+hace es recorrer todos los ejes (se recorren las listas de adyacencia de los nodos de una de las particiones) 
+y se van guardando en una lista los ejes con sus componentes traducidas (ciclo de la línea 2).
 
-Luego ordenamos los ejes, como lo hacemos con radix sort, el costo es $max(m, v_1, v_2)$, puesto que tengo que ordenar m ejes, y para hacerlo voy a necesitar de $\sharp v_1$ $buckets$ primero y $\sharp v_2$ $buckets$ luego.
+Luego ordenamos los ejes. Para esto utilizamos \textit{radix sort}, cuyo costo es $max(m, v_1, v_2)$, 
+puesto que tengo que ordenar $m$ ejes y para hacerlo voy a necesitar de $v_1$ \textit{buckets} primero 
+y $v_2$ \textit{buckets} más adelante.
 
-Una vez ordenado y armado el 'arbol, que se puede hacer en O($v_2$) como se vera mas adelante, vamos a mirar todos los ejes. Para cada eje recorremos el arbol desde una hoja hasta la raiz. Como el arbol tiene $2^k$ hojas, tiene $log_{2}(2^k)$ de altura, pero $log_{2}(2^k)=k=\left\lceil log_{2}(\sharp v2)\right\rceil$.
+Una vez ordenado y armado el 'arbol (tarea que puede llevarse a cabo en $O(v_2)$ como se verá más adelante) 
+vamos a mirar todos los ejes. Para cada eje recorremos el árbol desde una hoja hasta la raíz. Dado que el árbol 
+tiene $2^k$ hojas, tiene $log_{2}(2^k)$ de altura, pero $log_{2}(2^k)=k=\left\lceil log_{2}(v2)\right\rceil$.
 
-El arbol se puede implementar sobre un arreglo, de modo que la posición 0 sea la raíz, la 1 y 2 sus hijos izquierdo y derecho respectivamente, y asi sucesivamente (de manera analoga a como se hace para implementar un heap). De esta manera, los nodos izquierdos del árbol quedan en las posiciones impares, y aumentar cada contador, asi como también moverse dentro del árbol de un nodo a su padre se puede hacer en O(1). Por lo tanto, el costo de insertar todos los ejes es $O(max(m,\sharp v_1, \sharp v_2)+m*log(\sharp v_2) )$.
+El árbol se puede implementar sobre un arreglo, de modo que la posición 0 sea la raíz, la 1 y 2 sus hijos 
+izquierdo y derecho respectivamente, y así sucesivamente (de manera análoga a como se hace para implementar
+\textit{heapsort} sobre arreglos). De esta manera, los nodos izquierdos del árbol quedan en las posiciones 
+impares, y aumentar cada contador, así como moverse dentro del árbol de un nodo a su padre se puede hacer
+en $O(1)$. Por lo tanto, el costo de insertar todos los ejes es $O(max(m,v_1,v_2)$ $+$ $m*log v_2$.
 
 \begin{figure}[H]
     \centering
     \subfigure[Árbol acumulador]{
-     \includegraphics[scale=0.2]{./figuras/cruces/arbolito.png}}
-     \subfigure[Representación en arreglo]{
-     \includegraphics[scale=0.2]{./figuras/cruces/arreglito.png}}
+    \includegraphics[scale=0.2]{./figuras/cruces/arbolito.png}}
+    \subfigure[Representación sobre arreglo]{
+    \includegraphics[scale=0.2]{./figuras/cruces/arreglito.png}}
 
 \end{figure} 
 
-Ahora bien, en vez de ordenar primero por la primer componente y luego con respecto a la segunda, podr'iamos hacer el mismo procedimiento pero ordenando primero por la segunda, luego por la primera y armando el arbol para $v_1$. Entonces, en particular el procedimiento se podria realizar utilizando el  $v_i$ de menor cardinal. Con lo cual el costo de las inserciones es de $O(max(m,\sharp v_1, \sharp v_2)+m*log(min_{i=1,2}(\sharp v_i) ))$
+Ahora bien, en lugar de ordenar primero por la primer componente y luego respecto a la segunda, podr'iamos 
+hacer el mismo procedimiento pero ordenando primero por la segunda y luego por la primera y armar el árbol 
+para $p_1$. Por lo tanto el procedimiento se podría realizar utilizando el $p_i$ de menor cardinal, con lo 
+cual el costo de las inserciones es de $O(max(m,v_1,v_2)$ $+$ $m*log(min(v_1, v_2) ))$.
 
-Como dijimos, este algoritmo podria no ser eficiente si la cantidad de ejes es muy pequeña, ya que para hacer radix sort se van a recorrer todos los nodos de ambas particiones, lo cual podria ser un costo mas grande que mirar todos los ejes. Sin embargo, también comentamo que vamos a filtrar a los nodos de grado 0 antes de trabajar con el dibujo, por lo cual creemos que este algoritmo es eficiente. Filtrar a los nodos de grado 0 tiene sentido, ya que por ejemplo en nuestro algoritmo exacto, un pequeño incremento en la cantidad de nodos, siginifica un gran aumento en la cantidad de permutaciones, de esta manera si lo separamos el algoritmo no perderia tiempo en mover a este nodo que no genera cambio alguno.
+Como dijimos, este algoritmo podría no ser eficiente si la cantidad de ejes es muy pequeña, ya que para 
+hacer \textit{radix sort} se van a recorrer todos los nodos de ambas particiones, lo cual podría tener
+un costo más elevado que mirar todos los ejes. Sin embargo, también comentamos que vamos a filtrar a los 
+nodos de grado 0 antes de trabajar con el dibujo, lo cual evita este caso y hace que el algoritmo sea 
+eficiente para todas las entradas. 
+
 
 \subsection{Reutilización de los cálculos}
 \label{reUso}
-Si bien hay situaciones donde el orden relativo de los nodos en las particiones se podría modificar sustancialmente, por lo cual sería necesario recalcular los cruces nuevamente , lo cual, como vimos en la sección anterior, tiene un costo bastante alto; hay otros casos donde se hace una modificación mas pequeña al orden de los mismos y es posible no recalcular todos los cruces.
 
-En particular si tenemos un orden de los nodos $\pi=\left\langle v_1,v_2,...v_i,v_{i+1},...,v_n \right\rangle$ y realizamos un ``swap'' entre dos posiciones consecutivas $i$, $i + 1$, podemos observar que si $\pi_1=C(\left\langle v_1,v_2,...,v_{i+1},v_{i},...v_n \right\rangle$ y definimos C($\pi$,$\rho$) como la cantidad de cruces entre los ejes del grafo, dado que los nodos de la primer partición estan ordenados seg'un $\pi$ y los de la segunda segunda según $\rho$, vale que:
+En muchas situaciones tiene sentido calcular completamente la cantidad de cruces de un dibujo. Sin embargo,
+para la implementación de muchos de los métodos de este trabajo práctico solo se realizan pequeñas modificiones
+en un dibujo y se desea conocer la variación de cruces que se produce por estos pequeños cambios. Recalcular
+los cruces del dibujo completo tiene un costo relativamente alto, y además se desperdician todos los cálculos
+previamente realizados que afectan a las partes del dibujo que no fueron modificadas.
 
- $$C(\pi_1,\rho) = C(\pi,\rho) - CrucesEntre(v_i,v_{i+1},\rho) + CrucesEntre(v_{i+1},v_i,\rho)$$
+\subsubsection{Permutaciones de dos nodos consecutivos}
 
-Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes de $b$ si $a$ esta en una posicion relativa menor que la de $b$ y dado que los nodos de la otra partición estan en el orden $\rho$. Esto se debe a que como dijimos anteriormente, los cruces dependen solo del orden relativo. Entonces si intercambiamos dos posiciones consecutivas, el orden relativo de los demas nodos se mantiene, es decir, los que estaban ``abajo'' de ellos siguen estando allí, y los que estaban ``arriba'' también, de modo que solo cambian los cruces que hay entre los dos nodos movidos.
+En particular, si tenemos un orden de los nodos $\pi=\left\langle v_1,v_2,...v_i,v_{i+1},...,v_n \right\rangle$
+y realizamos un \textit{swap} entre dos posiciones consecutivas $i$, $i + 1$, podemos observar que si 
+$\pi_1=cruces(\left\langle v_1,v_2,...,v_{i+1},v_{i},...v_n \right\rangle$ y definimos $cruces(\pi,\rho)$ 
+como la cantidad de cruces entre los ejes del grafo, dado que los nodos de la primer partición estan ordenados 
+seg'un $\pi$ y los de la segunda segunda según $\rho$, vale que:
+
+ $$cruces(\pi_1,\rho) = cruces(\pi,\rho) - CrucesEntre(v_i,v_{i+1},\rho) + CrucesEntre(v_{i+1},v_i,\rho)$$
+
+Donde $CrucesEntre(a,b,\rho)$ es la cantidad de cruces entre ejes de $a$ y ejes de $b$ si $a$ está en 
+una posición relativa menor que la de $b$ y dado que los nodos de la otra partición estan en el orden 
+$\rho$. Esto se debe a que, como dijimos anteriormente, los cruces dependen solo del orden relativo
+entre los nodos del dibujo. Entonces, si intercambiamos dos posiciones consecutivas, como el orden relativo 
+de los demás nodos se mantiene (es decir, los que estaban ``abajo'' de ellos siguen estando allí, y los que 
+estaban ``arriba'' también), solo se modifican los cruces que ocurrían entre los dos nodos afectados por
+el \textit{swap}.
 
 \begin{figure}[H]
     \centering
@@ -225,11 +328,36 @@ Donde CrucesEntre(a,b,$\rho$) es la cantidad de cruces entre ejes de $a$ y ejes 
 \end{figure} 
 
 
-Para calcular crucesEntre se puede utilizar el algoritmo antes descripto para el conteo de cruces en general, simulando una partición que solo contenga a los nodos $a$ y $b$, y solo teniendo en cuenta los ejes que salen de ellos dos. En este caso, como la partición mas chica tiene 2 nodos (o menos si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en $O( v_j + m_{a} + m_{b})$ con $m_{a,b}$ la cantidad de ejes incidentes a $a$ y a $b$ y $v_j$ es la otra partición. Basicamente lo que hacemos solo mirar los ejes que salen de a y de b, armar un arbol de dos posiciones y aplicar el procedimiento anterior
+Para calcular $CrucesEntre()$ se puede utilizar el algoritmo antes descripto para el conteo de 
+cruces en general, simulando una partición que sólo contenga a los nodos $a$ y $b$, y teniendo en cuenta
+únicamente a los ejes que salen de ellos dos. En este caso, como la partición mas chica tiene 2 nodos 
+(o menos, si una partición era solo un nodo), resulta que el algoritmo puede calcular los cruces en 
+$O(|v_j| + m_{a} + m_{b})$ siendo $m_{i}$ la cantidad de ejes incidentes al nodo $i$ y $v_j$ es 
+partición opuesta. Básicamente, lo que se hace es mirar solamente los ejes que salen de $a$ y de $b$,
+armar un árbol de dos posiciones y aplicar el procedimiento anteriormente descripto.
 
 %FIXME: Esto esta bien?
-En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp v_j$ , utilizamos la versión simple del algoritmo toma todos los pares de ejes de a y b. De este modo el orden para contar cruces es $min(max(v_j,m_a,m_b),m_a*m_b)$
+En el caso en que $a$ y $b$ tengan pocos ejes, de modo tal que $m_{a}*m_{b} < |v_j|$ , utilizamos la 
+versión simple del algoritmo que toma todos los pares de ejes de $a$ y $b$. De este modo el orden para 
+contar cruces en un \textit{swap} es $min(max(|v_j|,m_a,m_b),m_a*m_b)$.
  
+\subsubsection{Agregado y extracción de nodos}
+
+Otro caso donde resulta útil recalcular todos los cruces es cuando se agrega un nodo al dibujo existente,
+y más particularmente si se agrega al principio o al final de una partición. Esta situación es bastante 
+común también, y, sumada a la de calcular cruces por \textit{swap} nos permite obtener de forma eficiente 
+los cruces que se producen por agregar un nodo en cualquier posición de una partición (ya que primero se 
+lo agrega en un extremo, y luego se lo permuta hasta la posición desdeada).
+
+En este caso, los cruces existentes entre otros nodos se mantienen, y solo se podrían agregar nuevos 
+cruces con los ejes del nodo recién agregado. Por lo tanto, una estrategia válida para calcular
+los cruces agregados es colapsar los nodos de la partición donde se está agregando el nuevo nodo, 
+dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto de la partición (producto de
+``compactarlos'' como ilustra la figura \ref{fig:compactar}), de modo de que el algoritmo sea 
+$O(m + |v_1|+|v_2| + m)$. Esto es así porque el costo de la traducción y del \textit{radix sort}
+no pueden evitarse, pero al igual que en el caso de los cruces por permutación entre dos nodos 
+consecutivos, el árbol tiene solo 2 elementos: el nodo que se agrega y el nodo producto de la compactación.
+
 \begin{figure}[H]
     \centering
     \setcounter{subfigure}{0}
@@ -241,15 +369,24 @@ En el caso en que a y b tengan pocos ejes, de modo tal que $m_{a}*m_{b} < \sharp
      \label{fig:compactar}
 \end{figure} 
 
-Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega un nodo al dibujo, particularmente si se agrega al principio o al final de la partición. En este caso, los cruces existentes entre otros nodos se mantienen, solo se podrían agregar nuevos cruces con los ejes del nodo recien agregado. Entonces podemos colapsar los nodos de la partición donde se esta agregando el nuevo nodo, dejando solo al nuevo nodo y a un nodo $w$ con todos los ejes del resto como ilustra la figura \ref{fig:compactar}, de modo de que el algoritmo sea $O(m + v_1+v_2 + m)$. Esto es asi porque el costo de la traducción y del radix sort hay que hacerlo igual, pero al igual que en el caso de los cruces entre dos nodos consecutivos, el arbol tiene solo 2 elementos: el nodo que se agrega y el nodo que compacta a todos los demas con sus ejes.
+Estas situaciones pueden parecer muy específicas pero responden a las necesidades particulares
+de los algoritmos presentados en el resto del trabajo.
 
-Estas situaciones si bien parecen casos muy especificos, pueden ser aprovechados por los distintos algoritmos que desarrollamos.
-
-\section{Eliminación de nodos nulos}
+\section{Preprocesamiento del grafo}
 \label{sacoNulos}
-Como dijimos, antes de aplicar las heuristicas, eliminamos los nodos de grado cero en lo que sería el grafo con todos los nodos ya puesto. Consideramos que esto evita que las heuristicas, asi como también el algoritmo exacto, realicen calculos innecesarios.
 
-Para hacerlo, basicamente tomamos los nodos de la entrada, asi como sus ejes y construimos un dibujo. A partir de este dibujo, que ya tiene armadas las listas de adyacencia, podemos separar en una lista a los nodos de grado distinto a cero. 
+
+Vimos previamente que un algoritmo de preprocesamiento sencillo y ejecutado una única vez 
+nos permite disminuir el costo de algunas operaciones. Este algoritmo debería eliminar
+los nodos aislados y computar nuevos valores para los nodos que mantengan el invariante
+del grafo de entrada respecto de la numeración de los nodos. Después de calcular la solución 
+al problema, un segundo algoritmo vuelve a completar el grafo con los nodos quitados insertándolos 
+en posiciones válidas, y restituye los valores originales de los nodos para poder presentar la
+solución al usuario.
+
+Para hacerlo, básicamente tomamos los nodos de la entrada, así como sus ejes y construimos un dibujo. 
+A partir de este dibujo, que ya tiene armadas las listas de adyacencia, podemos separar en una 
+lista a los nodos de grado distinto a cero.
 
 \begin{figure}[H]
     \centering
@@ -258,20 +395,43 @@ Para hacerlo, basicamente tomamos los nodos de la entrada, asi como sus ejes y c
      \includegraphics[scale=0.2]{./figuras/cruces/pocosEjes.png}}
      \subfigure[]{
 \includegraphics[scale=0.2]{./figuras/cruces/limpio.png} }
-     \caption{Reducir la cantiidad de cruces en el primero es equivalente a hacerlo en el segundo}
+     \caption{Reducir la cantidad de cruces en el primero es equivalente a hacerlo en el segundo}
      \label{fig:limpieza}
 \end{figure} 
 
-Si solamente los sacaramos, nos encontraríamos frente al problema de que los nodos no tienen como identificadores números consecutivos. Por esta razón, no solo filtramos a los nodos de grado nulo, sino que se realiza un nueva númeración de los nodos que quedan. La misma cumple que los nodos fijos tienen númeración consecutiva (la cual ademas indica la posición relativa, es decir si a $<$ b con a y b nodos de la misma partición, entonces el nodo fijo a esta antes que el nodo fijo b) y que los números son asignados primero a los nodos fijos de la primer partición, luego a los nodos fijos de la segunda, en tercer lugar a los nodos no fijos de la primera y finalmente a los de la segunda.
+Si nos contentáramos con extraer los nodos, nos encontraríamos frente al problema de que los nodos 
+no tienen como identificadores números consecutivos. Esto viola el invariante del problema original
+y si bien podría no ser problemático, nos permite hacer optimizaciones varias, en particular
+respecto del tamaño de los diccionarios que almacenan valores asociados a un cierto nodo.
 
-Para realizar dicha traducción se utilizan diccionarios sobre arreglos a fin de poder realizarla rapidamente. Lo que se guarda es dado un identifador nuevo a que nodo viejo identifica. 
+Por esta razón, no solo filtramos a los nodos de grado nulo, sino que se realiza un nueva numeración 
+de los nodos que quedan. La misma cumple que los nodos fijos tienen númeración consecutiva (que además 
+indica la posición relativa, es decir si $a $<$ b$ con $a$ y $b$ nodos de la misma partición, entonces 
+el nodo fijo $a$ está antes que el nodo fijo $b$) y que los números son asignados primero a los nodos 
+fijos de la primer partición, luego a los nodos fijos de la segunda, en tercer lugar a los nodos móviles
+de la primera y finalmente a los móviles de la segunda.
 
-Los ejes también son traducidos, por lo cual se necesita momentaneamente poder ir de un identificador viejo a su numero nuevo, por lo cual se necesita otro indice provisioriamete.
+Para realizar dicha traducción se utilizan diccionarios sobre arreglos a fin de poder realizarla 
+rápidamente. Se asocia a cada identificador nuevo el identificador que tenía el nodo en el grafo
+original, para poder deshacer la traducción más adelante. Los ejes también son traducidos, por lo cual 
+se necesita momentáneamente poder ir de un identificador viejo a su nuevo valor, por lo cual se necesita 
+provisoriamente otro índice de identificadores.
 
-Una vez que se realizó la traducción, las heuristicas y el algoritmo exacto trabajan con el dibujo nuevo.
+Una vez que se realizó la traducción, las heurísticas y el algoritmo exacto trabajan con el dibujo nuevo.
+Cuando terminan, se realiza el proceso inverso para volver de los nodos nuevos a los viejos, y además se
+inserta a los nodos viejos aislados en posiciones válidas dentro del dibujo devuelto por el algoritmo elegido.
 
-Cuando terminan se realiza el proceso inverso para volver de los nodos nuevos a los viejos, y ademas insertar a los viejos en posiciones validas (hay que respetar la posicon de los nodos fijos que tenían grado cero y no fueron tenidos en cuenta)
+Todo este proceso nos agrega un costo $O(|v_1|+|v_2|+m)$ donde $|v_i|$ es la cantidad de nodos de la 
+partición $i$ original (sin filtrar) y $m$ la cantidad de ejes. En el peor caso, ningún nodo tiene grado 
+cero, por lo que esta mejora representa un \textit{overhead}. Sin embargo, como se verá mas adelante,
+el orden de los distintos algoritmos es lo suficientemente elevado como para hacer despreciable este costo
+adicional, mientras que las mejoras obtenidas en los casos favorables hacen muy apreciable su utilización.
 
-Todo este proceso nos agrega un costo $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes. En el peor caso, ningún nodo tenía grado cero, por lo que esta mejora representa un overhead, sin embargo como se verá mas adelante el orden de los distintos algoritmos es lo suficientemente elevado como para hacer despreciable dicho overhead.
+Filtrar a los nodos aislados tiene sentido como optimización general
+más allá del conteo de cruces. En el caso del algoritmo exacto, donde se evalúa un árbol de permutaciones
+de los nodos cuyo tamaño es de orden factorial en la cantidad de nodos, eliminar al menos unos pocos nodos
+aislados disminuye sustancialmente el tiempo necesario para computar la solución ya que elimina una cantidad
+muy grande de permutaciones que solo difieren de otras en la posición de los nodos aislados (que, como dijimos,
+no afectan al criterio a optimizar).
 
 %TODO: comparar que pasa si no saco los nodos al pedo y si los saco
