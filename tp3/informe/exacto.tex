@@ -207,8 +207,57 @@ descripta previamente, que aligera mucho el cómputo de la cota).
 % uso de la heurística constructiva para determinar el candidato inicial
 
 \section{Cálculo de complejidad}
+Antes de correr nuestro algoritmo exacto, lo que hacemos es limpiar el grafo, lo cual nos da un costo inicial $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes.
 
-\subsection{Peores casos}
+Al iniciar lo que hacemos es inicializar ciertas variables que nos serán de utilidad tales como las listas de adyacencia parciales, vectores con posiciones, etc. Todo esto tiene un costo $O(v_1+v_2 + m)$ donde $v_i$ es la cantidad de nodos de una partición. Esto lo podemos acotar por  $O(v_max + m)$. En esta inicialización se llena la tabla de resultados para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i,w_j \in v_1$. Esto tiene un costo $O(v_{1}*v_{max})$, ya que son $O(v_{1})$ calculos y cada calculo tiene cosot $O(v_{max})$.
+  %TODO: completar
+Para realizar el estudio de este algoritmo creemos que será provechoso considerar por separado el llenado de cada partición. Como comentamos antes, primero se llena una de las particiones, y después se llena la otra. Ademas consideraremos para el estudio el caso donde no es posible podar nada.
+
+Primero observemos el costo que tenemos al pasar por cada nodo del arbol de permutaciones de la primer partición. En cada paso lo que hacemos es insertar un elemento al final, y contar cuantos cruces nos agrega, lo cual lo hacemos en $O(v_1+ m )$. Esto último no es cierto, pues en verdad no se inserta para cada nodo del árbol, sino que dado un nivel, el elemento se inserta tantas veces como nodos hay en nivel anterior del arbol y luego se hace swap, sin embargo para no hacer mas engorroso aun el calculo, decidimos simplificarlo de esa manera. Luego intentamos aplicar la poda. Aplicarla tiene un costo $O(v_{1}^2)$ ya que tengo que obtener la suma de los minimos de los cruces entre dos elementos y dichos elementos ya estan en la tabla. Después hacemos otra llamada para ir armando el siguiente nivel. Una vez que regresamos de esa llamada, hacemos un swap del nodo con un adyacente, y actualizamos los cruces, esta actualización la hacemos en $O(1)$ ya que tenemos los cruces entre ambos tabulados.
+
+Entonces recorrer el árbol de llenado de la primer partición tiene un costo:
+
+$$O(nodos * (v_{1}^2 +(v_1+m)))$$
+
+aqui nodos es la cantidad de nodos del arbol de permutación. Veamos cuantos nodos tiene:
+Podemos obtener la cantidad de nodos del arbol en función de la cantidad de nodos moviles y fijos que tiene, de la siguiente manera:
+%TODO: gonza explica esta formula
+  \begin{equation}
+     tamArbol(moviles,fijos) = \left\{
+	       \begin{array}{ll}
+		 1      & \mathrm{si\ } moviles = 0 \\
+		(fijos+1)*tamArbol(moviles-1,fijos+1) + 1 & \mathrm{si\ } moviles \neq 0 \\
+	       \end{array}
+	     \right.
+   \end{equation}
+
+Esta formula no es facilmente manejable, por lo cual usaremos una cota. Dado que cada nivel tiene mas nodos que el nivel anterior (si tengo una permutación de k elementos, al agregar un nuevo elemento obtenemos k + 1 posibles ordenes), podemos acotar la cantidad de nodos del arbol como:
+ $$h*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$$
+
+Donde h es la altura del arbol y $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$ es la cantidad de hojas.
+
+La altura del árbol es igual a la cantidad de nodos moviles en la partición 1, ya que en cada nivel estamos agregando un nodo, mas 1 por la raiz donde no agregamos nada todavia. Luego:
+
+cantidad de nodos $\leq moviles_1*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$
+
+Luego el orden de completar todas las permutaciones de la primer partición nos quedó:
+
+$$O(moviles_1*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2))$$
+
+En cada hoja del arbol de las permutaciones de la primer partición, completamos la tabla para la segunda partición. Esto tiene un orden $O(v_2*v_{max})$
+
+Completar la segunda partición tiene el mismo costo que completar la primer partición, con la salvedad de que en las hojas tenemos un costo $O(v_1+v_2)$ por copiar al mejor dibujo (el grafo no se copia, se usa una referencia).
+
+Entonces, completar el arbol de la segunda particion tiene un costo:
+$$O(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))$$
+
+Para cada hoja del arbol de la primer partición, llenamos todo un árbol de la segunda. Por lo tanto el costo final es (luego de sacar algunos factores comunes):
+
+%$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max})$
+
+$O(moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2)$ 
+
+De la formula vemos que es preferible tomar como primer partición a aquella que tenga una menor cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan mas calculos.
 
 \section{Análisis experimental}
 
