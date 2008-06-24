@@ -15,11 +15,11 @@ void help() {
     cout << "  -o file: archivo de salida (se le agrega sufijo del método)" << endl;
     cout << "Métodos Posibles:" << endl;
     cout << "  -e: exacto" << endl;
-    cout << "  -c: contructiva" << endl;
-    cout << "  -l: local" << endl;
+    cout << "  -c: constructiva" << endl;
+    cout << "  -l: búsqueda local" << endl;
     cout << "  -g: grasp" << endl;
-    cout << "  -a: todas las aproximadas" << endl;
-    cout << "  -t: todos los metodos" << endl;
+    cout << "  -a: todas las heurísticas" << endl;
+    cout << "  -t: todos los métodos" << endl;
     cout << "Método por defecto: -a " << endl;
     cout << endl;
 }
