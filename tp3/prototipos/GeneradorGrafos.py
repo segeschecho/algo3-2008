@@ -53,9 +53,12 @@ def generarDibujoAleatorio(g, n1=5, n2=5):
 
     return Dibujo(g, l1, l2)
 
-def generarEntrada(iv1,iv2,v1,v2,m):
+def generarEntrada(iv1,iv2,v1,v2,m, fname=None):
     d=generarDibujoAleatorioEntrada(iv1,iv2,v1,v2,m)
-    out=open("test"+str(iv1)+str(iv2)+str(v1)+str(v2)+str(m)+".in",'w')
+    if fname is None:
+        out=open("test"+str(iv1)+str(iv2)+str(v1)+str(v2)+str(m)+".in",'w')
+    else:
+        out = open(fname,'w')
     out.write(str(v1)+"\n")
     for each in d.l1:
         out.write(str(each+1)+"\n")
