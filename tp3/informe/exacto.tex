@@ -189,9 +189,68 @@ descripta previamente, que aligera mucho el cómputo de la cota).
 \begin{algorithm}[H]
 \caption{Resuelve de forma exacta el problema de dibujo incremental de grafos bipartitos}
 \begin{algorithmic}[1]
-\STATE generar excepción de no implementado
+\STATE inicializarParametros
+\STATE mejorSolución $\leftarrow$ construir una solución con la heuristica constructiva
+\STATE buscarMejorSolucion()
+\RETURN mejorSolucion
 \end{algorithmic}
 \end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Inicializa variables que va a usar el algoritmo exacto}
+\begin{algorithmic}[1]
+\STATE determinar cual de las particiones tiene menos permutaciones, llamarla 1, a la otra llamarla 2
+\STATE construir indice de posiciones para los nodos que ya estan en el dibujo
+\STATE constuir listas de adyacencias para los nodos de 1 y los fijos de 2
+\STATE calcular los cruces del dibujo original
+\STATE construir la tabla para la particion 1
+\IF{no hay moviles en la particion 2}
+\STATE construir la tabla para la particion 2
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{construye todas las particiones que pueden ser solucion buscando la mejor (o una de ellas)}
+\begin{algorithmic}[1]
+\IF{ no hay mas moviles por poner}
+\IF{los cruces de la solucin que arme son menos que los de la mejor hasta ahora}
+\STATE mejorSolucion $\leftarrow$ solucionActual
+\ENDIF
+\ELSIF{no hay mas moviles que poner en la particion 1}
+\STATE agregar atras al primer movil a la particion (sacarlo de moviles y actualizar indice)
+\STATE cruces $\leftarrow$ curces + los cruces que me agrega el nuevo nodo
+\WHILE{ el nuevo no recorrio toda la particion}
+\IF{cruces + minimoCruces < los cruces del mejor}
+\STATE buscarMejorSolucion()
+\ENDIF
+\STATE intercambiar al nuevo por el nodo que esta adelante de el (actualizar posiciones y cruces)
+\ENDWHILE
+\STATE sacar al nodo \COMMENT{quedo adelante de todo}
+\STATE actualizar posiciones y cruces
+\ELSE
+\STATE agregar atras al primer movil a la particion (sacarlo de moviles y actualizar indice)
+\STATE cruces $\leftarrow$ curces + los cruces que me agrega el nuevo nodo
+\WHILE{ el nuevo no recorrio toda la particion}
+\IF{cruces + minimoCruces < los cruces del mejor}
+\IF{ no quedan mas nodos moviles en esta particion}
+\STATE construir tabla para la partición 2
+\ENDIF
+\STATE buscarMejorSolucion()
+\ENDIF
+\STATE intercambiar al nuevo por el nodo que esta adelante de el (actualizar posiciones y cruces)
+\ENDWHILE
+\STATE sacar al nodo \COMMENT{quedo adelante de todo}
+\STATE actualizar posiciones y cruces
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+Construir tabla 1 toma todos los nodos de la particion 1 de a pares  (i,j) y guarda en una matriz en la posicion (i,j) los cruces entre los nodos ubicados con i antes que j y en (j,i) los cruces entre ellos ubicados al reves. Para contar los cruces, solo se tiene en cuenta a los fijos de la particion 2.
+
+Construir tabla 2 es analogo, pero tiene en cuenta a todos los nodos de la particion 1 para contar los cruces.
+
+minimo cruces utiliza las tablas (la correspondiente a la particion que se esta llenando) y realiza la cuenta antes descripta para obtener una cota inferior a la cantidad de cruces que se pueden originar
 
 \section{Detalles de implementación}
 % uso de listas doblemente enlazadas para push_back(), pop_front() y swap() en O(1)
@@ -209,7 +268,7 @@ descripta previamente, que aligera mucho el cómputo de la cota).
 \section{Cálculo de complejidad}
 Antes de correr nuestro algoritmo exacto, lo que hacemos es limpiar el grafo, lo cual nos da un costo inicial $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes.
 
-Al iniciar lo que hacemos es inicializar ciertas variables que nos serán de utilidad tales como las listas de adyacencia parciales, vectores con posiciones, etc. Todo esto tiene un costo $O(v_1+v_2 + m)$ donde $v_i$ es la cantidad de nodos de una partición. Esto lo podemos acotar por  $O(v_max + m)$. En esta inicialización se llena la tabla de resultados para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i,w_j \in v_1$. Esto tiene un costo $O(v_{1}*v_{max})$, ya que son $O(v_{1})$ calculos y cada calculo tiene cosot $O(v_{max})$.
+Al iniciar lo que hacemos es inicializar ciertas variables que nos serán de utilidad tales como las listas de adyacencia parciales, vectores con posiciones, etc. Todo esto tiene un costo $O(v_1+v_2 + m)$ donde $v_i$ es la cantidad de nodos de una partición. Esto lo podemos acotar por  $O(v_max + m*log(v_max))$. En esta inicialización se llena la tabla de resultados para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i,w_j \in v_1$. Esto tiene un costo $O(v_{1}*v_{max})$, ya que son $O(v_{1})$ calculos y cada calculo tiene cosot $O(v_{max})$.
   %TODO: completar
 Para realizar el estudio de este algoritmo creemos que será provechoso considerar por separado el llenado de cada partición. Como comentamos antes, primero se llena una de las particiones, y después se llena la otra. Ademas consideraremos para el estudio el caso donde no es posible podar nada.
 
@@ -253,9 +312,9 @@ $$O((moviles_2+1)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2
 
 Para cada hoja del arbol de la primer partición, llenamos todo un árbol de la segunda. Por lo tanto el costo final es (luego de sacar algunos factores comunes):
 
-%$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max})$
+%$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max}+ m*log(v_max))$
 
-$O(moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2)$ 
+$O(moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
 
 De la formula vemos que es preferible tomar como primer partición a aquella que tenga una menor cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan mas calculos.
 
