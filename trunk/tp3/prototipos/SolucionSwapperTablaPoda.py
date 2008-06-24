@@ -18,7 +18,6 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
     ###########################################################
     
     def resolver(self, invertir=True):
-        self.total = 0
         self.invertir = invertir
         g = self.dibujo.g
         d = self.dibujo
@@ -38,10 +37,10 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
         self.llamadas = 0
 
         combinaciones = cuantasCombinaciones(self.fijo1, self.fijo2, self.movil1, self.movil2)
-        tamanioArbol = tamArbol(self.fijo2, self.fijo2, self.movil1, self.movil2)
+        tamanioArbol = tamArbol(self.fijo1, self.fijo2, self.movil1, self.movil2)
         
         self._mejor()
-        
+
         assert tamanioArbol == self.llamadas + self.podasArbol
         assert combinaciones == self.casosBase + self.podasHojas
 
@@ -51,6 +50,7 @@ class ResolvedorSwapperTablaConPoda(ResolvedorConstructivo):
             (self.mejorDibujo.contarCruces(), porcent_podasArbol, porcent_podasHojas)
 
         return self.mejorDibujo
+        
 
 
     ###########################################################
@@ -356,8 +356,8 @@ def test_resolvedorSwapperTablaConPoda():
     from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
     from SolucionFuerzaBruta import ResolvedorFuerzaBruta
 
-    g = generarGrafoBipartitoAleatorio(n1=8, n2=8, m=30)
-    d = generarDibujoAleatorio(g, n1=4, n2=4)
+    g = generarGrafoBipartitoAleatorio(n1=6, n2=6, m=30)
+    d = generarDibujoAleatorio(g, n1=4, n2=5)
 
     #r1 = ResolvedorFuerzaBruta(d)
     #s1 = r1.resolver()
