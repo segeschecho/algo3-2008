@@ -32,8 +32,10 @@ class Timer:
         if not self.empezo:
             raise Exception, "La cuenta no habia empezado!"
 
-        print "Tiempo: %.2f segundos" % (time() - self.comienzo)
+        t = time() - self.comienzo
+        print "Tiempo: %.2f segundos" % t
         self.empezo = False
+        return t
 
 def comparar():
     n1 = 8
