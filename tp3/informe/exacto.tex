@@ -238,7 +238,7 @@ Donde h es la altura del arbol y $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_
 
 La altura del árbol es igual a la cantidad de nodos moviles en la partición 1, ya que en cada nivel estamos agregando un nodo, mas 1 por la raiz donde no agregamos nada todavia. Luego:
 
-cantidad de nodos $\leq moviles_1*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$
+cantidad de nodos $\leq (moviles_1+1)*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$
 
 Luego el orden de completar todas las permutaciones de la primer partición nos quedó:
 
@@ -249,7 +249,7 @@ En cada hoja del arbol de las permutaciones de la primer partición, completamos 
 Completar la segunda partición tiene el mismo costo que completar la primer partición, con la salvedad de que en las hojas tenemos un costo $O(v_1+v_2)$ por copiar al mejor dibujo (el grafo no se copia, se usa una referencia).
 
 Entonces, completar el arbol de la segunda particion tiene un costo:
-$$O(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))$$
+$$O((moviles_2+1)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))$$
 
 Para cada hoja del arbol de la primer partición, llenamos todo un árbol de la segunda. Por lo tanto el costo final es (luego de sacar algunos factores comunes):
 
