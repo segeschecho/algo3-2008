@@ -314,7 +314,11 @@ Para cada hoja del arbol de la primer partición, llenamos todo un árbol de la se
 
 %$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max}+ m*log(v_max))$
 
-$O(moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
+$O(moviles_1!*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
+
+Usando que $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1} = \frac{(moviles_1 + fijos_1)!}{fijos_1!}$ 
+
+$O(\frac{(moviles_1 + fijos_1)!}{fijos_1!}(v_1+m+v_{1}^2)*(moviles_1+ \frac{(moviles_1 + fijos_2)!}{fijos_2!}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
 
 De la formula vemos que es preferible tomar como primer partición a aquella que tenga una menor cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan mas calculos.
 
