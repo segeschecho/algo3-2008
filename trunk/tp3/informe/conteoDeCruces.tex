@@ -246,9 +246,21 @@ Otro caso donde se puede evitar re calcular todos los cruces es cuando se agrega
 Estas situaciones si bien parecen casos muy especificos, pueden ser aprovechados por los distintos algoritmos que desarrollamos.
 
 \section{Eliminación de nodos nulos}
+\label{sacoNulos}
 Como dijimos, antes de aplicar las heuristicas, eliminamos los nodos de grado cero en lo que sería el grafo con todos los nodos ya puesto. Consideramos que esto evita que las heuristicas, asi como también el algoritmo exacto, realicen calculos innecesarios.
 
 Para hacerlo, basicamente tomamos los nodos de la entrada, asi como sus ejes y construimos un dibujo. A partir de este dibujo, que ya tiene armadas las listas de adyacencia, podemos separar en una lista a los nodos de grado distinto a cero. 
+
+\begin{figure}[H]
+    \centering
+    \setcounter{subfigure}{0}
+    \subfigure[]{
+     \includegraphics[scale=0.2]{./figuras/cruces/pocosEjes.png}}
+     \subfigure[]{
+\includegraphics[scale=0.2]{./figuras/cruces/limpio.png} }
+     \caption{Reducir la cantiidad de cruces en el primero es equivalente a hacerlo en el segundo}
+     \label{fig:limpieza}
+\end{figure} 
 
 Si solamente los sacaramos, nos encontraríamos frente al problema de que los nodos no tienen como identificadores números consecutivos. Por esta razón, no solo filtramos a los nodos de grado nulo, sino que se realiza un nueva númeración de los nodos que quedan. La misma cumple que los nodos fijos tienen númeración consecutiva (la cual ademas indica la posición relativa, es decir si a $<$ b con a y b nodos de la misma partición, entonces el nodo fijo a esta antes que el nodo fijo b) y que los números son asignados primero a los nodos fijos de la primer partición, luego a los nodos fijos de la segunda, en tercer lugar a los nodos no fijos de la primera y finalmente a los de la segunda.
 

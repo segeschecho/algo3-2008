@@ -362,17 +362,19 @@ Cuando buscamos la posici'on mas conveniente para el nodo (aquella que genere me
 %FIXME: falta en función del tamaño de la entrada
 %FIXME: no olvidar el costo de limpiar el grafo
 \section{Calculo de complejidad}
+Antes de comenzar, realizamos una limpieza del grafo, para no considerar a los nodos que tendran grado nulo. Como comentamos en el apartado \ref{sacoNulos}, esto tiene un costo $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes. Este costo se deberá sumar a la complejidad total.
+
 La heur'istica de inserci'on de nodos comienza asignando variables y atributos 'utiles para la reutilizaci'on de c'alculos. Inicializamos dos listas de nodos fijos y dos de nodos a agregar (un par para cada partici'on), y los diccionarios de adyacencias parcial, grado parcial, posiciones y nodos moviles. Todo esto tiene un costo de $O(n + m)$. Adem'as en esta parte inicializamos la variable cruces, contando los cruces del dibujo sin agregar ning'un nodo, que nos cuesta $O(m*log(fijos_{max})+fijos_{max}))$, entonces la parte de inicializaci'on nos cuesta $O(n + m + m*log(fijos_{max})+fijos_{max})$, donde $n$ es la cantidad de nodos del grafo bipartito, $m$ su cantidad de ejes, y $fijos_{max}$ es la cantidad de nodos fijos de la partici'on que tiene m'as nodos fijos.
 
 Veamos ahora cuanto nos cuesta elegir un nodo entre los nodos a agregar. Primero ordenamos de forma creciente (con sort de STL) los nodos a agregar por su grado parcial, es decir considerando solamente los ejes que van del nodo hacia un nodo fijo o del nodo hacia un nodo que esta ya fue agregado. 
 %FIXME: en el caso no random es al pedo iterar, hay q quedarse con el ultimo
-Este ordenamiento tiene complejidad $O(cantMovilesPi*log(cantMovilesPi))$.Luego de ordenarlos, iteramos la secuencia hasta que el grado maximo sea mayor al grado del nodo en la posición que estamos mirando y de estos nodos nos quedamos con uno, esto nos cuesta $O(cantMovilesPi)$. Luego estos pasos tienen un costo $O(cantMovilesPi + cantMovilesPi*log(cantMovilesPi))$, siendo Pi la partici'on sobre la cual estamos agregando el nodo.
+Este ordenamiento tiene complejidad.  $O(cantMovilesPi*log(cantMovilesPi))$.Luego de ordenarlos, tomamos el primero de la secuencia.Luego estos pasos tienen un costo $O(cantMovilesPi*log(cantMovilesPi))$, siendo Pi la partici'on sobre la cual estamos agregando el nodo.%iteramos la secuencia hasta que el grado maximo sea mayor al grado del nodo en la posición que estamos mirando y de estos nodos nos quedamos con uno, esto nos cuesta $O(cantMovilesPi)$. Luego estos pasos tienen un costo $O(cantMovilesPi + cantMovilesPi*log(cantMovilesPi))$, siendo Pi la partici'on sobre la cual estamos agregando el nodo.
 
 Ahora buscamos una de las mejores posiciones en la partici'on para insertar este nodo. Primero actualizamos la lista de adyacencias parcial para incorporar las adyacencias del nodo que voy a agregar (esto es necesario pues las funciones de conteo de cruces se usan dentro del subgrafo fijo y por tanto para que tengan en cuenta al nodo a agregar, es necesario completarlas con sus ejes) y luego insertamos el nodo al final de la partici'on.
 
 Actualizar la lista de adyacencias parcial tiene un costo $O(m_a)$, con $m_a$ los ejes del nodo a agregar. Entonces una vez que agregue a todos los nodos, en el peor de los casos agregue todos los ejes también, por lo que esto tiene un costo $O(m)$. Luego contamos los cruces por agregar atras, lo cual tiene un costo $O(n+m)$. Ahora swapeamos el nodo con su nodo anterior de la particion y recalculamos los cruces hasta que el nodo a agregar queda primero. Aqu'i podemos utilizar lo mostrado en el apartado que explica el conteo de cruces, y lo hacemos con costo $O(min(max(vi,m_a,m_b),m_a*m_b))$. Esto, haciendolo por cada posici'on en la partici'on que estamos agregando, tiene un costo de $O(cantModosParticion * min(max(vi,m_a,m_b),m_a*m_b))$. Dado que $max(vi, m_a, m_b) \leq v_{max}$ porque vale para vi, pero ademas $m_a$ y $m_b$ son a lo sumo tan grandes como la particion mas grande, en el caso en el que los nodos esten relacionados con todos los de la partición de enfrente, por otro lado com vale que $min(max(vi,m_a,m_b),m_a*m_b) \leq max(vi,m_a,m_b)$, resulta que la complejidad de este ciclo nos queda $O(v_{max}^2)$.
 
-Finalmente insertamos el nodo y actualizamos los grados parciales y el vector de posiciones, con un costo de $O(m + cantMnodosParticion)$.
+Finalmente insertamos el nodo y actualizamos los grados parciales y el vector de posiciones, con un costo de $O(m + v_{max})$.
 
 Dado que este procedimiento lo hacemos para todos los nodos a agregar, la complejidad resultante es: 
 
@@ -393,6 +395,33 @@ Esto es asi porque:
 $O(m+n) \subseteq O(Moviles*v_{max}^2)$ dado que $n \leq v_{max}$ y $m \leq v_max*v_{max}$ 
 
 $O(MovilesPi + MovilesPi*log(MovilesPi)) \subseteq O(MovilesPi*log(MovilesPi))$ y como $MovilesPi*log(MovilesPi) \leq v_{max}*log(v_{max}) \leq v_{max}*v_{max}$, vale que $O(MovilesPi + MovilesPi*log(MovilesPi)) \subseteq  O(v_{max}^2)$
+
+Finalmente a esta complejidad obtenida, debemos agregarle el costo de la ``limpieza'' del grafo. Por lo tanto, la complejidad total es:
+$$O(Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max}+ V_{1}+V_2+m)$$
+
+El tamaño de la entrada t, lo podemos definir de la siguiente manera:
+
+$$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
+ $$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$ 
+
+donde $P_i$ es la cantidad de nodos originales de la primera partición, $m_p$ es la cantidad de ejes originales, $IV_i$ es la cantidad de nodos que se agregan a la partición i y $m_iv$ es la cantidad de ejes que se agregan.
+
+Luego vale que:
+$$t \geq log(P_1)+ v_1+ log(P_2)+V_2 + log(m_p) +m +log(IV_1) + log(IV_2) + log(m_{iv})$$
+ 
+a partir de esto, vemos que:
+$$ t \geq V_i \geq v_i$$
+$$ t \geq V_{max} \geq v_{max}$$
+$$ t \geq Moviles$$
+$$ t \geq fijos_{max}$$
+$$ t \geq m $$
+
+Por lo tanto:
+
+$$O(Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max}+ V_{1}+V_2+m) \subseteq O(t^3 + t*log(t)+t) \subseteq O(t^3)$$ 
+
+
+
 
 \section{Analisis}
 \subsection{Casos borde}
