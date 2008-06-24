@@ -108,10 +108,17 @@ def tamTree(fijo1, fijo2, movil1, movil2):
         return (f1+1)*tamTree(f1+1, f2, m1-1, m2) + 1
 
 def tamArbol(fijo1,fijo2,movil1,movil2):
+    if isinstance(fijo1, list) and \
+       isinstance(fijo2, list) and \
+       isinstance(movil1, list) and \
+       isinstance(movil2, list):
+        f1, f2, m1, m2 = map(len, [fijo1, fijo2, movil1, movil2])
+    else:
+        f1, f2, m1, m2 = fijo1, fijo2, movil1, movil2
 
-    arbol1 = tamTree(fijo1,[],movil1,[])
-    arbol2 = tamTree([],fijo2,[],movil2)
-    return arbol1 + cuantasCombinaciones(fijo1, [], movil1, [])*(arbol2 -1)
+    arbol1 = tamTree(f1,0,m1,0)
+    arbol2 = tamTree(0,f2,0,m2)
+    return arbol1 + cuantasCombinaciones(f1, 0, m1, 0)*(arbol2 -1)
 
 def test_resolvedorFuerzaBruta():
     from GeneradorGrafos import generarGrafoBipartitoAleatorio, generarDibujoAleatorio
