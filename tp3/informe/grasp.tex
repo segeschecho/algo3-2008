@@ -179,5 +179,38 @@ $$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log(
 Usando esto, mas el calculo hecho para la complejidad de la busqueda local en función de la entrada, podemos ver que el orden es $O(t^6*log(t))$
 
 \section{Analisis experimental}
+\subsection{Mal caso}
+Para determinar un mal caso para nuestra heuristica Grasp, lo que tenemos que buscar es algún mal caso de la heuristica constructiva, que la heuristica de busqueda local no pueda resolver correctamente. Con un caso alcanza, porque si bien la selección de nodos aleatorios, podemos suponer que en el peor caso siempre se repite este ordenamiento malo de los nodos.
 
+Consideremos entonces el ejemplo de caso malo para la constructiva. Recordemos como era:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.25]{./figuras/constructivas/malCasoConstructivo.png}
+\caption{Mal caso para la heuristica constructiva}
+\end{figure}
+
+Ahora apliquemos la busqueda local para ver que resultado obtenemos:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Partimos del dibujo que produce la heuristica constructiva]{
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons4.png}}
+\subfigure[Para los nodos fijos, no se puede hacer nada. Al nodo 1 lo cambiamos de posición pero no porque baja la cantidad de cruces, sino porque en caso de empate, la busqueda local elige la primer posición visitada]{
+\includegraphics[scale=0.2]{./figuras/grasp/malGrasp1.png}}
+\subfigure[Al nodo 2 no se lo mueve porque no cambia el número de cruces. El nodo 3 tampoco cambia el número de cruces, pero se lo mueve por lo dicho antes del criterio de elección de posiciones]{
+\includegraphics[scale=0.2]{./figuras/grasp/malGrasp2.png}}
+\subfigure[Finalmente se mueve al nodo 4 pero tampoco baja el número de cruces]{
+\includegraphics[scale=0.2]{./figuras/grasp/malGrasp3.png}}
+\end{figure}
+
+Como el número de cruces no cambio, consideramos que la busqueda local llego a un mínimo local y no se vuelve a intentar mejorar al dibujo. Sin embargo como vimos en \ref{mal-caso} el dibujo se podía lograr con 0 cruces.
+
+Entonces si consideramos la misma familia que hacia fallar a la heuristica constructiva, observamos que la busqueda local no logra mejorar los dibujos que aquella genera, de modo que el Grasp fallaría de la misma manera que la heuristica constructiva frente a estos casos.
+
+Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un alfa suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección.
+ 
+\subsection{Comparativa de heuristicas}
 \section{Discusión}
