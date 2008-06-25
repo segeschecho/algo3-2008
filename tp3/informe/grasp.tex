@@ -1,15 +1,36 @@
 \chapter{GRASP}
 
-\section{Modificaciones a la heuristica constructiva}
-Para poder aplicar nuestra heuristica constructiva a un procedimiento GRASP, fue necesario introducir algun factor de aleatoriedad a la misma.
+\section{Introducción}
 
-Nosotros consideramos dos formas de hacerlo:
+La idea de la metaheurística GRASP es construir una solución mediante una heurística constructiva
+(en la que interviene algún factor de aleatoriedad) y luego refinarla mediante una segunda heurística
+de búsqueda local, que halla el óptimo en la vecindad del caso construido inicialmente.
+
+Este procedimiento se repite una cierta cantidad de veces. La idea de fondo es que la heurística
+constructiva construye candidatos que son apropiados para empezar, y el factor aleatorio
+introduce variantes sobre estos candidatos para explorar al menos varios óptimos locales distintos.
+Si no existiera este factor, como la búsqueda local es determinista, se encontraría una única
+solución óptima localmente (la que está en la vecindad del único candidato construíble).
+
+Para construir el algoritmo GRASP es necesario por lo tanto introducir un elemento aleatorio
+a la heurística constructiva y determinar un criterio de parada apropiado para terminar la
+ejecución del proceso ``construcción - refinamiento'' que se lleva a cabo en cada iteración.
+
+\section{Modificaciones a la heuristica constructiva}
+Para poder aplicar nuestra heurística constructiva a un procedimiento GRASP, fue necesario 
+introducir algún factor de aleatoriedad a la misma.
+
+Consideramos dos formas de hacerlo:
 \begin{enumerate}
 \item Modificar el criterio de elección del nodo candidato en la inserción:
-Se considera un valor $\alpha \in [0,1]$, de modo que en cada paso no se selecciona el de grado máximo, sino que se selecciona un v tal que $d(v) \geq \alpha*d_{max}$. Si $\alpha = 1$, la elección no es aleatoria, en cambio si $\alpha = 0$, se escoge un candidato totalmente al azar. En general, en (0,1), un $\alpha$ mas grande implica una lista restringida de candidatos mas pequeña.
+Se considera un valor $\alpha \in [0,1]$, de modo que en cada paso no se selecciona el de 
+grado máximo, sino que se selecciona un $v$ tal que $d(v) \geq \alpha*d_{max}$. Si $\alpha = 1$, 
+la elección no es aleatoria, en cambio si $\alpha = 0$, se escoge un candidato totalmente al azar. 
+En general, en (0,1), un $\alpha$ más grande implica una lista restringida de candidatos más pequeña.
 
 \item Modificar el criterio de elección de la posición:
-Nuestra heuristica constructiva frente a un ``empate'' de posiciones, es decir, para un nodo dado, hay dos o mas posiciones que generan la misma cantidad de cruces, lo que hace es quedarse con la primera visitada. 
+Frente a un ``empate'' de posiciones (cuando para un nodo dado a insertar hay dos o más posiciones que 
+generan la misma cantidad de cruces), el algoritmo original se queda con la primera visitada. 
 
 \begin{figure}[H]
 \centering
@@ -21,61 +42,128 @@ Nuestra heuristica constructiva frente a un ``empate'' de posiciones, es decir, 
 \includegraphics[scale=0.2]{./figuras/grasp/empate2.png}}
 \subfigure[]{
 \includegraphics[scale=0.2]{./figuras/grasp/empate3.png}}
-\caption{Cualquiera de las 3 posiciones para v es a priori tan buena como las otras}
+\caption{Cualquiera de las 3 posiciones para $v$ es a priori tan buena como las otras}
 \end{figure}
 
-Entonces podemos modificar esto, para que si hay empate eliga alguna de todas estas posiciones al azar.
-
+Podemos entonces modificar este factor para que de haber ``empate'' se elija al azar alguna
+de las posiciones posibles.
 \end{enumerate}
-Posteriormente realizaremos, experiencias con el fin de determinar si estas modificaciones son utilies, y ademas con el fin de determinar que valor de $\alpha$ debe usarse.
+
+Posteriormente, realizaremos experiencias con el fin de determinar si estas modificaciones 
+son útiles, y encontrar qué valor de $\alpha$ es conveniente utilizar.
 
 \section{Determinación de los parametros}
-Para nuestro grasp debíamos fijar tres parametros:
+Para nuestro algoritmo basado en GRASP debemos fijar tres parámetros:
 \begin{enumerate}
 \item criterio de parada
-\item alfa (que determina el tamaño de la lista restringida de candidatos)
-\item posición aleatoria, que determina si frente a un empate de posiciones nos quedamos con la primera encontrada o con alguna al azar.
+\item $\alpha$ (que determina el tamaño de la lista restringida de candidatos)
+\item posición aleatoria (que determina si frente a un empate de posiciones nos quedamos con la primera encontrada o con alguna al azar)
 \end{enumerate}
-Para cada parametro se propusieron distintos valores alternativos, y luego realizamos experiencias para determinar cual de las distintas combinaciones daba un mejor resultado en función de la cantidad de cruces obtenida y el tiempo requerido.
 \subsection{Criterios de parada}
-Consideramos que el criterio de parada debia tener en cuenta la cantidad de nodos que posee el grafo, ya que esta cantidad influye en la cantidad posible de configuraciones y por ende en la cantidad de mejoras que se pueden hacer. Por ejemplo como vimos en la busqueda local, en general necesitaban mas iteraciones para mejorar una solución. Por esta razón el primer criterio que proponemos es el maximo de los tamaños de las particiones, criterio que nos da un una cantidad de iteraciones lineal en la cantidad de nodos.
 
-El otro criterio que planteamos varia su cantidad de iteraciones de una manera adaptativa. Se toma como valor maximo en el numero de iteraciones la cantidad de nodos del grafo. Ahora si en un iteracion no se produce una mejora, se disminuye en 1 la cantidad de iteraciones. Si en cambio se produce una mejor, la cantidad maxima de iteraciones se divide por 2. 
-Este criterio utiliza como el anterior, la idea de que mas nodos implica mas trabajo para mejorar, pero por otro lado agrega la idea de que no es posible mejorar indefinidamete y que si se mejoro mucho es menos probable que se siga mejorando.
+El problema de la parametrización de algoritmos basados en metaheurísticas con factores aleatorios es
+muy delicado. No disponemos de las herramientas como para establecer un criterio de parada óptimo, puesto
+que la definición de dicho óptimo depende del contexto de uso del algoritmo. Además, el problema tiene
+parámetros infinitos: cualquier función propuesta a partir de los resultados de las iteraciones de
+las heurísticas constructivas y de búsqueda puede ser un parámetro válido.
 
-En el peor caso, si no mejora nunca, este criterio hace que el grasp genere mas iteraciones que el criterio anterior, pero en el mejor caso hace una cantidad logaritmica de iteraciones.
-% deberian ir juntos
+Esta dificultad es tal que da lugar a situaciones curiosas en el desarrollo de algoritmos basados en 
+metaheurísticas. En el caso de los algoritmos genéticos, donde los parámetros suelen ser pocos, no es
+inusual recurrir a un segundo algoritmo genético para optimizar los parámetros del primero.
+
+Dada esta situación no podemos más que razonar de forma heurística para asignar valores a los
+parámetros. Al menos será necesario hallar un valor apropiado para el  parámetro $\alpha$ de 
+la heurística constructiva, y determinar un criterio de parada cuyo desempeño sea al menos
+razonable. A partir de ideas heurísticas, intentaremos validar algunas de nuestras predicciones
+mediante experimentación.
+
+\subsection{Criterio de parada}
+Como dijimos anteriormente, el criterio de parada está muchas veces determinado por el contexto
+de uso del algoritmo. En casos de presentación de datos para su observación por personas, puede
+ser necesario que dicha presentación tenga un tiempo de respuesta rápido para evitar la percepción
+de lentitud que puede tener el usuario si el algoritmo es lento. En aplicaciones para integración
+de componentes electrónicos que se producirán en masa, puede ser aceptable esperar un tiempo
+sustancial puesto que ese tiempo resulta pequeño comparado con los tiempos y valores involucrados
+en la producción posterior. En el primer caso se utilizaría un criterio de parada por cota temporal
+constante (¿ya pasó el tiempo suficiente para impacientar al usuario?), mientras que en el segundo
+es probable que el algoritmo corra por tanto tiempo como lo permita el plan del proyecto de producción
+(lo cual podría ser, potencialmente, hasta que la persona responsable le indique al programa que
+terminó su tiempo de cálculo).
+
+En otros casos se busca simplemente una solución de compromiso - el algoritmo debería tomar
+un tiempo relativamente corto y obtener una solución en lo posible óptima, o en su defecto
+bastante buena.
+
+Razonando heurísticamente, consideramos que el criterio de parada debe tener en cuenta la 
+cantidad de nodos que posee el grafo, ya que esta cantidad influye en la cantidad posible de 
+configuraciones y por ende en la cantidad de mejoras que se pueden hacer. Como vimos por ejemplo 
+en la búsqueda local, en general se necesitan más iteraciones para mejorar una solución de tamaño
+mayor. Por esta razón el primer criterio que proponemos es el de hacer tantas iteraciones como nodos
+haya en la partición más grande del grafo.
+
+Un segundo criterio que planteamos varía su cantidad de iteraciones de manera adaptativa. Se toma 
+como valor máximo en el número de iteraciones la cantidad de nodos del grafo. Si en un iteración no 
+se produce una mejora, se disminuye en 1 la cantidad de iteraciones restantes. Si en cambio se produce 
+una mejora, la cantidad máxima de iteraciones se divide por 2. Este criterio utiliza, como el anterior, 
+la idea de que más nodos implica mas trabajo para mejorar, pero por otro lado agrega la idea de que no 
+es posible mejorar indefinidamete y por tanto la ocurrencia de mejoras disminuye la probabilidad de hallar
+más en el futuro.
+
+
 \subsection{Tamaño de la lista de candidatos}
-Para determinar el tamaño de la lista de candidatos propusimos también dos opciones:
+Para determinar el tamaño de la lista de candidatos de la heurística constructiva proponemos también 
+dos opciones:
 \begin{itemize}
-\item Tomar un alfa fijo = 0.75: La idea es que un valor bajo de alfa genera muchas soluciones, entre las cuales puede haber muchas malas, mientras que un alfa demasiado grande limita mucho la variedad de las soluciones generadas. Por esa razon nos parece que alfa = 0.75 podria ser un valor razonable.
-\item Tomar un alfa adaptativo: En este caso, se parte de un alfa alto, 0.95, y en cada iteracion, si no se produce mejora, lo que se hace es disminuir el valor de alfa. De esta manera, la lista de candidatos comienza siendo pequeña, con la esperanza de lograr buenos resultados, y a medida que no se mejora, se da lugar a soluciones mas variadas
+\item Tomar un $\alpha$ fijo = 0.75: La idea es que un valor demasiado bajo de $\alpha$ equivale a elegir
+      un nodo cualquiera en lugar de uno de grado máximo. Como observamos empíricamente que elegir
+      uno de grado máximo es apropiado, no es bueno alejarse demasiado de este criterio. Por otro lado,
+      un $\alpha$ demasiado grande hace que la heurística sea esencialmente determinista, y por lo tanto
+      elimina las ventajas de la aleatoriedad en su implementación. Proponemos $\alpha$ = 0.75 como un
+      valor intermedio razonable.
+\item Tomar un $\alpha$ adaptativo: En este caso, se parte de un $\alpha$ alto, 0.95, y en cada iteración, si no 
+      se produce mejora, se disminuye su valor. De esta manera, la lista de candidatos comienza siendo 
+      pequeña, con la esperanza de lograr buenos resultados rápidamente, y en la medida en que no se
+      observarn mejoras, se da lugar a soluciones más variadas.
 \end{itemize}
-\subsection{Posicion aleatoria}
-En este caso, se consideraron las dos alternativas: tomar posicion aleatoria o tomar la primer posición.
+
+\subsection{Posición aleatoria}
+En este caso, se consideraron las dos alternativas: tomar una posición aleatoria entre las mejores,
+o tomar siempre la primer posición.
 
 \subsection{Experimentos}
-Con el fin de observar si alguna configuración de los parametros, se comportaba mejor que las demas, decidimos aplicar cada posible configuración a distintas instancias del problema.
+Con el fin de observar si alguna configuración de los parametros se comportaba mejor que las demás, 
+decidimos aplicar cada posible configuración a distintas instancias del problema.
 Decidimos identificar a cada combinación mediante un número, lo cual hicimos de la siguiente manera:
 \begin{enumerate}
-\item alfa 0.75, primera posición, parada por maximo de partición
-\item alfa 0.75, primera posición, parada adaptativa
-\item alfa 0.75, posición aleatoria, parada por maximo de partición
-\item alfa 0.75, posición aleatoria, parada adaptativa
-\item alfa adaptativa, primera posición, parada por maximo de partición
-\item alfa adaptativa, primera posición, parada adaptativa
-\item alfa adaptativa, posición aleatoria, parada por maximo de partición
-\item alfa adaptativa, posición aleatoria, parada adaptativa
+\item $\alpha$ 0.75, primera posición, parada por maximo de partición
+\item $\alpha$ 0.75, primera posición, parada adaptativa
+\item $\alpha$ 0.75, posición aleatoria, parada por maximo de partición
+\item $\alpha$ 0.75, posición aleatoria, parada adaptativa
+\item $\alpha$ adaptativa, primera posición, parada por maximo de partición
+\item $\alpha$ adaptativa, primera posición, parada adaptativa
+\item $\alpha$ adaptativa, posición aleatoria, parada por maximo de partición
+\item $\alpha$ adaptativa, posición aleatoria, parada adaptativa
 \end{enumerate}
-Para comparar, decidimos medir el tiempo que requería cada heuristica y ademas considerar cuanto lograban disminuir la cantidad de cruces, con respecto a la busqueda local. Es decir dada la solución inicial con la que comienza el grasp, que tanto logra mejorarla.
+
+Esto evita la consideración heurística de que los parámetros son independientes. Asumir esto introduce
+un nuevo factor desconocido a la elección de los parámetros, aunque también disminuye la cantidad
+de combinaciones a examinar. Tomamos la decisión de limitar los parámetros pero sí evaluar todas
+sus combinaciones.
+
+Para efectuar las comparaciones decidimos medir el tiempo que requiere cada heurística y además 
+considerar la mejora que se logra a partir de la primera iteración del algoritmos, es decir, dada
+la solución inicial con la que comienza el GRASP, cual es la mejora que se obtiene mediante las
+iteraciones subsiguientes.
 
 Realizamos las siguientes experiencias:
 \begin{itemize}
 \item Aplicar la heuristica a grafos densos con entre 30 y 50 nodos en cada partición
-\item Aplicar la heuristica a grafos con menos ejes y entre 50 y 70 nodos en cada partición
+\item Aplicar la heuristica a grafos ralos  con entre 50 y 70 nodos en cada partición
 \end{itemize}
 
-Como en cada experiencia aplicamos las 8 combinaciones, decidimos dividir los gráficos, dejando en uno a los que tienen alfa fijo (combinaciones 1,2,3,4) y por otro a los que usan un alfa adaptativo (5,6,7,8) ya que de no hacer esto, se hacia mas dificl visualizar los graficos.
+Como en cada experiencia aplicamos las 8 combinaciones, decidimos dividir los gráficos, dejando en 
+uno a los que tienen $\alpha$ fijo (combinaciones 1,2,3,4) y por otro a los que usan un $\alpha$ 
+adaptativo (5,6,7,8) ya que de no hacer esto se hace muy difícil visualizar los resultados.
 
 Los resultados de la primer experiencia son los siguientes:
 \begin{figure}[H]
@@ -86,7 +174,7 @@ Los resultados de la primer experiencia son los siguientes:
 \setcounter{subfigure}{1}
 \subfigure[]{
 \includegraphics[scale=0.65]{./graficos/grasp/test22.png}}
-\caption{Mejora con respecto a la solución propuesta por la busqueda local}
+\caption{Mejora con respecto a la solución propuesta por la búsqueda local}
 \end{figure}
 
 \begin{figure}[H]
@@ -100,7 +188,12 @@ Los resultados de la primer experiencia son los siguientes:
 \caption{Tiempo de ejecución (en segundos)}
 \end{figure}
 
-Lo que podemos observar es que si bien no existe uno que se destaque por sobre el resto, en general, 2 y 6 obtienen buenos resultados, lo cual es interesante, si tenemos en cuenta que son metodos que utilizan el criterio de parada adapatativo. Con respecto a los tiempos de ejecución, el criterio adaptativo suele tener tiempos mas bajas, sin embargo en los casos donde mejora poca, por ejemplo, para n=41, el metodo 4 casi no logró mejoras y como podemos observar su tiempo fue mas alto en ese caso que el de los metodos no adaptativos.
+
+Lo que podemos observar es que si bien no existe uno que se destaque por sobre el resto, en general
+2 y 6 obtienen buenos resultados. Esto es interesante si tenemos en cuenta que son métodos 
+que utilizan el criterio de parada adapatativo. Con respecto a los tiempos de ejecución, el criterio adaptativo 
+suele tener tiempos más bajos. Sin embargo, en los casos donde mejora poco (por ejemplo, para n=41) el método 4 
+casi no logró mejoras y como podemos observar su tiempo fue más alto en ese caso que el de los métodos no adaptativos.
 
 \begin{figure}[H]
 \centering
@@ -124,16 +217,27 @@ Lo que podemos observar es que si bien no existe uno que se destaque por sobre e
 \caption{Tiempo de ejecución (en segundos)}
 \end{figure}
 
-En esta experiencia, se nota claramente la diferencia de tiempo entre los metodos adaptativos y el resto. Con respecto a la mejora en la cantidad de cruces, en este experimento si se observa un método que se desempeñó mejor, el método número 6,  mientras que el método 2 que en la experiencia anterior se habia comportado bastante bien, en esta no lo hizo tan bien.
+En esta experiencia se nota claramente la diferencia de tiempo entre los métodos adaptativos y el 
+resto. Con respecto a la mejora en la cantidad de cruces, en este experimento sí se observa un método 
+que se desempeñó mejor: el método número 6. Por otro lado, el método 2, que en la experiencia anterior 
+se había comportado bastante bien, no logró destacarse.
 
 \subsection{Conclusiones}
-A partir de las experiencias, lo que observamos es que si bien hay diferencias entre las distintas combinaciones de parametros, en general no existe un ganador contundente. 
 
-No obstante, en ambas experiencias la combinación \textit{alfa adaptativa, primera posición y parada adaptativa} se mostró como una buena opción. Tanto a nivel de mejora en la cantidad de cruces, como a nivel de tiempo de ejecución.
+Las experiencias son la viva imagen de la complejidad del problema a atacar. Si bien en teoría los
+diferentes criterios y parámetros parecen afectar de forma sustancial los resultados, no se observa
+ningún patrón claro en los gráficos, a excepción de la mejora en tiempo que acarrean los criterios
+de parada adaptativos por sobre los constantes.
 
+Esencialmente, lo que observamos es que si bien hay diferencias entre las distintas combinaciones 
+de parámetros, en general no existe un ganador contundente. No obstante, en ambas experiencias la 
+combinación \textit{$\alpha$ adaptativa, primera posición y parada adaptativa} se mostró como una buena 
+opción, tanto a nivel de mejora en la cantidad de cruces, como a nivel de tiempo de ejecución.
+
+% FIXME: esto y otras cosas posiblemente se deban a q el rand() andaba mal :D
 Lo que nos sorprendió, es el hecho de que utilizar una posición aleatoria en lugar de la primer posición, no lograra mejoras. 
 
-Por esa razón, es que decidimos utilizar esos parametros.
+Finalmente esos son los parámetros que decidimos utilizar.
 
 \section{Pseudocodigo}
 
@@ -144,9 +248,9 @@ Por esa razón, es que decidimos utilizar esos parametros.
 \STATE crucesActual $\leftarrow$ cantidad de cruces de la solución propuesta
 \STATE iteraciones $\leftarrow$ 0
 \STATE maxIteraciones = cantidad de nodos
-\STATE alfa $\leftarrow$ 0.95
+\STATE $\alpha$ $\leftarrow$ 0.95
 \WHILE{iteraciones < maxIteraciones}
-\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heuristica constructiva randomizada con alfa, y aplicar busqueda local
+\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heuristica constructiva randomizada con $\alpha$, y aplicar busqueda local
 \STATE nuevosCruces $\leftarrow$ cantidad de cruces de nuevoDibujo
 \IF{ nuevosCruces $<$ crucesActual}
 \STATE solActual $\leftarrow$ nuevoDibujo
@@ -154,7 +258,7 @@ Por esa razón, es que decidimos utilizar esos parametros.
 \STATE maxIteraciones $\leftarrow$ maxIteraciones $/$ 2
 \ELSE
 \STATE iteraciones $\leftarrow$ iteraciones + 1
-\STATE alfa $\leftarrow$ minimo(alfa - 0.02,0)
+\STATE $\alpha$ $\leftarrow$ minimo($\alpha$ - 0.02,0)
 \ENDIF
 \ENDWHILE
 \RETURN solActual
@@ -210,7 +314,7 @@ Como el número de cruces no cambio, consideramos que la busqueda local llego a u
 
 Entonces si consideramos la misma familia que hacia fallar a la heuristica constructiva, observamos que la busqueda local no logra mejorar los dibujos que aquella genera, de modo que el Grasp fallaría de la misma manera que la heuristica constructiva frente a estos casos.
 
-Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un alfa suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección.
+Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un $\alpha$ suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección.
  
 \subsection{Comparativa de heuristicas}
 \section{Discusión}
