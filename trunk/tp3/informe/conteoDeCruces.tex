@@ -1,10 +1,48 @@
 \chapter{Consideraciones preliminares}
 \section{Aplicaciones prácticas}
+El problema de minimización de cruces en dibujo de grafos bipartitos tiene varias
+aplicaciones prácticas en campos diversos. La aplicación más típica es sin duda
+la representación de relaciones bipartitas en esquemas o diagramas para ser leídos
+por seres humanos. La presencia de cruces en los ejes que unen a las partes del
+diagrama resulta confusa para la lectura: en este contexto resulta conveniente
+minimizar la cantidad de cruces en el dibujo para hacer más legible la información.
+El aspecto incremental del problema se aplica claramente a esta aplicación. Dado
+un diagrama existente, si se le agregan elementos sigue siendo deseable minimizar
+la cantidad de cruces en los ejes, pero en muchos casos puede ser más importante
+mantener el orden relativo de los elementos existentes del diagrama, ya que los
+usuarios que conocen un diagrama relativamente complejo recuerdan intuitivamente
+la posición de los elementos ya existentes. Si se invirtieran los órdenes originales
+para obtener menos cruces de ejes, el efecto indeseable del reordenamiento podría
+ser más confuso que la existencia de algunos cruces adicionales.
+
+El problema de dibujo bipartito convencional (es decir, no incremental) tiene
+aplicaciones prácticas más diversas. En VLSI (\textit{Very Large Scale Integration}) se
+combinan grandes cantidades de componentes electrónicos en un único microchip.
+La conexión entre estos componentes se hace con \textit{buses} que pueden representarse
+como ejes de un grafo bipartito. El interés de ordenar las interfases de los componentes
+para minimizar cruces proviene de que, por un lado, dependiendo de la cantidad de capas
+del microchip puede o no ser viable que haya cruces entre los conductores y, por otra
+parte, toda superposición de conductores en un sistema electrónico de alta frecuencia
+produce interferencia electromagnética que puede afectar el rendimiento del dispositivo.
+A mayor escala, un problema similar existe en la diagramación de circuitos electrónicos
+sobre placas de computadoreas.
+
+Finalmente, los grafos bipartitos sirven para modelar diversas estructuras de datos
+en problemas de \textit{data mining}. Un ejemplo sencillo es la relación entre
+documentos y palabras clave que los referencian. La minimización de los cruces en 
+un dibujo bipartito de un grafo de estas características puede servir como punto
+de partida para resolver un problema de particionamiento del conjunto de palabras clave
+(con el fin de agrupar de forma automatizada las palabras clave que refieren
+a una misma área de interés). Si los \textit{clusters} de palabras claves se presentan
+al usuario, una vez más se observa el interés del problema incremental: es importante
+que al agregar nuevos documentos o palabras claves (nodos del grafo) el particionamiento
+existente se mantenga coherente.
+
 
 \section{Conteo de cruces}
 \label{conteoCruces}
 \subsection{Distintos algoritmos}
-Dentro del problema a resolver, un tema a tener en cuenta es el del conteo de cruces, ya 
+Dentro del problema a resolver, un tema esencial a explorar es el del conteo de cruces, ya 
 que tanto la solución exacta como las heurísticas necesitan contabilizar con frecuencia los 
 cruces que resultan de un dibujo dado para tomar decisiones (como por ejemplo para decidir cual
 es la posición óptima para insertar un nodo, o si una permutación es mejor o peor que otra). Por
@@ -18,7 +56,7 @@ que $v_i$ esta ``$arriba$'' de $v_j$ y $w_k$ esta ``$abajo$'' de $w_p$, como se 
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.3]{./figuras/cruces/cruce.png}
+     \includegraphics[scale=0.25]{./figuras/cruces/cruce.png}
      \caption{Esquema de un cruce}
      \label{unCruce}
 \end{figure}
@@ -53,7 +91,6 @@ por la posición en la primer partición, y luego por la posición en la segunda, s
 es porque para los ejes $(v_1,j_k)$ y $(v_2,j_m)$ valía que $v_1 < v_2 \wedge j_k > j_m$, que es la 
 condición para que se produzca un cruce.
 
-%TODO: ver si no hay q explicar mejor como se puede calcular eso
 Resulta de esto que si ordenamos los ejes de esa manera y después contamos las inversiones podemos
 obtener el número de cruces. El mecanismo utilizado para contar los ejes es \textit{radix sort} a partir
 de la definición de los ejes como el par de posiciones que unen (y no como el par de nodos que unen, que es
@@ -68,7 +105,7 @@ es $O(max(n_1, n_2, m) + c)$ con $c$ la cantidad de \textit{swaps} (o cruces) de
 Para ver un ejemplo de este algoritmo, consideremos el siguiente grafo bipartito:
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.8]{./figuras/cruces/ejemplo1.png}
+     \includegraphics[scale=0.6]{./figuras/cruces/ejemplo1.png}
      \caption{Grafo de ejemplo para la aplicación del segundo algoritmo de conteo de cruces}
      \label{ejemplo1}
 \end{figure} 
@@ -78,25 +115,15 @@ $$\left\langle (0,0),(1,1),(1,2),(2,0),(2,3),(2,4),(3,0),(3,2),(4,3),(5,2),(5,4)
 
 Entonces, las segundas componentes son:
 $$\left\langle0,1,2,\textcolor{Red}{0},3,4,0,2,3,2,4\right\rangle$$
-
 Entonces, aplicamos \textit{insertion sort}. El 0 (rojo) recorre dos posiciones antes de insertarse en su posición correcta.
-
 $$\left\langle0,0,1,2,3,4,\textcolor{Red}{0},2,3,2,4\right\rangle$$
-
 Luego el tercer 0 se swapea cuatro veces:
- 
 $$\left\langle0,0,0,1,2,3,4,\textcolor{Red}{2},3,2,4\right\rangle$$
-
 El segundo 2 cambia dos veces de posición:
-
 $$\left\langle0,0,0,1,2,2,3,4,\textcolor{Red}{3},2,4\right\rangle$$
-
 Ahora el segundo 3 cambia una vez de posición:
-
 $$\left\langle0,0,0,1,2,2,3,3,4,\textcolor{Red}{2},4\right\rangle$$
-
 Finalmente el último 2 es swapeado tres posiciones.
-
 Entonces la cantidad de cruces del grafo es $2+4+2+1+3 = 12$.
 
 Si bien en el caso general este algoritmo tiene un rendimiento superior, en peor caso sigue siendo $O(m^2)$.
@@ -126,7 +153,7 @@ Como tenemos $|v_2| = 5$, el árbol va a tener 8 hojas y un total de 15 nodos.
  
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.4]{./figuras/cruces/arbol.png}
+     \includegraphics[scale=0.3]{./figuras/cruces/arbol.png}
      \caption{Árbol para contar cruces en el grafo de ejemplo}
      \label{arbol}
 \end{figure} 
@@ -152,7 +179,7 @@ terminan en 2 o 3. Procedemos de esta manera hasta la raíz del árbol.
 Luego de esta inserción obtenemos el siguiente árbol:
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.4]{./figuras/cruces/arbol2.png}
+     \includegraphics[scale=0.3]{./figuras/cruces/arbol2.png}
      \caption{Árbol con el eje (0,0) insertado}
      \label{arbol2}
 \end{figure} 
@@ -162,8 +189,8 @@ queda de la siguiente manera:
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.4]{./figuras/cruces/arbol3.png}
-     \caption{Árbol con los ejes (0,0),(1,1) y (1,2) insertados}
+     \includegraphics[scale=0.3]{./figuras/cruces/arbol3.png}
+     \caption{Árbol con los ejes (0,0), (1,1) y (1,2) insertados}
      \label{arbol3}
 \end{figure} 
 
@@ -179,20 +206,19 @@ ningún eje que terminara en 4.
 
 \begin{figure}[H]
     \centering
-     \includegraphics[scale=0.4]{./figuras/cruces/arbol4.png}
+     \includegraphics[scale=0.3]{./figuras/cruces/arbol4.png}
      \caption{Árbol con los ejes (0,0),(1,1),(1,2) y (2,0) insertados}
      \label{arbol4}
 \end{figure} 
 
-El procedimiento se repite de la misma manera hasta colocar todos los ejes.
+El procedimiento se repite de la misma manera hasta colocar todos los ejes. Como veremos más adelante, 
+este procedimiento tiene como orden $O(max(m,|v_1|, |v_2|)$ $+$ $m*log(min(|v_1|, |v_2|))))$.
 
-Como veremos mas adelante, este procedimiento tiene como orden $O(max(m,|v_1|, |v_2|)$ $+$ $m*log(min(|v_1|, |v_2|))))$.
-
-Repasando tenemos 3 algoritmos para calcular los cruces:
+Repasando, tenemos 3 algoritmos para calcular los cruces:
 \begin{itemize}
 \item El primero consiste en revisar todo par de ejes posible. Tiene un costo $O(m^2)$.
-\item El segundo ordena los ejes y luego realiza \textit{insertion sort} para contar inversiones. Tiene un costo de $O(max(m,|v_1|, |v_2|)+c)$.
-\item El tercero utiliza el arbol binario para contar inversiones. Tiene un orden $O(max(m,|v_1|,|v_2|)$ $+$ $m*log(min(|v_1|, |v_2|)))$
+\item El segundo ordena los ejes y luego realiza \textit{insertion sort} para contar inversiones. Su costo es $O(max(m,|v_1|, |v_2|)+c)$.
+\item El tercero utiliza el arbol binario para contar inversiones. Su orden es $O(max(m,|v_1|,|v_2|)$ $+$ $m*log(min(|v_1|, |v_2|)))$.
 \end{itemize}
 
 Todos estos algoritmos requieren conocer las posiciones de los nodos dentro de cada partición. En caso de no 
@@ -208,7 +234,7 @@ o móviles). Esto es lícito ya que la inserción de nodos sin ejes no afecta de ni
 criterio a optimizar (los cruces entre ejes). De esta manera, el algoritmo 3 se muestra como la mejor 
 opción, ya que si $m>|v_i|$ resulta que 
 $O(max(m,|v_1|,|v_2|)$ $+$ $m*log(min(|v_1|, |v_2|))) \subseteq O(m*log(min(|v_1|, |v_2|)))$. Este
-preprocesamiento se discute con más detalle en la sección sobre \ref{sacoNulos}.
+preprocesamiento se discute con más detalle en la sección \ref{sacoNulos}.
 
 
 \subsubsection{Pseudocódigo}
@@ -217,7 +243,7 @@ preprocesamiento se discute con más detalle en la sección sobre \ref{sacoNulos}.
 \begin{algorithmic}[1]
 \PARAMS{particiones del dibujo (suponemos para simplificar que $|p_2| <= |p_1|$)}
 \PARAMS{ejes del dibujo, posiciones de los nodos (índices dentro de su partición)}
-\STATE ejesPorPos $\leftarrow$ $[]$
+\STATE ejesPorPos $\leftarrow$ $[$ $]$
 \FOR{cada eje(x,y) del dibujo}
     \STATE agregar a ejesPorPos la tupla (posición de x, posición de y)
 \ENDFOR
@@ -261,20 +287,20 @@ y $v_2$ \textit{buckets} más adelante.
 
 Una vez ordenado y armado el 'arbol (tarea que puede llevarse a cabo en $O(v_2)$ como se verá más adelante) 
 vamos a mirar todos los ejes. Para cada eje recorremos el árbol desde una hoja hasta la raíz. Dado que el árbol 
-tiene $2^k$ hojas, tiene $log_{2}(2^k)$ de altura, pero $log_{2}(2^k)=k=\left\lceil log_{2}(v2)\right\rceil$.
+tiene $2^k$ hojas, tiene $log_{2}(2^k)$ de altura, pero $log_{2}(2^k)=k=\left\lceil log_{2}(v_2)\right\rceil$.
 
 El árbol se puede implementar sobre un arreglo, de modo que la posición 0 sea la raíz, la 1 y 2 sus hijos 
 izquierdo y derecho respectivamente, y así sucesivamente (de manera análoga a como se hace para implementar
 \textit{heapsort} sobre arreglos). De esta manera, los nodos izquierdos del árbol quedan en las posiciones 
 impares, y aumentar cada contador, así como moverse dentro del árbol de un nodo a su padre se puede hacer
-en $O(1)$. Por lo tanto, el costo de insertar todos los ejes es $O(max(m,v_1,v_2)$ $+$ $m*log v_2$.
+en $O(1)$. Por lo tanto, el costo de insertar todos los ejes es $O(max(m,v_1,v_2)$ $+$ $m*log$ $v_2)$.
 
 \begin{figure}[H]
     \centering
     \subfigure[Árbol acumulador]{
-    \includegraphics[scale=0.2]{./figuras/cruces/arbolito.png}}
+    \includegraphics[scale=0.25]{./figuras/cruces/arbolito.png}}
     \subfigure[Representación sobre arreglo]{
-    \includegraphics[scale=0.2]{./figuras/cruces/arreglito.png}}
+    \includegraphics[scale=0.25]{./figuras/cruces/arreglito.png}}
 
 \end{figure} 
 
@@ -324,7 +350,7 @@ el \textit{swap}.
      \subfigure[]{
 \includegraphics[scale=0.2]{./figuras/cruces/crucesPostSwap.png} }
      \label{fig:swap}
-     \caption{Al intercambiar los nodos verde y azul, los cruces que involucran al resto de los nodos se mantienen}
+     \caption{\textit{Swap} de nodos consecutivos}
 \end{figure} 
 
 
@@ -362,10 +388,10 @@ consecutivos, el árbol tiene solo 2 elementos: el nodo que se agrega y el nodo p
     \centering
     \setcounter{subfigure}{0}
     \subfigure[]{
-     \includegraphics[scale=0.2]{./figuras/cruces/nuevoNodo.png}}
+     \includegraphics[scale=0.16]{./figuras/cruces/nuevoNodo.png}}
      \subfigure[]{
-\includegraphics[scale=0.2]{./figuras/cruces/compactado.png} }
-     \caption{Compactación del grafo para averiguar cuantos cruces agrega un nuevo nodo}
+\includegraphics[scale=0.16]{./figuras/cruces/compactado.png} }
+     \caption{Compactación del grafo para inserción de un nodo}
      \label{fig:compactar}
 \end{figure} 
 
@@ -392,10 +418,10 @@ lista a los nodos de grado distinto a cero.
     \centering
     \setcounter{subfigure}{0}
     \subfigure[]{
-     \includegraphics[scale=0.2]{./figuras/cruces/pocosEjes.png}}
+     \includegraphics[scale=0.16]{./figuras/cruces/pocosEjes.png}}
      \subfigure[]{
-\includegraphics[scale=0.2]{./figuras/cruces/limpio.png} }
-     \caption{Reducir la cantidad de cruces en el primero es equivalente a hacerlo en el segundo}
+\includegraphics[scale=0.16]{./figuras/cruces/limpio.png} }
+     \caption{Filtrado de nodos aislados}
      \label{fig:limpieza}
 \end{figure} 
 
