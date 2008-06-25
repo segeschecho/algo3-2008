@@ -265,6 +265,8 @@ minimo cruces utiliza las tablas (la correspondiente a la particion que se esta 
 
 % uso de la heurística constructiva para determinar el candidato inicial
 
+% uso de profiling para determinar los puntos a mejorar del algoritmo
+
 \section{Cálculo de complejidad}
 Antes de correr nuestro algoritmo exacto, lo que hacemos es limpiar el grafo, lo cual nos da un costo inicial $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes.
 
@@ -332,6 +334,39 @@ De la formula vemos que es preferible tomar como primer partición a aquella que 
 % tiempos del algoritmo de backtracking vs. tabla vs. tabla + poda loca (en funcion de las combinaciones)
 
 \subsection{Resultados}
-% estimación del tiempo del algoritmo para resolver un caso dado (en funció de la cantidad de combianciones)
+
+%aclarar que los de C++ se hicieron con -g y que con -O3 va 3x más rápido
+
+\begin{figure}[H]                                                                                     
+\centering
+\includegraphics[height=8cm]{./graficos/exacto/tiempos_tabulado.png} 
+\caption{Tiempos con y sin tabulado de valores}
+\end{figure} 
+
+\begin{figure}[H]                                                                                     
+\centering
+\includegraphics[height=8cm]{./graficos/exacto/tiempos_inversion} 
+\caption{Tiempos con y sin inversión de particiones}
+\end{figure} 
+
+\begin{figure}[H]                                                                                     
+\centering
+\includegraphics[height=11cm]{./graficos/exacto/podas.png} 
+\caption{Comparación de podas}
+\end{figure} 
+
+\begin{figure}[H]                                                                                     
+\centering
+\includegraphics[height=11cm]{./graficos/exacto/tiempos_densidad.png} 
+\caption{Tiempos en función de la densidad del grafo}
+\end{figure} 
+
+\begin{figure}[H]                                                                                     
+\centering
+\includegraphics[height=11cm]{./graficos/exacto/tiempos_cpp.png} 
+\caption{Tiempos en función del tamaño del árbol de \textit{backtracking}}
+\end{figure} 
+
 
 \section{Discusión}
+% estimación del tiempo del algoritmo para resolver un caso dado (en función de la cantidad de combianciones)
