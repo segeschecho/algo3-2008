@@ -318,7 +318,7 @@ Los resultados de las pruebas realizadas son los siguientes:
 \includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces3.png}}
 \setcounter{subfigure}{1}
 \subfigure[Tiempo en segundos en función de n]{
-\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos3.png} }
+\includegraphics[scale=0.69]{./graficos/comparacionConstructivas/tiempos3.png} }
 \caption{ n nodos en cada partición con n creciente. Cantidad de ejes = 3n. Porcentaje de nodos nuevos: 60\%}
 \end{figure}
 
@@ -329,7 +329,7 @@ Los resultados de las pruebas realizadas son los siguientes:
 \includegraphics[scale=0.61]{./graficos/comparacionConstructivas/cruces4.png}}
 \setcounter{subfigure}{1}
 \subfigure[Tiempo en segundos en función de n]{
-\includegraphics[scale=0.61]{./graficos/comparacionConstructivas/tiempos4.png} }
+\includegraphics[scale=0.67]{./graficos/comparacionConstructivas/tiempos4.png} }
 \caption{ n nodos en cada partición con n creciente. Cantidad de ejes = 3n. Porcentaje de nodos nuevos: 40\%}
 \end{figure}
 
@@ -359,9 +359,10 @@ En cada paso se elige uno de grado máximo y se busca una de las mejores posicion
 %Para construir la soluci'on se elige un nodo entre los que superan un grado alfa-m'aximo. Se puede optar por elegir uno de esos nodos de forma aleatoria. Para elegir el alfa-m'aximo primero ordenamos la lista de nodos moviles por grado parcial en orden creciente, y lo hacemos utilizando el sort de la STL.
 Cuando buscamos la posici'on mas conveniente para el nodo (aquella que genere menos cruces) lo hacemos insert'andolo al final de la particion y luego swapeandolo con su nodo contiguo de la misma partici'on. En cada paso debemos calcular los cruces que se generan, y lo hacemos reutilizando los datos, como ya se coment'o en el apartado de consideraciones preliminares.
 
-%FIXME: falta en función del tamaño de la entrada
-%FIXME: no olvidar el costo de limpiar el grafo
+%FIXME: unificar notacion
+%FIXME: revisar si el orden esta bien, ademas si esta bien expresarlo asi. Por ej. se suprime un movil*log(movil) que tal vez este bueno dejar
 \section{Calculo de complejidad}
+\label{complejidadDeLaConstructiva}
 Antes de comenzar, realizamos una limpieza del grafo, para no considerar a los nodos que tendran grado nulo. Como comentamos en el apartado \ref{sacoNulos}, esto tiene un costo $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes. Este costo se deberá sumar a la complejidad total.
 
 La heur'istica de inserci'on de nodos comienza asignando variables y atributos 'utiles para la reutilizaci'on de c'alculos. Inicializamos dos listas de nodos fijos y dos de nodos a agregar (un par para cada partici'on), y los diccionarios de adyacencias parcial, grado parcial, posiciones y nodos moviles. Todo esto tiene un costo de $O(n + m)$. Adem'as en esta parte inicializamos la variable cruces, contando los cruces del dibujo sin agregar ning'un nodo, que nos cuesta $O(m*log(fijos_{max})+fijos_{max}))$, entonces la parte de inicializaci'on nos cuesta $O(n + m + m*log(fijos_{max})+fijos_{max})$, donde $n$ es la cantidad de nodos del grafo bipartito, $m$ su cantidad de ejes, y $fijos_{max}$ es la cantidad de nodos fijos de la partici'on que tiene m'as nodos fijos.
@@ -420,11 +421,8 @@ Por lo tanto:
 
 $$O(Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max}+ V_{1}+V_2+m) \subseteq O(t^3 + t*log(t)+t) \subseteq O(t^3)$$ 
 
-
-
-
 \section{Analisis}
-\subsection{Casos borde}
+\subsection{Mal caso}
 \label{mal-caso} 
 Para ver que tan mala podría ser nuestra heuristica, lo que hicimos fue busacar casos donde se el resultado que proponga diste arbitrariamente de la solución óptima.
 
@@ -469,8 +467,44 @@ En particular, una cruz mas por cada par de nodos que se agregue. %TODO: ver si 
 
 Luego la cantidad de cruces de la constructiva es k, donde k es la cantidad de pares de nodos, de la forma viejo nuevo que se agregan. 
 \subsection{Tiempo de ejecución}
+Para observar el comportamiento decidimos medir los tiempos variando distintos parametros en los grafos que utilizamos como entrada para la heuristica. La idea era ver que influencia tenían en el tiempo de ejecución del algoritmo la variación de la cantidad de nodos, ejes y nodos libres o nuevos.
 
+Nuestra primer experiencia consitió en utilizar grafos aleatorios con una cantidad n de nodos en cada partición. Variamos este n con distintos porcentajes de nodos libres y ejes. Los resultados son los siguientes:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.65]{./graficos/benchmarkConstructiva/100NodosAumentandoNodosComplejidad.png}
+\caption{Tiempo en función de la cantidad de nodos en cada partición}
+\end{figure}
+Los porcentajes indican la proporción de ejes con respecto al grafo completo (n*n es 100 \%) y la cantidad de nodos moviles
+Lo primero que observamos es que la complejidad teorica se acerca considerablemente a los resultados empiricos. Por otro lado, se puede notar también a simple vista es que no solo la cantidad de nodos tiene una fuerte influencia en el tiempo de ejecución, sino que también la densidad del grafo asi como también la cantidad de nodos moviles agregados. Esto es de esperarse ya que como vimos en el analisis de complejidad (sección \ref{complejidadDeLaConstructiva}) estos factores son tenidos en cuenta en el analisis de complejidad del algoritmo. Y esto tiene sentido, ya que mas ejes hace mas costoso el calculo de cruces y mas nodos moviles aumenta el número de pasos hasta construir una solución.
+
+Las siguientes expericiencias se hicieron con la intención de observar la influencia, antes comentada, de la cantidad de ejes y de nodos moviles. Las experiencias se realizaron en grafos de 100 nodos por partición. A continuación presentamos los resultados:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.4]{./graficos/benchmarkConstructiva/100NodosAumentandoMoviles.png}
+\caption{Tiempo en función de la cantidad de nodos moviles en cada particion}
+\end{figure}
+
+Los porcentajes indican la proporcion de ejes en el grafo con respecto al completo.
+
+Como vemos, hay una influencia muy grande en la cantidad de nodos moviles. A medida que aumenta la cantidad aumenta el tiempo, sin embargo, observamos que a partir de un 50\% de nodos moviles, el crecimiento parece desacelerarse paulatinamente. En principio no tenemos ninguna hipotesis que pueda explicar esto, no obstante la tendencia es clara en las tres graficas. 
+%FIXME: no tenemos hipotesis?
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.4]{./graficos/benchmarkConstructiva/100NodosAumentandoEjes.png}
+\caption{Tiempo en función de la cantidad de ejes en cada partición}
+\end{figure}
+
+En este caso, los porcentajes hacen referencia a la cantidad de nodos libres.
+
+Lo que observamos es que una mayor cantidad de ejes desemboca en un mayor tiempo de ejecución. El tiempo de ejecución tiene un aspecto lineal, lo cual se condice con el analisis teorico, ya que la complejidad quedaba lineal como función de m. 
+
+A modo de conclusión, podemos decir que los tiempos de ejecución obtenidos empiricamente, reflejaron a los obtenidos en el analisis teorico de la heuristica.
 
 %TODO: no olvidar poner constructiva vs azar
-
-\section{Discusión}
