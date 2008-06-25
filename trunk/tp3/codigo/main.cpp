@@ -25,6 +25,9 @@ void help() {
 }
 
 int main(int argc, char* argv[]) {
+    // inicializo el generador de numeros aleatorios
+    srand(time(NULL));
+
     CCmdLine cmdLine;
     bool todas=false, aproximados=false, constructiva=false,local=false,grasp=false,exacta=false;
     cout << endl;
