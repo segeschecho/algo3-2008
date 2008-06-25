@@ -45,9 +45,6 @@ Dibujo HeuristicaConstructiva :: construirSolucion(float a, bool randPos) {
 
 
 void HeuristicaConstructiva :: inicializar() {
-    // Inicializo el generador de numeros aleatorios
-    srand((unsigned) time(NULL));
-
     // Obtengo las listas de nodos fijos y moviles con las que voy a operar
     fijo1.assign(d->nodosEnP1().begin(), d->nodosEnP1().end());
     fijo2.assign(d->nodosEnP2().begin(), d->nodosEnP2().end());
