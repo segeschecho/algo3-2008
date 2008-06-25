@@ -466,6 +466,31 @@ En particular, una cruz mas por cada par de nodos que se agregue. %TODO: ver si 
 \end{figure}
 
 Luego la cantidad de cruces de la constructiva es k, donde k es la cantidad de pares de nodos, de la forma viejo nuevo que se agregan. 
+
+\subsection{Comparación con la heuristica trivial}
+La heuristica que elegimos se comporto bien en cuanto a tiempo y cruces comparandola con las otras heuristicas planteadas. Sin embargo, nos pareció interesante ver si nuestra heuristica era por lo menos mejor que la heuristica trivial o heuristica del avestruz \footnote{el metodo del avestruz consiste en, frente a un problema, esconder la cabeza bajo tierra y no hacer nada, de este modo, como el dibujo se devuelve como vino, la analogía es válida} consistente en no hacer nada y devolver la entrada como vino (con los nodos nuevos agregados al final). 
+
+Esta experiencia nos permitirá ver, si por lo menos vale la pena el tiempo gastado en construir la solución.
+
+A continuación se muestran los resultados:
+%TODO: son demasiado lindos, algo no cierra en los ejemplos
+\begin{figure}[H]
+\centering
+\subfigure[]{
+\includegraphics[scale=0.5]{./graficos/constructivaVSavestruz/AvestruzVSConstructiva1.png}}
+\subfigure[]{
+\includegraphics[scale=0.5]{./graficos/constructivaVSavestruz/AvestruzVSConstructiva2.png} }
+\end{figure}
+\begin{figure}[H]
+\centering
+\subfigure[]{
+\includegraphics[scale=0.6]{./graficos/constructivaVSavestruz/AvestruzVSConstructiva3.png} }
+\caption{Comparación entre inserción greedy de nodos y heuristica optimista (cantidad de cruces del resultados)}
+\setcounter{subfigure}{0}
+\end{figure}
+
+Como vemos, nuestra heuristica se muestra considerablemente mejor que el acercamiento optimista, y esta mejora se hace mas clara en grafos densos y con un número alto de nodos.
+
 \subsection{Tiempo de ejecución}
 Para observar el comportamiento decidimos medir los tiempos variando distintos parametros en los grafos que utilizamos como entrada para la heuristica. La idea era ver que influencia tenían en el tiempo de ejecución del algoritmo la variación de la cantidad de nodos, ejes y nodos libres o nuevos.
 
