@@ -467,6 +467,14 @@ En particular, una cruz mas por cada par de nodos que se agregue. %TODO: ver si 
 
 Luego la cantidad de cruces de la constructiva es k, donde k es la cantidad de pares de nodos, de la forma viejo nuevo que se agregan. 
 
+Veamos graficamente la cantidad de cruces que encuentra la heuristica en función de la cantidad de nodos:
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.5]{./graficos/casoBorde/crucesCasoBordeConstructiva.png}
+\caption{Cantidad de cruces al aplicar la heuristica a grafos de la familia presentada}
+\end{figure}
+
 \subsection{Comparación con la heuristica trivial}
 La heuristica que elegimos se comporto bien en cuanto a tiempo y cruces comparandola con las otras heuristicas planteadas. Sin embargo, nos pareció interesante ver si nuestra heuristica era por lo menos mejor que la heuristica trivial o heuristica del avestruz \footnote{el metodo del avestruz consiste en, frente a un problema, esconder la cabeza bajo tierra y no hacer nada, de este modo, como el dibujo se devuelve como vino, la analogía es válida} consistente en no hacer nada y devolver la entrada como vino (con los nodos nuevos agregados al final). 
 
@@ -477,14 +485,14 @@ A continuación se muestran los resultados:
 \begin{figure}[H]
 \centering
 \subfigure[]{
-\includegraphics[scale=0.5]{./graficos/constructivaVSavestruz/AvestruzVSConstructiva1.png}}
+\includegraphics[scale=0.5]{./graficos/constructivaVSTrivial/ConstructivaVSTrivial1.png}}
 \subfigure[]{
-\includegraphics[scale=0.5]{./graficos/constructivaVSavestruz/AvestruzVSConstructiva2.png} }
+\includegraphics[scale=0.5]{./graficos/constructivaVSTrivial/ConstructivaVSTrivial2.png} }
 \end{figure}
 \begin{figure}[H]
 \centering
 \subfigure[]{
-\includegraphics[scale=0.6]{./graficos/constructivaVSavestruz/AvestruzVSConstructiva3.png} }
+\includegraphics[scale=0.6]{./graficos/constructivaVSTrivial/ConstructivaVSTrivial2.png} }
 \caption{Comparación entre inserción greedy de nodos y heuristica optimista (cantidad de cruces del resultados)}
 \setcounter{subfigure}{0}
 \end{figure}
