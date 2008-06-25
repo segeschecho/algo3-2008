@@ -136,13 +136,13 @@ decidimos aplicar cada posible configuración a distintas instancias del problema
 Decidimos identificar a cada combinación mediante un número, lo cual hicimos de la siguiente manera:
 \begin{enumerate}
 \item $\alpha$ 0.75, primera posición, parada por maximo de partición
-\item $\alpha$ 0.75, primera posición, parada adaptativa
-\item $\alpha$ 0.75, posición aleatoria, parada por maximo de partición
 \item $\alpha$ 0.75, posición aleatoria, parada adaptativa
+\item $\alpha$ 0.75, posición aleatoria, parada por maximo de partición
+\item $\alpha$ 0.75, primera posición, parada adaptativa
 \item $\alpha$ adaptativa, primera posición, parada por maximo de partición
-\item $\alpha$ adaptativa, primera posición, parada adaptativa
-\item $\alpha$ adaptativa, posición aleatoria, parada por maximo de partición
 \item $\alpha$ adaptativa, posición aleatoria, parada adaptativa
+\item $\alpha$ adaptativa, posición aleatoria, parada por maximo de partición
+\item $\alpha$ adaptativa, primera posición, parada adaptativa
 \end{enumerate}
 
 Esto evita la consideración heurística de que los parámetros son independientes. Asumir esto introduce
@@ -222,6 +222,27 @@ resto. Con respecto a la mejora en la cantidad de cruces, en este experimento sí
 que se desempeñó mejor: el método número 6. Por otro lado, el método 2, que en la experiencia anterior 
 se había comportado bastante bien, no logró destacarse.
 
+Dado que la cantidad de cruces que encuentra cada versión del Grasp se mantuvo muy similar, decidimos descartar a las heuristicas que no utilizaban un criterio de parada adaptativo, ya que tardaban mayor tiempo sin lograr resultados que se destaquen.
+
+Decidimos también continuar con la experimentación con las versiones que usan un criterio de parada adaptativo. De esta manera tratamos de observar como se comportaban en función de la densidad del grafo y de la cantidad de nodos moviles. 
+
+Los resultados que obtuvimos son los siguientes:
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Cantidad de cruces]{
+\includegraphics[scale=0.55]{./graficos/grasp/AumentosMoviles.png}}
+\setcounter{subfigure}{1}
+\subfigure[Tiempo (en segundos)]{
+\includegraphics[scale=0.55]{./graficos/grasp/AumentoMovilesTiempo.png}}
+\caption{Cruces y tiempo en función de la cantidad de nodos moviles}
+\end{figure}
+
+Nuevamente se mantiene la tendencia a disminuir la cantidad de cruces que encuentra la heursitica cuando se aumenta el número de nodos moviles, la cual ya se observaba en la busqueda local asi como tambien en la constructiva.
+
+También observamos que los tiempos son similares, con la excepción de la versión 6, que necesitó de tiempos mucho menores para lograr una cantidad de cruces menor o igual que los demas.
+
+
 \subsection{Conclusiones}
 
 Las experiencias son la viva imagen de la complejidad del problema a atacar. Si bien en teoría los
@@ -231,13 +252,16 @@ de parada adaptativos por sobre los constantes.
 
 Esencialmente, lo que observamos es que si bien hay diferencias entre las distintas combinaciones 
 de parámetros, en general no existe un ganador contundente. No obstante, en ambas experiencias la 
-combinación \textit{$\alpha$ adaptativa, primera posición y parada adaptativa} se mostró como una buena 
+combinación \textit{$\alpha$ adaptativa, posición aleatoria y parada adaptativa} se mostró como una buena 
 opción, tanto a nivel de mejora en la cantidad de cruces, como a nivel de tiempo de ejecución.
 
-% FIXME: esto y otras cosas posiblemente se deban a q el rand() andaba mal :D
-Lo que nos sorprendió, es el hecho de que utilizar una posición aleatoria en lugar de la primer posición, no lograra mejoras. 
+Creemos que esto tiene bastante sentido, porque el criterio adapatativo, como explicamos antes, se base en que si bajo mucho el número de cruces, esperamos que sea menos probable seguir mejorando. De esta manera, suele dar tiempos mas bajos que un criterio estatico.
 
-Finalmente esos son los parámetros que decidimos utilizar.
+Por otro lado un $\alpha$ adaptativo trata de usar las mejores soluciones que genera una lista restrictiva, ampliandola a medida que esta se va agotando.
+
+Y finalmente, elegir la posición al azar, nos brinda en general, una familia mas amplia para un mismo alfa, y de esta manera permite encontrar soluciones que de otra forma, con el criterio de primer posición no se encontrarian.
+
+Concluyendo, decidimos tomar estos parametros para construir nuestro Grasp.
 
 \section{Pseudocodigo}
 
@@ -250,7 +274,7 @@ Finalmente esos son los parámetros que decidimos utilizar.
 \STATE maxIteraciones = cantidad de nodos
 \STATE $\alpha$ $\leftarrow$ 0.95
 \WHILE{iteraciones < maxIteraciones}
-\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heuristica constructiva randomizada con $\alpha$, y aplicar busqueda local
+\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heuristica constructiva randomizada con $\alpha$ (seleccionando cada vez una posicion al azar de entre las mejores), y aplicar busqueda local
 \STATE nuevosCruces $\leftarrow$ cantidad de cruces de nuevoDibujo
 \IF{ nuevosCruces $<$ crucesActual}
 \STATE solActual $\leftarrow$ nuevoDibujo
