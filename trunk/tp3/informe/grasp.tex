@@ -59,7 +59,6 @@ Para nuestro algoritmo basado en GRASP debemos fijar tres parámetros:
 \item $\alpha$ (que determina el tamaño de la lista restringida de candidatos)
 \item posición aleatoria (que determina si frente a un empate de posiciones nos quedamos con la primera encontrada o con alguna al azar)
 \end{enumerate}
-\subsection{Criterios de parada}
 
 El problema de la parametrización de algoritmos basados en metaheurísticas con factores aleatorios es
 muy delicado. No disponemos de las herramientas como para establecer un criterio de parada óptimo, puesto
@@ -242,6 +241,28 @@ Nuevamente se mantiene la tendencia a disminuir la cantidad de cruces que encuen
 
 También observamos que los tiempos son similares, con la excepción de la versión 6, que necesitó de tiempos mucho menores para lograr una cantidad de cruces menor o igual que los demas.
 
+Nuestra última experiencia en este apartado, consisitió en dejar fija la cantidad de nodos e ir aumentando la densidad. 
+Dado que nuevamente la cantidad de cruces encontrada fue muy similar, y teniendo en cuenta la tendencia que vemos en las experiencias anteriores en las cuales la versión 6 parecía ser mejor que las demas, decidimos graficar esta vez, la diferencia entre la cantidad de cruces encontrada por la versión 6 y el resto de las versiones.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.65]{./graficos/grasp/difCrucesM.png}
+\caption{Diferencia en la cantidad de cruces encontrada por la versión 6 y el resto (m creciente, 50 nodos en cada partición)}
+\end{figure}
+
+Este gráfico muestra de manera clara, en primer lugar, que la cantidad de cruces es muy similar entre todas las versiones. Y en segundo lugar, vemos como la versión 6 efectivamente tiende a comportarse mejor. Esto se refleja en que al graficar la diferencia entre la cantidad de cruces encontradas por esta versión y la cantidad encontrada por las demas, la mayor parte de los puntos son negativos. Ahora bien, la mayor parte de los puntos estan por debajo del 0, sin embargo las diferencias son notablemente pequeñas, lo cual venimos observando desde la primer experiencia.
+
+Por último medimos los tiempos de ejecución:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[scale=0.6]{./graficos/grasp/tiempoM.png}
+\caption{Tiempo de ejecución (m creciente, 50 nodos en cada partición)}
+\end{figure}
+
+En este grafico, volvemos a ver un buen desempeño de la versión 6, y ademas vemos como el método 8 y 2 se encontraron con un caso que no pudieron mejorar rapidamente y obtuvieron un tiempo muy alto.
 
 \subsection{Conclusiones}
 
@@ -325,11 +346,11 @@ Ahora apliquemos la busqueda local para ver que resultado obtenemos:
 \centering
 \setcounter{subfigure}{0}
 \subfigure[Partimos del dibujo que produce la heuristica constructiva]{
-\includegraphics[scale=0.2]{./figuras/constructivas/malCons4.png}}
+\includegraphics[scale=0.2]{./figuras/constructivas/malCons4.png}}\hspace{0.2in}
 \subfigure[Para los nodos fijos, no se puede hacer nada. Al nodo 1 lo cambiamos de posición pero no porque baja la cantidad de cruces, sino porque en caso de empate, la busqueda local elige la primer posición visitada]{
-\includegraphics[scale=0.2]{./figuras/grasp/malGrasp1.png}}
+\includegraphics[scale=0.2]{./figuras/grasp/malGrasp1.png}}\hspace{0.2in}
 \subfigure[Al nodo 2 no se lo mueve porque no cambia el número de cruces. El nodo 3 tampoco cambia el número de cruces, pero se lo mueve por lo dicho antes del criterio de elección de posiciones]{
-\includegraphics[scale=0.2]{./figuras/grasp/malGrasp2.png}}
+\includegraphics[scale=0.2]{./figuras/grasp/malGrasp2.png}}\hspace{0.2in}
 \subfigure[Finalmente se mueve al nodo 4 pero tampoco baja el número de cruces]{
 \includegraphics[scale=0.2]{./figuras/grasp/malGrasp3.png}}
 \end{figure}
@@ -338,7 +359,7 @@ Como el número de cruces no cambio, consideramos que la busqueda local llego a u
 
 Entonces si consideramos la misma familia que hacia fallar a la heuristica constructiva, observamos que la busqueda local no logra mejorar los dibujos que aquella genera, de modo que el Grasp fallaría de la misma manera que la heuristica constructiva frente a estos casos.
 
-Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un $\alpha$ suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección.
+Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un $\alpha$ suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección, mas aún si se inserta en una posición aleatoria cada vez.
  
 \subsection{Comparativa de heuristicas}
 \section{Discusión}
