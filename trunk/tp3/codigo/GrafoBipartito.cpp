@@ -8,7 +8,7 @@ GrafoBipartito :: GrafoBipartito(const vector<nodo>& p1, const vector<nodo>& p2,
 
     V1 = p1;
     V2 = p2;
-    
+
     diccEjes = vector< list<nodo> > (p1.size() + p2.size());
     list<eje>::const_iterator itEjes(ejes.begin());
     while (itEjes != ejes.end()) {
@@ -34,7 +34,7 @@ unsigned int GrafoBipartito :: cantEjes(void) const {
 }
 
 unsigned int GrafoBipartito :: grado(nodo v) const {
-	return diccEjes[v].size();
+    return diccEjes[v].size();
 }
 
 void GrafoBipartito :: operator= (const GrafoBipartito& g) {

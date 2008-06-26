@@ -7,11 +7,11 @@
 
 using namespace std;
 
-class FiltroGrafos{
+class FiltroGrafos {
 
 public:
     FiltroGrafos(Dibujo& entrada);
-	Dibujo reconstruirDibujo(Dibujo& limpio);
+    Dibujo reconstruirDibujo(Dibujo& limpio);
     Dibujo* dibujoLimpio;
     ~FiltroGrafos();
 
@@ -21,7 +21,7 @@ private:
     list<nodo> nulos1, nulos2;
     GrafoBipartito *grafoOriginal;
     GrafoBipartito* grafoLimpio;
-	vector<nodo> nuevoP1;
+    vector<nodo> nuevoP1;
     vector<nodo> nuevoP2;
     list<nodo> nuevoV1;
     list<nodo> nuevoV2;
