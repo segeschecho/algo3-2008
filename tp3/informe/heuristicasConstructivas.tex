@@ -519,7 +519,7 @@ entre elementos según su grado.
 \label{complejidadDeLaConstructiva}
 Antes de comenzar, realizamos una limpieza del grafo, para no considerar a los nodos que tendran grado nulo. Como comentamos en el apartado \ref{sacoNulos}, esto tiene un costo $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes. Este costo se deberá sumar a la complejidad total.
 
-La heur'istica de inserci'on de nodos comienza asignando variables y atributos 'utiles para la reutilizaci'on de c'alculos. Inicializamos dos listas de nodos fijos y dos de nodos a agregar (un par para cada partici'on), y los diccionarios de adyacencias parcial, grado parcial, posiciones y nodos moviles. Todo esto tiene un costo de $O(n + m)$. Adem'as en esta parte inicializamos la variable cruces, contando los cruces del dibujo sin agregar ning'un nodo, que nos cuesta $O(m*log(fijos_{max})+fijos_{max}))$, entonces la parte de inicializaci'on nos cuesta $O(n + m + m*log(fijos_{max})+fijos_{max})$, donde $n$ es la cantidad de nodos del grafo bipartito, $m$ su cantidad de ejes, y $fijos_{max}$ es la cantidad de nodos fijos de la partici'on que tiene m'as nodos fijos.
+La heur'istica de inserci'on de nodos comienza asignando variables y atributos 'utiles para la reutilizaci'on de c'alculos. Inicializamos dos listas de nodos fijos y dos de nodos a agregar (un par para cada partici'on), y los diccionarios de adyacencias parcial, grado parcial, posiciones y nodos moviles. Todo esto tiene un costo de $O(v_{max} + m)$. Adem'as en esta parte inicializamos la variable cruces, contando los cruces del dibujo sin agregar ning'un nodo, que nos cuesta $O(m*log(fijos_{max})+fijos_{max}))$, entonces la parte de inicializaci'on nos cuesta $O(n + m + m*log(fijos_{max})+fijos_{max})$, $m$ su cantidad de ejes, y $fijos_{max}$ es la cantidad de nodos fijos de la partici'on que tiene m'as nodos fijos.
 
 Veamos ahora cuanto nos cuesta elegir un nodo entre los nodos a agregar. Primero ordenamos de forma creciente (con sort de STL) los nodos a agregar por su grado parcial, es decir considerando solamente los ejes que van del nodo hacia un nodo fijo o del nodo hacia un nodo que esta ya fue agregado. 
 %FIXME: en el caso no random es al pedo iterar, hay q quedarse con el ultimo
@@ -527,13 +527,13 @@ Este ordenamiento tiene complejidad.  $O(cantMovilesPi*log(cantMovilesPi))$.Lueg
 
 Ahora buscamos una de las mejores posiciones en la partici'on para insertar este nodo. Primero actualizamos la lista de adyacencias parcial para incorporar las adyacencias del nodo que voy a agregar (esto es necesario pues las funciones de conteo de cruces se usan dentro del subgrafo fijo y por tanto para que tengan en cuenta al nodo a agregar, es necesario completarlas con sus ejes) y luego insertamos el nodo al final de la partici'on.
 
-Actualizar la lista de adyacencias parcial tiene un costo $O(m_a)$, con $m_a$ los ejes del nodo a agregar. Entonces una vez que agregue a todos los nodos, en el peor de los casos agregue todos los ejes también, por lo que esto tiene un costo $O(m)$. Luego contamos los cruces por agregar atras, lo cual tiene un costo $O(n+m)$. Ahora swapeamos el nodo con su nodo anterior de la particion y recalculamos los cruces hasta que el nodo a agregar queda primero. Aqu'i podemos utilizar lo mostrado en el apartado que explica el conteo de cruces, y lo hacemos con costo $O(min(max(vi,m_a,m_b),m_a*m_b))$. Esto, haciendolo por cada posici'on en la partici'on que estamos agregando, tiene un costo de $O(cantModosParticion * min(max(vi,m_a,m_b),m_a*m_b))$. Dado que $max(vi, m_a, m_b) \leq v_{max}$ porque vale para vi, pero ademas $m_a$ y $m_b$ son a lo sumo tan grandes como la particion mas grande, en el caso en el que los nodos esten relacionados con todos los de la partición de enfrente, por otro lado com vale que $min(max(vi,m_a,m_b),m_a*m_b) \leq max(vi,m_a,m_b)$, resulta que la complejidad de este ciclo nos queda $O(v_{max}^2)$.
+Actualizar la lista de adyacencias parcial tiene un costo $O(m_a)$, con $m_a$ los ejes del nodo a agregar. Entonces una vez que agregue a todos los nodos, en el peor de los casos agregue todos los ejes también, por lo que esto tiene un costo $O(m)$. Luego contamos los cruces por agregar atras, lo cual tiene un costo $O(v_{max}+m)$. Ahora swapeamos el nodo con su nodo anterior de la particion y recalculamos los cruces hasta que el nodo a agregar queda primero. Aqu'i podemos utilizar lo mostrado en el apartado que explica el conteo de cruces, y lo hacemos con costo $O(min(max(vi,m_a,m_b),m_a*m_b))$. Esto, haciendolo por cada posici'on en la partici'on que estamos agregando, tiene un costo de $O(cantModosParticion * min(max(vi,m_a,m_b),m_a*m_b))$. Dado que $max(v_i, m_a, m_b) \leq v_{max}$ porque vale para vi, pero ademas $m_a$ y $m_b$ son a lo sumo tan grandes como la particion mas grande, en el caso en el que los nodos esten relacionados con todos los de la partición de enfrente, por otro lado com vale que $min(max(vi,m_a,m_b),m_a*m_b) \leq max(vi,m_a,m_b)$, resulta que la complejidad de este ciclo nos queda $O(v_{max}^2)$.
 
 Finalmente insertamos el nodo y actualizamos los grados parciales y el vector de posiciones, con un costo de $O(m + v_{max})$.
 
 Dado que este procedimiento lo hacemos para todos los nodos a agregar, la complejidad resultante es: 
 
-$$O(cantMoviles*(\underbrace{m + n}_{a} + \underbrace{v_{max}^2}_{b} + \underbrace{Moviles + MovilesP1*log(MovilesP1) + MovilesP2*log(MovilesP2))}_{c} + \underbrace{m*log(p_{max})+p_max}_{d})  (*)$$ 
+$$O(cantMoviles*(\underbrace{m + v_{max}}_{a} + \underbrace{v_{max}^2}_{b} + \underbrace{Moviles + MovilesP1*log(MovilesP1) + MovilesP2*log(MovilesP2))}_{c} + \underbrace{m*log(p_{max})+p_{max}}_{d})  (*)$$ 
 
 \begin{itemize}
 \item $a$ es por agregar al nodo atras
@@ -547,7 +547,7 @@ siendo Moviles la cantidad total de nodos a agregar, $v_{max}$ la cantidad de no
 
 Esto es asi porque:
 
-$O(m+n) \subseteq O(Moviles*v_{max}^2)$ dado que $n \leq v_{max}$ y $m \leq v_max*v_{max}$ 
+$O(m+v_{max}) \subseteq O(Moviles*v_{max}^2)$ dado que $m \leq v_{max}*v_{max}$ 
 
 $O(MovilesPi + MovilesPi*log(MovilesPi)) \subseteq O(MovilesPi*log(MovilesPi))$ y como $MovilesPi*log(MovilesPi) \leq v_{max}*log(v_{max}) \leq v_{max}*v_{max}$, vale que $O(MovilesPi + MovilesPi*log(MovilesPi)) \subseteq  O(v_{max}^2)$
 

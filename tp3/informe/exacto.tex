@@ -74,12 +74,13 @@ El pseudocódigo del algoritmo resultante es aproximadamente:
 \end{algorithmic}
 \end{algorithm}
 
-De esta manera, el árbol de \textit{backtracking} que tenemos es:
-\begin{figure}[H]
+De esta manera, el árbol de \textit{backtracking} que tenemos es el de la figura \ref{arbolBacktracking}:
+%FIXME: error en el dibujo, borrar puntos suspensivos en el primer nivel
+\begin{figure}
 \centering
 \setcounter{subfigure}{0}
-\includegraphics[scale=0.9]{./figuras/exacto/arbolbt.png}
-\caption{Árbol de \textit{backtracking}}
+\includegraphics[scale=0.8]{./figuras/exacto/arbolbt.png}
+\caption{Árbol de \textit{backtracking}}\label{arbolBacktracking}
 \end{figure}
 
 El algoritmo lo recorre en orden DFS, cortando aquellas ramas que pueden ser descartadas
@@ -104,13 +105,14 @@ a agregar un nodo móvil en todas las posiciones posibles dentro del dibujo fijo 
 puede describirse en términos de 3 operaciones: agregar el nodo al final del dibujo, 
 permutarlo $n$ veces hacia atrás con su vecino inmediato, y finalmente extraerlo del principio 
 del dibujo donde habrá quedado ubicado. Con este procedimiento, un nodo móvil dado
-pasa por todas las posiciones posibles dentro del dibujo fijo original.
+pasa por todas las posiciones posibles dentro del dibujo fijo original. La figura
+\ref{swapear} ilustra este proceso.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \setcounter{subfigure}{0}
 \includegraphics[scale=0.25]{./figuras/exacto/swaps.png}
-\caption{Permutaciones mediante swaps}
+\caption{Permutaciones mediante swaps}\label{swapear}
 \end{figure}
 
 Dado un candidato, la cantidad de cruces que se agregan por agregarle un nuevo nodo al 
@@ -373,7 +375,7 @@ Donde $h$ es la altura del arbol y $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijo
 La altura del árbol es igual a la cantidad de nodos móviles en la partición 1, ya que en cada nivel 
 estamos agregando un nodo, mas 1 de la raíz donde no agregamos nada todavía. Luego:
 
-$nodos$ $\leq (moviles_1+1)*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$
+$$nodos$ $\leq (moviles_1+1)*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$$
 
 Luego el orden de completar todas las permutaciones de la primer partición es:
 
@@ -393,19 +395,18 @@ Por lo tanto el costo final es el producto de ambas complejidades, lo que redund
 
 %$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max}+ m*log(v_max))$
 
-$O(moviles_1!*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
+$$O(moviles_1!*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2} * $$
+$$(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$$
 
-Y usando que $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1} = \frac{(moviles_1 + fijos_1)!}{fijos_1!}$:
+Y usando que:
+ $$moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1} = \frac{(moviles_1 + fijos_1)!}{fijos_1!} $$ :
 
-$O(\frac{(moviles_1 + fijos_1)!}{fijos_1!}(v_1+m+v_{1}^2)*(moviles_1+ \frac{(moviles_1 + fijos_2)!}{fijos_2!}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
+tenemos que:
+$$O(\frac{(moviles_1 + fijos_1)!}{fijos_1!} * (v_1+m+v_{1}^2)*(moviles_1+ \frac{(moviles_2 + fijos_2)!}{fijos_2!} *$$
+$$(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$$ 
 
 En la fórmula vemos que es preferible tomar como primer partición a aquella que tenga una menor 
 cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan más cálculos.
-
-
-
-
-
 
 \section{Análisis experimental}
 
