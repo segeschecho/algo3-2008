@@ -77,6 +77,6 @@ void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2);
 
 unsigned int acumTree (const list<eje>& l, unsigned int cantHojas);
 
-void armarIndices(const vector<nodo>& nodos, vector<unsigned int>& indicesPi);
+void armarIndices(const vector<nodo>& nodos, vector<unsigned int>& indicesPi, unsigned int tamanio);
 
 #endif
