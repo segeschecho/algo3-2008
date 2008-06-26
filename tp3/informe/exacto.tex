@@ -1,4 +1,7 @@
 \chapter{Algoritmo exacto}
+
+
+
 \section{Desarrollo}
 Un dibujo incremental válido consiste en una permutación de los nodos 
 de cada partición que mantenga el orden relativo de los nodos previamente 
@@ -185,12 +188,18 @@ sin un costo excesivo (producto, en gran parte, de la disponibilidad de la tabla
 descripta previamente, que aligera mucho el cómputo de la cota).
 
 
+
+
+
+
+
 \section{Pseudocódigo}
+
 \begin{algorithm}[H]
 \caption{Resuelve de forma exacta el problema de dibujo incremental de grafos bipartitos}
 \begin{algorithmic}[1]
 \STATE inicializarParametros
-\STATE mejorSolución $\leftarrow$ construir una solución con la heuristica constructiva
+\STATE mejorSolucion $\leftarrow$ construir una solución con la heuristica constructiva
 \STATE buscarMejorSolucion()
 \RETURN mejorSolucion
 \end{algorithmic}
@@ -200,90 +209,153 @@ descripta previamente, que aligera mucho el cómputo de la cota).
 \caption{Inicializa variables que va a usar el algoritmo exacto}
 \begin{algorithmic}[1]
 \STATE determinar cual de las particiones tiene menos permutaciones, llamarla 1, a la otra llamarla 2
-\STATE construir indice de posiciones para los nodos que ya estan en el dibujo
-\STATE constuir listas de adyacencias para los nodos de 1 y los fijos de 2
-\STATE calcular los cruces del dibujo original
-\STATE construir la tabla para la particion 1
-\IF{no hay moviles en la particion 2}
-\STATE construir la tabla para la particion 2
+\STATE construir índice de posiciones para los nodos que ya están en el dibujo
+\STATE construir listas de adyacencia para los nodos de 1 y los fijos de 2
+\STATE calcular los cruces del candidato original
+\STATE construir la tabla para la partición 1
+\IF{no hay móviles en la partición 2}
+\STATE construir la tabla para la partición 2
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}[H]
-\caption{construye todas las particiones que pueden ser solucion buscando la mejor (o una de ellas)}
+\caption{Construye todas las particiones que pueden ser solución buscando la mejor (o una de las mejores)}
 \begin{algorithmic}[1]
-\IF{ no hay mas moviles por poner}
-\IF{los cruces de la solucin que arme son menos que los de la mejor hasta ahora}
-\STATE mejorSolucion $\leftarrow$ solucionActual
+\IF{no hay mas móviles por poner}
+\IF{los cruces de la solución que armé son menos que los de la mejor hasta ahora}
+    \STATE mejorSolucion $\leftarrow$ solucionActual
 \ENDIF
-\ELSIF{no hay mas moviles que poner en la particion 1}
-\STATE agregar atras al primer movil a la particion (sacarlo de moviles y actualizar indice)
-\STATE cruces $\leftarrow$ curces + los cruces que me agrega el nuevo nodo
-\WHILE{ el nuevo no recorrio toda la particion}
-\IF{cruces + minimoCruces < los cruces del mejor}
-\STATE buscarMejorSolucion()
-\ENDIF
-\STATE intercambiar al nuevo por el nodo que esta adelante de el (actualizar posiciones y cruces)
-\ENDWHILE
-\STATE sacar al nodo \COMMENT{quedo adelante de todo}
-\STATE actualizar posiciones y cruces
+\ELSIF{no hay mas móviles que poner en la partición 1}
+    \STATE agregar atrás al primer móvil a la partición (sacarlo de móviles y actualizar índices)
+    \STATE cruces $\leftarrow$ cruces + los cruces que me agrega el nuevo nodo
+    \WHILE{el nuevo no recorrió todas las posiciones en la partición}
+        \IF{cruces + minimoCruces < los cruces del mejor}
+            \STATE buscarMejorSolucion()
+        \ENDIF
+        \STATE intercambiar al nuevo por el nodo que está adelante de él (actualizar posiciones y cruces)
+    \ENDWHILE
+    \STATE sacar al nodo \COMMENT{quedó adelante de todo en la partición}
+    \STATE actualizar posiciones y cruces
 \ELSE
-\STATE agregar atras al primer movil a la particion (sacarlo de moviles y actualizar indice)
-\STATE cruces $\leftarrow$ curces + los cruces que me agrega el nuevo nodo
-\WHILE{ el nuevo no recorrio toda la particion}
-\IF{cruces + minimoCruces < los cruces del mejor}
-\IF{ no quedan mas nodos moviles en esta particion}
-\STATE construir tabla para la partición 2
-\ENDIF
-\STATE buscarMejorSolucion()
-\ENDIF
-\STATE intercambiar al nuevo por el nodo que esta adelante de el (actualizar posiciones y cruces)
-\ENDWHILE
-\STATE sacar al nodo \COMMENT{quedo adelante de todo}
-\STATE actualizar posiciones y cruces
+    \STATE agregar atrás al primer móvil a la partición (sacarlo de móviles y actualizar índices)
+    \STATE cruces $\leftarrow$ cruces + los cruces que me agrega el nuevo nodo
+    \WHILE{el nuevo no recorrió todas las posiciones en la partición}
+        \IF{cruces + minimoCruces < los cruces del mejor}
+            \IF{no quedan más nodos móviles en esta partición}
+                \STATE construir tabla para la partición 2
+            \ENDIF
+            \STATE buscarMejorSolucion()
+        \ENDIF
+        \STATE intercambiar al nuevo por el nodo que está adelante de él (actualizar posiciones y cruces)
+    \ENDWHILE
+    \STATE sacar al nodo \COMMENT{quedó adelante de todo en la partición}
+    \STATE actualizar posiciones y cruces
 \ENDIF
 \end{algorithmic}
 \end{algorithm}
 
-Construir tabla 1 toma todos los nodos de la particion 1 de a pares  (i,j) y guarda en una matriz en la posicion (i,j) los cruces entre los nodos ubicados con i antes que j y en (j,i) los cruces entre ellos ubicados al reves. Para contar los cruces, solo se tiene en cuenta a los fijos de la particion 2.
+\begin{itemize}
+\item Para construir la tabla 1, se toman todos los nodos de la partición 1 de a pares  $(i,j)$ y se guardan en
+una matriz en la posición $(i,j)$ el valor de $CrucesEntre(i,j)$. Para contar los cruces, solo se tienen
+en cuenta los nodos fijos de la partición 2. Para construir la tabla 2 se procede análogamente pero se 
+toman en cuenta a todos los nodos de la partición 1 (no solo a los fijos) para contar los cruces.
+\item minimoCruces utiliza las tablas (la correspondiente a la partición que se está llenando) y realiza la 
+cuenta antes descripta para obtener una cota inferior a la cantidad de cruces que se pueden originar agregando
+los nodos faltantes en cualquier orden.
+\end{itemize}
 
-Construir tabla 2 es analogo, pero tiene en cuenta a todos los nodos de la particion 1 para contar los cruces.
+Las listas de adyacencia parciales, así como los vectores de posiciones parciales se utilizan como
+datos de entrada para las funciones incrementales de conteo de cruces. Al ir manteniendo actualizados
+estos datos durante la ejecución, evitamos el costo de recalcular índices y adyacencias de todo el grafo
+al hacer modificaciones incrementales.
 
-minimo cruces utiliza las tablas (la correspondiente a la particion que se esta llenando) y realiza la cuenta antes descripta para obtener una cota inferior a la cantidad de cruces que se pueden originar
+
+
+
+
 
 \section{Detalles de implementación}
-% uso de listas doblemente enlazadas para push_back(), pop_front() y swap() en O(1)
 
-% uso de buffers únicos para fijo1, fijo2, movil1, movil2 y cruces que son usados
-% por todas las instancias recursivas del algoritmo (ahorra mucho espacio en stack y evita
-% muchas copias de listas o conjuntos de nodos fijos y moviles).
+La implementación del algoritmo fue realizada originalmente en Python por la facilidad
+que brinda el lenguaje de alto nivel para hacer pruebas y comparaciones. Se comenzó por
+la versión de fuerza bruta y se fue refinando progresivamente el algoritmo agregando
+optimizaciones, varias de las cuales fueron descriptas anteriormente. Es importante
+destacar que las optimizaciones no fueron hechas de forma aleatoria sino que se realizó
+periódicamente un \textit{profiling} del algoritmo para determinar cuales eran las funciones
+que insumían más tiempo durante la ejecución, y luego enfocar los esfuerzos de optimización
+en ellas. Una vez terminado, el algoritmo completo se reimplementó en C++.
 
-% uso de diccionarios sobre arreglo para mayor velocidad (el uso de memoria del
-% algoritmo está básicamente determinado por el tamaño del stack, por lo tanto
-% no tiene sentido optimizar el uso de memoria de los factores constantes)
+Vale la pena comentar algunos detalles y optimizaciones propios de la implementación.
+En primer lugar, se utilizaron \textit{buffers} únicos para almacenar las secuencias
+de nodos fijos y móviles que utiliza cada llamada recursiva, que se almacenan
+en atributos de la clase $SolucionExacta$ y por tanto son compartidos por todas
+las llamadas recursivas. Esto permite ahorrar memoria en el \textit{stack} (que puede
+tomar un tamaño considerable) reduciéndolo al tamaño mínimo indispensable. Se evitan
+además operaciones de copias innecesarias de estos parámetros. Esto tiene como efecto
+secundario la imposibilidad de ejecutar en paralelo dos instancias del algoritmo
+en una máquina multiprocesador. Si se pasan todos los parámetros por copia (incluyendo
+posiblemente las tablas de valores) la mejora de tiempo de ejecución del algoritmo
+en multiprocesadores puede ser esencialmente lineal en la cantidad de CPUs.
 
-% uso de la heurística constructiva para determinar el candidato inicial
+Las secuencias en cuestión se implementaron sobre lista doblemente enlazada para 
+permitr las operaciones de insertar atrás, \textit{swap} y extraer de adelante en $O(1)$.
+Todos los diccionarios se implementaron sobre vectores ya que sus tamaños son lineales
+o a lo sumo cuadráticos en $V_1+V_2$ y por lo tanto no tiene sentido ahorrar
+memoria en estos aspectos a costa de velocidad cuando el consumo de memoria del algoritmo
+estará determinado por el tamaño del \textit{stack}.
 
-% uso de profiling para determinar los puntos a mejorar del algoritmo
+Para construir el candidato inicial se utilizó la heurística constructiva que
+describimos en \ref{constructivas}.
+
+
+
+
+
+
+
+
 
 \section{Cálculo de complejidad}
-Antes de correr nuestro algoritmo exacto, lo que hacemos es limpiar el grafo, lo cual nos da un costo inicial $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de nodos de partición i sin filtrar y m la cantidad de ejes.
 
-Al iniciar lo que hacemos es inicializar ciertas variables que nos serán de utilidad tales como las listas de adyacencia parciales, vectores con posiciones, etc. Todo esto tiene un costo $O(v_1+v_2 + m)$ donde $v_i$ es la cantidad de nodos de una partición. Esto lo podemos acotar por  $O(v_max + m*log(v_max))$. En esta inicialización se llena la tabla de resultados para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i,w_j \in v_1$. Esto tiene un costo $O(v_{1}*v_{max})$, ya que son $O(v_{1})$ calculos y cada calculo tiene cosot $O(v_{max})$.
-  %TODO: completar
-Para realizar el estudio de este algoritmo creemos que será provechoso considerar por separado el llenado de cada partición. Como comentamos antes, primero se llena una de las particiones, y después se llena la otra. Ademas consideraremos para el estudio el caso donde no es posible podar nada.
+Antes de correr nuestro algoritmo exacto utilizamos el algoritmo de preprocesamiento descripto en 
+\ref{sacoNulos}, lo cual conlleva un costo inicial de $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de 
+nodos de la partición $i$ sin filtrar y $m$ la cantidad de ejes del grafo.
 
-Primero observemos el costo que tenemos al pasar por cada nodo del arbol de permutaciones de la primer partición. En cada paso lo que hacemos es insertar un elemento al final, y contar cuantos cruces nos agrega, lo cual lo hacemos en $O(v_1+ m )$. Esto último no es cierto, pues en verdad no se inserta para cada nodo del árbol, sino que dado un nivel, el elemento se inserta tantas veces como nodos hay en nivel anterior del arbol y luego se hace swap, sin embargo para no hacer mas engorroso aun el calculo, decidimos simplificarlo de esa manera. Luego intentamos aplicar la poda. Aplicarla tiene un costo $O(v_{1}^2)$ ya que tengo que obtener la suma de los minimos de los cruces entre dos elementos y dichos elementos ya estan en la tabla. Después hacemos otra llamada para ir armando el siguiente nivel. Una vez que regresamos de esa llamada, hacemos un swap del nodo con un adyacente, y actualizamos los cruces, esta actualización la hacemos en $O(1)$ ya que tenemos los cruces entre ambos tabulados. Una vz que el elemnto recorre toda la partición hay que sacarlo, lo cual también tiene un costo $O(v_1+ m )$ porque se actualizan los cruces.
+En primer lugar el algoritmo inicializa ciertas variables que nos serán de utilidad tales como 
+las listas de adyacencia parciales, vectores con posiciones, etc. Todo esto tiene un costo $O(v_1+v_2 + m)$ 
+donde $v_i$ es la cantidad de nodos de la partición $i$ ya filtrada. Esto lo podemos acotar por  
+$O(v_max + m*log(v_max))$ con $v_max=max(v_1, v_2)$. En esta inicialización se llena la tabla de resultados 
+para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i,w_j \in v_1$. Esto tiene un 
+costo $O(v_{1}*v_{max})$, ya que se efectúan $O(v_{1})$ cálculos y cada cálculo tiene costo $O(v_{max})$ como
+se indicó previamente.
+
+ %TODO: completar
+Para realizar el estudio de este algoritmo decidimos considerar por separado el llenado de cada 
+partición. Como comentamos antes, primero se llena una de las particiones, y a continuación la otra,
+pero se efectúan optimizaciones distintas en función del tabulado dependiendo de qué caso se trate. 
+Decidimos además ignorar las podas ya que no es posible prever fácilmente si se realizarán o no, por lo
+tanto consideraremos (como peor caso) el caso en que se evalúan todas las podas pero éstas no permiten
+nunca descartar casos.
+
+Primero observemos el costo que tenemos al pasar por cada nodo del arbol de permutaciones de la primer 
+partición. En cada paso lo que hacemos es insertar un elemento al final, y contar cuantos cruces nos agrega, 
+lo cual puede hacerse en $O(v_1+ m)$. Esto último no es una cota fina puesto que únicamente se inserta
+en cada nivel tantas veces como nodos padre tenga ese nivel, pero utilizamos esta cota para simplificar el
+cálculo. Luego intentamos aplicar la poda: este cálculo tiene un costo $O(v_{1}^2)$ ya que tengo que obtener 
+la suma de los mínimos de los cruces entre dos elementos y dichos elementos ya están en la tabla. Después 
+hacemos otra llamada para ir armando el siguiente nivel (analizada por separado). Una vez que regresamos de 
+esa llamada, hacemos un \textit{swap} del nodo con un adyacente y actualizamos los cruces, acción que puede
+hacerse en $O(1)$ ya que tenemos los cruces entre ambos tabulados. Una vez que el elemento recorre toda la 
+partición hay que sacarlo, lo cual también tiene un costo $O(v_1+ m)$ porque se actualizan nuevamente los cruces.
 
 Entonces recorrer el árbol de llenado de la primer partición tiene un costo:
-
 $$O(nodos * (v_{1}^2 +(v_1+m)))$$
 
-aqui nodos es la cantidad de nodos del arbol de permutación. Veamos cuantos nodos tiene:
-Podemos obtener la cantidad de nodos del arbol en función de la cantidad de nodos moviles y fijos que tiene, de la siguiente manera:
-%TODO: gonza explica esta formula
-  \begin{equation}
+Donde \textit{nodos} es la cantidad de nodos del árbol de \textit{backtracking}. Veamos qué valor
+tiene esta variable. Podemos obtener la cantidad de nodos del árbol en función de la cantidad de 
+nodos móviles y fijos que tiene la partición involucrada de la siguiente manera:
+   \begin{equation}
      tamArbol(moviles,fijos) = \left\{
 	       \begin{array}{ll}
 		 1      & \mathrm{si\ } moviles = 0 \\
@@ -292,50 +364,104 @@ Podemos obtener la cantidad de nodos del arbol en función de la cantidad de nodo
 	     \right.
    \end{equation}
 
-Esta formula no es facilmente manejable, por lo cual usaremos una cota. Dado que cada nivel tiene mas nodos que el nivel anterior (si tengo una permutación de k elementos, al agregar un nuevo elemento obtenemos k + 1 posibles ordenes), podemos acotar la cantidad de nodos del arbol como:
+Esta fórmula no es fácilmente manejable, razón por la cual usaremos una cota. Dado que cada nivel 
+tiene más nodos que el nivel anterior (si tengo una permutación de $k$ elementos, al agregar un 
+nuevo elemento obtenemos $k + 1$ posibles órdenes), podemos acotar la cantidad de nodos del árbol como:
  $$h*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$$
 
-Donde h es la altura del arbol y $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$ es la cantidad de hojas.
+Donde $h$ es la altura del arbol y $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$ es la cantidad de hojas.
+La altura del árbol es igual a la cantidad de nodos móviles en la partición 1, ya que en cada nivel 
+estamos agregando un nodo, mas 1 de la raíz donde no agregamos nada todavía. Luego:
 
-La altura del árbol es igual a la cantidad de nodos moviles en la partición 1, ya que en cada nivel estamos agregando un nodo, mas 1 por la raiz donde no agregamos nada todavia. Luego:
+$nodos$ $\leq (moviles_1+1)*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$
 
-cantidad de nodos $\leq (moviles_1+1)*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$
-
-Luego el orden de completar todas las permutaciones de la primer partición nos quedó:
+Luego el orden de completar todas las permutaciones de la primer partición es:
 
 $$O(moviles_1*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2))$$
 
-En cada hoja del arbol de las permutaciones de la primer partición, completamos la tabla para la segunda partición. Esto tiene un orden $O(v_2*v_{max})$
+En cada hoja del árbol de \textit{backtracking} de la primer partición, completamos 
+la tabla para la segunda partición. Esto tiene un orden $O(v_2*v_{max})$.
 
-Completar la segunda partición tiene el mismo costo que completar la primer partición, con la salvedad de que en las hojas tenemos un costo $O(v_1+v_2)$ por copiar al mejor dibujo (el grafo no se copia, se usa una referencia).
-
-Entonces, completar el arbol de la segunda particion tiene un costo:
+En segunda instancia, completar la segunda partición tiene el mismo costo que completar la primera,
+con la salvedad de que en las hojas tenemos un costo $O(v_1+v_2)$ por copiar al mejor dibujo 
+(el grafo no se copia, se usa una referencia) en el atributo $mejorDibujo$.
+Entonces, completar el árbol de la segunda particion tiene un costo:
 $$O((moviles_2+1)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))$$
 
-Para cada hoja del arbol de la primer partición, llenamos todo un árbol de la segunda. Por lo tanto el costo final es (luego de sacar algunos factores comunes):
+Ahora, para cada hoja del árbol de la primer partición, llenamos todo un árbol de la segunda. 
+Por lo tanto el costo final es el producto de ambas complejidades, lo que redunda en (luego de sacar algunos factores comunes):
 
 %$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max}+ m*log(v_max))$
 
 $O(moviles_1!*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
 
-Usando que $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1} = \frac{(moviles_1 + fijos_1)!}{fijos_1!}$ 
+Y usando que $moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1} = \frac{(moviles_1 + fijos_1)!}{fijos_1!}$:
 
 $O(\frac{(moviles_1 + fijos_1)!}{fijos_1!}(v_1+m+v_{1}^2)*(moviles_1+ \frac{(moviles_1 + fijos_2)!}{fijos_2!}(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$ 
 
-De la formula vemos que es preferible tomar como primer partición a aquella que tenga una menor cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan mas calculos.
+En la fórmula vemos que es preferible tomar como primer partición a aquella que tenga una menor 
+cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan más cálculos.
+
+
+
+
+
 
 \section{Análisis experimental}
 
 \subsection{Experiencias realizadas}
-% utilidad de invertir particion1 y particion2
-% aptitud de las podas: poda "simple" vs. poda loca
-% utilidad de las tablas: algoritmo con y sin tabulado
-% tiempos para un grafo con cantidad de permutaciones dadas y densidad de ejes variable
-% tiempos del algoritmo de backtracking vs. tabla vs. tabla + poda loca (en funcion de las combinaciones)
+
+A continuación se presentan varias experiencias que fueron realizadas con el
+propósito de examinar el comportamiento de los algoritmos, así como de las optimizaciones
+que fueron realizadas.
+
+Observamos primero la efectividad de las optimizaciones más importantes
+que realizamos sobre el algoritmo de \textit{backtracking} trivial:
+\begin{itemize}
+\item En primer lugar buscamos mostrar la ventaja de tabular los valores de 
+      $crucesEntre$ en memoria y utilizar los métodos incrementales de conteo
+      de cruces respecto de la implementación más trivial que consiste en
+      volver a contar completamente los cruces de todo el dibujo formado en cada
+      hoja del árbol de \textit{backtracking}. Esta prueba fue realizada
+      con la implementación en Python de los algoritmos, utilizado CPython 2.5
+      para 3 casos grandes del problema, promediando 10 ejecuciones sobre grafos
+      del mismo tamaño pero con ejes aleatorios para cada punto. Se consideró
+      un grafo ``ralo'' si tiene el 15\% de los ejes del grafo bipartito completo,
+      y ``denso'' cuando tiene el 85 \%.
+\item En segundo lugar examinamos el comportamiento del algoritmo con tabulado
+      de valores según si se utiliza o no la inversión de las particiones (para
+      garantizar que la mitad del árbol más grande sea la segunda que se completa).
+      Una vez más las comparaciones se hicieron en Python promediando 10 ejecuciones
+      sobre instancias grandes del problema.
+\item Por último comparamos la eficiencia de los dos criterios de poda: el más
+      sencillo que consiste únicamente en eliminar las ramas que se "pasan" del mejor
+      candidato obtenido hasta el momento, y la más avanzada que consiste en utilizar
+      la cota inferior que se desprende de los valores tabulados previamente. Se
+      contabiliza la cantidad de nodos visitados del árbol de \textit{backtracking} como
+      porcentaje del tamaño total del árbol. Se utilizó una instancia simétrica de tamaño
+      medio y se promediaron 20 ejecuciones para cada punto.
+\end{itemize}
+
+A continuación nos enfocamos en la performance del algoritmo completo: 
+\begin{itemize}
+\item Graficamos primero el tiempo insumido por el algoritmo para resolver un caso de
+      tamaño medio variando la cantidad de ejes (que no afecta el tamaño del árbol de
+      \textit{backtracking} que depende únicamente de los nodos) pero sí interviene
+      en algoritmos auxiliares.
+\item Finalmente examinamos el tiempo que insume el algoritmo para resolver instancias
+      de diferentes tamaños. Tomamos como variable el tamaño del árbol de \textit{backtracking}
+      característico de la instancia en cuestión ya que nos pareció mucho más representativo
+      de la dificultad de la instancia que simplemente la cantidad de nodos del grafo.
+      Los casos fueron elegidos de forma conveniente para obtener puntos a intervalos regulares,
+      pero dado que el tamaño del árbol crece de forma importante cuando se aumentan las
+      cantidades de nodos, no fue fácil encontrar valores apropiados que permitan regularidad
+      perfecta. Se graficaron tiempos para distintas cantidades de ejes en cada tamaño de 
+      grafo. Se utilizó una escala logarítmica en ambos ejes del gráfico para permitir su lectura
+      dadas las magnitudes involucradas, y para ofrecer un punto de referencia se acotaron los
+      tiempos por una función conveniente.
+\end{itemize}
 
 \subsection{Resultados}
-
-%aclarar que los de C++ se hicieron con -g y que con -O3 va 3x más rápido
 
 \begin{figure}[H]                                                                                     
 \centering
@@ -369,4 +495,54 @@ De la formula vemos que es preferible tomar como primer partición a aquella que 
 
 
 \section{Discusión}
-% estimación del tiempo del algoritmo para resolver un caso dado (en función de la cantidad de combianciones)
+
+Los gráficos iniciales son bastante ilustrativos de las mejoras realizadas al algoritmo.
+Resulta claro que tabular los valores de la función $crucesEntre$ y utilizar conteos
+incrementales de los cruces redunda en un rendimiento superior del algoritmo, que insume
+entre 5 y 10 veces menos tiempo para resolver los casos que el algoritmo de fuerza bruta
+o backtracking trivial. Observamos también la diferencia que existe cuando el grafo
+es asimétrico en caso favorable y desfavorable (que corresponden a que la partición
+que se ubica primero en el árbol de \textit{backtracking} es la que tiene más permutaciones
+o no). De todas maneras, en ambos casos el rendimiento fue mejor que el del algoritmo de
+fuerza bruta mostrando que el \textit{overhead} de mantenimiento de tablas no niega los
+beneficios de tener los valores precalculados.
+
+A continuación vemos la diferencia de tiempo sustancial que ocurre al invertir las particiones
+para que la que tiene menos permutaciones siempre se complete primero. El gráfico anterior
+sugería esto al comparar los casos favorable y desfavorable de instancias asimétrica. Esta
+optimización sencilla reduce a todos los casos asimétricos a la situación favorable y de
+ello se desprenden mejoras significativas de performance. Si bien no se aprecia en este gráfico,
+estas mejoras son mayores mientras más asimétrico es el grafo (ya que en general el algoritmo
+de la primera mitad del árbol es bastante más lento que el de la segunda mitad, como se discutió
+antes).
+
+En el tercer gráfico se observa la eficiencia de las podas. Puede observarse que ambas podas
+tienen un rendimiento muy razonable, logrando en cualquier caso podas de al menos 85\% del árbol
+completo de \textit{backtracking}. Sin embargo, la poda más sofisticada no solo tiene un comportamiento
+más constante (la sencilla poda cada vez menos según se incrementa la densidad del grafo), sino que
+además sus valores son mucho mejores, no podando nunca menos del 98\% del árbol. Esta poda por
+sí sola mejora el rendimiento del algoritmo en 2 órdenes de magnitud, lo cual representa una mejora
+importante.
+
+Los últimos dos gráficos refieren al rendimiento de la implementación en C++. Rápidamente se observa
+que la densidad del grafo es un factor no despreciable en el tiempo de ejecución del algoritmo.
+Esto se debe a que las funciones de conteo de cruces insumen un tiempo que depende esencialmente de
+la cantidad de ejes del grafo, y el mayor tiempo insumido por las invocaciones a estas funciones
+se aprecia claramente en el rendimiento global del algoritmo.
+
+Por último observamos el tiempo de ejecución global del algoritmo. Este gráfico se aproxima
+bastante a lo que uno podría esperar: el tiempo de ejecución del algoritmo está en relación
+directa con el tamaño del árbol de \textit{backtracking}. Las irregularidades en la curva se
+deben a que, a fines de elegir valores uniformemente espaciados del tamaño del árbol, debieron
+usarse intermitentemente instancias simétricas y asimétricas que como vimos anteriormente tienen
+tiempos de ejecución característicos diferentes. Proponemos una función que acota el tiempo
+de ejecución del algoritmo: $0.004 * \sqrt(tam)$ donde $tam$ es el tamaño del árbol a examinar.
+La constante puede variar dependiendo de la computadora que se use y las optimizaciones del
+compilador - el valor propuesto corresponde a G++ 4.3 con símbolos de \textit{debugging} en
+un Pentium IV 2.8. El uso del flag -O3 de G++ produce un reducción por un factor de aproximadamente
+tres en los tiempos insumidos.
+
+Si bien la tendencia de las curvas nos permite intuir que la cota puede no ser suficiente
+para instancias muy grandes, si puede dar una idea razonable del tiempo que será necesario
+darle al algoritmo para terminar, y en todo caso es de esperarse que la relación entre el tamaño
+del árbol y el tiempo insumido sea a lo sumo lineal.
