@@ -7,8 +7,8 @@
 class Grasp {
 public:
     Grasp (Dibujo& original);
-    Dibujo resolver(float alfa);
-    ~Grasp();
+    Dibujo resolver();
+
 private:
     Dibujo* d;
 };
