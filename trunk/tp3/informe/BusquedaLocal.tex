@@ -1,22 +1,46 @@
-\chapter{Busqueda Local}
+\chapter{Búsqueda Local}
+
+
+
 
 \section{Introducción}
-De manera analoga a lo que hicimos para las heuristicas constructivas, plantemos diferentes heuristicas de busqueda local. 
+De manera análoga a lo que hicimos para las heurísticas constructivas, 
+plantearemos a continuación diferentes heurísticas de búsqueda local. 
+A continuación comentaremos como proceden dichas heurísticas, y posteriormente 
+realizaremos diversas experiencias para poder decidir a partir de éstas cual 
+utilizaremos en el algoritmo GRASP. Se implementaron prototipos en Python
+al igual que con los demás algoritmos.
 
-A continuación comentaremos como proceden dichas heuristicas, y posteriormente realizaremos diversas experiencias para poder decidir a partir de estas cual utilizaremos en el GRASP.
+Los algoritmos de búsqueda local parten de un dibujo original
+y buscan un óptimo local en la vecindad del dibujo propuesto. El
+criterio a optimizar, una vez más, es heurístico y varía de un
+algoritmo a otro. El rasgo común reside en que todos ellos deben ser
+deterministas - dado un mismo dibujo a mejorar, el algoritmo
+debe producir siempre el mismo dibujo mejorado.
 
-\section{Descripción de las heuristicas}
 
-\subsection{Busqueda local por reinserción de nodos}
-Esta método de busqueda local procede tomando cada nodo, sacandolo del dibujo y reubicandolo en la mejor posición, en el sentido de que se generan menos cruces. Este procedimiento se repite para cada nodo del dibujo.
 
-Cada paso de la busqueda local consiste entonces en reinsertar cada nodo del dibujo una vez. Consideramos que estamos en un mínimo local si la cantidad de cruces antes y después de un paso es la misma.
 
-En el caso de los nodos cuyo orden relativo debe ser respetado, la reinserción se realiza entre posiciones posibles que no violen dicho invariante
+\section{Descripción de las heurísticas}
 
-El procedimiento es basicamente la aplicación del criterio greedy de construcción por inserción de nodos, pero aplicado a una busqueda local. Cada reinserción (salvo para los nodos fijos, que antes no se tocaban) es basicamente el paso correspondiente a la inserción del nodo en la heuristica constructiva con sus adyacentes ya colocados.
+\subsection{Búsqueda local por reinserción de nodos}
 
-Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (para simplificar no se consideraron nodos fijos):
+Este método de búsqueda local procede tomando cada nodo del dibujo propuesto, 
+sacándolo y reubicándolo de forma análoga a las inserciones de la heurística
+constructiva por inserción de nodos descripta anteriormente. La idea es tomar
+un nodo y reinsertarlo en la posición que genera menos cruces. El procedimiento
+se repite iterativamente una vez para cada nodo del dibujo.
+
+Esa secuencia se repite sucesivamente, reinsertando de a $n$ nodos hasta
+que no se logre obtener una mejora. Cuando la cantidad de cruces no es 
+mejorada en una iteración, termina la búsqueda y se considera que se alcanzó
+un mínimo local.
+
+En el caso de los nodos ``fijos'', cuyo orden relativo debe ser mantenido, se
+intenta la reinserción en las posiciones que no violan dicho invariante.
+
+Veamos el siguiente ejemplo de aplicación de la búsqueda local por reinserción 
+(para simplificar no se consideraron nodos fijos):
 
 \begin{figure}[H]
     \centering
@@ -24,268 +48,442 @@ Veamos el siguiente ejemplo de aplicación de la busqueda local por reinserción (
     \subfigure[Dibujo a mejorar (4 cruces)]{
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion.png}}     
      \setcounter{subfigure}{1}%\hspace{1.0in}
-     \subfigure[Buscamos a donde reinsertar al nodo A, delante de D logramos minimizar los cruces]{
+     \subfigure[Buscamos donde reinsertar al nodo A. Delante de D logramos minimizar los cruces]{
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion1.png}}    
      \setcounter{subfigure}{2}
-     \subfigure[Movemos al nodo A, no podemos mover a nadie mas de esta partición de modo de bajar el número de cruces, por lo cual, pasamos a la siguiente partición. Moviendo a 4 no logramos nada, por lo que buscamos mover a 3(1 cruce)]{
+     \subfigure[Movemos al nodo A. No podemos mover a nadie más de esta partición de modo de bajar el número de cruces, por lo cual pasamos a la siguiente partición. Moviendo a 4 no logramos nada, por lo que buscamos mover a 3 (1 cruce)]{
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion2.png}}     
      \setcounter{subfigure}{3}%\hspace{1.0in}
      \subfigure[Movimos a 3, y ya no queda ninguna mejora por hacer (0 cruces)]{
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/reinsercion3.png}}     
 \end{figure} 
 
-\subsubsection{Pseudocodigo}
+\subsubsection{Pseudocódigo}
+
+A continuación presentamos el pseudocódigo de una iteración de la búsqueda local.
+Este algoritmo se aplica iterativamente hasta no lograr obtener mejora alguna.
+
 \begin{algorithm}[H]
 \caption{Intenta mejorar un dibujo mediante la reinserción golosa de nodos}
 \begin{algorithmic}[1]
-\PARAMS{lista de nodos del dibujo, indice con la posición de cada nodo en la lista}
+\PARAMS{lista de nodos del dibujo, índice con la posición de cada nodo en la lista}
 \FOR{cada nodo del dibujo}
-\STATE sacar al nodo del mismo
-\STATE calcular el rango en el cual se puede mover al nodo
-\STATE insertar al nodo en la primer posición del rango
-\STATE reacomodar los indices
-\STATE mejoresCruces $\leftarrow$ los cruces por ponerlos en esta posición
-\STATE mejorPosición $\leftarrow$ posición actual
-\STATE crucesAhora $\leftarrow$ mejoresCruces
-\FOR{cada posicion donde se puede poner al nodo}
-\STATE contar los cruces entre el nodo y su vecino siguiente \COMMENT{crucesEntre(nodo,vecino)}
-\STATE contar los cruces entre el vecino siguiente y el nodo \COMMENT{crucesEntre(vecino,nodo)}
-\STATE crucesAhora $\leftarrow$ crucesAhora - crucesEntre(nodo,vecino) + crucesEntre(vecino,nodo) \COMMENT{cambio de cruces por hacer ``swap''}
-\STATE hacer el swap entre el nodo y su vecino
-\STATE actualizar los indices
-\IF{crucesAhora $<$ mejoresCruces}
-   \STATE mejoresCruces $\leftarrow$ crucesAhora
-   \STATE mejorPosición $\leftarrow$ posicion actual
-\ENDIF
-\ENDFOR
-\STATE poner al nodo en  mejorPosicion
+    \STATE sacar al nodo del mismo
+    \STATE calcular el rango en el cual se puede mover al nodo
+    \STATE insertar al nodo en la primer posición del rango
+    \STATE recalcular los índices
+    \STATE mejoresCruces $\leftarrow$ los cruces por ponerlos en esta posición
+    \STATE mejorPosición $\leftarrow$ posición actual
+    \STATE crucesAhora $\leftarrow$ mejoresCruces
+    \FOR{cada posición donde se puede poner al nodo}
+        \STATE contar los cruces entre el nodo y su vecino siguiente \COMMENT{crucesEntre(nodo,vecino)}
+        \STATE contar los cruces entre el vecino siguiente y el nodo \COMMENT{crucesEntre(vecino,nodo)}
+        \STATE crucesAhora $\leftarrow$ crucesAhora - crucesEntre(nodo,vecino) + crucesEntre(vecino,nodo) \COMMENT{cambio de cruces por hacer \textit{swap}}
+        \STATE hacer el \textit{swap} entre el nodo y su vecino
+        \STATE actualizar los índices
+        \IF{crucesAhora $<$ mejoresCruces}
+           \STATE mejoresCruces $\leftarrow$ crucesAhora
+           \STATE mejorPosición $\leftarrow$ posicion actual
+        \ENDIF
+    \ENDFOR
+    \STATE poner al nodo en  mejorPosicion
 \ENDFOR
 \end{algorithmic}
 \end{algorithm} 
 
-\subsection{Busqueda local por intercambio goloso de nodos}
-Esta heuristica contempla como soluciones vecinas de un dibujo a aquellas que se pueden obtener por un intercambio válido entre dos nodos del dibujo.
+\subsection{Búsqueda local por intercambio de nodos}
+
+Esta heurística contempla como soluciones vecinas de un dibujo a aquellas
+que se pueden obtener por un intercambio válido entre dos nodos del dibujo.
 
 \begin{figure}[H]
     \centering
      \includegraphics[scale=0.5]{./figuras/busquedaLocal/vecindad.png}
 \end{figure}
 
-Primero se considera la vecindad, consistente en todo posible intercambio de dos nodos (siempre que dicho intercambio no viole el orden relativo de los nodos originales) y luego prueba cual de todos esos intercambios reporta mayor beneficio, es decir reduce mas el número de cruces. Una vez encontrado dicho par, nos movemos a la solución vecina realizando el intercambio de dichos nodos. Al hacerlo terminamos un paso de la busqueda local.
+Primero se considera la vecindad del candidato propuesto, consistente en 
+todo posible intercambio de dos nodos (siempre que dicho intercambio no viole 
+el orden relativo de los nodos originales), y luego prueba cual de todos esos 
+intercambios reporta mayor beneficio en cuanto al número de cruces. Una vez hallado
+dicho par, nos movemos a la solución vecina realizando el intercambio de dichos 
+nodos. Al hacerlo terminamos un paso de la búsqueda local.
 
-El procedimiento se repite hasta que ningún intercambio genere una reducción en el número de cruces. En cuyo caso decimos que alcanzamos un mínimo local.
+El procedimiento se repite hasta que ningún intercambio genere una reducción en 
+el número de cruces, en cuyo caso decimos que alcanzamos un mínimo local.
 
-\subsubsection{Pseudocodigo}
+
+\subsubsection{Pseudocódigo}
 \begin{algorithm}[H]
 \caption{Intenta mejorar un dibujo mediante intercambio goloso de nodos}
 \begin{algorithmic}[1]
-\STATE vecindad = \{(x,y) por cada x en alguna particion e y de la misma partición, si es válido intercambiar x por y\}
+\STATE vecindad = \{$(x,y)$ por cada $x$ en alguna partición e $y$ de la misma partición, si es válido intercambiar $x$ por $y$\}
 \STATE mejorIntercambio $\leftarrow$ ninguno
 \STATE crucesPorIntercambio $\leftarrow$ cantidad de cruces del dibujo
-\FOR{(x,y) en vecindad}
-\STATE crucesVecino $\leftarrow$ cantidad de cruces al intercambiar x e y
-\IF{crucesVecino $<$ crucesPorIntercambio}
-\STATE mejorIntercambio $\leftarrow$ (x,y)
-\STATE crucesPorIntercambio $\leftarrow$ cruces al intercambiar x e y
-\ENDIF
+\FOR{$(x,y)$ en la vecindad}
+    \STATE crucesVecino $\leftarrow$ cantidad de cruces al intercambiar $x$ e $y$
+    \IF{crucesVecino $<$ crucesPorIntercambio}
+        \STATE mejorIntercambio $\leftarrow$ $(x,y)$
+        \STATE crucesPorIntercambio $\leftarrow$ cruces al intercambiar $x$ e $y$
+    \ENDIF
 \ENDFOR
 \IF{mejorIntercambio $\neq$ ninguno}
-\STATE realizar el intercambio
+    \STATE realizar el intercambio
 \ENDIF
 \end{algorithmic}
 \end{algorithm} 
 
-\subsection{Busqueda local por inserción por mediana}
-Una de las heuristicas constructivas que planteamos es la inserción de nodos por mediana. Esta heuristica no funcionó bien como esperabamos, ya que si bien era rápida, generaba mas cruces que las otras heuristicas golosas. Nuestra idea entonces es aplicar el concepto de la mediana, pero como busqueda local.
 
-En este contexto como todos los nodos estan puestos, cada nodo tiene ahora la información de todos sus adyacentes, es por esta razón que creemos que podria funcionar bien el metodo como busqueda local.
+\subsection{Búsqueda local con inserción por mediana}
+Una de las heurísticas constructivas que planteamos es la inserción de nodos 
+por mediana. Esta heurística no funcionó tan bien como esperábamos a partir
+de la lectura de otras fuentes, ya que si bien era rápida, generaba más cruces 
+que las otras heurísticas golosas. Nuestra idea entonces es aplicar el concepto de 
+la heurística constructiva de la mediana, pero como búsqueda local.
 
-Entonces la idea es muy similar a la inserción por mediana: tomamos cada nodo de una partición y tratamos de moverlo a la posición correspondiente a la mediana de las posiciones de sus adyacentes, o la mediana mas o menos uno. Si al moverlo se reducen los cruces lo hacemos. Si esto no ocurre, se lo deja donde esta. A diferencia de la heuristica constructiva, en esta los nodos que estaban en el dibujo inicial también se intentan ubicar segun sus medianas siempre que esto no rompa el orden relativo que deben guardar.
+En este contexto, como todos los nodos están ya puestos, cada nodo tiene 
+ahora la información de todos sus adyacentes. Es por esta razón que creemos que 
+podría haber una mejora importante en el rendimiento del algoritmo.
 
- Una vez hecho esto para todos los nodos, lo que hacemos es tratar de intercambiar adyacentes, con el objetivo de reducir el número de cruces.
+La idea es entonces muy similar a la de inserción por mediana: tomamos cada
+nodo de una partición y tratamos de moverlo a la posición correspondiente a la mediana
+de las posiciones de sus nodos adyacentes (o sus vecinos inmediatos). Si con esta
+reubicación se disminuyen los cruces totales del dibujo, se realiza la modificación, y
+en caso contrario se pasa al nodo siguiente. Una vez hecho esto para todos los 
+nodos, lo que hacemos es tratar de intercambiar adyacentes, con el objetivo de reducir el número de cruces.
 
-La busqueda termina cuando no es posible reducir el número de cruces ya sea ubicando en la posición de la mediana o por intercambio de pares.
+Nuevamente, la búsqueda termina cuando no es posible reducir el número de 
+cruces ya sea por medio de la reubicación de un nodo por mediana o intercambiando
+pares de nodos.
 
-\subsubsection{Pseudocodigo}
+\subsubsection{Pseudocódigo}
 \begin{algorithm}[H]
-\caption{Intenta mejorar un dibujo inserción por mediana}
+\caption{Intenta mejorar un dibujo con inserción por mediana}
 \begin{algorithmic}[1]
-\FOR{ cada nodo del dibujo}
-\STATE calcular la mediana de las posiciones de los adyacentes al nodo
-\STATE mejorPos $\leftarrow$ posicionActual
-\STATE mejoreCruces $\leftarrow$ cruces en el dibujo
-\FOR{ posicion = mediana -1, mediana, mediana + 1}
-\IF{ se puede insertar en esa posición  y baja el número de cruces en el dibujo}
-\STATE mejorPos $\leftarrow$ posicion
-\STATE mejoresCruces $\leftarrow$ cruces en el dibujo al poner al nodo en posicion
-\ENDIF
-\ENDFOR
-\STATE poner al nodo en mejorPos
+\FOR{cada nodo del dibujo}
+    \STATE calcular la mediana de las posiciones de los adyacentes al nodo
+    \STATE mejorPos $\leftarrow$ posicionActual
+    \STATE mejoreCruces $\leftarrow$ cruces en el dibujo
+    \FOR{ posicion = mediana -1, mediana, mediana + 1}
+        \IF{ se puede insertar en esa posición  y baja el número de cruces en el dibujo}
+            \STATE mejorPos $\leftarrow$ posicion
+            \STATE mejoresCruces $\leftarrow$ cruces en el dibujo al poner al nodo en posicion
+        \ENDIF
+    \ENDFOR
+    \STATE poner al nodo en mejorPos
 \ENDFOR
 \end{algorithmic}
 \end{algorithm} 
 
-\section{Comparación de las heuristicas de busqueda local}
-Con el fin de determinar que heuristica implementariamos en C++, decidimos realizar pruebas, de modo similar a como lo hicimos para las heuristicas contructivas, con el objetivo de estudiar a cuanto reducían el número de cruces las distintas busquedas locales, teniendo en cuenta ademas el tiempo que necesitaban para lograr el mínimo local.
 
-Para hacer las pruebas generamos distintos tipos de grafos, le aplicamos la heuristica constructiva y luego aplicamos las distintas hueristicas de busqueda local. 
 
-La primer prueba se realizó en grafos con una cantidad de nodos creciente, un 40$\%$ de nodos fijos y $m = 5*n$
+
+
+
+
+
+
+
+
+\section{Comparación de las heurísticas de búsqueda local}
+
+Con el fin de determinar que heurística implementaríamos en C++ para luego ser
+usada en el GRASP, decidimos realizar pruebas sobre los prototipos de la misma manera
+que hicimos con los algoritmos anteriores. Una vez más consideramos la mejora lograda
+por los algoritmos y el tiempo insumido por su ejecución.
+
+Para hacer las pruebas generamos distintos tipos de grafos, les aplicamos la heurística 
+constructiva y luego aplicamos las distintas heurísticas de búsqueda local.
+
+La primera prueba se realizó en grafos con una cantidad de nodos creciente, un 40$\%$ de nodos fijos y $m = 5*n$.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Cantidad de cruces obtenidos en función de n]{
+\subfigure[Cantidad de cruces obtenidos en función de $n$]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/cruces1}}
 \setcounter{subfigure}{1}
-\subfigure[Tiempo en segundos en función de n]{
+\subfigure[Tiempo en segundos en función de $n$]{
 \includegraphics[scale=0.55]{./graficos/comparacionLocales/tiempo1.png} }
-\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $5*n$. Porcentaje de nodos nuevos: 60\%}
+\caption{$n$ nodos en cada partición, $n$ creciente, $m$ = $5*n$, 60\% de nodos nuevos}
 \end{figure}
 
-La siguiente prueba se realizó en grafos mas densos con un 40\% de nodos nuevos. Dado que los resultados daban relativamente similares, decidimos graficar para que sea mas visible la información, la diferencia en el número de cruces en el dibujo producido por la reinserción y el producido por las otras heuristicas. 
+La siguiente prueba se realizó en grafos más densos con un 40\% de nodos nuevos.
+Dado que los resultados obtenidos eran relativamente similares, decidimos graficar la 
+diferencia en el número de cruces en el dibujo producido por la reinserción y el 
+producido por las otras heurísticas, a modo de hacer más visibles los resultados.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia en la cantidad de cruces obtenidos en función de n]{
+\subfigure[Diferencia en la cantidad de cruces obtenidos en función de $n$]{
 \includegraphics[scale=0.55]{./graficos/comparacionLocales/cruces2}}
 \setcounter{subfigure}{1}
-\subfigure[Tiempo en segundos en función de n]{
+\subfigure[Tiempo en segundos en función de $n$]{
 \includegraphics[scale=0.55]{./graficos/comparacionLocales/tiempo2.png} }
-\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $n*n/2$. Porcentaje de nodos nuevos: 60\%}
+\caption{$n$ nodos en cada partición, $n$ creciente, $m$ = $n*n/2$, 60\% de nodos nuevos}
 \end{figure}
  
-La tercara se realizó para grafos de 30 nodos, variando la cantidad de ejes. Nuevamente, el método de reinserción fue el que presentó en general un mejor compartamiento, por eso decidimos de manera similar a lo hecho en la experiencia anterior graficar la diferencia entre la cantidad de cruces.
+La tercera y última experiencia se realizó para grafos de 30 nodos, variando 
+la cantidad de ejes. Nuevamente, el método de reinserción fue el que presentó 
+en general un mejor compartamiento, por eso decidimos como en la experiencia 
+anterior graficar la diferencia entre la cantidad de cruces obtenida por cada
+implementación.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia en la cantidad de cruces obtenidos en función de m]{
+\subfigure[Diferencia en la cantidad de cruces obtenidos en función de $m$]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/cruces}}
 \setcounter{subfigure}{1}
-\subfigure[Tiempo en segundos en función de m]{
+\subfigure[Tiempo en segundos en función de $m$]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/tiempo.png} }
-\caption{n nodos en cada partición con n creciente. Cantidad de ejes = $n*n/2$. Porcentaje de nodos nuevos: 60\%}
+\caption{$n$ nodos en cada partición, $n$ creciente, $m$ = $n*n/2$, 60\% de nodos nuevos}
 \end{figure}
 
+
+
+
+
+
+
+
 \section{Análisis de los resultados}
-A partir de los gráficos, se puede ver que la heuristica de reinserción es la que reduce en mayor medida la cantidad de cruces. Esto se evidencia en las tres experiencias: En la primera el número de cruces en el dibujo dado por esta heuristica esta por debajo del número generado por las demas, y en la segunda y tercera al graficar \textit{cruces de la heuristica de reinserción - cruces del dibujo de otra heuristica} se observa que la mayoria de los puntos se encuntran debajo del 0, lo cual significa que encontró un dibujo con menos cruces. En cuanto al tiempo, si bien fue mayor que el tiempo de la heuristica de la mediana, fue considerablemente menor que la de intercambio goloso. Ademas, consideramos que siempre se mantuvo en intervalos razonables, es decir que no necesito de un tiempo extremadamente largo para alcanzar un mínimo local.
 
-Con respecto a la heuristica de mejor intercambio, en general quedo en segundo lugar, sin embargo el tiempo que requiere para mejorar un dibujo es demasiado alto. Esto se debe a varias razones:  En primer lugar, este metodo requiere explorar toda la vecindad, la cual tiene un tamaño $O(n^2)$, y en segundo lugar cada ``pasada'' solo hace un intercambio (el mejor entre los posibles) por lo que parece razonable pensar que si solo hace un unico intercambio cada vez, necesite varios pasos hasta lograr un mínimo local.
+A partir de los gráficos, se puede ver que la heurística de reinserción es la que 
+reduce en mayor medida la cantidad de cruces. Esto se evidencia en las tres experiencias.
+En la primera, el número de cruces en el dibujo dado por esta heurística está por debajo 
+del número generado por las demás, y en la segunda y tercera al graficar \textit{cruces de 
+la heurística de reinserción - cruces del dibujo de otra heurística} se observa que la mayoría 
+de los puntos se encuentran debajo del 0, lo cual indica que la heurística de reinserción
+encontró un dibujo con menos cruces. En cuanto al tiempo, si bien fue mayor que el tiempo de la 
+heurística de la mediana, fue considerablemente menor que la de intercambio goloso. Además, 
+consideramos que siempre se mantuvo en rangos razonables, ya que nunca necesitó de un tiempo 
+extremadamente largo para alcanzar un mínimo local.
 
-Finalmente la heuristica de la mediana, al igual que la versión constructiva, fue la mejor en cuanto a lo que a tiempo se refiere. No obstante, no obtuvo buenos resultados en cuanto a la reducción de cruces. 
+La heurística de mejor intercambio se ubica en general en segundo lugar en cuanto a resultados;
+sin embargo, el tiempo que requiere para mejorar un dibujo es demasiado alto. Esto se debe a varias 
+razones: en primer lugar, este método requiere explorar toda la vecindad, que tiene un tamaño $O(n^2)$, y 
+en segundo lugar cada ``pasada'' solo hace un intercambio (el mejor entre los posibles) por lo que parece 
+razonable pensar que harán falta muchas más iteraciones de la búsqueda para alcanzar un mínimo local.
 
-Por estas razones decidimos descartar a las heuristicas de intercambio goloso y a la de la mediana y conservar a la de reinserción.
+Finalmente, la heurística de la mediana, al igual que la versión constructiva, fue la mejor 
+en lo que a tiempo se refiere. No obstante, no obtuvo buenos resultados en cuanto a la reducción de cruces.
 
-\section{Detalles de implementación de la heuristica de busqueda local}
-Para implementar esta heuristica se utilizaron las estructuras de Dibujo y GrafoBipartito comentadas anteriormente. %TODO: ver q asi seea
-La clase busqueda local se construye tomando un dibujo y recibe un dibujo incremental al cual mejora, devolviendo un nuevo dibujo.
+Por estas razones decidimos descartar a las heurísticas de intercambio de nodos y reinserción por mediana,
+conservando la reinserción \textit{greedy} de nodos.
 
-Se utilizaron listas para guardar las particiones que se van modificando en cada paso de la busqueda local. No se utilzaron vectores porque es necesario eliminar elementos de posiciones arbitrarias lo cual puede hacerse de manera mas eficiente en listas.
 
-Una vez insertado un nodo, el rango en el cual el mismo puede ubicarse se recorrer mediante ``swaps'' de modo de poder calcular mas facilmente los cruces por cambiarlo de posición.
 
-Por otro lado se mantienen durante cada iteración los indices de cada partición (arreglo). Estos indices se pueden actualizar facilmente cuando se ``swapea'' a un nodo, sin embargo el sacar un nodo y reinsertarlo hace que el calculo del mismo sea de orden lineal.
 
-Para poder iterar sobre los elementos de cada partición, lo que hacemos es tener otra copia de la lista que se va a modificar a fin de poder recorrer los elementos en el orden en que vienen dados.
 
-El dibujo que recibe la heuristica, no posee nodos de grado 0, ya que estos son filtrados al inicio, ademas como resultado de este filtrado los nodos que deben guardar una posicion relativa dada, cumplen que su id respeta ese orden, es decir si el nodo a tiene que estar antes que b entonces a $<$ b.
-%darle rigurosidad al pseudocodigo correspondiente para poder usarlo aca
-\section{Calculo de complejidad}
-Para realizar el calculo, definiremos $v_i$ como la cantidad de nodos de la partición i, y m como la cantidad de ejes del dibujo. Dado que el dibujo no posee nodos de grado 0, sabemos que m $>$ $v_i$. Ademas definimos $v_{max}$ como la cantidad de nodos de la particion mas grande. Utilizaremos el modelo uniforme, ya que consideramos que lo importante es la cantidad de nodos y ejes en el dibujo, mas que las operaciones aritmeticas que se realizan.
 
-A la complejidad del algoritmo que vamos a describir a continuación, debe sumarse la complejidad de ``limpiar'' al grafo y de correr la heuristica constructiva.
+
+
+
+\section{Detalles de implementación}
+
+Los objetos de la clase búsqueda local se construyen tomando un dibujo original (fijo) y
+recibe un dibujo incremental que es el que se debe mejorar. Cuando terminar de procesar,
+devuelve un nuevo dibujo.
+
+Se utilizaron listas enlazadas para guardar las particiones que se van modificando en cada 
+paso de la búsqueda local. No se utilizaron vectores porque es necesario eliminar 
+elementos de posiciones arbitrarias, lo cual puede hacerse de manera más eficiente sobre esta
+estructura de datos.
+
+Una vez insertado un nodo, el rango en el cual el mismo puede ubicarse se recorre 
+mediante \textit{swaps}, de modo de poder calcular más eficientemente los cruces por cambiarlo 
+de posición.
+
+Por otro lado, se mantienen durante cada iteración los índices de cada partición en un
+diccionario sobre vector. Estos índices se pueden actualizar fácilmente cuando se \textit{swapea}
+un nodo, pero sin embargo el sacar un nodo y reinsertarlo hace que en algunos casos volver
+a computar las posiciones pueda ser de orden lineal.
+
+Para poder iterar sobre los elementos de cada partición, llevamos otra copia de la lista 
+que se va a modificar a fin de poder recorrer los elementos en el orden en que vienen dados.
+
+El dibujo que recibe la heurística no posee nodos de grado 0 ya que el grafo es preprocesado
+al inicio para evitar precisamente ese caso. Además como resultado de este filtrado los nodos 
+que deben guardar una posición relativa dada cumplen que su $id$ respeta ese orden (es decir,
+si el nodo $a$ tiene que estar antes que $b$ entonces $a<b$).
+
+
+
+
+
+
+
+
+\section{Cálculo de complejidad}
+
+Para realizar el cálculo, definiremos $v_i$ como la cantidad de nodos 
+de la partición $i$, y $m$ como la cantidad de ejes del dibujo. Dado que 
+el dibujo no posee nodos de grado 0, sabemos que $m$ $>$ $v_i$. Además 
+definimos $v_{max}$ como la cantidad de nodos de la partición mas grande. 
+Utilizaremos el modelo uniforme, ya que consideramos que lo importante es 
+la cantidad de nodos y ejes en el dibujo, más que las operaciones aritmeticas 
+que se realizan (que son tan simples como escasas).
+
+A la complejidad del algoritmo que vamos a describir a continuación, debe 
+sumarse la complejidad de ``limpiar'' al grafo y de correr la heurística constructiva.
 
 Una vez que hicimos esto, veamos el costo de cada paso.
 
-La heuristica de busqueda local va a iterar para cada nodo del dibujo. Dado un nodo, primero se lo retira de su partición. Esto tiene un costo $O(v_{i})$. Una vez que lo retiramos, determinamos el rango donde insertarlo. Si no es un nodo de los que deben guardar un orden relativo dado (en adelante nodos fijos), el rango es toda la partición. Si es un nodo fijo, el rango es delante del fijo anterior a el (o la primer posición si no existe tal nodo) y detras del fijo siguiente (o la ultima posición si no existe tal fijo). Determinar dicho rango es $O(1)$, pues dado un nodo podemos saber facil si es fijo o no por su identificador. Y dado un nodo fijo, también por su identificador podemos saber cual es el nodo fijo anterior o siguiente, y los indices como dijimos anteriormente los tenemos actualizados, de modo que conocer la posición de estos nodos también es $O(1)$.
+La heurística de búsqueda local va a iterar para cada nodo del dibujo. Dado un nodo, 
+primero se lo retira de su partición. Esto tiene un costo $O(v_{i})$. Una vez que lo 
+retiramos, determinamos el rango donde insertarlo: si no es un nodo de los que deben 
+guardar un orden relativo dado (en adelante nodos fijos), el rango es toda la partición;
+si es un nodo fijo, el rango es delante del fijo anterior a él (o la primer posición si no 
+existe tal nodo) y detrás del fijo siguiente (o la última posición si no existe tal nodo). 
+Determinar dicho rango es $O(1)$, pues dado un nodo podemos saber fácilmente si es fijo o 
+no por su identificador. Dado un nodo fijo, podemos saber también por su identificador cual 
+es el nodo fijo anterior o siguiente, y al estar los índices actualizados como dijimos 
+anteriormente, conocer la posición de estos nodos también es $O(1)$.
 
-Luego insertamos el nodo en su primer posición valida. Hacerlo es $O(v_{i})$ ya que si es un nodo fijo, podriamos tener que insertarlo en posiciones arbitrarias.
+Luego insertamos el nodo en su primer posición válida. Hacerlo es $O(v_{i})$ ya que si 
+es un nodo fijo, podríamos tener que insertarlo en posiciones arbitrarias.
+Este borrado y reinserción del nodo requiere que se actualice el índice de la partición, 
+también en $O(v_{max})$, y por otro lado requiere que se recalculen los cruces. Hacer 
+esto último nos cuesta $O(m*log(v_{min}))$ como vimos en \ref{conteoCruces}.
 
-Este borrado y reinserción del nodo, requiere que se actualice el indice de la partición, también en $O(v_{max})$, y por otro lado requiere que se recalculen los cruces. Hacer esto último nos cuesta $O(m*log(v_{min}))$ como vimos en \ref{conteoCruces}.
+A partir de este momento, el nodo es \textit{swapeado} hacia atrás para recorrer todo su rango. 
+El rango tiene a lo sumo $v_{max}$ posiciones. Para calcular los cruces se calculan entonces
+los cruces entre el nodo y el nodo inmediatamente siguiente (análogamente a lo realizado con el
+algoritmo exacto) y se aplica la fórmula dada en \ref{conteoCruces}. Calcular los cruces nos cuesta 
+entonces $O(min(max(v_i,m_a,m_b),m_a*m_b))$. Esto sale de que vimos que el orden de calcular cruces 
+entre dos posiciones adyacentes era $O(v_i,m_a,m_b)$, y si teníamos pocos ejes ($m_a*m_b < v_i$) usábamos 
+el algoritmo de conteo de cruces más sencillo cuya complejidad es $O(m_a*m_b)$. Podemos suponer sin 
+equivocarnos que $min(max(v_i,m_a,m_b),m_a*m_b)\subseteq O(v_{max})$.
+% FIXME: está bien la inclusión anterior?
 
-A partir de este momento, el nodo es ``swapeado'' para recorrer todo su rango. El rango, tiene a lo sumo $v_{max}$ posiciones. Para calcular los cruces se calcula los cruces entre el nodo y el nodo inmediatamente siguiente antes y despues de intercambiar y se aplica la formula dada también en \ref{conteoCruces}. Calcula entonces los cruces nos cuesta $O(min(max(v_i,m_a,m_b),m_a*m_b))$, esto sale de que vimos que el orden de calcular cruces entre dos posiciones adyacentes era $O(v_i,m_a,m_b)$ y si teniamos pocos ejes, es decir $m_a*m_b < v_i$ y no nos era conveniente hacer el radix sort, usabamos el algoritmo de conteo de cruces consistente en comparar los ejes de a y b de a pares. Podemos suponer sin equivocarnos que $min(max(v_i,m_a,m_b),m_a*m_b)\subseteq O(v_{max})$.
+Al \textit{swapear} nodos se pueden actualizar los índices en $O(1)$ ya que solo cambian dos 
+posiciones. Por otro lado, comparar la cantidad de cruces para decidir si el nodo está en una 
+mejor posición y en caso afirmativo guardar dicha posición también se realiza en $O(1)$.
 
-Al ``swapear'' nodos se pueden actualizar los indices en $O(1)$ ya que solo cambian dos posiciones, por otro lado comparar la cantidad de cruces para decidir si el nodo esta en una mejor posicion y en caso afirmativo guardar dicha posición también se realiza en $O(1)$. 
+Una vez que recorrimos todo el rango, sacamos de nuevo al nodo para ponerlo en la mejor 
+posición (y se actualizan los índices), lo cual se hace en $O(v_{max})$.
 
-Una vez que recorrimos todo el rango, sacamos de nuevo al nodo para ponerlo en la mejor posición (y se actualizan los indices), lo cual se hace en $O(v_{max})$.
-
-En conclusión, iteramos para $v_1 + v_2$ nodos, es decir $O(v_{max})$ iteraciones. Cada iteración tiene un costo de 
-$O(v_{max}*(v_{max} + m*log(v_{max}))) \subseteq O(v_{max}*m*log(v_{max}))$. 
-
+En conclusión, iteramos para $v_1 + v_2$ nodos, o sea que hay $O(v_{max})$ iteraciones. 
+Cada iteración tiene un costo de $O(v_{max}*(v_{max} + m*log(v_{max}))) \subseteq O(v_{max}*m*log(v_{max}))$. 
 Luego cada paso tiene un costo $O(v_{max}^2*m*log(v_{max}))$.
 
-Ahora bien, este costo es el de cada pasos. El orden de toda la busqueda local es $O((Pasos)*v_{max}^2*m*log(v_{max}))$. Necesitariamos saber cuantos pasos puede realizar la busqueda. A priori no sabemos cuantos puede realizar, ya que tampoco tenemos una cota que nos diga que tan lejos puede estar la solución inicial del mínimo local. Por esta razón, lo mejor que podemos llegar a hacer, es ver que la cantidad de iteraciones no es de orden exponencial. 
+Ahora bien, este costo es el de cada paso. El orden de toda la búsqueda local es 
+$O((Pasos)*v_{max}^2*m*log(v_{max}))$. Necesitaríamos saber cuantos pasos puede realizar la búsqueda. 
+A priori no sabemos cuantos puede realizar, ya que tampoco tenemos una cota que nos diga qué tan 
+lejos puede estar la solución inicial del mínimo local. Por esta razón, lo mejor que podemos hacer es 
+observar que la cantidad de iteraciones no es de orden exponencial. 
 
-En el peor de los casos, en la solución inicial cada eje se cruzaba con todos los demas, dando una cantidad de cruces $O(m^2)$, el mínimo local es 0 y en cada iteración se disminuye en uno la cantidad de cruces (tiene que disminuir en cada iteración ya que sino la busqueda se detiene. En este caso, entonces la cantidad de iteraciones es $O(m^2)$, por lo cual la busqueda local tiene un orden $O(v_{max}^2*m*log(v_{max})*m^2)$.
-%TODO: guarda con esto
-Sin embargo, creemos que en general la cantidad de iteraciones hasta converger sera mucho menor. 
+En el peor de los casos, en la solución inicial cada eje se cruzaba con todos los demás, dando una 
+cantidad de cruces $O(m^2)$, y el mínimo local es 0 (esa es la mayor cantidad de valores distintos
+de cruces que puede haber). También en peor caso, la mínima disminución por iteración es de 1 cruce
+(ya que si disminuye menos el algoritmo para). Por lo tanto, la cantidad de iteraciones está acotada
+por $O(m^2)$. Resulta de esto que la búsqueda local tiene un orden de complejidad 
+$O(v_{max}^2*m*log(v_{max})*m^2)$.
 
-Ademas de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heuristica constructiva. En conclusión, el orden es $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m))$ %FIXME: completar cuando esto este completo
+Sin embargo, nos permitimos suponer que en general la cantidad de iteraciones hasta
+parar será en la práctica mucho menor. 
+
+Además de esto hay que tener en cuenta el costo de la limpieza del grafo y el costo de la heurística 
+constructiva. Finalmente, el orden es 
+%FIXME: completar cuando esto este completo -- <- fede mirá esto
+$O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m))$ 
 
 Con respecto a la complejidad en función del tamaño de la entrada, podemos ver que la entrada es:
 $$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
- $$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$ 
+$$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$ 
  
- donde $P_i$ es la cantidad de nodos originales de la primera partición, $m_p$ es la cantidad de ejes originales, $IV_i$ es la cantidad de nodos que se agregan a la partición i y $m_iv$ es la cantidad de ejes que se agregan
+donde $P_i$ es la cantidad de nodos originales de la primera partición, $m_p$ es 
+la cantidad de ejes originales, $IV_i$ es la cantidad de nodos que se agregan a la 
+partición $i$ y $m_iv$ es la cantidad de ejes que se agregan al grafo.
  
- Entonces, vale que:
+Entonces, vale que:
  
  $$t \geq log(P_1)+ P_1+ log(P_2)+P_2 + log(m_p) +m_p +log(IV_1) + IV_1 + log(IV_2) + IV_2 + log(m_{iv})+ m_{iv}$$
  
- pero $P_i + IV_i = V_i$ y $m_p + m_iv = m$, luego:
+Pero $P_i + IV_i = V_i$ y $m_p + m_iv = m$, luego:
  
  $$t \geq log(P_1)+ v_1+ log(P_2)+V_2 + log(m_p) +m +log(IV_1) + log(IV_2) + log(m_{iv})$$
  
- a partir de esto, vemos que:
+A partir de esto, vemos que:
  $$ t \geq V_i \geq v_i$$
  $$ t \geq V_{max} \geq v_{max}$$
  $$ t \geq m $$
  
- Luego $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ %TODO: ojo con esto, verificar
- 
-\section{Analisis}
-\subsection{Mal caso}
-Para observar que tan mala podría ser nuestra heuristica de busqueda local, lo que buscamos es encontrar alguna familia de instancias donde no pudiera lograr la solución óptima.
+%TODO: ojo con esto, verificar
+Luego obtenemos $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ 
 
-Consideremos entonces el siguiente grafo:
+
+
+
+
+
+\section{Análisis de la heurística}
+
+\subsection{Casos patológicos}
+Para observar que tan mala podría ser nuestra heurística de búsqueda local, 
+buscamos alguna familia de instancias del problema donde el algoritmo encuentre
+una solución arbitrariamente mala.
+
+Consideramos entonces el siguiente grafo:
 
 \begin{figure}[H]
     \centering
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/CasoBordeLocal.png}
-     \caption{Mal caso para la busqueda local}
+     \caption{Caso patológico para la búsqueda local}
 \end{figure}
 
-Frente a este grafo, la heuristica de busqueda local, no podrá hacer ninguna mejora, ya que para cualquier nodo que mueva, siempre obtiene mas o igual numero de cruces. Entonces, en este caso, el dibujo que provee la heuristica frente a esta entrada tiene 4 cruces, 2 mas que la solución óptima:
+Frente a este grafo, la heurística de búsqueda local no podrá hacer ninguna mejora, 
+ya que para cualquier nodo que mueva, siempre obtiene una cantidad de cruces mayor
+o igual a la que ya tenía. Por ende en este caso el dibujo que provee la heurística 
+frente a esta entrada tiene 4 cruces, 2 mas que la solución óptima:
 
 \begin{figure}[H]
     \centering
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/CasoBordeLocalSol.png}
-     \caption{Solución optima para el grafo de ejemplo}
+     \caption{Solución óptima para el grafo de ejemplo}
 \end{figure}
 
-En general, podemos considerar los grafos que tengan la forma anterior, pero que en vez de dos nodos nuevos, tengan $k$ nodos nuevos:
+En general, podemos considerar como familia de casos problemáticos para la heurística
+a todos los grafos que tengan la forma anterior, pero que en vez de dos nodos nuevos,
+incorporen $k$ nodos nuevos:
 
 \begin{figure}[H]
     \centering
      \includegraphics[scale=0.2]{./figuras/busquedaLocal/CasoBordeLocalFlia.png}
-     \caption{Familia de casos borde para la busqueda local}\label{familiaLocal}
+     \caption{Familia de casos patológicos para la búsqueda local}\label{familiaLocal}
 \end{figure}
 
-Frente a toda esta familia de grafos, nuestra busqueda local no puede hacer nada. De esta manera frente a una solución que tiene 2 cruces (como en el ejemplo, se bajan a los nodos nuevos, dejando a los relaciones enfrentados, de modo que no generen cruces), nuestra heuristica devuelve un dibujo que tiene k + 2 cruces. De modo que aumentando k lo suficiente, se puede lograr que el número de cruces diste de la solución optima, tanto como se desee.
+Frente a toda esta familia de grafos, nuestra búsqueda local no puede hacer ninguna
+mejora. Por esta razón, frente a un caso con una solución óptima de 2 cruces (que como 
+en el ejemplo, se obtiene bajando a los nodos nuevos a la parte inferior del dibujo), la
+heurística de búsqueda no es capaz de producir ninguna mejora. Así, tomando $k$ apropiados,
+se pueden producir casos que hacen la heurística de búsqueda cometa un error arbitrariamente
+grande.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \includegraphics[scale=0.6]{./graficos/comparacionLocales/malCaso.png}
-\caption{Cantidad de cruces en funcion de la cantidad de nodos nuevos agregados para grafos de la familia \ref{familiaLocal}}
+\caption{Cantidad de cruces en función de la cantidad de nodos nuevos agregados para grafos de la familia \ref{familiaLocal}}
 \end{figure}
 
-Este ejemplo, aunque sencillo, nos alcanza para ver que nuestra busqueda local no es una heuristica buena, ya que se puede hacer, para ciertas instancias, que el número de cruces óptimo diste arbitrariamente de la solución propuesta.
+Este ejemplo, aunque sencillo, nos alcanza para ver que nuestra búsqueda local no es
+un algoritmo aproximado, ya existen instancias donde la solución que propone el
+algoritmo es arbitrariamente mala. 
 
-\subsection{Relación con la heuristica constructiva}
-Si bien vimos que de todas las variantes propuestas la que obtuvo un mejor desempeño fue la heuristica de busqueda local por reinserción de nodos, consideramos que debíamos observar si esta busqueda local se beneficiaba de partir de un dibujo construido mediante la heuristica constructiva. Para observar esto, lo que hicimos fue correr la heuristica de busqueda local para un mismo grafo, a partir de un dibujo generado al azar y un dibujo generado por la heuristica constructiva. Luego medimos la diferencia en el número de cruces en las mejoras de cada dibujo. Los resultados fueron los siguientes:
+
+
+\subsection{Relación con la heurística constructiva}
+
+Si bien vimos que de todas las variantes propuestas la que obtuvo un mejor desempeño
+fue la heurística de búsqueda local por reinserción de nodos, como la finalidad detrás
+de la heurística es ser utilizada como mejora en un algoritmo GRASP, consideramos que debíamos 
+observar si esta búsqueda local se beneficiaba de partir de un dibujo construído mediante la 
+heurística constructiva. Para observar esto, ejecutamos la heurística de búsqueda local para 
+una misma instancia del problema, a partir de un dibujo generado al azar y de un dibujo generado 
+por la heurística constructiva. Luego medimos la diferencia en el número de cruces obtenido
+en cada caso. Los resultados fueron los siguientes:
 
 \begin{figure}[H]
 \centering
@@ -295,96 +493,172 @@ Si bien vimos que de todas las variantes propuestas la que obtuvo un mejor desem
 \setcounter{subfigure}{1}
 \subfigure[40\% de nodos nuevos, $m = 5*n$]{
 \includegraphics[scale=0.6]{./graficos/comparacionLocales/localRandomConstr2.png} }
-\caption{Diferencia en la cantidad de cruces obtenidos en función de n}
+\caption{Diferencia en la cantidad de cruces obtenidos en función de $n$}
 \end{figure}
 
-En los graficos, lo que observamos es que la mayor parte de los puntos son mayores que cero. Dado que lo que graficamos fue la diferencia entre los cruces obtenidos al comenzar por un dibujo al azar y por el dibujo obtenido por la heuristica constructiva, resulta que un punto positivo nos dice que:
-$$Cruces_{Azar} - Cruces_{Constructiva} > 0$$
+En los gráficos, lo que observamos es que la mayor parte de los puntos son mayores 
+que cero. Dado que lo que graficamos fue la diferencia entre los cruces obtenidos 
+al comenzar por un dibujo al azar y por el dibujo obtenido por la heurística 
+constructiva, resulta que un punto positivo nos dice que 
+$Cruces_{Azar} - Cruces_{Constructiva} > 0$, o sea que $Cruces_{Azar} > Cruces_{Constructiva}$.
  
-es decir
- 
-$$Cruces_{Azar} > Cruces_{Constructiva}$$
- 
-Luego, lo que observamos es que en general la construcción de un dibujo con la heuristica de inserción greedy de nodos permite que obtengamos, luego de la busqueda local, mejores resultados que con un dibujo al azar. Esto coincide con lo esperado, ya que en general la heuristica da ``buenos'' resultados de entrada, por lo que, tendemos a pensar, que mejorarlos requiera menos trabajo.
+Luego, lo que observamos es que en general la construcción de un dibujo con 
+la heurística de inserción greedy de nodos permite que obtengamos, luego de la 
+búsqueda local, una mejor solución que usando la búsqueda local por sí sola,
+justificando así el uso de la heurística constructiva.
 
 \subsection{Aplicación a distintas instancias}
-Para probar el desempeño de nuestra implementación, realizamos varias pruebas sobre diferentes tipos de instancias.
+Para probar el desempeño de nuestra implementación, realizamos varias pruebas 
+sobre diferentes tipos de instancias.
 
-Aplicamos como primera experiencia, la heurisitca a grafos con n nodos de cada lado, n creciente, y una cantidad de ejes igual a n*n/5. La cantidad de nodos libres fue del 40\%.
+Como primera experiencia, aplicamos la heurística constructiva a grafos con $n$ 
+nodos de cada lado, $n$ creciente, y una cantidad de ejes igual a $n^2/5$. 
+La cantidad de nodos móviles fue del 40\%.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia en la cantidad de cruces con respecto a la Heuristica constructiva]{
+\subfigure[Diferencia en la cantidad de cruces con respecto a la heurística constructiva]{
 \includegraphics[scale=0.55]{./graficos/comparacionLocales/difCrucesTest1.png}}
 \setcounter{subfigure}{1}
 \subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
 \includegraphics[scale=0.4]{./graficos/comparacionLocales/iteracionesTest1.png} }
-\subfigure[Tiempo (en segundos) y complejidad teorica]{
+\subfigure[Tiempo (en segundos) y complejidad teórica]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/tiempoTest1.png}\label{TiempoOrdenTeorico} }
-\caption{Aplicación a grafos con n nodos en cada partición, n creciente, m = n*n/5, porcentaje de nuevos 40\%} 
+\caption{Aplicación a grafos con $n$ nodos en cada partición, $n$ creciente, $m = n^2/5$, 40\% de nodos nuevos} 
 \end{figure}
 
-Del primer grafico, podemos observar como la busqueda local logra una mejora sustancial en la cantidad de cruces, por ejemplo cuando tenemos 200 nodos de cada lado, la diferencia entre la cantidad de cruces de la heuristica constructiva y la de busqueda local es mayor que $3*10^6$. Por otro lado si míramos la cantidad de iteraciones que necesita la busqueda local hasta llegar a un mínimo es bastante pequeña en general, asi para un grafo con 200 nodos, no necesito mas de 24 pasos hasta lograr el mínimo.
-En \ref{TiempoOrdenTeorico}, vemos el tiempo de ejecución, y como la complejidad teorica acota bastante bien a los valores obtenidos. Esta complejidad teorica, se calculo utilizando el número real de iteraciones, el cual recordemos, en el calculo de complejidad lo acotamos por $m^2$, sin embargo como vemos en esta experiencia y en las siguientas, dicho acote es considerablemente grueso.
+En el primer gráfico podemos observar como la búsqueda local logra una mejora sustancial 
+en la cantidad de cruces. Por ejemplo, cuando tenemos 200 nodos de cada lado, la diferencia 
+entre la cantidad de cruces de la heurística constructiva y la de búsqueda local es mayor 
+que $3*10^6$. Por otro lado si miramos la cantidad de iteraciones que necesita la búsqueda local
+hasta llegar a un mínimo, vemos que es en general bastante pequeña, y así para un grafo con 200 
+nodos, no necesita más de 24 pasos hasta lograr el mínimo local.
 
-La experiencia siguiente, fue similar a la anterior, pero esta vez se modifico la cantidad de ejes, que esta vez fue 5*n, por otro lado la cantidad de nodos libres
+En \ref{TiempoOrdenTeorico} vemos el tiempo de ejecución, y como la complejidad teórica 
+acota de forma adecuada los valores obtenidos. Esta complejidad teórica se calculó utilizando 
+el número real de iteraciones, el cual -recordemos- en el cálculo de complejidad fue acotado por $m^2$.
+Sin embargo, como vemos en esta experiencia y en las siguientas, dicha cota es considerablemente gruesa.
+
+La siguiente experiencia fue similar a la anterior, con la diferencia de que se modificó
+la cantidad de ejes usando esta vez $m=5*n$, así como la cantidad de nodos libres.
+
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia en la cantidad de cruces con respecto a la Heuristica constructiva]{
+\subfigure[Diferencia en la cantidad de cruces respecto de la heurística constructiva]{
 \includegraphics[scale=0.50]{./graficos/comparacionLocales/difCrucesTest3.png}\label{crucesTest3}}
 \setcounter{subfigure}{1}
 \subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
 \includegraphics[scale=0.45]{./graficos/comparacionLocales/iterTest3.png}\label{iterTest3} }
-\subfigure[Tiempo (en segundos) de la busqueda local y de la heuristica constructiva]{
+\subfigure[Tiempo (en segundos) de la búsqueda local y de la heurística constructiva]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/tiemposTest3.png}\label{tiempoTest3}}
-\caption{Aplicación a grafos con n nodos en cada partición, n creciente, m = 5*n, porcentaje de nuevos 60\%} 
+\caption{Aplicación a grafos con $n$ nodos en cada partición, $n$ creciente, $m = 5*n$, 60\% de nodos nuevos} 
 \end{figure}
 
-Nuevamente notamos como la busqueda local corrige bastante a la solución propuesta por la constructiva, ya que como vemos en \ref{crucesTest3} la diferencia en el número de cruces llega al orden de $2*10^4$, diferencia que es menor que en la experiencia anterior, pero esto es esperable ya que al haber menos ejes, es probable que la cantidad de cruces baje, y que por lo tanto la diferencia que se puede lograr sea menor. Como vemos en \ref{iterTest3}, nuevamente la cantidad de iteraciones es considerablemente menor que la cota que propusimos en el analisis teorico. También se observa que la cantidad de iteraciones tienda a aumentar a medida que aumenta la cantidad de nodos.
 
-En \ref{tiempoTest3} vemos la diferencia entre el tiempo de la busqueda y el de la construcción mediante la otra heuristica de una solución. Como era de esperarse, la busqueda local tiene un tiempo mucho mayor que la constructiva (de hecho tiene que ser mayor si o si, ya que se parte de una solución que se construye con el metodo constructivo). Sin embargo hay un detalle a notar en este grafico, y es que al compararlo con \ref{TiempoOrdenTeorico} notamos que el tiempo es mucho mayor, lo cual refleja el hecho de que el conteo de cruces se hace mas caro, en particular en el primer caso, el factor m se convierte en $v_i^2$, por lo cual es de esperar esta gran diferencia entre los tiempos. También podemos extraer de este grafico, que la construcción de la solución base tiene un costo muy bajo comparado con el costo de mejorarla. Esto refuerza la idea de que es conveniente comenzar con una solución generada por la heuristica constructiva, ya que antes vimos que en general obtiene menos cruces que un ordenamiento al azar y como vemos en \ref{tiempoTest3} el tiempo de construcción es casi despreciable con respecto al tiempo total de la busqueda.
+Nuevamente notamos como la búsqueda local hace una mejora significativa sobre
+la solución propuesta por la constructiva, ya que como vemos en \ref{crucesTest3} 
+la diferencia en el número de cruces llega al orden de $2*10^4$, diferencia que es 
+menor que en la experiencia anterior (esto es esperable ya que al haber menos ejes, 
+es probable que la cantidad de cruces baje, y que por lo tanto la diferencia que se 
+pueda lograr sea menor). Como vemos en \ref{iterTest3}, nuevamente la cantidad de 
+iteraciones es considerablemente menor que la cota que propusimos en el análisis 
+teórico. También se observa que la cantidad de iteraciones tiende a aumentar a medida 
+que aumenta la cantidad de nodos del grafo.
 
-Para ver como influía la cantidad de ejes en el desempeño de la heuristica, decidimos hacer una prueba dejando la cantidad de nodos fija (en particular en 30) y variar la cantidad de ejes del grafo, los resultados son los siguientes
+En \ref{tiempoTest3} vemos la diferencia entre el tiempo de la búsqueda y el de la 
+construcción de una solución mediante la heurística constructiva.  Como era de esperarse, 
+la búsqueda local tiene un tiempo mucho mayor esta última (tiene que ser mayor inevitablemente, 
+ya que se parte de una solución que se construye con el método constructivo). Sin embargo,
+hay un detalle a notar en este gráfico: al compararlo con \ref{TiempoOrdenTeorico}, notamos 
+que el tiempo es mucho mayor, lo cual refleja el hecho de que el conteo de cruces se hace 
+más caro, en particular en el primer caso: el factor $m$ se convierte en $v_i^2$, por lo 
+cual es de esperar esta gran diferencia entre los tiempos. También podemos extraer de este 
+gráfico que la construcción de la solución base tiene un costo muy bajo comparado con el 
+costo de mejorarla. Esto refuerza la idea de que es conveniente comenzar con una solución 
+generada por la heurística constructiva, ya que antes vimos que en general el algoritmo
+completo obtiene menos cruces que comenzando por un ordenamiento al azar, y como vemos 
+en \ref{tiempoTest3} el tiempo de construcción del candidato inicial es prácticamente 
+despreciable con respecto al tiempo total de la búsqueda.
+
+Para ver como influía la cantidad de ejes en el desempeño de la heurística, 
+decidimos hacer una prueba dejando la cantidad de nodos fija (en 30) y 
+variar la cantidad de ejes del grafo. Los resultados son los siguientes:
+
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia en la cantidad de cruces con respecto a la Heuristica constructiva]{
+\subfigure[Diferencia en la cantidad de cruces con respecto a la heurística constructiva]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/difCrucesTest5.png}\label{crucesTest5}}
 \setcounter{subfigure}{1}
 \subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
 \includegraphics[scale=0.55]{./graficos/comparacionLocales/iteracionesTest5.png}\label{iterTest5} }
-\subfigure[Tiempo (en segundos) de la busqueda local y de la heuristica constructiva]{
+\subfigure[Tiempo (en segundos) de la búsqueda local y de la heurística constructiva]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/tiemposTest5.png}\label{tiempoTest5}}
-\caption{Diferencia entre cruces, cantidad de iteraciones y tiempo de ejecución en función de m}
+\caption{Diferencia entre cruces, cantidad de iteraciones y tiempo de ejecución en función de $m$}
 \end{figure}
 
-Con respecto a \ref{crucesTest5}, vemos que la diferencia aumenta y luego pareceria comenzar a disminuir. Creemos que se debe a que cuando hay pocos ejes es mas facil lograr pocos cruces. A medida que aumenta es mas posible mejorar la solución inicial, pero cuando se va saturando el grafo, es menos lo que se puede hacer para reducir el número de cruces (en el extremo, dado un grafo completo cualquier ordenamiento logra la misma cantidad de cruces). En \ref{iterTest5} podemos observar como al igual que en las experiencias anteriores, la cantidad de iteraciones es mucho menor que la cota dad en el analisis teorico. Pero ademas en este caso, a diferencia que en los anteriores, lo que se observa es que la cantidad de iteraciones no fue considerablemente mas chica que la cantidad de nodos que habia en el grafo. 
-Al mirar \ref{tiempoTest5}, se nota claramente la relación entre el tiempo de ejecución y la cantidad de iteraciones, ya que al observar la grafica de tiempo, asi como también la de iteraciones, vemos una forma muy similar en ambas. De hecho a grandes rasgos parecería verificarse que el tiempo de ejecución es de cantidad de iteraciones sobre diez. notar también que cuando hay pocos ejes, el mismo número de iteraciones requiere un tiempo menor, lo cual es muy razonable, ya que contar cruces se hace mas caro y es basicamente el ``core'' de cada paso de la busqueda local.
+Con respecto a \ref{crucesTest5}, vemos que la diferencia aumenta y luego parecería 
+comenzar a disminuir. Creemos que esto se debe a que cuando hay pocos ejes es más fácil 
+lograr pocos cruces. A medida que aumenta $m$ es más posible mejorar la solución inicial, 
+pero cuando se va saturando el grafo, es menos lo que se puede hacer para reducir el número 
+de cruces (en el extremo, dado un grafo completo cualquier ordenamiento logra la misma cantidad 
+de cruces). 
 
-Finalmente, buscamos observar que influencia tenia la cantidad de nodos nuevos. Por eso, creamos distintos grafos aleatorios, donde lo que variaba era precisamente esa caracterisitca. Los resultados son los que se presentan a continuación:
+En \ref{iterTest5} podemos observar como al igual que en las experiencias anteriores, la 
+cantidad de iteraciones es mucho menor que la cota dada en el análisis teorico. Además, 
+en este caso se observa que la cantidad de iteraciones no fue considerablemente más chica 
+que la cantidad de nodos que había en el grafo. 
+
+Al mirar \ref{tiempoTest5}, se nota claramente la relación entre el tiempo de ejecución y 
+la cantidad de iteraciones, ya que al observar la gráfica de tiempo así como también la de 
+iteraciones, vemos un patrón muy similar en ambas. A grandes rasgos incluso parecería 
+verificarse que el tiempo de ejecución es de cantidad de iteraciones sobre 10. Es de notar 
+también que cuando hay pocos ejes, el mismo número de iteraciones requiere un tiempo menor, 
+lo cual es muy razonable ya que contar cruces se hace más caro, y esta operación es básicamente 
+el núcleo de cada paso de la búsqueda local en lo que a costo se refiere.
+
+Finalmente, buscamos observar que influencia tiene la cantidad de nodos nuevos en el grafo.
+Por esta razón creamos distintos grafos aleatorios, variando esa característica. Los resultados 
+son los que se presentan a continuación:
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Cantidad de cruces con respecto a la Heuristica constructiva]{
+\subfigure[Cantidad de cruces con respecto a la heurística constructiva]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/crucesTest6.png}\label{crucesTest6}}
 \setcounter{subfigure}{1}
 \subfigure[Cantidad de iteraciones hasta encontrar un mínimo local]{
 \includegraphics[scale=0.55]{./graficos/comparacionLocales/iteracionesTest6.png}\label{iterTest6} }
-\subfigure[Tiempo (en segundos) de la busqueda local y de la heuristica constructiva]{
+\subfigure[Tiempo (en segundos) de la búsqueda local y de la heurística constructiva]{
 \includegraphics[scale=0.5]{./graficos/comparacionLocales/tiemposTest6.png}\label{tiempoTest6}}
 \caption{Diferencia entre cruces, cantidad de iteraciones y tiempo de ejecución en función de la cantidad de nodos nuevos}
 \end{figure}
 
-Lo que notamos es que cuanto mayor es la cantidad de nodos libres mas mejora la heuristica al resultado obtenido por la constructiva. También vemos que esta mejora mayor necesita de mas iteraciones. La relación que se observa entre el aumento entre la cantidad de iteraciones y del tiempo, consideramos que pone de manifiesto como nuestra heuristica de busqueda local no es tan sensible al aumento de la cantidad de nodos libres, es decir, creemos que demora mas porque necesita mas iteraciones, pero el costo de cada iteración es similar. Esto se debe a que a los nodos fijos también se los intenta mover, y si bien estos nodos tienen un rango de desplazamiento menor, sacarlos del dibujo asi como volverlos a insertar ya de por si trae un costo lineal aparejado.
+Lo que notamos es que a mayor cantidad de nodos móviles, mayor es la mejora lograda por la heurística al
+resutado obtenido previamente por la heurística constructiva. También observamos que esta mejora 
+mayor necesita de más iteraciones. La relación que se observa entre el aumento de la cantidad de 
+iteraciones y el del tiempo, consideramos que pone de manifiesto como nuestra heurística de 
+búsqueda local no es tan sensible al aumento de la cantidad de nodos libres, es decir, creemos que 
+demora más porque necesita más iteraciones, pero el costo de cada iteración es similar. Esto se debe a
+que a los nodos fijos también se los intenta mover, y si bien estos nodos tienen un rango de desplazamiento 
+menor, sacarlos del dibujo y volverlos a insertar ya de por si trae un costo lineal aparejado.
 
 \subsection{Conclusiones empíricas}
 A partir de las experiencias realizadas podemos concluir lo siguiente:
 \begin{itemize}
-\item Existen casos donde la solución propuesta por la busqueda local diste tanto como se desee de la solución óptima.
-\item Es conveniente comenzar de una solución construida por la heuristica constructiva, en general se obtienen mejores resultados y el costo de la construcción suele ser despreciable con respecto al costo de la busqueda.
-\item La busqueda local es bastante sensible a la cantidad de ejes que posee el grafo, no solo por cuanto puede mejorar sino por lo que aumenta el costo de cada paso
-\item No obstante lo anterior, la cota para la cantidad de iteraciones ( $O(m^2)$), se mostró en la practica, exagerada. Esto se condice con lo que esperabamos, sin embargo no pudimos construir un acotamiento mejor.
-\item Logra mejorar considerablemente mas en los casos donde la cantidad de nodos que se agregan es mayor
+\item Existen casos donde la solución propuesta por la búsqueda local dista
+      tanto como se desee de la solución óptima.
+\item Es conveniente comenzar de una solución construida por la heurística 
+      constructiva, ya que en general se obtienen mejores resultados y el 
+      costo de la construcción suele ser despreciable con respecto al costo 
+      de la búsqueda local.
+\item La búsqueda local es bastante sensible a la cantidad de ejes que posee el 
+      grafo, no solo por cuanto puede mejorar sino por lo que aumenta el costo de cada paso.
+\item No obstante lo anterior, la cota para la cantidad de iteraciones ($O(m^2)$) fue
+      observada en la practica, aunque exagerada. Esto se condice con lo que esperábamos, 
+      pero sin embargo no pudimos construir un acotamiento mejor.
+\item Las mejoras obtenidas con la búsqueda local son sensiblemente mayores
+      cuando la cantidad de nodos a agregar es mayor. Esto se logra a costa de una mayor
+      cantidad de iteraciones del algoritmo de búsqueda.
 \end{itemize}
