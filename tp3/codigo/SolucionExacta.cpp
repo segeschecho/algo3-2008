@@ -2,7 +2,7 @@
 
 unsigned cuantasCombinaciones(unsigned f, unsigned m) {
     unsigned c = 1;
-    for(unsigned i = 0; i < m; i++) {
+    for (unsigned i = 0; i < m; i++) {
         c = c * (f + i + 1);
     }
     return c;
@@ -69,14 +69,14 @@ void SolucionExacta :: inicializar() {
 
     // Armo las listas de adyacencia que me van a servir para calcular
     // de forma eficiente los cruces de una cierta permutación de p1.
-    
+
     vector<bool> estaEnFijo2 = vector<bool>(d->grafo()->cantNodos(), false);
     list<nodo>::const_iterator it = fijo2.begin();
     while (it != fijo2.end()) {
         estaEnFijo2[*it] = true;
         it++;
     }
-    
+
     vector<bool> estaEnAdyP1 = vector<bool>(d->grafo()->cantNodos(), false);
     adyp1 = vector< list<nodo> >(d->grafo()->cantNodos());
     it = l1.begin();
@@ -90,9 +90,8 @@ void SolucionExacta :: inicializar() {
     while (ite != d->grafo()->listaEjes().end()) {
         if (estaEnAdyP1[ite->primero] && estaEnFijo2[ite->segundo]) {
             adyp1[ite->primero].push_back(ite->segundo);
-        }
-        else if (estaEnAdyP1[ite->segundo] && estaEnFijo2[ite->primero]) {
-            adyp1[ite->segundo].push_back(ite->primero); 
+        } else if (estaEnAdyP1[ite->segundo] && estaEnFijo2[ite->primero]) {
+            adyp1[ite->segundo].push_back(ite->primero);
         }
         ite++;
     }
@@ -118,8 +117,8 @@ void SolucionExacta :: inicializar() {
         i++;
         it++;
     }
-    
-    
+
+
     // Armo un cache de cruces para reutilizar calculos
     unsigned n = d->grafo()->cantNodos();
     tabla1 = vector< vector<unsigned> >(n, vector<unsigned>(n));
@@ -137,9 +136,9 @@ void SolucionExacta :: inicializar() {
 
 
 void SolucionExacta :: mejorar() {
-    
+
     // Esto corresponde al caso base, donde chequeo si obtuve una
-    // solución mejor a la previamente máxima, y de ser así la 
+    // solución mejor a la previamente máxima, y de ser así la
     // actualizo con el nuevo valor.
     if (movil1.empty() && movil2.empty()) {
         if (cruces < mejorDibujo.contarCruces()) {
@@ -158,7 +157,7 @@ void SolucionExacta :: mejorar() {
         agregarAtras2();
         list<nodo>::iterator it = fijo2.end();
         unsigned pos = fijo2.size() - 1;
-        while(it != fijo2.begin()) {
+        while (it != fijo2.begin()) {
             if (it != fijo2.end()) {
                 retrasar2(it, pos);
                 it--;
@@ -174,14 +173,14 @@ void SolucionExacta :: mejorar() {
         sacarPrincipio2();
     }
 
-    // Entro en este caso cuando lleno la permutacion de fijo1 
-    // (siempre se hace esto antes de verificar la otra particion, 
+    // Entro en este caso cuando lleno la permutacion de fijo1
+    // (siempre se hace esto antes de verificar la otra particion,
     // ya que elegimos fijo1 para que tenga menos permutaciones).
     else {
         agregarAtras1();
         list<nodo>::iterator it = fijo1.end();
         unsigned pos = fijo1.size() - 1;
-        while(it != fijo1.begin()) {
+        while (it != fijo1.begin()) {
             if (it != fijo1.end()) {
                 retrasar1(it, pos);
                 it--;
@@ -192,7 +191,7 @@ void SolucionExacta :: mejorar() {
             if (movil1.empty()) {
                 tabular2();
             }
-            
+
             if (minimosCrucesRestantes1() + cruces < mejorDibujo.contarCruces()) {
                 mejorar();
             }
@@ -238,7 +237,7 @@ unsigned SolucionExacta :: minimosCrucesRestantes1() {
         }
         for (it2 = fijo1.begin(); it2 != fijo1.end(); it2++) {
             c = c + min(tabla1[*it1][*it2], tabla1[*it2][*it1]);
-        }        
+        }
     }
     return c;
 }
@@ -255,7 +254,7 @@ unsigned SolucionExacta :: minimosCrucesRestantes2() {
         }
         for (it2 = fijo2.begin(); it2 != fijo2.end(); it2++) {
             c = c + min(tabla2[*it1][*it2], tabla2[*it2][*it1]);
-        }        
+        }
     }
     return c;
 }
@@ -266,7 +265,7 @@ void SolucionExacta :: sacarPrincipio1() {
     nodo n = fijo1.front();
     fijo1.pop_front();
     movil1.push_back(n);
-    
+
     // Actualizo las posiciones.
     list<nodo>::const_iterator it = fijo1.begin();
     unsigned i = 0;
@@ -304,13 +303,13 @@ void SolucionExacta :: agregarAtras2() {
 void SolucionExacta :: retrasar1(list<nodo>::iterator& it, unsigned pos) {
     list<nodo>::iterator itAux = it;
     itAux--;
-   
+
     unsigned cAntes = tabla1[*itAux][*it];
     unsigned cDespues = tabla1[*it][*itAux];
 
     posiciones1[*itAux] = pos;
     posiciones1[*it] = pos - 1;
-    
+
     nodo val = *it;
     fijo1.erase(it);
     fijo1.insert(itAux,val);
@@ -322,10 +321,10 @@ void SolucionExacta :: retrasar1(list<nodo>::iterator& it, unsigned pos) {
 void SolucionExacta :: retrasar2(list<nodo>::iterator& it, unsigned pos) {
     list<nodo>::iterator itAux = it;
     itAux--;
-   
+
     unsigned cAntes = tabla2[*itAux][*it];
     unsigned cDespues = tabla2[*it][*itAux];
-   
+
     nodo val = *it;
     fijo2.erase(it);
     fijo2.insert(itAux,val);

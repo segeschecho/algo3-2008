@@ -5,6 +5,7 @@
 #include "BusquedaLocal.h"
 
 class Grasp {
+
 public:
     Grasp (Dibujo& original);
     Dibujo resolver();

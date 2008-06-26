@@ -34,20 +34,19 @@ int main(int argc, char* argv[]) {
     cout << "---------------------------------------------------------------------" << endl;
     cout << "Constructor de dibujos de grafos bipartitos" << endl;
     cout << "González, Martínez, Sainz-Trápaga" << endl;
-    cout << "Algoritmos y Estructuras de Datos 3 - FCEN, UBA (2008)" << endl; 
+    cout << "Algoritmos y Estructuras de Datos 3 - FCEN, UBA (2008)" << endl;
     cout << "---------------------------------------------------------------------" << endl << endl;
 
     if (cmdLine.SplitLine(argc, argv) < 1) {
         cout << "Se ejecutan métodos aproximados por defecto." << endl;
         cout << "Para ver las opciones utilice el parámetro -h." << endl << endl;
         aproximados = true;
-    }
-    else{
+    } else {
         if (cmdLine.HasSwitch("-h")) {
             help();
             exit(0);
         }
-        
+
         if (cmdLine.HasSwitch("-a")) {
             aproximados = true;
         }
@@ -71,19 +70,17 @@ int main(int argc, char* argv[]) {
     string i, o;
     try {
         i = cmdLine.GetArgument("-i",0);
-    }
-    catch(...){
+    } catch (...) {
         i = "Tp3.in";
     }
 
     try {
         o = cmdLine.GetArgument("-o",0);
-    }
-    catch(...){
+    } catch (...) {
         o = "Tp3.out";
     }
 
-    if(!(todas || aproximados || constructiva || local || grasp || exacta)){
+    if (!(todas || aproximados || constructiva || local || grasp || exacta)) {
         cout << "Se ejecutan métodos aproximados por defecto." << endl;
         cout << "Para ver las opciones utilice el parámetro -h." << endl << endl;
         aproximados = true;
@@ -95,11 +92,11 @@ int main(int argc, char* argv[]) {
         help();
         return 1;
     }
-    ofstream outE,outL,outG,outC; 
-    if(todas || exacta){
+    ofstream outE,outL,outG,outC;
+    if (todas || exacta) {
         string salidaExacta = o;
         string :: iterator it = salidaExacta.begin();
-        while(it != salidaExacta.end() && *it != '.'){
+        while (it != salidaExacta.end() && *it != '.') {
             it++;
         }
         salidaExacta.insert(it,'E');
@@ -112,25 +109,25 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if(todas || aproximados || constructiva){
+    if (todas || aproximados || constructiva) {
         string salidaConstructiva = o;
         string :: iterator it = salidaConstructiva.begin();
-        while(it != salidaConstructiva.end() && *it != '.'){
+        while (it != salidaConstructiva.end() && *it != '.') {
             it++;
         }
         salidaConstructiva.insert(it,'C');
         outC.open(salidaConstructiva.c_str());
-         if (!outC.is_open()) {
+        if (!outC.is_open()) {
             cout << endl << "ERROR: No se pudo abrir el archivo de salida!" << endl;
             help();
             return 1;
         }
     }
 
-    if(todas || aproximados || local){
+    if (todas || aproximados || local) {
         string salidaLocal = o;
         string :: iterator it = salidaLocal.begin();
-        while(it != salidaLocal.end() && *it != '.'){
+        while (it != salidaLocal.end() && *it != '.') {
             it++;
         }
         salidaLocal.insert(it,'L');
@@ -142,13 +139,13 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if(todas || aproximados || grasp){
+    if (todas || aproximados || grasp) {
         string salidaGrasp = o;
         string :: iterator it = salidaGrasp.begin();
-        while(it != salidaGrasp.end() && *it != '.'){
+        while (it != salidaGrasp.end() && *it != '.') {
             it++;
         }
-        salidaGrasp.insert(it,'G');	
+        salidaGrasp.insert(it,'G');
         outG.open(salidaGrasp.c_str());
         if (!outG.is_open()) {
             cout << endl << "ERROR: No se pudo abrir el archivo de salida!" << endl;
@@ -157,54 +154,54 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    while(f.peek() != '-'){
-	    Dibujo d (f);
+    while (f.peek() != '-') {
+        Dibujo d (f);
         FiltroGrafos filtro(d);
-    	
-	    if(todas || exacta){
-		    SolucionExacta s(*filtro.dibujoLimpio);
+
+        if (todas || exacta) {
+            SolucionExacta s(*filtro.dibujoLimpio);
             Dibujo dib (s.resolver());
             cout << "El algoritmo exacto logró:         " << dib.contarCruces() << " cruces" << endl;
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outE);
-	    }
-	    if(todas || aproximados || constructiva){
+        }
+        if (todas || aproximados || constructiva) {
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion(1.0, false);
-            cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl; 
+            cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl;
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outC);
-	    }
-	    if(todas || aproximados || local){
+        }
+        if (todas || aproximados || local) {
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
-		    BusquedaLocal bl(*filtro.dibujoLimpio);
+            BusquedaLocal bl(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion(1.0, false);
-		    Dibujo dibu = bl.hallarMinimoLocal(dib);
+            Dibujo dibu = bl.hallarMinimoLocal(dib);
             cout << "La búsqueda local logró:           " << dibu.contarCruces() << " cruces" << endl;
             Dibujo reconstruido = filtro.reconstruirDibujo(dibu);
             reconstruido.guardar(outL);
-	    }
-	    if(todas || aproximados || grasp){
+        }
+        if (todas || aproximados || grasp) {
             Grasp gp(*filtro.dibujoLimpio);
             Dibujo dib (gp.resolver());
             cout << "Grasp logró:                       " << dib.contarCruces() << " cruces" << endl;
-		    Dibujo reconstruido = filtro.reconstruirDibujo(dib);
+            Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outG);
-	    }
+        }
 
         f.ignore(2, '\n');
     }
-    if(todas || exacta){
-	    outE.close();
+    if (todas || exacta) {
+        outE.close();
     }
-    if(todas || aproximados || constructiva){
-	    outC.close();
+    if (todas || aproximados || constructiva) {
+        outC.close();
     }
-    if(todas || aproximados || local){
-	    outL.close();
+    if (todas || aproximados || local) {
+        outL.close();
     }
-    if(todas || aproximados || grasp){
-	    outG.close();
+    if (todas || aproximados || grasp) {
+        outG.close();
     }
     cout << endl;
     return 0;

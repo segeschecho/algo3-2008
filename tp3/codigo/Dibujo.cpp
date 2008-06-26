@@ -1,7 +1,7 @@
 #include "Dibujo.h"
 
 Dibujo :: Dibujo() {
-	desdeArchivo = false;
+    desdeArchivo = false;
     contado = false;
 }
 
@@ -153,53 +153,52 @@ const vector<nodo>& Dibujo :: nodosEnP2(void) const {
 GrafoBipartito* Dibujo :: grafo(void) {
     return g;
 }
-bool estaEn(nodo each, vector<nodo> &li){
+bool estaEn(nodo each, vector<nodo> &li) {
     vector<nodo> :: iterator it = li.begin();
-    while(it != li.end()){
-        if(*it == each){
+    while (it != li.end()) {
+        if (*it == each) {
             return true;
         }
         it++;
-    
+
     }
     return false;
 }
 unsigned Dibujo :: contarCruces() {
-	// si es la primera vez que contamos cruces
-    if(contado == false) {
-		vector<nodo> indice(g->cantNodos());
-    	unsigned i;
+    // si es la primera vez que contamos cruces
+    if (contado == false) {
+        vector<nodo> indice(g->cantNodos());
+        unsigned i;
 
         i = 0;
-    	for(vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++) {
-    		indice[*it] = i;
-    		i++;
-    	}
-    	i = 0;
-    	for(vector<nodo> :: const_iterator it =nodosL2.begin(); it != nodosL2.end(); it++) {
-    		indice[*it] = i;
-    		i++;
-    	}
-		// si el dibujo esta completo
-		if(g->cantNodos() == nodosL1.size() + nodosL2.size()){
-			cruces = contadorDeCruces(nodosL1,nodosL2,g->ejes(),indice,indice);
-			contado = true;
-		}
-		else{ // dibujo que no tiene todos los nodos - el calculo no es eficiente, por lo 
-              // que no es la idea que se use este metodo si el dibujo no está completo
-    	     vector< list<nodo> > ejesAux(g->cantNodos());
-    	     for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++) {
-    		    for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++) {
-    		       if (estaEn(*it2,nodosL2)){
-        			   ejesAux[*it].push_back(*it2);
-        			   ejesAux[*it2].push_back(*it);
-        		   }
-    		    }
-    	     }
-			 cruces = contadorDeCruces(nodosL1,nodosL2,ejesAux,indice,indice);
-             contado = true;
-		}
-        
+        for (vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++) {
+            indice[*it] = i;
+            i++;
+        }
+        i = 0;
+        for (vector<nodo> :: const_iterator it =nodosL2.begin(); it != nodosL2.end(); it++) {
+            indice[*it] = i;
+            i++;
+        }
+        // si el dibujo esta completo
+        if (g->cantNodos() == nodosL1.size() + nodosL2.size()) {
+            cruces = contadorDeCruces(nodosL1,nodosL2,g->ejes(),indice,indice);
+            contado = true;
+        } else { // dibujo que no tiene todos los nodos - el calculo no es eficiente, por lo
+            // que no es la idea que se use este metodo si el dibujo no está completo
+            vector< list<nodo> > ejesAux(g->cantNodos());
+            for (vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++) {
+                for (list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++) {
+                    if (estaEn(*it2,nodosL2)) {
+                        ejesAux[*it].push_back(*it2);
+                        ejesAux[*it2].push_back(*it);
+                    }
+                }
+            }
+            cruces = contadorDeCruces(nodosL1,nodosL2,ejesAux,indice,indice);
+            contado = true;
+        }
+
     }
     return cruces;
 }

@@ -10,8 +10,10 @@
 
 
 class Dibujo {
+
     friend std::ostream& operator<< (ostream&, Dibujo&);
-  public:
+
+public:
     //aclaracion sobre el constructor: se produce aliasing con el GrafoBipartito
     Dibujo(GrafoBipartito* g, const vector<nodo>& l1, const vector<nodo>& l2);
     Dibujo(GrafoBipartito* g, const list<nodo>& l1, const list<nodo>& l2);
@@ -24,18 +26,16 @@ class Dibujo {
     bool perteneceAP1(nodo) const;
     bool perteneceAP2(nodo) const;
     unsigned int grado(nodo) const;
+    unsigned contarCruces();
 
     const vector<nodo>& nodosEnP1(void) const;
     const vector<nodo>& nodosEnP2(void) const;
     GrafoBipartito* grafo(void);
 
     void guardar(ofstream& salida);
-
     void operator= (const Dibujo& d);
 
-    unsigned contarCruces();
-
-    //private:
+private:
     GrafoBipartito* g;
     vector<nodo> nodosL1, nodosL2;
     bool desdeArchivo;

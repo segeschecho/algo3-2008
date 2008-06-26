@@ -1,7 +1,7 @@
 #include "HeuristicaConstructiva.h"
 
 
-class AdaptadorTabla { 
+class AdaptadorTabla {
 public:
     AdaptadorTabla(vector<unsigned>& t) : tabla(t) {
     };
@@ -9,7 +9,7 @@ public:
         return tabla[a] > tabla[b];
     };
 private:
-    vector<unsigned>& tabla; 
+    vector<unsigned>& tabla;
 };
 
 
@@ -172,7 +172,7 @@ nodo HeuristicaConstructiva :: tomarSiguiente(list<nodo>& moviles) {
     unsigned ultimoQueSupera = 0;
     list<nodo>::iterator it = moviles.begin();
     while (++it != moviles.end() &&
-           gradoParcial[*it] >= alfaMaximoGrado) {
+            gradoParcial[*it] >= alfaMaximoGrado) {
         ultimoQueSupera++;
     }
 
@@ -230,7 +230,8 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     fijos.push_back(n);
     unsigned c = cruces + crucesPorAgregarAtras(fijos, otrosFijos, adyParcial, posiciones);
     unsigned pos = fijos.size() - 1;
-    list<nodo>::iterator itc = fijos.end(); itc--;
+    list<nodo>::iterator itc = fijos.end();
+    itc--;
     list<nodo>::iterator itcp1 = fijos.end();
 
 
@@ -263,7 +264,7 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
     if (randomPos) {
         unsigned randomIndex = rand() % posValidas.size();
         itc = posValidas.begin();
-        for(unsigned i = 0; i != randomIndex; i++) itc++;
+        for (unsigned i = 0; i != randomIndex; i++) itc++;
         mejorPos = *itc;
     } else {
         mejorPos = posValidas.front();
@@ -271,7 +272,7 @@ void HeuristicaConstructiva :: insertar(nodo n, list<nodo>& fijos, list<nodo>& o
 
     fijos.pop_front();
     itc = fijos.begin();
-    for(unsigned i = 0; i != mejorPos; i++) itc++;
+    for (unsigned i = 0; i != mejorPos; i++) itc++;
     fijos.insert(itc, n);
     cruces = mejorCruces;
 

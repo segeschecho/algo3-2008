@@ -3,22 +3,22 @@
 #define BETA(a) a ? 1 : 0
 
 void armarIndices(const vector<nodo>& nodos, vector<unsigned int>& indicesPi, unsigned tamanio) {
-	if(nodos.size() > 0){
+    if (nodos.size() > 0) {
         indicesPi = vector<unsigned int> (tamanio + 1);
         for (unsigned int i = 0; i < nodos.size(); i++) {
             indicesPi[nodos[i]] = i;
         }
-	}
+    }
 }
 
 nodo maxElem(const vector<nodo>& p) {
-  nodo maximo = p[0];
-  for(unsigned int i = 1; i < p.size(); i++) {
-    if ( p[i] > maximo) {
-      maximo = p[i];
+    nodo maximo = p[0];
+    for (unsigned int i = 1; i < p.size(); i++) {
+        if ( p[i] > maximo) {
+            maximo = p[i];
+        }
     }
-  }
-  return maximo;
+    return maximo;
 }
 
 void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2) {
@@ -34,7 +34,7 @@ void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2) {
     }
 
     listaEjes.clear();
-    for(unsigned int i = 0; i < size2; i++) {
+    for (unsigned int i = 0; i < size2; i++) {
         listaEjes.splice(listaEjes.end(), bucket2[i]);
     }
 
@@ -46,7 +46,7 @@ void radixSort(list<eje>& listaEjes, unsigned int size1, unsigned int size2) {
     }
 
     listaEjes.clear();
-    for(unsigned int i = 0; i < size1; i++) {
+    for (unsigned int i = 0; i < size1; i++) {
         listaEjes.splice(listaEjes.end(), bucket1[i]);
     }
 }
@@ -72,7 +72,7 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
         arbol[indice] += 1;
 
         // Recorro hacia arriba
-        while(indice > 0) {
+        while (indice > 0) {
             // Si estoy parado en un nodo izquierdo, miro al hermano
             // Para saber cuantos cruces agrego
             if (indice % 2 == 1) {
@@ -90,8 +90,8 @@ unsigned int acumTree (const list<eje>& l, unsigned int cantHojas) {
 }
 
 unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP1, const vector<nodo>& indicesP2) {
-	// Quiero tener a la de menor tamano como segundo parametro para lograr O(m*log(min(p1,p2))
-    if(p2.size() < 2){
+    // Quiero tener a la de menor tamano como segundo parametro para lograr O(m*log(min(p1,p2))
+    if (p2.size() < 2) {
         return 0;
     }
     if (p1.size() < p2.size()) {
@@ -120,8 +120,8 @@ unsigned int contadorDeCruces (const vector<nodo>& p1, const vector<nodo>& p2, c
 }
 
 unsigned int contadorDeCruces (const list<nodo>& p1, const list<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP1, const vector<nodo>& indicesP2) {
-	// Quiero tener a la de menor tamano como segundo parametro para lograr O(m*log(min(p1,p2))
-    if(p2.size() < 2){
+    // Quiero tener a la de menor tamano como segundo parametro para lograr O(m*log(min(p1,p2))
+    if (p2.size() < 2) {
         return 0;
     }
     if (p1.size() < p2.size()) {
@@ -150,7 +150,7 @@ unsigned int contadorDeCruces (const list<nodo>& p1, const list<nodo>& p2, const
 }
 
 unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2) {
-    if(p2.size() < 2){
+    if (p2.size() < 2) {
         return 0;
     }
     if (ejes[x].size() * ejes[y].size() < p2.size()) {
@@ -167,13 +167,12 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< l
             itAdyacentesX++;
         }
         return cruces;
-    }
-    else {
+    } else {
         // Me preparo la lista de ejes para hacer Radix Sort
         list<eje> listaAux;
 
         list<nodo>::const_iterator it (ejes[x].begin());
-        while(it != ejes[x].end()) {
+        while (it != ejes[x].end()) {
             eje e;
             e.primero = indicesP2[*it];
             e.segundo = 0;
@@ -182,7 +181,7 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< l
         }
 
         it = (ejes[y].begin());
-        while(it != ejes[y].end()) {
+        while (it != ejes[y].end()) {
             eje e;
             e.primero = indicesP2[*it];
             e.segundo = 1;
@@ -197,7 +196,7 @@ unsigned int crucesEntre(nodo x, nodo y, const vector<nodo>& p2, const vector< l
 }
 
 unsigned int crucesEntre(nodo x, nodo y, const list<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2) {
-    if(p2.size() < 2){
+    if (p2.size() < 2) {
         return 0;
     }
     if (ejes[x].size() * ejes[y].size() < p2.size()) {
@@ -214,13 +213,12 @@ unsigned int crucesEntre(nodo x, nodo y, const list<nodo>& p2, const vector< lis
             itAdyacentesX++;
         }
         return cruces;
-    }
-    else {
+    } else {
         // Me preparo la lista de ejes para hacer Radix Sort
         list<eje> listaAux;
 
         list<nodo>::const_iterator it (ejes[x].begin());
-        while(it != ejes[x].end()) {
+        while (it != ejes[x].end()) {
             eje e;
             e.primero = indicesP2[*it];
             e.segundo = 0;
@@ -229,7 +227,7 @@ unsigned int crucesEntre(nodo x, nodo y, const list<nodo>& p2, const vector< lis
         }
 
         it = (ejes[y].begin());
-        while(it != ejes[y].end()) {
+        while (it != ejes[y].end()) {
             eje e;
             e.primero = indicesP2[*it];
             e.segundo = 1;
@@ -244,14 +242,13 @@ unsigned int crucesEntre(nodo x, nodo y, const list<nodo>& p2, const vector< lis
 }
 
 unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>& p1, const vector<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2) {
-    if(p2.size() < 2 || p1.size() < 2){
+    if (p2.size() < 2 || p1.size() < 2) {
         return 0;
     }
     nodo candidato;
     if (agregoAdelante) {
         candidato = p1[0];
-    }
-    else {
+    } else {
         candidato = p1[p1.size() - 1];
     }
 
@@ -266,8 +263,7 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
             e.primero = indicesP2[*itEjes];
             if (*itNodosP1 == candidato) {
                 e.segundo = BETA(!agregoAdelante);
-            }
-            else {
+            } else {
                 e.segundo = BETA(agregoAdelante);
             }
             listaAux.push_back(e);
@@ -282,14 +278,13 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const vector<nodo>
 }
 
 unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const list<nodo>& p1, const list<nodo>& p2, const vector< list<nodo> >& ejes, const vector<nodo>& indicesP2) {
-    if(p2.size() < 2 || p1.size() < 2){
+    if (p2.size() < 2 || p1.size() < 2) {
         return 0;
     }
     nodo candidato;
     if (agregoAdelante) {
         candidato = p1.front();
-    }
-    else {
+    } else {
         candidato = p1.back();
     }
 
@@ -304,8 +299,7 @@ unsigned int crucesPorAgregarEnLosBordes(bool agregoAdelante, const list<nodo>& 
             e.primero = indicesP2[*itEjes];
             if (*itNodosP1 == candidato) {
                 e.segundo = BETA(!agregoAdelante);
-            }
-            else {
+            } else {
                 e.segundo = BETA(agregoAdelante);
             }
             listaAux.push_back(e);
