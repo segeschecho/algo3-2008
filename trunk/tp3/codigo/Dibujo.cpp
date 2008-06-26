@@ -249,7 +249,7 @@ void Dibujo :: guardar(ofstream& salida) {
     it = nodosL2.begin();
 
     while (it != nodosL2.end()) {
-        salida << " " << *it + 1 << endl;
+        salida << " " << *it + 1;
         it++;
     }
 }
