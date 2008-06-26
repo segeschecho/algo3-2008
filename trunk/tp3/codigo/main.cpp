@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
 	    }
 	    if(todas || aproximados || constructiva){
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
-            Dibujo dib = hc.construirSolucion();
+            Dibujo dib = hc.construirSolucion(1.0, false);
             cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl; 
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outC);
@@ -178,7 +178,7 @@ int main(int argc, char* argv[]) {
 	    if(todas || aproximados || local){
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
 		    BusquedaLocal bl(*filtro.dibujoLimpio);
-            Dibujo dib = hc.construirSolucion();
+            Dibujo dib = hc.construirSolucion(1.0, false);
 		    Dibujo dibu = bl.hallarMinimoLocal(dib);
             cout << "La búsqueda local logró:           " << dibu.contarCruces() << " cruces" << endl;
             Dibujo reconstruido = filtro.reconstruirDibujo(dibu);
