@@ -137,8 +137,11 @@ Dibujo FiltroGrafos:: reconstruirDibujo(Dibujo& resuelto){
                p1Posta.push_back(traduccion[*each]);
             }
        }
-        p1Posta.splice(p1Posta.end(),nulos1);
 
+       for(list<nodo>::iterator itNulo1 = nulos1.begin();itNulo1 != nulos1.end();itNulo1++){
+                p1Posta.push_back(*itNulo1);
+       }
+       
         while(i < marcados1.size()){
              p1Posta.push_back(marcados1[i]);
 	     i++;
@@ -157,7 +160,9 @@ Dibujo FiltroGrafos:: reconstruirDibujo(Dibujo& resuelto){
                p2Posta.push_back(traduccion[*each]);
             }
        }
-        p2Posta.splice(p2Posta.end(),nulos2);
+       for(list<nodo>::iterator itNulo2 = nulos2.begin();itNulo2 != nulos2.end();itNulo2++){
+                p2Posta.push_back(*itNulo2);
+       }
         while(i < marcados2.size()){
              p2Posta.push_back(marcados2[i]);
 	     i++;
