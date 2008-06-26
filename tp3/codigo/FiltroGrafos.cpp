@@ -70,7 +70,7 @@ FiltroGrafos::FiltroGrafos(Dibujo& entrada){
           unsigned tam = tamv1+tamv2+tamIV1+tamIV2;
           traduccion = vector<unsigned>(tam);
           unsigned i = 0;
-          //TODO: deberia ser list
+          
           vector<list<unsigned> > ejesNuevos(tam);
           vector<nodo> indice(g->cantNodos());
           nuevoP1 =vector<nodo>(tamv1+tamIV1);
