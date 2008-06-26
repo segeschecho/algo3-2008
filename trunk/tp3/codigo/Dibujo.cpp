@@ -125,8 +125,6 @@ Dibujo :: Dibujo(const Dibujo& d) {
 }
 
 Dibujo :: ~Dibujo() {
-    // FIXME: arreglar este destructor, por ahora lo comento
-    // porque sino provoca segfaults.
     if (desdeArchivo) {
         delete g;
     }
@@ -167,7 +165,7 @@ bool estaEn(nodo each, vector<nodo> &li){
     return false;
 }
 unsigned Dibujo :: contarCruces() {
-	/* si es la primera vez que contamos cruces */
+	// si es la primera vez que contamos cruces
     if(contado == false) {
 		vector<nodo> indice(g->cantNodos());
     	unsigned i;
@@ -182,13 +180,13 @@ unsigned Dibujo :: contarCruces() {
     		indice[*it] = i;
     		i++;
     	}
-		/*si el dibujo esta completo */
+		// si el dibujo esta completo
 		if(g->cantNodos() == nodosL1.size() + nodosL2.size()){
 			cruces = contadorDeCruces(nodosL1,nodosL2,g->ejes(),indice,indice);
 			contado = true;
 		}
-		else{ //dibujo que no tiene todos los nodos. El calculo no es eficiente, por lo que no es la idea que se use este metodo si el dibujo
-			  //no esta completo
+		else{ // dibujo que no tiene todos los nodos - el calculo no es eficiente, por lo 
+              // que no es la idea que se use este metodo si el dibujo no está completo
     	     vector< list<nodo> > ejesAux(g->cantNodos());
     	     for(vector<nodo> :: const_iterator it = nodosL1.begin(); it != nodosL1.end(); it++) {
     		    for(list<nodo> ::const_iterator it2 = ((g->ejes())[*it]).begin(); it2 != ((g->ejes())[*it]).end();it2++) {
