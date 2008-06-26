@@ -165,15 +165,13 @@ int main(int argc, char* argv[]) {
 		    SolucionExacta s(*filtro.dibujoLimpio);
             Dibujo dib (s.resolver());
             cout << "El algoritmo exacto logró:         " << dib.contarCruces() << " cruces" << endl;
-            
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outE);
 	    }
 	    if(todas || aproximados || constructiva){
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion();
-            cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl;
-            
+            cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl; 
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outC);
 	    }
@@ -183,17 +181,13 @@ int main(int argc, char* argv[]) {
             Dibujo dib = hc.construirSolucion();
 		    Dibujo dibu = bl.hallarMinimoLocal(dib);
             cout << "La búsqueda local logró:           " << dibu.contarCruces() << " cruces" << endl;
-
             Dibujo reconstruido = filtro.reconstruirDibujo(dibu);
             reconstruido.guardar(outL);
 	    }
 	    if(todas || aproximados || grasp){
             Grasp gp(*filtro.dibujoLimpio);
-            // FIXME: este parámetro está hardcodeado acá que probablemente
-            // no es la mejor idea, no hay que olvidárselo.
-            Dibujo dib (gp.resolver(0.65));
+            Dibujo dib (gp.resolver());
             cout << "Grasp logró:                       " << dib.contarCruces() << " cruces" << endl;
-            
 		    Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outG);
 	    }
