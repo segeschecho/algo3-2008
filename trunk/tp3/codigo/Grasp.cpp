@@ -4,10 +4,10 @@ Grasp :: Grasp(Dibujo& original) {
     d = &original;
 }
 
-Dibujo Grasp :: resolver(float alfa) {
-    alfa = 0.95;
-	//primero una greedy a secas
-    Dibujo mejorSolucion (HeuristicaConstructiva(*d).construirSolucion());
+Dibujo Grasp :: resolver() {
+    float alfa = 0.95;
+    
+    Dibujo mejorSolucion (HeuristicaConstructiva(*d).construirSolucion(1, false));
     mejorSolucion = BusquedaLocal(*d).hallarMinimoLocal(mejorSolucion);
 
     vector<unsigned int> indicesP1, indicesP2;
@@ -16,6 +16,7 @@ Dibujo Grasp :: resolver(float alfa) {
     unsigned int crucesMejor = contadorDeCruces(mejorSolucion.nodosEnP1(),mejorSolucion.nodosEnP2(), d->grafo()->ejes(), indicesP1, indicesP2);
     unsigned maxIteraciones = mejorSolucion.nodosEnP1().size()+mejorSolucion.nodosEnP2().size();
     unsigned iteraciones = 0;
+    
     while (iteraciones < maxIteraciones) {
         Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa,true));
         nuevaSolucion = BusquedaLocal(*d).hallarMinimoLocal(nuevaSolucion);
@@ -28,14 +29,10 @@ Dibujo Grasp :: resolver(float alfa) {
 			maxIteraciones = maxIteraciones / 2;
         }
 		else{
-			alfa = min(0.0,alfa-0.02);
+			alfa = min(0.2,alfa-0.02);
+            iteraciones++;
 		}
-        iteraciones++;
     }
-
     return mejorSolucion;
-}
-
-Grasp :: ~Grasp() {
 }
 
