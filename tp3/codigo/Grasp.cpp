@@ -11,8 +11,8 @@ Dibujo Grasp :: resolver() {
     mejorSolucion = BusquedaLocal(*d).hallarMinimoLocal(mejorSolucion);
 
     vector<unsigned int> indicesP1, indicesP2;
-    armarIndices(mejorSolucion.nodosEnP1(), indicesP1);
-    armarIndices(mejorSolucion.nodosEnP2(), indicesP2);
+    armarIndices(mejorSolucion.nodosEnP1(), indicesP1, mejorSolucion.grafo()->cantNodos());
+    armarIndices(mejorSolucion.nodosEnP2(), indicesP2, mejorSolucion.grafo()->cantNodos());
     unsigned int crucesMejor = contadorDeCruces(mejorSolucion.nodosEnP1(),mejorSolucion.nodosEnP2(), d->grafo()->ejes(), indicesP1, indicesP2);
     unsigned maxIteraciones = mejorSolucion.nodosEnP1().size()+mejorSolucion.nodosEnP2().size();
     unsigned iteraciones = 0;
@@ -20,8 +20,8 @@ Dibujo Grasp :: resolver() {
     while (iteraciones < maxIteraciones) {
         Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa,true));
         nuevaSolucion = BusquedaLocal(*d).hallarMinimoLocal(nuevaSolucion);
-        armarIndices(nuevaSolucion.nodosEnP1(), indicesP1);
-        armarIndices(nuevaSolucion.nodosEnP2(), indicesP2);
+        armarIndices(nuevaSolucion.nodosEnP1(), indicesP1, nuevaSolucion.grafo()->cantNodos());
+        armarIndices(nuevaSolucion.nodosEnP2(), indicesP2, nuevaSolucion.grafo()->cantNodos());
         unsigned int crucesNueva = contadorDeCruces(nuevaSolucion.nodosEnP1(),nuevaSolucion.nodosEnP2(), d->grafo()->ejes(), indicesP1, indicesP2);
         if (crucesNueva < crucesMejor) {
             mejorSolucion = nuevaSolucion;

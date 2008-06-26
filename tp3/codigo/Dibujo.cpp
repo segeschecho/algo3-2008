@@ -169,7 +169,7 @@ unsigned Dibujo :: contarCruces() {
     if(contado == false) {
 		vector<nodo> indice(g->cantNodos());
     	unsigned i;
-        
+
         i = 0;
     	for(vector<nodo> :: const_iterator it =nodosL1.begin(); it != nodosL1.end(); it++) {
     		indice[*it] = i;
@@ -232,31 +232,25 @@ std::ostream& operator<< (ostream& o, Dibujo& d) {
 void Dibujo :: guardar(ofstream& salida) {
     assert(salida.is_open());
     assert(nodosL1.size() == g->V1.size() && nodosL2.size() == g->V2.size());
-    
+
     vector<nodo>::const_iterator it;
 
-    salida << nodosL1.size() << endl;
+    salida << contarCruces() << endl;
+    salida << nodosL1.size();
     it = nodosL1.begin();
-    
+
     while (it != nodosL1.end()) {
-        salida << *it + 1 << endl;
+        salida << " " << *it + 1;
         it++;
     }
 
-    salida << nodosL2.size() << endl;
+    salida << endl;
+    salida << nodosL2.size();
     it = nodosL2.begin();
 
     while (it != nodosL2.end()) {
-        salida << *it + 1 << endl;
+        salida << " " << *it + 1 << endl;
         it++;
-    }
-
-    // FIXME: borrar las siguientes 6 lineas antes de entregar el TP
-    salida << g->listaEjes().size() << endl;
-    list<eje>::const_iterator itEjes (g->listaEjes().begin());
-    while (itEjes != g->listaEjes().end()) {
-        salida << itEjes->primero + 1 << " " << itEjes->segundo + 1 << endl;
-        itEjes++;
     }
 }
 

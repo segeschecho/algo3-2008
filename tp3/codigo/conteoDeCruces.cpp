@@ -1,11 +1,9 @@
 #include "conteoDeCruces.h"
 
 #define BETA(a) a ? 1 : 0
-#define print(a) cout<<a<<endl;
 
-void armarIndices(const vector<nodo>& nodos, vector<unsigned int>& indicesPi) {
+void armarIndices(const vector<nodo>& nodos, vector<unsigned int>& indicesPi, unsigned tamanio) {
 	if(nodos.size() > 0){
-        nodo tamanio = maxElem(nodos);
         indicesPi = vector<unsigned int> (tamanio + 1);
         for (unsigned int i = 0; i < nodos.size(); i++) {
             indicesPi[nodos[i]] = i;
