@@ -16,7 +16,7 @@ class HeuristicaConstructiva {
 
 public:
     HeuristicaConstructiva(Dibujo& original);
-    Dibujo construirSolucion(float alfa=1.0, bool randomPos=true);
+    Dibujo construirSolucion(float alfa=1.0, bool randomPos=false);
 
 private:
     Dibujo* d;
