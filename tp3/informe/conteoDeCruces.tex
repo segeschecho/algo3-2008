@@ -127,8 +127,8 @@ Finalmente el último 2 es swapeado tres posiciones.
 Entonces la cantidad de cruces del grafo es $2+4+2+1+3 = 12$.
 
 Si bien en el caso general este algoritmo tiene un rendimiento superior, en peor caso sigue siendo $O(m^2)$.
-
-Veamos un tercer acercamiento al problema \footnote{Ver referencia a Bath, Mutzel, Junger}: sea $|v_2|$ la 
+%\footnote{Ver referencia a Bath, Mutzel, Junger}
+Veamos un tercer acercamiento al problema \cite{acumTree}: sea $|v_2|$ la 
 cantidad de nodos de la partición 2 en un dibujo dado. Consideremos un arbol binario con $2^k$ hojas donde 
 $k$ es tal que $2^{k-1} < |v_2| <= 2^{k}$. El árbol se completa de modo de que cada nodo esté en una hoja 
 (aunque podría haber hojas que tengan ningún nodo), dispuestos de izquierda a derecha según su orden en la 
