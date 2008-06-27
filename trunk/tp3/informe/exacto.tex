@@ -75,7 +75,7 @@ El pseudocódigo del algoritmo resultante es aproximadamente:
 \end{algorithm}
 
 De esta manera, el árbol de \textit{backtracking} que tenemos es el de la figura \ref{arbolBacktracking}:
-%FIXME: error en el dibujo, borrar puntos suspensivos en el primer nivel
+
 \begin{figure}
 \centering
 \setcounter{subfigure}{0}
@@ -335,7 +335,6 @@ para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i
 costo $O(v_{1}^2*v_{max})$, ya que se efectúan $O(v_{1}^2)$ cálculos y cada cálculo tiene costo $O(v_{max})$ como
 se indicó previamente.
 
- %TODO: completar
 Para realizar el estudio de este algoritmo decidimos considerar por separado el llenado de cada 
 partición. Como comentamos antes, primero se llena una de las particiones, y a continuación la otra,
 pero se efectúan optimizaciones distintas en función del tabulado dependiendo de qué caso se trate. 

@@ -355,7 +355,6 @@ entonces $O(min(max(v_i,m_a,m_b),m_a*m_b))$. Esto sale de que vimos que el orden
 entre dos posiciones adyacentes era $O(v_i,m_a,m_b)$, y si teníamos pocos ejes ($m_a*m_b < v_i$) usábamos 
 el algoritmo de conteo de cruces más sencillo cuya complejidad es $O(m_a*m_b)$. Podemos suponer sin 
 equivocarnos que $min(max(v_i,m_a,m_b),m_a*m_b)\subseteq O(v_{max})$.
-% FIXME: está bien la inclusión anterior?
 
 Al \textit{swapear} nodos se pueden actualizar los índices en $O(1)$ ya que solo cambian dos 
 posiciones. Por otro lado, comparar la cantidad de cruces para decidir si el nodo está en una 
@@ -409,7 +408,6 @@ A partir de esto, vemos que:
  $$ t \geq V_{max} \geq v_{max}$$
  $$ t \geq m $$
  
-%TODO: ojo con esto, verificar
 Luego obtenemos $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)) \subseteq O(t^5*log(t))$ 
 
 
