@@ -153,19 +153,26 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
-
+    unsigned lecturas = 0;
     while (f.peek() != '-') {
-        Dibujo d (f);
+		
+		Dibujo d (f);
         FiltroGrafos filtro(d);
 
         if (todas || exacta) {
-            SolucionExacta s(*filtro.dibujoLimpio);
+            if(lecturas != 0){
+                outE<<endl;
+		    }
+			SolucionExacta s(*filtro.dibujoLimpio);
             Dibujo dib (s.resolver());
             cout << "El algoritmo exacto logró:         " << dib.contarCruces() << " cruces" << endl;
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
             reconstruido.guardar(outE);
         }
         if (todas || aproximados || constructiva) {
+			if (lecturas != 0){
+				outC<<endl;
+			}
             HeuristicaConstructiva hc(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion(1.0, false);
             cout << "La heurística constructiva logró:  " << dib.contarCruces() << " cruces" << endl;
@@ -173,7 +180,10 @@ int main(int argc, char* argv[]) {
             reconstruido.guardar(outC);
         }
         if (todas || aproximados || local) {
-            HeuristicaConstructiva hc(*filtro.dibujoLimpio);
+			if(lecturas != 0){
+				outL<<endl;
+			}
+			HeuristicaConstructiva hc(*filtro.dibujoLimpio);
             BusquedaLocal bl(*filtro.dibujoLimpio);
             Dibujo dib = hc.construirSolucion(1.0, false);
             Dibujo dibu = bl.hallarMinimoLocal(dib);
@@ -182,7 +192,10 @@ int main(int argc, char* argv[]) {
             reconstruido.guardar(outL);
         }
         if (todas || aproximados || grasp) {
-            Grasp gp(*filtro.dibujoLimpio);
+			if(lecturas != 0){
+				outG<<endl;
+			}
+			Grasp gp(*filtro.dibujoLimpio);
             Dibujo dib (gp.resolver());
             cout << "Grasp logró:                       " << dib.contarCruces() << " cruces" << endl;
             Dibujo reconstruido = filtro.reconstruirDibujo(dib);
@@ -190,6 +203,7 @@ int main(int argc, char* argv[]) {
         }
 
         f.ignore(2, '\n');
+		lecturas++;
     }
     if (todas || exacta) {
         outE.close();
