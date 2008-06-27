@@ -97,8 +97,33 @@ comparado con otras heurísticas y con los resultados exactos.
 \input{BusquedaLocal}
 \input{grasp}
 \newpage
+%ZONA MODIFICADA POR FEDE
 \chapter{Conclusión}
-%FIXME: completar
+\section{Posibles extensiones}
+Por razones de tiempo, quedaron diversas experiencias y optimizaciones a los algoritmos presentados que no se pudieron realizar.
+
+Entre estas tenemos:
+
+\begin{itemize}
+\item Desarrollar otros algoritmos que nos permitan contar cruces mas rápidamente
+\item Buscar criterios mas sofisticados de poda
+\item Intentar disminuir la complejidad tanto espacial como temporal del backtracking, principalmente en lo que se refiere al calculo de la cota inferior
+\item Proponer nuevas heuristicas constructivas y de busqueda local que pudieran ser comparadas con las presentadas en este informe.
+\item Realizar un estudio mas extensivo sobre los diversos parametros que hacen al funcionamiento del Grasp, principalmente en lo relacionado con el criterio de parada, a fin de optimizar su rendimiento.
+\item Proponer alguna alternativa basada en otra metaheuristica, por ejemplo, un algoritmo genetico para enfrentar este mismo problema
+\item Pensar algun estructura mejor, que nos permita bajar el orden de los algoritmos heuristicos.
+\end{itemize}
+
+\section{Conclusiones globales}
+Durante este trabajo pudimos desarrollar un algoritmo exacto para la resolución del problema del dibujo incremental de grafos bipartitos. Sin embargo, si bien este algoritmo consideramos que se comporta bien dada su naturaleza factorial, no es capaz de resolver instancias grandes en tiempos aceptables, por lo cual propusimos distintas heuristicas.
+
+Pudimos estudiar estas heuristicas, considerando la relación costo, medido en tiempo, contra beneficio, medido en cantidad de cruces.
+
+Logramos ademas, construir un algoritmo basado en la metaheuristica Grasp, el cual mostró dar buenos resultados en un tiempo razonable, aun para instancias muy grandes.
+
+Por todo esto, consideramos que la realización de este trabajo nos resulto fructifera y nos sirvió de introducción al tema de las heuristicas.
+
+%FIN ZONA TOCADA POR FEDE
 \begin{thebibliography}{15}
 \bibitem{acumTree} Simple and Efficient Bilayer Cross Counting, Wilhelm Barth, Petra Mutzel, Michael Junger, Journal of Graph Algorithms and Applications, vol. 8, no. 2, pp. 179-194 (2004).
 \bibitem{usosDelProb} A New Lower Bound for the Bipartite Crossing Number with Applications, Farhad Shahrokhi, Ondrej Sýkora, László Székely, Imrich Vrt`o %si, se llama con una coma al reves el tipo

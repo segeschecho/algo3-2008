@@ -361,8 +361,17 @@ Como el número de cruces no cambio, consideramos que la busqueda local llego a u
 Entonces si consideramos la misma familia que hacia fallar a la heuristica constructiva, observamos que la busqueda local no logra mejorar los dibujos que aquella genera, de modo que el Grasp fallaría de la misma manera que la heuristica constructiva frente a estos casos.
 
 Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un $\alpha$ suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección, mas aún si se inserta en una posición aleatoria cada vez.
- 
 % MODIFICADO POR FEDE (podria contener ligeros errores)
+Para estudiar el comportamiento del Grasp frente a casos que las otras heuristicas resuelven muy mal, decidimos aplicarlo a casos de esta familia. Los resultados son los siguientes:
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\includegraphics[height=8cm]{./graficos/casoBorde/malCasoGrasp.png}
+\end{figure}
+ 
+Como vemos, si bien hay casos donde no logra el óptimo, en general obtiene un resultado considerablemente mejor que las demas heuristicas.
+
 \subsection{Comparativa de heuristicas}
 En este apartado consideramos realizar a modo de experimento final, una comparación entre las distintas heuristicas.
 
@@ -410,15 +419,28 @@ A continuación corrimos los algoritmos en grafos de 8 nodos en cada partición, y
 \centering
 \setcounter{subfigure}{0}
 \subfigure[Error relativo de la cantiad de cruces encontrada por las heuristicas]{
-\includegraphics[scale=0.55]{./graficos/todos/crucesVsExactoMoviles.png}}
+\includegraphics[scale=0.6]{./graficos/todos/crucesVsExactoMoviles.png}}
 \setcounter{subfigure}{1}
 \subfigure[Porcentaje de tiempo del algoritmo usado por las heuristicas]{
-\includegraphics[scale=0.55]{./graficos/todos/tiemposVsExactoMoviles.png}}
+\includegraphics[scale=0.6]{./graficos/todos/tiemposVsExactoMoviles.png}}
 \end{figure}
 
 Lo que vemos es que a medida que aumenta el número de nodos moviles, peor es la solución que logra la constructiva, creemos que eso se debe a que cuanto mas nodos tienen que insertar, mas posibilidades de fallar tiene. Sin embargo, es de destacar como la busqueda local y el grasp mejoran notablemente el desempeño de la constructiva.
 
 En cuanto a tiempos se ve que el backtracking es mucho mas sensible que las heuristicas a un aumento de la proporción de nodos moviles. También vemos que nuevamente se hace preferible usar dichas heuristicas si la frecuencia es muy alta, aun en casos relativamente chicos como los de esta experiencia.
 
-\section{Discusión}
+Finalmente, decidimos comparar a las tres heuristicas en casos mas grandes, en los que el exacto no puede encontrar la solución correcta en tiempo razonable. Generamos entonces grafos aleatorios con una cantidad de nodos en cada partición que va de 30 a 200 y medimos tiempos y cruces.
+
+\begin{figure}[H]
+\centering
+\setcounter{subfigure}{0}
+\subfigure[Diferencia entre la cantidad de las heuristicas y del Grasp]{
+\includegraphics[scale=0.65]{./graficos/todos/crucesGrandes.png}}
+\setcounter{subfigure}{1}
+\subfigure[Porcentaje de tiempo del Grasp usado por las otras heuristicas]{
+\includegraphics[scale=0.65]{./graficos/todos/tiemposGrandes.png}}
+\end{figure}
+
+Creemos que en esta experiencia se marca claramente el compromiso entre calidad de la solución y cantidad de cruces. Si bien las heuristicas de busqueda local y constructiva son mucho mas rapidas que el grasp, lo cual es mas que logico ya que son parte de cada iteración de este último, también es cierto que dan una solución considerablemente peor. Entonces si bien el Grasp es mas lento que ellas, es una alternativa viable para buscar soluciones buenas (sus soluciones son siempre mejores que las de las otras heurisiticas) en un tiempo razonable.
+
 %FIN ZONA MODIFICADA POR FEDE (se ingresa nuevamente a una zona libre de errores ortograficos)

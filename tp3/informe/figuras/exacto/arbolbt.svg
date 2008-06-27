@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
-   xmlns:ns="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -14,7 +13,7 @@
    height="650"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    inkscape:export-filename="/home/gomo/facultad/algo3/tp3/code/informe/figuras/exacto/arbolbt.png"
    inkscape:export-xdpi="108.85715"
    inkscape:export-ydpi="108.85715"
@@ -29,16 +28,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="300.3349"
-     inkscape:cy="347.12427"
+     inkscape:zoom="2"
+     inkscape:cx="245.02236"
+     inkscape:cy="192.97757"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="968"
-     inkscape:window-x="5"
-     inkscape:window-y="45"
+     inkscape:window-x="0"
+     inkscape:window-y="22"
      height="650px"
      width="744.09448px" />
   <defs
@@ -226,12 +225,12 @@
   <metadata
      id="metadata7">
     <rdf:RDF>
-      <ns:Work
+      <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </ns:Work>
+      </cc:Work>
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
@@ -692,17 +691,6 @@
        d="M 255.22295,574.46397 L 300.95495,542.5426"
        inkscape:connector-type="polyline"
        id="path5930" />
-    <text
-       style="font-size:37.84776306px;font-style:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       transform="scale(1.0324511,0.9685689)"
-       y="175.21371"
-       x="173.66174"
-       id="text3282"
-       xml:space="preserve"><tspan
-         sodipodi:role="line"
-         id="tspan3284"
-         y="175.21371"
-         x="173.66174">...</tspan></text>
     <text
        style="font-size:20.04571533px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Century Schoolbook L"
        y="246.22809"
