@@ -129,7 +129,7 @@ class Tp3:
 
         return Dibujo(self.g,p1Posta,p2Posta)
 
-g =  generarGrafoBipartitoAleatorio(10, 7000, 8)
+g =  generarGrafoBipartitoAleatorio(10, 7, 8)
 d = generarDibujoAleatorio(g,5,4)
 losEjesDe = {}
 for each in g.p1 :
@@ -141,6 +141,7 @@ for each in g.ejes:
     losEjesDe[each[1]].append(each[0])
 tp3 = Tp3()
 dibu = tp3.limpiarDibujo(d,losEjesDe)
+print dibu.l1
 res = HeuristicaInsercionNodos(tp3.limpiarDibujo(d,losEjesDe)).resolver()
 print "ahhh",len(dibu.l2),len(dibu.g.p2)
-print tp3.reconstruirDibujo(res).contarCruces()
+print tp3.reconstruirDibujo(res)

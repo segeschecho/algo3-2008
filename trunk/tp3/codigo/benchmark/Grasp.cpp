@@ -16,7 +16,7 @@ Dibujo Grasp :: resolver(float alfa) {
     int sinMejorar = 0;
 
     while (sinMejorar < 100) {
-        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa));
+        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa,false));
         nuevaSolucion = BusquedaLocal(*d).hallarMinimoLocal(nuevaSolucion);
         armarIndices(nuevaSolucion.nodosEnP1(), indicesP1);
         armarIndices(nuevaSolucion.nodosEnP2(), indicesP2);
@@ -47,7 +47,7 @@ Dibujo Grasp :: resolver1(float alfa) {
     unsigned maxIteraciones = max(mejorSolucion.nodosEnP1().size(),mejorSolucion.nodosEnP2().size());
     unsigned iteraciones = 0;
     while (iteraciones < maxIteraciones) {
-        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa));
+        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa,false));
         nuevaSolucion = BusquedaLocal(*d).hallarMinimoLocal(nuevaSolucion);
         armarIndices(nuevaSolucion.nodosEnP1(), indicesP1);
         armarIndices(nuevaSolucion.nodosEnP2(), indicesP2);
@@ -75,7 +75,7 @@ Dibujo Grasp :: resolver2(float alfa) {
     unsigned maxIteraciones = mejorSolucion.nodosEnP1().size()+mejorSolucion.nodosEnP2().size();
     unsigned iteraciones = 0;
     while (iteraciones < maxIteraciones) {
-        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa));
+        Dibujo nuevaSolucion (HeuristicaConstructiva(*d).construirSolucion(alfa,false));
         nuevaSolucion = BusquedaLocal(*d).hallarMinimoLocal(nuevaSolucion);
         armarIndices(nuevaSolucion.nodosEnP1(), indicesP1);
         armarIndices(nuevaSolucion.nodosEnP2(), indicesP2);
@@ -178,7 +178,7 @@ Dibujo Grasp :: resolver5(float alfa) {
 
     return mejorSolucion;
 }
-//alfa fija en .75, randomPos = false, parada=cantNodos /2 por mejora
+//alfa movil, randomPos = false, parada=cantNodos /2 por mejora
 Dibujo Grasp :: resolver6(float alfa) {
     alfa = 0.95;
 	//primero una greedy a secas
@@ -204,8 +204,9 @@ Dibujo Grasp :: resolver6(float alfa) {
         }
 		else{
 			alfa = min(0.0,alfa-0.25);
+			iteraciones++;
 		}
-        iteraciones++;
+
     }
 
     return mejorSolucion;
@@ -242,7 +243,7 @@ Dibujo Grasp :: resolver7(float alfa) {
 
     return mejorSolucion;
 }
-//alfa fija en .75, randomPos = true, parada=cantNodos /2 por mejora
+//alfa movil, randomPos = true, parada=cantNodos /2 por mejora
 Dibujo Grasp :: resolver8(float alfa) {
     alfa = 0.95;
 	//primero una greedy a secas
