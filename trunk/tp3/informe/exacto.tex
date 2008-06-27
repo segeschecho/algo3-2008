@@ -79,7 +79,7 @@ De esta manera, el árbol de \textit{backtracking} que tenemos es el de la figura
 \begin{figure}
 \centering
 \setcounter{subfigure}{0}
-\includegraphics[scale=0.8]{./figuras/exacto/arbolbt.png}
+\includegraphics[scale=0.9]{./figuras/exacto/arbolbt.png}
 \caption{Árbol de \textit{backtracking}}\label{arbolBacktracking}
 \end{figure}
 
@@ -324,12 +324,15 @@ Antes de correr nuestro algoritmo exacto utilizamos el algoritmo de preprocesami
 \ref{sacoNulos}, lo cual conlleva un costo inicial de $O(V_1+V_2+m)$ donde $V_i$ es la cantidad de 
 nodos de la partición $i$ sin filtrar y $m$ la cantidad de ejes del grafo.
 
+Definimos además definimos $moviles_i$ como la cantidad de nodos nuevos, ya filtrados en la partición i. Por otro lado
+$fijos_i$ es la cantidad de nodos viejos ya filtrados.
+
 En primer lugar el algoritmo inicializa ciertas variables que nos serán de utilidad tales como 
 las listas de adyacencia parciales, vectores con posiciones, etc. Todo esto tiene un costo $O(v_1+v_2 + m)$ 
 donde $v_i$ es la cantidad de nodos de la partición $i$ ya filtrada. Esto lo podemos acotar por  
 $O(v_max + m*log(v_max))$ con $v_max=max(v_1, v_2)$. En esta inicialización se llena la tabla de resultados 
 para la primer partición. Lo que calculamos es $crucesEntre(w_i,w_j) \forall w_i,w_j \in v_1$. Esto tiene un 
-costo $O(v_{1}*v_{max})$, ya que se efectúan $O(v_{1})$ cálculos y cada cálculo tiene costo $O(v_{max})$ como
+costo $O(v_{1}^2*v_{max})$, ya que se efectúan $O(v_{1}^2)$ cálculos y cada cálculo tiene costo $O(v_{max})$ como
 se indicó previamente.
 
  %TODO: completar
@@ -352,7 +355,7 @@ hacerse en $O(1)$ ya que tenemos los cruces entre ambos tabulados. Una vez que e
 partición hay que sacarlo, lo cual también tiene un costo $O(v_1+ m)$ porque se actualizan nuevamente los cruces.
 
 Entonces recorrer el árbol de llenado de la primer partición tiene un costo:
-$$O(nodos * (v_{1}^2 +(v_1+m)))$$
+$$O(nodos * (v_{1}^2 +m))$$
 
 Donde \textit{nodos} es la cantidad de nodos del árbol de \textit{backtracking}. Veamos qué valor
 tiene esta variable. Podemos obtener la cantidad de nodos del árbol en función de la cantidad de 
@@ -379,35 +382,45 @@ $$ nodos \leq (moviles_1+1)*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}$$
 
 Luego el orden de completar todas las permutaciones de la primer partición es:
 
-$$O(moviles_1*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2))$$
+$$O(moviles_1*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(m+v_{1}^2))$$
 
 En cada hoja del árbol de \textit{backtracking} de la primer partición, completamos 
-la tabla para la segunda partición. Esto tiene un orden $O(v_2*v_{max})$.
+la tabla para la segunda partición. Esto tiene un orden $O(v_2^2*v_{max})$.
 
 En segunda instancia, completar la segunda partición tiene el mismo costo que completar la primera,
 con la salvedad de que en las hojas tenemos un costo $O(v_1+v_2)$ por copiar al mejor dibujo 
 (el grafo no se copia, se usa una referencia) en el atributo $mejorDibujo$.
 Entonces, completar el árbol de la segunda particion tiene un costo:
-$$O((moviles_2+1)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))$$
+$$O(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(m+v_{2}^2))$$
 
 Ahora, para cada hoja del árbol de la primer partición, llenamos todo un árbol de la segunda. 
-Por lo tanto el costo final es el producto de ambas complejidades, lo que redunda en (luego de sacar algunos factores comunes):
+Por lo tanto el costo final es el producto de ambas complejidades, lo que redunda en:
 
 %$ O(moviles_1*moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) + moviles_1!*\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2) *(moviles_2*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2) + (v_1+v_2)*moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2}(v_2+m+v_{2}^2))+\dbinom{moviles_1 + v_1}{v_1}(v_1+m+v_{1}^2)*v_2*v_{max}+ m*log(v_max))$
 
-$$O(moviles_1!*moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}(v_1+m+v_{1}^2)*(moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2} * $$
-$$(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$$
+$$O(moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1}((m+v_{1}^2)*moviles_1+ moviles_2!*\dbinom{moviles_2 + fijos_2}{fijos_2} *$$
+$$((m+v_{2}^2)*moviles_2 + (v_1+v_2)) + v_2^2*v_{max}) + V_1 + V_2 )$$
 
 Y usando que:
  $$moviles_1!*\dbinom{moviles_1 + fijos_1}{fijos_1} = \frac{(moviles_1 + fijos_1)!}{fijos_1!} $$ :
 
 tenemos que:
-$$O(\frac{(moviles_1 + fijos_1)!}{fijos_1!} * (v_1+m+v_{1}^2)*(moviles_1+ \frac{(moviles_2 + fijos_2)!}{fijos_2!} *$$
-$$(v_2+m+v_{2}^2)*(moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 + m*log(v_max))$$ 
+$$O(\frac{(moviles_1 + fijos_1)!}{fijos_1!}((m+v_{1}^2)*moviles_1+ \frac{(moviles_2 + fijos_2)!}{fijos_2!} *$$
+$$((m+v_{2}^2)*moviles_2 + (v_1+v_2)) + v_2^2*v_{max}) + V_1 + V_2 )$$
 
-En la fórmula vemos que es preferible tomar como primer partición a aquella que tenga una menor 
-cantidad de hojas, de esta manera la segunda tabla se construye menos veces y se aprovechan más cálculos.
+Por otro lado, resulta que $moviles_i+fijos_i = v_i$, entonces tenemos lo siguiente:
+$$O(\frac{v_1!}{fijos_1!}((m+v_{1}^2)*moviles_1+ \frac{(v_2)!}{fijos_2!} *$$
+$$((m+v_{2}^2)*moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 )$$
 
+El tamaño de la entrada t, es:
+$$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
+ $$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$
+
+donde $P_i$ es la cantidad de nodos originales de la primera partición, $m_p$ es la cantidad de ejes originales, $IV_i$ es la cantidad de nodos que se agregan a la partición i y $m_iv$ es la cantidad de ejes que se agregan.
+
+dado que $t\geq v_i$, $t\geq m$, $t\geq V_i$, resulta que:
+ 
+$O(\frac{v_1!}{fijos_1!}((m+v_{1}^2)*moviles_1+ \frac{(v_2)!}{fijos_2!} *((m+v_{2}^2)*moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 ) \subseteq O(t!(t! + P(t)))$, con P(t) un polinomio en t. Luego el algoritmo es $O(t!^2)$ 
 \section{Análisis experimental}
 
 \subsection{Experiencias realizadas}
