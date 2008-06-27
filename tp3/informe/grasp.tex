@@ -222,9 +222,13 @@ resto. Con respecto a la mejora en la cantidad de cruces, en este experimento sí
 que se desempeñó mejor: el método número 6. Por otro lado, el método 2, que en la experiencia anterior 
 se había comportado bastante bien, no logró destacarse.
 
-Dado que la cantidad de cruces que encuentra cada versión del Grasp se mantuvo muy similar, decidimos descartar a las heuristicas que no utilizaban un criterio de parada adaptativo, ya que tardaban mayor tiempo sin lograr resultados que se destaquen.
+Dado que la cantidad de cruces que encuentra cada versión del GRASP se mantuvo muy similar, 
+decidimos descartar a las heurísticas que no utilizaban un criterio de parada adaptativo, ya que 
+tardaban un tiempo superior sin lograr mejoras importantes.
 
-Decidimos también continuar con la experimentación con las versiones que usan un criterio de parada adaptativo. De esta manera tratamos de observar como se comportaban en función de la densidad del grafo y de la cantidad de nodos moviles. 
+Decidimos también continuar con la experimentación con las versiones que usan un criterio 
+de parada adaptativo. De esta manera tratamos de observar como se comportaban en función 
+de la densidad del grafo y de la cantidad de nodos móviles. 
 
 Los resultados que obtuvimos son los siguientes:
 \begin{figure}[H]
@@ -235,35 +239,47 @@ Los resultados que obtuvimos son los siguientes:
 \setcounter{subfigure}{1}
 \subfigure[Tiempo (en segundos)]{
 \includegraphics[scale=0.55]{./graficos/grasp/AumentoMovilesTiempo.png}}
-\caption{Cruces y tiempo en función de la cantidad de nodos moviles}
+\caption{Cruces y tiempo en función de la cantidad de nodos móviles}
 \end{figure}
 
-Nuevamente se mantiene la tendencia a disminuir la cantidad de cruces que encuentra la heursitica cuando se aumenta el número de nodos moviles, la cual ya se observaba en la busqueda local asi como tambien en la constructiva.
+Nuevamente se mantiene la tendencia a disminuir la cantidad de cruces que encuentra 
+la heurística cuando se aumenta el número de nodos móviles. La misma tendencia se observaba
+ya en la búsqueda local así como también en la constructiva, haciendo muy probable
+su aparición tras la combinación de ambas.
+Observamos también que los tiempos son similares, con la excepción de la versión 6, 
+que necesitó de tiempos mucho menores para lograr una cantidad de cruces menor o igual que los demás.
 
-También observamos que los tiempos son similares, con la excepción de la versión 6, que necesitó de tiempos mucho menores para lograr una cantidad de cruces menor o igual que los demas.
-
-Nuestra última experiencia en este apartado, consisitió en dejar fija la cantidad de nodos e ir aumentando la densidad. 
-Dado que nuevamente la cantidad de cruces encontrada fue muy similar, y teniendo en cuenta la tendencia que vemos en las experiencias anteriores en las cuales la versión 6 parecía ser mejor que las demas, decidimos graficar esta vez, la diferencia entre la cantidad de cruces encontrada por la versión 6 y el resto de las versiones.
+Nuestra última experiencia en este apartado consistió en dejar fija la cantidad de nodos e 
+ir aumentando la densidad. Dado que nuevamente la cantidad de cruces encontrada fue muy similar, 
+y teniendo en cuenta la tendencia que vemos en las experiencias anteriores en las cuales la versión 
+6 parecía ser mejor que las demás, decidimos graficar esta vez la diferencia entre la cantidad de 
+cruces encontrada por la versión 6 y el resto de las versiones.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \includegraphics[scale=0.65]{./graficos/grasp/difCrucesM.png}
-\caption{Diferencia en la cantidad de cruces encontrada por la versión 6 y el resto (m creciente, 50 nodos en cada partición)}
+\caption{Diferencia en la cantidad de cruces encontrada por la versión 6 y el resto ($m$ creciente, 50 nodos en cada partición)}
 \end{figure}
 
-Este gráfico muestra de manera clara, en primer lugar, que la cantidad de cruces es muy similar entre todas las versiones. Y en segundo lugar, vemos como la versión 6 efectivamente tiende a comportarse mejor. Esto se refleja en que al graficar la diferencia entre la cantidad de cruces encontradas por esta versión y la cantidad encontrada por las demas, la mayor parte de los puntos son negativos. Ahora bien, la mayor parte de los puntos estan por debajo del 0, sin embargo las diferencias son notablemente pequeñas, lo cual venimos observando desde la primer experiencia.
+Este gráfico muestra de manera clara, en primer lugar, que la cantidad de cruces es muy similar 
+entre todas las versiones. En segundo lugar vemos como la versión 6 efectivamente tiende a comportarse 
+mejor. Esto se refleja en que al graficar la diferencia entre la cantidad de cruces encontradas por esta versión 
+y la cantidad encontrada por las demás, la mayor parte de los puntos son negativos. Ahora, si bien la mayor parte de 
+los puntos están por debajo del 0, las diferencias son notablemente pequeñas, lo cual venimos observando desde la primer 
+experiencia.
 
-Por último medimos los tiempos de ejecución:
+Medimos por último los tiempos de ejecución:
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
 \includegraphics[scale=0.6]{./graficos/grasp/tiempoM.png}
-\caption{Tiempo de ejecución (m creciente, 50 nodos en cada partición)}
+\caption{Tiempo de ejecución ($m$ creciente, 50 nodos en cada partición)}
 \end{figure}
 
-En este grafico, volvemos a ver un buen desempeño de la versión 6, y ademas vemos como el método 8 y 2 se encontraron con un caso que no pudieron mejorar rapidamente y obtuvieron un tiempo muy alto.
+En este gráfico volvemos a observar un buen desempeño de la versión 6, y además vemos como 
+el método 8 y 2 se encontraron con un caso que no pudieron mejorar rápidamente y obtuvieron un tiempo muy alto.
 
 \subsection{Conclusiones}
 
@@ -277,26 +293,32 @@ de parámetros, en general no existe un ganador contundente. No obstante, en amba
 combinación \textit{$\alpha$ adaptativa, posición aleatoria y parada adaptativa} se mostró como una buena 
 opción, tanto a nivel de mejora en la cantidad de cruces, como a nivel de tiempo de ejecución.
 
-Creemos que esto tiene bastante sentido, porque el criterio adapatativo, como explicamos antes, se base en que si bajo mucho el número de cruces, esperamos que sea menos probable seguir mejorando. De esta manera, suele dar tiempos mas bajos que un criterio estatico.
+Creemos que esto tiene bastante sentido, porque el criterio adapatativo, como explicamos antes, se basa
+en que si bajó mucho el número de cruces, es de esperarse que sea menos probable seguir mejorando. De esta 
+manera, suele dar tiempos mas bajos que un criterio estático.
 
-Por otro lado un $\alpha$ adaptativo trata de usar las mejores soluciones que genera una lista restrictiva, ampliandola a medida que esta se va agotando.
+Por otro lado un $\alpha$ adaptativo trata de usar las mejores soluciones que genera una lista 
+restrictiva, ampliándola a medida que esta se va agotando.
 
-Y finalmente, elegir la posición al azar, nos brinda en general, una familia mas amplia para un mismo alfa, y de esta manera permite encontrar soluciones que de otra forma, con el criterio de primer posición no se encontrarian.
+Finalmente, elegir la posición de inserción al azar nos brinda en general una familia más amplia 
+para un mismo $\alpha$, y de esta manera permite encontrar soluciones que con el criterio de primer 
+posición no se encontrarían por quedar fuera del universo alcanzable.
 
-Concluyendo, decidimos tomar estos parametros para construir nuestro Grasp.
+Concluyendo, decidimos tomar estos parámetros para construir nuestro GRASP.
 
-\section{Pseudocodigo}
+
+\section{Pseudocódigo}
 
 \begin{algorithm}[H]
-\caption{Propone un dibujo mediante la metahuristica GRASP}
+\caption{Propone un dibujo mediante la metaheurística GRASP}
 \begin{algorithmic}[1]
-\STATE solActual $\leftarrow$ construir solución mediante la heursitca constructiva y mejorarla mediante la busqueda local.
+\STATE solActual $\leftarrow$ construir solución mediante la heurística constructiva y mejorarla mediante la búsqueda local.
 \STATE crucesActual $\leftarrow$ cantidad de cruces de la solución propuesta
 \STATE iteraciones $\leftarrow$ 0
 \STATE maxIteraciones = cantidad de nodos
 \STATE $\alpha$ $\leftarrow$ 0.95
 \WHILE{iteraciones < maxIteraciones}
-\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heuristica constructiva randomizada con $\alpha$ (seleccionando cada vez una posicion al azar de entre las mejores), y aplicar busqueda local
+\STATE nuevoDibujo $\leftarrow$ construir un dibujo con la heurística constructiva randomizada con $\alpha$ (seleccionando cada vez una posición al azar de entre las mejores), y aplicar búsqueda local
 \STATE nuevosCruces $\leftarrow$ cantidad de cruces de nuevoDibujo
 \IF{ nuevosCruces $<$ crucesActual}
 \STATE solActual $\leftarrow$ nuevoDibujo
@@ -311,26 +333,46 @@ Concluyendo, decidimos tomar estos parametros para construir nuestro Grasp.
 \end{algorithmic}
 \end{algorithm} 
 
-\section{Calculo de complejidad}
-Lo primero que hacemos es crear una primer solución mediante la heursitica constructiva y mejorarla con nuestra heuristica de busqueda local. El orden de hacer esto es $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)))$. 
+\section{Cálculo de complejidad}
 
-Contar los cruces de esta solución tiene un costo $O(m*log(v_max))$, pero este costo es absorvido por la construcción de la solución inicial.
+Examinemos paso por paso el algoritmo. Lo primero que hacemos es crear una primer solución 
+mediante la heurística constructiva y mejorarla con nuestra heurística de búsqueda local. El 
+orden de hacer esto es $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)))$. 
 
-Luego comenzamos a iterar. Cada iteracíón tiene el costo de las heuristicas, mas el conteo de cruecs, por lo que vimos recien en total es  $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m))$. Esto lo hacemos cada vez que iteramos. En el peor de los casos, nunca logramos hacer ninguna mejora y por lo tanto iteramos tantas veces como nodos hay, es decir, $O(v_max)$ iteraciones. Luego el costo total de la heuristica grasp es:
+Contar los cruces de esta solución tiene un costo $O(m*log(v_max))$, pero este costo es absorbido 
+por la construcción de la solución inicial.
+
+Luego comenzamos a iterar: cada iteracíón tiene el costo de las heurísticas, más el del conteo de cruces, 
+que por lo que vimos hace instantes es en total $O(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m))$. 
+Esto lo hacemos cada vez que iteramos. En el peor de los casos, nunca logramos hacer ninguna mejora y por lo 
+tanto iteramos tantas veces como nodos hay, o sea un total de $O(v_max)$ iteraciones. Luego el costo total de la 
+heurística GRASP es:
 
 $$O(v_{max}*(v_{max}^2*m*log(v_{max})*m^2 + Moviles*v_{max}^2 + m*log(fijos_{max})+fijos_{max} + (V_1+V_2+m)))$$
 
-Hay que notar que en un mejor caso, siempre mejora por lo que la cantidad de iteraciones no es lineal en $v_{max}$, sino de orden logaritmico.
+Hay que notar que en un caso más favorable, se lograrán muchas mejoras haciendo que la cantidad de iteraciones
+no sea lineal en $v_max$ sino de orden logarítmico.
 
 En función del tamaño de la entrada, sabemos que: 
 $$ t = log(P_1)+ \sum_{i=1}^{P_1}{log((p_1)_i)}+ log(P_2)+ \sum_{i=1}^{P_2}{log((p_2)_i)} + log(m_p) + \sum_{i=1}^{m_p}{log((e_i)_0) + log((e_i)_1)} $$
  $$+log(IV_1) + \sum_{i=1}^{IV_1}{log((iv_1)_i)} + log(IV_2) + \sum_{i=1}^{IV_2}{log((iv_2)_i)} + log(m_{iv})+ \sum_{i=1}^{m_{iv}}{log((e'_i)_0) + log((e'_i)_1)} $$ 
 
-Usando esto, mas el calculo hecho para la complejidad de la busqueda local en función de la entrada, podemos ver que el orden es $O(t^6*log(t))$
+Usando esto, más el cálculo hecho para la complejidad de la búsqueda local en función de 
+la entrada, podemos ver que el orden es $O(t^6*log(t))$.
 
-\section{Analisis experimental}
-\subsection{Mal caso}
-Para determinar un mal caso para nuestra heuristica Grasp, lo que tenemos que buscar es algún mal caso de la heuristica constructiva, que la heuristica de busqueda local no pueda resolver correctamente. Con un caso alcanza, porque si bien la selección de nodos aleatorios, podemos suponer que en el peor caso siempre se repite este ordenamiento malo de los nodos.
+
+
+
+
+\section{Análisis experimental}
+
+\subsection{Casos patológicos}
+
+Para determinar un caso malo para nuestra heurística GRASP, lo que tenemos que buscar es algún 
+mal caso de la heurística constructiva que la heurística de búsqueda local no pueda resolver correctamente. 
+Con un caso alcanzará puesto que si bien hay un factor de aleatoriedad en la elección de las posiciones
+de inserción de los nodos, para un análisis de peor caso es válido suponer que el azar conllevará siempre
+la elección de la peor opción posible.
 
 Consideremos entonces el ejemplo de caso malo para la constructiva. Recordemos como era:
 
@@ -338,17 +380,17 @@ Consideremos entonces el ejemplo de caso malo para la constructiva. Recordemos c
 \centering
 \setcounter{subfigure}{0}
 \includegraphics[scale=0.25]{./figuras/constructivas/malCasoConstructivo.png}
-\caption{Mal caso para la heuristica constructiva}
+\caption{Caso patológico para la heurística constructiva}
 \end{figure}
 
-Ahora apliquemos la busqueda local para ver que resultado obtenemos:
+Ahora apliquemos la búsqueda local para ver que resultado obtenemos:
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Partimos del dibujo que produce la heuristica constructiva]{
+\subfigure[Partimos del dibujo que produce la heurística constructiva]{
 \includegraphics[scale=0.2]{./figuras/constructivas/malCons4.png}}\hspace{0.2in}
-\subfigure[Para los nodos fijos, no se puede hacer nada. Al nodo 1 lo cambiamos de posición pero no porque baja la cantidad de cruces, sino porque en caso de empate, la busqueda local elige la primer posición visitada]{
+\subfigure[Para los nodos fijos, no se puede hacer nada. Al nodo 1 lo cambiamos de posición pero no porque baja la cantidad de cruces, sino porque en caso de empate, la búsqueda local elige la primer posición visitada]{
 \includegraphics[scale=0.2]{./figuras/grasp/malGrasp1.png}}\hspace{0.2in}
 \subfigure[Al nodo 2 no se lo mueve porque no cambia el número de cruces. El nodo 3 tampoco cambia el número de cruces, pero se lo mueve por lo dicho antes del criterio de elección de posiciones]{
 \includegraphics[scale=0.2]{./figuras/grasp/malGrasp2.png}}\hspace{0.2in}
@@ -356,13 +398,20 @@ Ahora apliquemos la busqueda local para ver que resultado obtenemos:
 \includegraphics[scale=0.2]{./figuras/grasp/malGrasp3.png}}
 \end{figure}
 
-Como el número de cruces no cambio, consideramos que la busqueda local llego a un mínimo local y no se vuelve a intentar mejorar al dibujo. Sin embargo como vimos en \ref{mal-caso} el dibujo se podía lograr con 0 cruces.
+Como el número de cruces no cambió, consideramos que la búsqueda local llegó a un mínimo local y 
+no se vuelve a intentar mejorar al dibujo. Sin embargo, como vimos en \ref{mal-caso} el dibujo se 
+podía lograr con 0 cruces. Entonces, si consideramos la misma familia que hacía fallar a la heurística 
+constructiva, observamos que la búsqueda local no logra mejorar los dibujos que aquella genera, de modo 
+que el GRASP fallaría de la misma manera que la heurística constructiva frente a estos casos.
 
-Entonces si consideramos la misma familia que hacia fallar a la heuristica constructiva, observamos que la busqueda local no logra mejorar los dibujos que aquella genera, de modo que el Grasp fallaría de la misma manera que la heuristica constructiva frente a estos casos.
+Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, 
+hay que considerar que en la práctica, con un $\alpha$ suficientemente bajo como para dar una lista 
+de candidatos adecuadamente grande, es muy poco probable que se repita siempre la peor elección, y 
+mas aún si se inserta en una posición aleatoria cada vez. Es por esto que en experimentos prácticos
+el comportamiento de las metaheurísticas con componentes aleatorios suele ser favorable.
 
-Si bien es cierto que en el peor caso siempre se elige de la misma manera a los nodos a insertar, hay que considerar que en la practica, con un $\alpha$ suficientemente bajo como para dar una lista de candidatos adecuadamente grande, es poco probable que se repita siempre la peor elección, mas aún si se inserta en una posición aleatoria cada vez.
-% MODIFICADO POR FEDE (podria contener ligeros errores)
-Para estudiar el comportamiento del Grasp frente a casos que las otras heuristicas resuelven muy mal, decidimos aplicarlo a casos de esta familia. Los resultados son los siguientes:
+Para estudiar el comportamiento del GRASP frente a casos que las otras heurísticas resuelven 
+muy mal, decidimos aplicarlo a casos de esta familia. Los resultados son los siguientes:
 
 \begin{figure}[H]
 \centering
@@ -370,77 +419,111 @@ Para estudiar el comportamiento del Grasp frente a casos que las otras heuristic
 \includegraphics[height=8cm]{./graficos/casoBorde/malCasoGrasp.png}
 \end{figure}
  
-Como vemos, si bien hay casos donde no logra el óptimo, en general obtiene un resultado considerablemente mejor que las demas heuristicas.
+Como vemos, si bien hay casos donde no se logra el óptimo, en general se obtiene un resultado 
+considerablemente mejor que con las heurísticas originales.
 
-\subsection{Comparativa de heuristicas}
-En este apartado consideramos realizar a modo de experimento final, una comparación entre las distintas heuristicas.
+\subsection{Comparativa de heurísticas}
 
-Primero realizamos experiencias en casos pequeños, para comparar a las heuristicas contra el algoritmo exacto. Estudiamos que impacto tenía en ellas el aumento en el número de nodos, de la densidad del grafo y del porcentaje de nodos moviles.
+En este apartado realizamos, a modo de experimento final, una comparación entre las distintas heurísticas
+desarrolladas a lo largo del trabajo.
 
-Los resultados son los siguientes:
+Primero realizamos experiencias en casos pequeños, para comparar a las heurísticas contra 
+el algoritmo exacto. Estudiamos qué impacto tiene en su performance el aumento del número de nodos, 
+de la densidad del grafo y del porcentaje de nodos móviles.
 
-En esta experiencia medimos tiempos y cruces, en función de la cantidad de nodos totales del grafo.
+
+En la primera experiencia medimos tiempos y cruces en función de la cantidad de nodos 
+totales del grafo.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia en la cantidad de cruces de las heuristicas y el exacto]{
+\subfigure[Diferencia en la cantidad de cruces de las heurísticas y el algoritmo exacto]{
 \includegraphics[height=6cm]{./graficos/todos/crucesVsExacto.png}}
 \setcounter{subfigure}{1}
-\subfigure[Porcenteje del tiempo del exacto utilizado por las heuristicas]{
+\subfigure[Porcentaje del tiempo del exacto utilizado por las heurísticas]{
 \includegraphics[height=6cm]{./graficos/todos/tiempoVsExacto.png}}
 \end{figure}
 
-En la primer figura, vemos como el grasp logra obtener una gran cantidad de dibujos óptimos, y como en general este muy cerca del valor optimo. Por otro lado, vemos como efectivamente representa una mejora con respecto a la busqueda local y a la heuristica constructiva aplicadas individualmente.
+En la primera gráfica vemos como el GRASP logra obtener una gran cantidad de dibujos 
+óptimos, y como en general está siempre muy cerca del valor óptimo. Por otro lado, vemos 
+como efectivamente representa una mejora con respecto a la búsqueda local y a la heurística 
+constructiva aplicadas individualmente.
 
-Con respecto a los tiempos, lo llamativo es que en casos pequeños los algoritmos heuristicos tardan mas que el algoritmo exacto, lo cual nos indica que los mismos deberían ser aplicados a grafos grandes, donde la diferencia de tiempos se inclina a favor de las heuristicas.
+Con respecto a los tiempos, lo llamativo es que en casos pequeños los algoritmos heurísticos 
+tardan más que el algoritmo exacto, lo cual nos indica que los mismos deberían ser aplicados a 
+grafos grandes, donde la diferencia de tiempos se incline a favor de las heurísticas.
 
-Queremos hacer notar, que en algunos casos se observa que la busqueda local tarda mas que la constructiva, esto se explica porque las corridas las hicimos por separado, y como el tiempo que tardan es muy poco, una pequeña disturbación de los tiemps causa lo que a priori parece incosistente, dado que la busqueda local primero construye una solución mediante la constructiva.
+Queremos hacer notar, que en algunos casos se observa que la búsqueda local tarda más que la 
+constructiva, a pesar de que una ejecución de búsqueda local conlleva una ejecución de la heurística
+constructiva para generar el primer candidato. Esto se explica porque las corridas fueron realizadas
+por separado y al ser los tiempos de esos casos muy pequeños, las anomalías de medición producen
+esas aparentes inconstistencias.
 
 Las siguientes pruebas se realizaron en grafos de 10 nodos en cada partición, aumentando la cantidad de ejes.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Error relativo de la cantiad de cruces encontrada por las heuristicas]{
+\subfigure[Error relativo de la cantidad de cruces encontrada por las heurísticas]{
 \includegraphics[height=6cm]{./graficos/todos/crucesVsExactoM.png}}
 \setcounter{subfigure}{1}
-\subfigure[Porcentaje de tiempo del algoritmo usado por las heuristicas]{
+\subfigure[Porcentaje de tiempo del algoritmo exacto empleado por las heurísticas]{
 \includegraphics[height=6cm]{./graficos/todos/tiempoVsExactoM.png}}
 \end{figure}
 
-El gráfico del error relativo nos deja ver nuevamente como si bien las tres heuristicas lograr un buen desempeño, el Grasp se comporta destacablemente bien, de modo que en todas las mediciones logro siempre un error relativo menor a 0.025.
+El gráfico del error relativo nos deja ver nuevamente como, si bien las tres heurísticas 
+logran un buen desempeño, el GRASP se comporta destacablemente bien, a tal punto que en todas
+las mediciones logró siempre un error relativo menor a 0.025.
 
-Por otro lado, vemos como aun en el caso trivial de 0 ejes, las heuristicas logran mejores tiempos. También vemos como a medida que aumenta la densidad se hace mas conveniente utilizar las heurisitcas, ya que el backtracking se muestra muy sensible a un aumento en la cantidad de ejes.
+Por otro lado, vemos como aún en el caso trivial de 0 ejes, las heurísticas logran mejores 
+tiempos. También vemos como a medida que aumenta la densidad del grafo se hace más conveniente 
+utilizar las heurísticas, ya que el \textit{backtracking} se muestra muy sensible a un aumento 
+en la cantidad de ejes.
 
-A continuación corrimos los algoritmos en grafos de 8 nodos en cada partición, y observamos el tiempo necesario asi como el desempeño.
+A continuación corrimos los algoritmos en grafos de 8 nodos en cada partición, y observamos 
+el tiempo necesario así como el desempeño.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Error relativo de la cantiad de cruces encontrada por las heuristicas]{
+\subfigure[Error relativo de la cantidad de cruces encontrados por las heurísticas]{
 \includegraphics[scale=0.6]{./graficos/todos/crucesVsExactoMoviles.png}}
 \setcounter{subfigure}{1}
-\subfigure[Porcentaje de tiempo del algoritmo usado por las heuristicas]{
+\subfigure[Porcentaje de tiempo del algoritmo exacto usado por las heuristicas]{
 \includegraphics[scale=0.6]{./graficos/todos/tiemposVsExactoMoviles.png}}
 \end{figure}
 
-Lo que vemos es que a medida que aumenta el número de nodos moviles, peor es la solución que logra la constructiva, creemos que eso se debe a que cuanto mas nodos tienen que insertar, mas posibilidades de fallar tiene. Sin embargo, es de destacar como la busqueda local y el grasp mejoran notablemente el desempeño de la constructiva.
+Lo que vemos es que a medida que aumenta el número de nodos móviles, peor se torna
+la solución que logra la heurística constructiva por sí sola. Creemos que eso se debe a 
+que mientras más nodos tienen que ser insertados, más posibilidades hay de que la heurística
+tome una decisión incorrecta. Sin embargo, es de destacar como la búsqueda local y el GRASP
+mejoran notablemente el desempeño de la constructiva.
 
-En cuanto a tiempos se ve que el backtracking es mucho mas sensible que las heuristicas a un aumento de la proporción de nodos moviles. También vemos que nuevamente se hace preferible usar dichas heuristicas si la frecuencia es muy alta, aun en casos relativamente chicos como los de esta experiencia.
+En lo que a tiempos se refiere, se ve que el \textit{backtracking} es mucho más sensible 
+que las heurísticas a un aumento de la proporción de nodos móviles. También vemos que nuevamente 
+se hace preferible usar los algoritmos heurísticos si la proporción es muy alta, aún en casos 
+relativamente chicos como los de esta experiencia.
 
-Finalmente, decidimos comparar a las tres heuristicas en casos mas grandes, en los que el exacto no puede encontrar la solución correcta en tiempo razonable. Generamos entonces grafos aleatorios con una cantidad de nodos en cada partición que va de 30 a 200 y medimos tiempos y cruces.
+Finalmente, decidimos comparar a las tres heurísticas en casos mas grandes, en los que el exacto 
+no puede encontrar la solución correcta en tiempos razonables. Generamos entonces grafos aleatorios 
+con una cantidad de nodos en cada partición que va de 30 a 200 y medimos tiempos y cruces.
 
 \begin{figure}[H]
 \centering
 \setcounter{subfigure}{0}
-\subfigure[Diferencia entre la cantidad de las heuristicas y del Grasp]{
+\subfigure[Diferencia entre la cantidad de cruces de las heurísticas simples y del GRASP]{
 \includegraphics[scale=0.65]{./graficos/todos/crucesGrandes.png}}
 \setcounter{subfigure}{1}
-\subfigure[Porcentaje de tiempo del Grasp usado por las otras heuristicas]{
+\subfigure[Porcentaje de tiempo del GRASP usado por las otras heurísticas]{
 \includegraphics[scale=0.65]{./graficos/todos/tiemposGrandes.png}}
 \end{figure}
 
-Creemos que en esta experiencia se marca claramente el compromiso entre calidad de la solución y cantidad de cruces. Si bien las heuristicas de busqueda local y constructiva son mucho mas rapidas que el grasp, lo cual es mas que logico ya que son parte de cada iteración de este último, también es cierto que dan una solución considerablemente peor. Entonces si bien el Grasp es mas lento que ellas, es una alternativa viable para buscar soluciones buenas (sus soluciones son siempre mejores que las de las otras heurisiticas) en un tiempo razonable.
-
-%FIN ZONA MODIFICADA POR FEDE (se ingresa nuevamente a una zona libre de errores ortograficos)
+En esta experiencia se marca claramente el compromiso entre calidad de la solución y cantidad de cruces. 
+Si bien las heurísticas de búsqueda local y constructiva son mucho más rapidas que el GRASP (lo cual es más
+que lógico ya que son parte de cada iteración de este último), también es cierto que dan una solución considerablemente 
+peor. Entonces,  si bien el GRASP es más lento que ellas, es una alternativa viable para buscar soluciones 
+buenas (sus soluciones son siempre mejores que las de las otras heurísticas) en un tiempo razonable. Una vez
+más, qué método es preferible utilizar dependerá del contexto de uso, ya que dependiendo de los casos
+podría ser conveniente conformarse con la precisión de las heurísticas simples para otener un mejor rendimiento
+temporal.

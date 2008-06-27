@@ -54,15 +54,14 @@
 \integrante{Mart'inez, Federico}{17/06}{federicoemartinez@gmail.com}
 \integrante{Sainz-Tr'apaga, Gonzalo}{454/06}{gonzalo@sainztrapaga.com.ar}
 \grupo{Grupo 3}
-%FIXME: la complejidad del grasp no es un orgullo, yo la sacaria
 \resumen{
 En el siguiente trabajo se explora el problema NP-completo de dibujo de grafos
 bipartitos (en su variante tradicional e incremental). Se proponen algoritmos
 eficientes para las problemáticas adyacentes del conteo de cruces, así como
 un algoritmo exacto basado en la técnica de \textit{backtracking} y uno
-heurístico basado en GRASP de complejidad $O(n^3*log n*m^3)$.
-Se estudian sus tiempos de ejecución y la calidad de los resultados obtenidos
-comparado con otras heurísticas y con los resultados exactos.
+heurístico basado en GRASP. Se estudian sus tiempos de ejecución y 
+la calidad de los resultados obtenidos comparado con otras heurísticas 
+y con los resultados exactos.
 }
 
 % TOC, usa estilos locos
@@ -97,33 +96,50 @@ comparado con otras heurísticas y con los resultados exactos.
 \input{BusquedaLocal}
 \input{grasp}
 \newpage
-%ZONA MODIFICADA POR FEDE
+
 \chapter{Conclusión}
 \section{Posibles extensiones}
-Por razones de tiempo, quedaron diversas experiencias y optimizaciones a los algoritmos presentados que no se pudieron realizar.
-
-Entre estas tenemos:
-
+Por razones de tiempo, quedaron diversas experiencias y optimizaciones a los algoritmos 
+presentados que no se pudieron realizar. Entre estas contamos:
 \begin{itemize}
 \item Desarrollar otros algoritmos que nos permitan contar cruces mas rápidamente
-\item Buscar criterios mas sofisticados de poda
-\item Intentar disminuir la complejidad tanto espacial como temporal del backtracking, principalmente en lo que se refiere al calculo de la cota inferior
-\item Proponer nuevas heuristicas constructivas y de busqueda local que pudieran ser comparadas con las presentadas en este informe.
-\item Realizar un estudio mas extensivo sobre los diversos parametros que hacen al funcionamiento del Grasp, principalmente en lo relacionado con el criterio de parada, a fin de optimizar su rendimiento.
-\item Proponer alguna alternativa basada en otra metaheuristica, por ejemplo, un algoritmo genetico para enfrentar este mismo problema
-\item Pensar algun estructura mejor, que nos permita bajar el orden de los algoritmos heuristicos.
+\item Buscar criterios más sofisticados de poda para el algoritmo de \textit{backtracking}
+\item Intentar disminuir la complejidad espacial y temporal del \textit{backtracking}, principalmente 
+      en lo que se refiere al cálculo de la cota inferior
+\item Proponer nuevas heurísticas constructivas y de búsqueda local que pudieran ser 
+      combinadas con las presentadas en este informe para evitar los casos patológicos.
+\item Realizar un estudio más extensivo sobre los diversos parámetros que hacen al funcionamiento 
+      del GRASP, principalmente en lo relacionado con el criterio de parada, a fin de optimizar 
+      su rendimiento para distintos escenarios (mayor necesidad de velocidad, de precisión, o
+      alguna relación particular entre ambas).
+\item Proponer alguna alternativa basada en otra metaheurística, como ser un algoritmo genético 
+      para enfrentar este mismo problema
+\item Diseñar una estructura más eficiente que nos permita mejorar los órdenes de complejidad
+      de los algoritmos heurísticos.
 \end{itemize}
 
 \section{Conclusiones globales}
-Durante este trabajo pudimos desarrollar un algoritmo exacto para la resolución del problema del dibujo incremental de grafos bipartitos. Sin embargo, si bien este algoritmo consideramos que se comporta bien dada su naturaleza factorial, no es capaz de resolver instancias grandes en tiempos aceptables, por lo cual propusimos distintas heuristicas.
+      Durante este trabajo pudimos desarrollar un algoritmo exacto para la resolución del 
+      problema del dibujo incremental de grafos bipartitos. Sin embargo, si bien consideramos que
+      este algoritmo se comporta bien dada su naturaleza factorial, no es capaz de resolver instancias 
+      medianamente complejas tiempos aceptables, por lo cual propusimos distintas heurísticas.
 
-Pudimos estudiar estas heuristicas, considerando la relación costo, medido en tiempo, contra beneficio, medido en cantidad de cruces.
+      Pudimos estudiar estas heuristicas, considerando la relación del costo temporal contra la
+      optimalidad de los resultados. Construímos además un algoritmo basado en la metaheurística 
+      GRASP, el cual mostró dar buenos resultados en un tiempo razonable, aún para instancias muy grandes
+      del problema.
 
-Logramos ademas, construir un algoritmo basado en la metaheuristica Grasp, el cual mostró dar buenos resultados en un tiempo razonable, aun para instancias muy grandes.
+      En general tuvimos que afrontar problemas de organización que se hicieron presentes dada
+      la dificultad del problema. Con problemas de estas características, puede resultar impredecible
+      el tiempo necesario para implementar un algoritmo heurístico y obtener resultados
+      correctos. Desde este punto de vista, fue muy positivo realizar primero prototipos en un
+      lenguaje de alto nivel, lo cual nos dio la libertad de hacer pruebas con mayor
+      rapidez. 
+      
+      Teniendo todo esto en cuenta, consideramos que el trabajo fue interesante porque nos
+      permitió abordar una solución a un problema complejo mediante algoritmos heurísticos, y
+      familiarizarnos con las dificultades relacionadas con este tipo de soluciones.
 
-Por todo esto, consideramos que la realización de este trabajo nos resulto fructifera y nos sirvió de introducción al tema de las heuristicas.
-
-%FIN ZONA TOCADA POR FEDE
 \begin{thebibliography}{15}
 \bibitem{acumTree} Simple and Efficient Bilayer Cross Counting, Wilhelm Barth, Petra Mutzel, Michael Junger, Journal of Graph Algorithms and Applications, vol. 8, no. 2, pp. 179-194 (2004).
 \bibitem{usosDelProb} A New Lower Bound for the Bipartite Crossing Number with Applications, Farhad Shahrokhi, Ondrej Sýkora, László Székely, Imrich Vrt`o %si, se llama con una coma al reves el tipo
