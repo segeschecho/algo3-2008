@@ -419,7 +419,7 @@ donde $P_i$ es la cantidad de nodos originales de la primera partición, $m_p$ es
 
 dado que $t\geq v_i$, $t\geq m$, $t\geq V_i$, resulta que:
  
-$O(\frac{v_1!}{fijos_1!}((m+v_{1}^2)*moviles_1+ \frac{(v_2)!}{fijos_2!} *((m+v_{2}^2)*moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 ) \subseteq O(t!(t! + P(t)))$, con P(t) un polinomio en t. Luego el algoritmo es $O(t!^2)$ 
+$O(\frac{v_1!}{fijos_1!}((m+v_{1}^2)*moviles_1+ \frac{(v_2)!}{fijos_2!} *((m+v_{2}^2)*moviles_2 + (v_1+v_2)) + v_2*v_{max}) + V_1 + V_2 ) \subseteq O(t!(t^3*t! + P(t)))$, con P(t) un polinomio en t. Luego el algoritmo es $O(t^3*t!^2)$ 
 \section{Análisis experimental}
 
 \subsection{Experiencias realizadas}

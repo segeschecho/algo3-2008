@@ -282,13 +282,13 @@ int main(int argc, char* argv[]) {
 		}
 		if(todas || aproximados || grasp){
             Grasp gp(*filtro.dibujoLimpio);
-            timer= new CStopWatch();
+            /*timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib1 (gp.resolver1(0.65));
 			timer->stopTimer();
 			grasp1<<dib1.contarCruces()<<" ";
 			grasp1t<<timer->getElapsedTime()<<" ";
-			delete timer;
+			delete timer;*/
 			timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib2 (gp.resolver2(0.65));
@@ -296,13 +296,13 @@ int main(int argc, char* argv[]) {
 			grasp2<<dib2.contarCruces()<<" ";
 			grasp2t<<timer->getElapsedTime()<<" ";
 			delete timer;
-			timer= new CStopWatch();
+			/*timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib3 (gp.resolver3(0.65));
 			timer->stopTimer();
 			grasp3<<dib3.contarCruces()<<" ";
 			grasp3t<<timer->getElapsedTime()<<" ";
-			delete timer;
+			delete timer;*/
 			timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib4 (gp.resolver4(0.65));
@@ -310,13 +310,13 @@ int main(int argc, char* argv[]) {
 			grasp4<<dib4.contarCruces()<<" ";
 			grasp4t<<timer->getElapsedTime()<<" ";
 			delete timer;
-			timer= new CStopWatch();
+			/*timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib5 (gp.resolver5(0.65));
 			timer->stopTimer();
 			grasp5<<dib5.contarCruces()<<" ";
 			grasp5t<<timer->getElapsedTime()<<" ";
-			delete timer;
+			delete timer;*/
 			timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib6 (gp.resolver6(0.65));
@@ -324,13 +324,13 @@ int main(int argc, char* argv[]) {
 			grasp6<<dib6.contarCruces()<<" ";
 			grasp6t<<timer->getElapsedTime()<<" ";
 			delete timer;
-			timer= new CStopWatch();
+			/*timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib7 (gp.resolver7(0.65));
 			timer->stopTimer();
 			grasp7<<dib7.contarCruces()<<" ";
 			grasp7t<<timer->getElapsedTime()<<" ";
-			delete timer;
+			delete timer;*/
 			timer= new CStopWatch();
 			timer->startTimer();
             Dibujo dib8 (gp.resolver8(0.65));
