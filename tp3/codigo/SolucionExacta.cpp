@@ -1,4 +1,10 @@
 #include "SolucionExacta.h"
+//TODO: agregar poda por propiedad del paper modificada
+//TODO: agregar optimizacion de conteo de cruces usando la matriz
+//TODO: agregar optimizacion de llenado de la matriz usando formulita loca
+//TODO: hacer q la suma no se re calcule
+//TODO: hacer q los valores de la matriz se mantengan (Podria ser necesario tener mas matrices).
+
 
 unsigned cuantasCombinaciones(unsigned f, unsigned m) {
     unsigned c = 1;
@@ -191,7 +197,7 @@ void SolucionExacta :: mejorar() {
             if (movil1.empty()) {
                 tabular2();
             }
-
+            //FIXME: minimosCrucesRestantes1 se puede tener precalculado y actualizarlo cada vez q se saca un nodo
             if (minimosCrucesRestantes1() + cruces < mejorDibujo.contarCruces()) {
                 mejorar();
             }
@@ -207,6 +213,7 @@ void SolucionExacta :: tabular1() {
         for (it2 = l1.begin(); it2 != l1.end(); it2++) {
             if (*it1 < *it2) {
                 tabla1[*it1][*it2] = crucesEntre(*it1, *it2, fijo2, adyp1, posiciones2);
+				//FIXME: este calculo se puede hacer mejor usando q 2 ejes o van al mismo nodo o se cruzan de alguna de las 2 maneras
                 tabla1[*it2][*it1] = crucesEntre(*it2, *it1, fijo2, adyp1, posiciones2);
             }
         }
@@ -261,6 +268,7 @@ unsigned SolucionExacta :: minimosCrucesRestantes2() {
 
 
 void SolucionExacta :: sacarPrincipio1() {
+	//FIXME: estos datos se pueden sacar de la matriz
     cruces = cruces - crucesPorAgregarAdelante(fijo1, fijo2, adyp1, posiciones2);
     nodo n = fijo1.front();
     fijo1.pop_front();
@@ -277,6 +285,7 @@ void SolucionExacta :: sacarPrincipio1() {
 }
 
 void SolucionExacta :: sacarPrincipio2() {
+	//FIXME: estos datos se pueden sacar de la matriz
     cruces = cruces - crucesPorAgregarAdelante(fijo2, fijo1, d->grafo()->ejes(), posiciones1);
     nodo n = fijo2.front();
     fijo2.pop_front();
@@ -288,6 +297,7 @@ void SolucionExacta :: agregarAtras1() {
     movil1.pop_front();
     fijo1.push_back(n);
     posiciones1[n] = fijo1.size() - 1;
+	//FIXME: estos datos se pueden sacar de la matriz
     cruces = cruces + crucesPorAgregarAtras(fijo1, fijo2, adyp1, posiciones2);
 
 }
@@ -296,6 +306,7 @@ void SolucionExacta :: agregarAtras2() {
     nodo n = movil2.front();
     movil2.pop_front();
     fijo2.push_back(n);
+	//FIXME: estos datos se pueden sacar de la matriz
     cruces = cruces + crucesPorAgregarAtras(fijo2, fijo1, d->grafo()->ejes(), posiciones1);
 }
 
